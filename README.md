@@ -1,4 +1,4 @@
-# 🦠 malwhere
+# 🦠 MalWhere
 ### Automated Threat Intelligence Extraction from Malware Samples via Reverse Engineering
 
 > Master's Thesis (TFM) · Universidad Complutense de Madrid · MSc in Cybersecurity · 2025–2026
