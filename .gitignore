@@ -1,0 +1,36 @@
+# Malware samples - NEVER commit binaries
+samples/*.exe
+samples/*.dll
+samples/*.bin
+samples/*.dat
+samples/*.vbs
+samples/*.ps1
+samples/*.bat
+samples/*.zip
+samples/*.7z
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Docker volumes & secrets
+docker/*/data/
+docker/*/logs/
+*.env.local
+.secrets/
+
+# Analysis artifacts with PII or sensitive IOCs
+results/**/raw/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
