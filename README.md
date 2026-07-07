@@ -83,11 +83,11 @@ malwhere/
 │   ├── misp/                 # MISP instance configuration
 │   └── navigator/            # ATT&CK Navigator instance
 ├── results/
-│   ├── xworm/
+│   ├── roning/
 │   │   ├── iocs/             # Normalized IOC JSON
 │   │   ├── attck/            # ATT&CK mappings + Navigator layers
 │   │   └── stix/             # STIX 2.1 bundles
-│   ├── lumma/
+│   ├── wsnake/
 │   └── akira/
 ├── paper/                    # Academic paper (LaTeX source)
 ├── docs/                     # Methodology documentation
@@ -123,22 +123,22 @@ This starts:
 
 ```bash
 # Static analysis
-python static/scripts/analyze.py --sample /path/to/sample.exe --output results/xworm/
+python static/scripts/analyze.py --sample /path/to/sample.exe --output results/roning/
 
 # Dynamic analysis (requires CAPE running)
-python dynamic/scripts/parse_cape.py --report results/xworm/cape_report.json --output results/xworm/
+python dynamic/scripts/parse_cape.py --report results/roning/cape_report.json --output results/roning/
 
 # Normalize and map to ATT&CK
-python pipeline/normalizer/normalize.py --static results/xworm/static_report.json \
-                                         --dynamic results/xworm/dynamic_report.json \
-                                         --output results/xworm/iocs/
+python pipeline/normalizer/normalize.py --static results/roning/static_report.json \
+                                         --dynamic results/roning/dynamic_report.json \
+                                         --output results/roning/iocs/
 
-python pipeline/mapper/map_attck.py --iocs results/xworm/iocs/normalized.json \
-                                     --output results/xworm/attck/
+python pipeline/mapper/map_attck.py --iocs results/roning/iocs/normalized.json \
+                                     --output results/roning/attck/
 
 # Export to STIX 2.1
-python pipeline/exporter/export_stix.py --mapping results/xworm/attck/mapping.json \
-                                          --output results/xworm/stix/
+python pipeline/exporter/export_stix.py --mapping results/roning/attck/mapping.json \
+                                          --output results/roning/stix/
 ```
 
 ---
@@ -175,7 +175,7 @@ All dynamic analysis runs in an **isolated Docker network with no internet egres
 
 This project is the practical component of a Master's thesis submitted to the **Universidad Complutense de Madrid** in partial fulfillment of the MSc in Cybersecurity requirements.
 
-The accompanying academic paper (≤20 pages) presents the methodology, case studies, and evaluation metrics. See [`paper/`](paper/) for the LaTeX source.
+The accompanying academic paper presents the methodology, case studies, and evaluation metrics. See [`paper/`](paper/) for the LaTeX source.
 
 ---
 
