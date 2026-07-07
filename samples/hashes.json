@@ -6,7 +6,7 @@
     "source": "MalwareBazaar",
     "acquired": "2025-07-07",
     "vt_score": "59/69",
-    "notes": "Akira C++, variante con EDR-killer"
+    "notes": "Akira C++, EDR-killer variant"
   },
   {
     "family": "WhiteSnakeStealer",
