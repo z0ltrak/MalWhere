@@ -19,9 +19,10 @@ The pipeline is validated against three representative malware families:
 
 | Family | Type | Language | Key techniques |
 |---|---|---|---|
-| **XWorm** | RAT | .NET | C2, keylogging, remote shell |
-| **Lumma Stealer** | Infostealer | C | String encryption, sandbox evasion, credential theft |
-| **Akira** | Ransomware + EDR-Killer | C++ | BYOVD, VSS deletion, ChaCha20+RSA encryption |
+| **Akira** | Ransomware + EDR-Killer | C++ | BYOVD, VSS deletion, ChaCha20+RSA encryption, EDR process termination |
+| **SnakeStealer** | Infostealer | .NET | MaaS model, credential theft, keylogging, sandbox evasion |
+| **RONINGLOADER** | Loader + EDR-Killer + RAT | Multi-stage | PPL abuse, signed driver abuse, WDAC bypass, Gh0st RAT delivery |
+
 
 ---
 
