@@ -1,0 +1,19 @@
+# ATT&CK
+mitreattack-python==3.0.6
+attackcti==0.4.6
+
+# STIX 2.1
+stix2==3.0.1
+
+# MISP
+pymisp==2.4.176
+
+# Data
+pandas==2.2.2
+pydantic==2.7.1
+
+# Utils
+rich==13.7.0
+click==8.1.7
+python-dotenv==1.0.1
+requests==2.32.3
