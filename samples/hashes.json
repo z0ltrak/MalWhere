@@ -1,0 +1,29 @@
+[
+  {
+    "family": "Akira",
+    "type": "Ransomware",
+    "sha256": "06c2a137c31aae5d02b4d7df61ffd31f1af9a9e59978f15b3f7265cc751bff1f",
+    "source": "MalwareBazaar",
+    "acquired": "2025-07-07",
+    "vt_score": "59/69",
+    "notes": "Akira C++, variante con EDR-killer"
+  },
+  {
+    "family": "WhiteSnakeStealer",
+    "type": "Infostealer",
+    "sha256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312",
+    "source": "MalwareBazaar",
+    "acquired": "2025-07-07",
+    "vt_score": "53/69",
+    "notes": ".NET, MaaS variant"
+  },
+  {
+    "family": "RONINGLOADER",
+    "type": "Loader+EDR-Killer",
+    "sha256": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
+    "source": "VirusTotal / Elastic IOCs",
+    "acquired": "2025-07-07",
+    "vt_score": "44/64",
+    "notes": "DragonBreath APT-Q-27, NSIS dropper"
+  }
+]
