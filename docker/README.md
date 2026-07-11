@@ -178,3 +178,68 @@ Compose cannot resolve which containers belong to the current configuration.
 - KVM enabled: `egrep -c '(vmx|svm)' /proc/cpuinfo` must return > 0
 - 16 GB RAM minimum
 - `/dev/kvm` accessible: `ls -la /dev/kvm`
+
+---
+
+## Building the CAPE Image (Required Before First Run)
+
+The `cape:kvm` image is **not available on Docker Hub** and must be built locally
+before running the sandbox profile. This is a one-time step.
+
+### Prerequisites
+
+```bash
+# Verify KVM is available
+egrep -c '(vmx|svm)' /proc/cpuinfo   # must return > 0
+ls -la /dev/kvm                        # must exist
+
+# Install make if not present
+sudo apt-get install -y make
+```
+
+### Build Steps
+
+```bash
+# 1. Clone the cape-docker build repo (outside the MalWhere project)
+cd ~
+git clone https://github.com/celyrin/cape-docker.git
+cd cape-docker
+
+# 2. Build the image (takes 15-30 minutes on first run)
+make all
+
+# 3. Verify the image was created
+docker images | grep cape
+# Expected: cape    kvm    <id>    <size ~5-6GB>
+```
+
+### Post-Build: PostgreSQL Setup
+
+The `cape-entry` service initializes the database on first boot, but if it fails
+(which happens if PostgreSQL isn't ready in time), create the role manually:
+
+```bash
+# Start the sandbox profile first
+docker compose -f docker/docker-compose.yml --profile sandbox up -d cape
+
+# Wait 10 seconds, then create the DB role if needed
+docker exec malwhere-cape sudo -u postgres psql -c \
+  "CREATE ROLE cape WITH SUPERUSER LOGIN PASSWORD 'SuperPuperSecret';"
+docker exec malwhere-cape sudo -u postgres psql -c \
+  "CREATE DATABASE cape WITH OWNER cape;"
+docker exec malwhere-cape systemctl restart cape-web cape
+```
+
+### Verifying CAPE is Running
+
+```bash
+# Check all CAPE services
+docker exec malwhere-cape systemctl status cape cape-web cape-processor | grep -E "Active|●"
+
+# Test the API
+curl -s http://localhost:8000/apiv2/tasks/list/ | python3 -m json.tool
+# Expected: {"data": [], "config": "Limit: 10, Offset: None", "buf": 0}
+```
+
+> **Note:** CAPE runs in no-auth mode for local development. The web UI is
+> accessible at `http://localhost:8000` without credentials.
