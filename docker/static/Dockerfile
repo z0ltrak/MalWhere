@@ -27,15 +27,15 @@ RUN pip3 install --no-cache-dir \
     lief==0.14.1 \
     python-magic==0.4.27 \
     ssdeep==3.4 \
-    tlsh==4.5.0 \
+    tlsh==0.2.0 \
     yara-python==4.5.0 \
     capstone==5.0.1 \
     rich==13.7.0
 
 # FLOSS (FireEye Obfuscated String Solver)
-RUN wget -q https://github.com/mandiant/flare-floss/releases/latest/download/floss-linux-amd64 \
-    -O /usr/local/bin/floss && \
-    chmod +x /usr/local/bin/floss
+FROM clausing/flare-floss:latest
+
+USER root
 
 # Ghidra headless (automated analysis)
 ARG GHIDRA_VERSION=11.1.2

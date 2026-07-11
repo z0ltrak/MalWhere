@@ -34,6 +34,7 @@ networks:
 # ---------------------------------------------------------------------------
 volumes:
   cape_data:
+  cape_work:
   misp_data:
   misp_logs:
   mysql_data:
@@ -113,7 +114,7 @@ services:
     container_name: malwhere-navigator
     profiles: [core]
     ports:
-      - "4200:4200"
+      - "4200:80"
     volumes:
       - ../results:/results:ro
       - navigator_data:/usr/src/app/nav-app/src/assets/generated
@@ -139,7 +140,7 @@ services:
       - redis_data:/data
     restart: unless-stopped
     mem_limit: 256m
-    command: redis-server --save 60 1 --loglevel warning
+    command: redis-server --save 60 1 --loglevel warning --requirepass redispassword
 
   # -------------------------------------------------------------------------
   # CAPE SANDBOX
@@ -147,7 +148,7 @@ services:
   # Profile: sandbox
   # -------------------------------------------------------------------------
   cape:
-    image: capturetheplatform/cape-sandbox:latest
+    image: cape:kvm
     container_name: malwhere-cape
     profiles: [sandbox]
     privileged: true # necesary for KVM
@@ -159,7 +160,8 @@ services:
       - ../samples:/samples:ro
       - ../dynamic/reports:/reports
       - cape_data:/opt/CAPEv2/storage
-      - ./cape/conf:/opt/CAPEv2/conf:ro
+      - cape_work:/work
+      #- ./cape/conf:/opt/CAPEv2/conf:ro
     networks:
       malwhere_net:
         ipv4_address: 172.20.0.21
@@ -209,7 +211,7 @@ services:
     container_name: malwhere-misp
     profiles: [sandbox]
     ports:
-      - "8443:443" # MISP web UI
+      - "443:443" # MISP web UI
     volumes:
       - misp_data:/var/www/MISP/app/files
       - misp_logs:/var/www/MISP/app/tmp/logs
@@ -221,9 +223,11 @@ services:
       - MYSQL_DATABASE=misp
       - MYSQL_USER=misp
       - MYSQL_PASSWORD=${MYSQL_PASSWORD:-malwhere_misp}
-      - MISP_BASEURL=https://localhost:8443
+      - MISP_BASEURL=https://localhost
       - MISP_EMAIL=admin@malwhere.local
       - MISP_PASSWORD=${MISP_ADMIN_PASSWORD:-Malwhere2025!}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=redispassword
     depends_on:
       mysql:
         condition: service_healthy

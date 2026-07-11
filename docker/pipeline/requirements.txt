@@ -1,12 +1,12 @@
 # ATT&CK
-mitreattack-python==3.0.6
-attackcti==0.4.6
+mitreattack-python==3.0.8
+attackcti==0.5.4
 
 # STIX 2.1
 stix2==3.0.1
 
 # MISP
-pymisp==2.4.176
+pymisp==2.4.185
 
 # Data
 pandas==2.2.2
@@ -17,3 +17,4 @@ rich==13.7.0
 click==8.1.7
 python-dotenv==1.0.1
 requests==2.32.3
+python-dateutil>=2.8.2
