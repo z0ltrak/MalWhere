@@ -70,7 +70,6 @@ services:
     mem_limit: 3g
     cpus: 2.0
     # No port exposure — acceso via docker exec o CLI
-    command: tail -f /dev/null # Keeps the container alive
 
   # -------------------------------------------------------------------------
   # PIPELINE (normalizer + mapper + exporter)
