@@ -1,13 +1,22 @@
 # Malware samples - NEVER commit binaries
 samples/*.exe
+samples/*/*.exe
 samples/*.dll
+samples/*/*.dll
 samples/*.bin
+samples/*/*.bin
 samples/*.dat
+samples/*/*.dat
 samples/*.vbs
+samples/*/*.vbs
 samples/*.ps1
+samples/*/*.ps1
 samples/*.bat
+samples/*/*.bat
 samples/*.zip
+samples/*/*.zip
 samples/*.7z
+samples/*/*.7z
 
 # Python
 __pycache__/
