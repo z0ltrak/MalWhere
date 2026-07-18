@@ -1,19 +1,27 @@
-"""Hash calculation utilities"""
+"""Hash calculation utilities."""
+
 import hashlib
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict
 
 try:
     import ssdeep
+    SSDEEP_AVAILABLE = True
 except ImportError:
-    ssdeep = None
+    SSDEEP_AVAILABLE = False
+
+try:
+    import tlsh
+    TLSH_AVAILABLE = True
+except ImportError:
+    TLSH_AVAILABLE = False
 
 
-"""Calculate various hashes for files"""
 class HashCalculator:
+    """Calculate various hashes for files."""
 
-    """Calculate all hash types"""
     def calculate_all(self, file_path: Path) -> Dict[str, str]:
+        """Calculate all hash types for a file."""
         try:
             with open(file_path, 'rb') as f:
                 data = f.read()
@@ -25,13 +33,22 @@ class HashCalculator:
                 }
 
                 # SSDeep fuzzy hash
-                if ssdeep:
+                if SSDEEP_AVAILABLE:
                     try:
                         result['ssdeep'] = ssdeep.hash(data)
                     except Exception:
                         result['ssdeep'] = 'N/A'
                 else:
                     result['ssdeep'] = 'N/A'
+
+                # TLSH hash
+                if TLSH_AVAILABLE:
+                    try:
+                        result['tlsh'] = tlsh.hash(data)
+                    except Exception:
+                        result['tlsh'] = 'N/A'
+                else:
+                    result['tlsh'] = 'N/A'
 
                 return result
 
@@ -41,12 +58,12 @@ class HashCalculator:
                 'sha1': 'ERROR',
                 'sha256': 'ERROR',
                 'ssdeep': 'ERROR',
+                'tlsh': 'ERROR',
                 'error': str(e)
             }
 
-
-    """Calculate hash of section data"""
     def calculate_section_hash(self, data: bytes, hash_type: str = 'md5') -> str:
+        """Calculate hash of section data."""
         if hash_type == 'md5':
             return hashlib.md5(data).hexdigest()
         elif hash_type == 'sha1':

@@ -1,12 +1,13 @@
-"""Data models for static analysis results"""
+"""Data models for static analysis results."""
+
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 
 
-"""PE section information"""
 @dataclass
 class SectionInfo:
+    """PE section information."""
     name: str
     virtual_address: str
     virtual_size: int
@@ -21,90 +22,74 @@ class SectionInfo:
     ssdeep: Optional[str] = None
 
 
-"""Imported function information"""
 @dataclass
 class ImportInfo:
+    """Imported function information."""
     dll: str
     function: str
     address: str
     hint: int
 
 
-"""Exported function information"""
 @dataclass
 class ExportInfo:
+    """Exported function information."""
     name: str
     address: str
     ordinal: int
 
 
-"""String extraction results"""
 @dataclass
 class StringInfo:
+    """String extraction results."""
     standard: List[str] = field(default_factory=list)
     floss: List[str] = field(default_factory=list)
     decoded: List[str] = field(default_factory=list)
 
 
-"""Packer detection results"""
 @dataclass
 class PackerInfo:
+    """Packer detection results."""
     detected: bool = False
     packers: List[Dict[str, str]] = field(default_factory=list)
     confidence: str = "none"
 
 
-"""Suspicious indicators"""
 @dataclass
 class IndicatorInfo:
+    """Suspicious indicators found during analysis."""
     suspicious_imports: List[str] = field(default_factory=list)
     suspicious_strings: List[Dict[str, str]] = field(default_factory=list)
     high_entropy_sections: List[Dict[str, Any]] = field(default_factory=list)
     anti_debug: List[Dict[str, str]] = field(default_factory=list)
     anti_vm: List[Dict[str, str]] = field(default_factory=list)
+    ransomware_indicators: List[Dict[str, str]] = field(default_factory=list)
 
 
-"""Complete static analysis report"""
 @dataclass
 class StaticReport:
-    # Sample info
+    """Complete static analysis report."""
     filename: str
     size_bytes: int
     size_mb: float
     extension: str
-
-    # Hashes
     md5: str
     sha1: str
     sha256: str
     ssdeep: Optional[str] = None
-
-    # PE Metadata
     metadata: Dict[str, Any] = field(default_factory=dict)
-
-    # Sections
     sections: List[SectionInfo] = field(default_factory=list)
-
-    # Imports/Exports
     imports: List[ImportInfo] = field(default_factory=list)
     exports: List[ExportInfo] = field(default_factory=list)
     resources: List[Dict[str, Any]] = field(default_factory=list)
-
-    # Strings
     strings: StringInfo = field(default_factory=StringInfo)
-
-    # Packer
     packer: PackerInfo = field(default_factory=PackerInfo)
-
-    # Indicators
     indicators: IndicatorInfo = field(default_factory=IndicatorInfo)
-
-    # Metadata
     analysis_timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
     errors: List[str] = field(default_factory=list)
 
-    """Convert to dictionary for JSON serialization"""
     def to_dict(self) -> Dict[str, Any]:
+        """Convert the report to a dictionary for JSON serialization."""
         import dataclasses
         result = {}
         for key, value in dataclasses.asdict(self).items():

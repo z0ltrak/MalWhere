@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
 Static Analysis CLI for MalWhere Pipeline
+TFM 2025-2026 - Universidad Complutense de Madrid
 """
+
 import sys
 import json
 import argparse
 from pathlib import Path
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
-
+# Add the src directory to Python path
+sys.path.insert(0, str(Path(__file__).parent / 'src'))
 from src.analyzer import StaticAnalyzer
 
 
@@ -40,17 +41,14 @@ def main():
 
     args = parser.parse_args()
 
-    # Validate sample exists
     sample_path = Path(args.sample)
     if not sample_path.exists():
-        print(f"❌ Error: Sample file not found: {args.sample}")
+        print(f"Error: Sample file not found: {args.sample}")
         sys.exit(1)
 
-    # Run analysis
     analyzer = StaticAnalyzer(sample_path, verbose=args.verbose, no_floss=args.no_floss)
     report = analyzer.analyze()
 
-    # Save results
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
     output_file = output_dir / f"{sample_path.stem}_static.json"
@@ -58,7 +56,6 @@ def main():
     with open(output_file, 'w') as f:
         json.dump(report.to_dict(), f, indent=2, default=str)
 
-    # Print summary
     print("\n" + "="*60)
     print(f"ANALYSIS COMPLETE: {sample_path.name}")
     print("="*60)
