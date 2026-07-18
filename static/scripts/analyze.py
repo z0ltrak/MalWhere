@@ -9,8 +9,8 @@ import json
 import argparse
 from pathlib import Path
 
-# Add the src directory to Python path
-sys.path.insert(0, str(Path(__file__).parent / 'src'))
+# Add the parent directory so we can import from src
+sys.path.insert(0, str(Path(__file__).parent))
 from src.analyzer import StaticAnalyzer
 
 
@@ -38,6 +38,11 @@ def main():
         action='store_true',
         help='Skip FLOSS extraction (faster)'
     )
+    parser.add_argument(
+        '--export-stix',
+        action='store_true',
+        help='Export results to STIX 2.1 format'
+    )
 
     args = parser.parse_args()
 
@@ -56,12 +61,23 @@ def main():
     with open(output_file, 'w') as f:
         json.dump(report.to_dict(), f, indent=2, default=str)
 
+    # Export to STIX if requested
+    if args.export_stix:
+        try:
+            from src.exporters.stix_exporter import export_report_to_stix
+            stix_file = output_dir / f"{sample_path.stem}_stix.json"
+            export_report_to_stix(output_file, stix_file)
+        except ImportError:
+            print("Warning: STIX exporter not available")
+
     print("\n" + "="*60)
     print(f"ANALYSIS COMPLETE: {sample_path.name}")
     print("="*60)
     print(f"File: {report.filename}")
     print(f"Size: {report.size_mb:.2f} MB")
     print(f"SHA-256: {report.sha256}")
+    print(f".NET: {'Yes' if report.is_dotnet else 'No'}")
+    print(f"Imphash: {report.imphash or 'N/A'}")
     print(f"Packer: {'Yes' if report.packer.detected else 'No'}")
     if report.packer.detected:
         for p in report.packer.packers:
@@ -72,6 +88,10 @@ def main():
     print(f"Strings: {len(report.strings.standard)}")
     print(f"FLOSS Strings: {len(report.strings.floss)}")
     print(f"Suspicious Indicators: {len(report.indicators.suspicious_strings)}")
+    print(f"Anti-VM Indicators: {len(report.indicators.anti_vm_strings)}")
+    print(f"Anti-Sandbox Indicators: {len(report.indicators.anti_sandbox_strings)}")
+    print(f"YARA Matches: {len(report.yara.matched_rules)}")
+    print(f"Config Items: {len(report.config.get('ips', [])) + len(report.config.get('domains', []))}")
     if report.errors:
         print(f"Errors: {len(report.errors)}")
         for error in report.errors[:5]:

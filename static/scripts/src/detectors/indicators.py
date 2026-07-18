@@ -98,6 +98,17 @@ class IndicatorDetector:
         'NtQuerySystemInformation': 'System information enumeration (T1082)',
         'GetSystemInfo': 'System information enumeration (T1082)'
     }
+    ANTI_VM_STRINGS = [
+        'vbox', 'vmware', 'xen', 'hyper-v', 'virtualbox', 'qemu',
+        'vboxvideo', 'vboxsf', 'vboxguest', 'vmci', 'vmmouse'
+    ]
+
+    ANTI_SANDBOX_STRINGS = [
+        'sandbox', 'cuckoo', 'vms', 'analysis', 'submit', 'malware',
+        'sample', 'test', 'debug', 'run', 'exec', 'process'
+    ]
+
+    SLEEP_FUNCTIONS = ['Sleep', 'NtDelayExecution', 'WaitForSingleObject', 'WaitForMultipleObjects']
 
     def __init__(self):
         self.indicators = {
@@ -106,8 +117,55 @@ class IndicatorDetector:
             'high_entropy_sections': [],
             'anti_debug': [],
             'anti_vm': [],
-            'ransomware_indicators': []
+            'ransomware_indicators': [],
+            'anti_vm_strings': [],
+            'anti_sandbox_strings': [],
+            'sleep_functions': []
         }
+
+    def check_anti_vm_strings(self, strings: List[str]) -> List[Dict[str, str]]:
+        """Check for anti-VM indicators in strings."""
+        found = []
+        for s in strings:
+            s_lower = s.lower()
+            for indicator in self.ANTI_VM_STRINGS:
+                if indicator in s_lower:
+                    found.append({
+                        'string': s[:50] + '...' if len(s) > 50 else s,
+                        'indicator': indicator,
+                        'description': f'Anti-VM detection: {indicator} (T1497)',
+                        'confidence': 'high'
+                    })
+                    break
+        return found[:50]
+
+    def check_anti_sandbox_strings(self, strings: List[str]) -> List[Dict[str, str]]:
+        """Check for anti-sandbox indicators in strings."""
+        found = []
+        for s in strings:
+            s_lower = s.lower()
+            for indicator in self.ANTI_SANDBOX_STRINGS:
+                if indicator in s_lower:
+                    found.append({
+                        'string': s[:50] + '...' if len(s) > 50 else s,
+                        'indicator': indicator,
+                        'description': f'Anti-sandbox detection: {indicator} (T1497)',
+                        'confidence': 'medium'
+                    })
+                    break
+        return found[:50]
+
+    def check_sleep_functions(self, imports: List[ImportInfo]) -> List[Dict[str, str]]:
+        """Check for sleep/delay functions used for anti-sandbox."""
+        found = []
+        for imp in imports:
+            if imp.function in self.SLEEP_FUNCTIONS:
+                found.append({
+                    'technique': 'Anti-sandbox timing (T1497)',
+                    'function': imp.function,
+                    'confidence': 'high'
+                })
+        return found
 
     def check_imports(self, imports: List[ImportInfo]) -> List[str]:
         """Check imports for suspicious functions with ATT&CK mapping."""
@@ -192,10 +250,18 @@ class IndicatorDetector:
             'high_entropy_sections': self.check_sections(sections),
             'anti_debug': self.check_anti_debug(imports),
             'anti_vm': self.check_anti_vm(imports),
-            'ransomware_indicators': []
+            'ransomware_indicators': [],
+            'anti_sandbox': [],
+            'sleep_functions': [],
+            'anti_vm_strings': [],
+            'anti_sandbox_strings': []
         }
 
         if strings:
             result['ransomware_indicators'] = self.check_ransomware_indicators(strings)
+            result['anti_vm_strings'] = self.check_anti_vm_strings(strings)
+            result['anti_sandbox_strings'] = self.check_anti_sandbox_strings(strings)
+
+        result['sleep_functions'] = self.check_sleep_functions(imports)
 
         return result

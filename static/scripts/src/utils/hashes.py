@@ -62,6 +62,15 @@ class HashCalculator:
                 'error': str(e)
             }
 
+    def calculate_imphash(self, pe) -> str:
+        """Calculate import hash (imphash) for a PE file."""
+        try:
+            if hasattr(pe, 'DIRECTORY_ENTRY_IMPORT'):
+                return pe.get_imphash()
+        except Exception:
+            pass
+        return 'N/A'
+
     def calculate_section_hash(self, data: bytes, hash_type: str = 'md5') -> str:
         """Calculate hash of section data."""
         if hash_type == 'md5':

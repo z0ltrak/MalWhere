@@ -1,0 +1,123 @@
+{
+    "mapping": {
+        "process_injection": {
+            "technique": "T1055",
+            "name": "Process Injection",
+            "confidence": "high",
+            "indicators": [
+                "CreateRemoteThread",
+                "VirtualAllocEx",
+                "WriteProcessMemory",
+                "OpenProcess",
+                "NtCreateThread"
+            ]
+        },
+        "defense_evasion": {
+            "technique": "T1562",
+            "name": "Impair Defenses",
+            "confidence": "high",
+            "indicators": [
+                "AdjustTokenPrivileges",
+                "NtLoadDriver",
+                "ZwLoadDriver"
+            ]
+        },
+        "debugger_evasion": {
+            "technique": "T1622",
+            "name": "Debugger Evasion",
+            "confidence": "high",
+            "indicators": [
+                "IsDebuggerPresent",
+                "CheckRemoteDebuggerPresent",
+                "NtQueryInformationProcess",
+                "OutputDebugString"
+            ]
+        },
+        "anti_sandbox": {
+            "technique": "T1497",
+            "name": "Virtualization/Sandbox Evasion",
+            "confidence": "medium",
+            "indicators": [
+                "GetTickCount",
+                "QueryPerformanceCounter",
+                "Sleep",
+                "NtDelayExecution"
+            ]
+        },
+        "ransomware": {
+            "technique": "T1486",
+            "name": "Data Encrypted for Impact",
+            "confidence": "high",
+            "indicators": [
+                "CryptEncrypt",
+                "CryptDecrypt",
+                "BCryptEncrypt",
+                "BCryptGenerateSymmetricKey",
+                "vssadmin",
+                "wbadmin",
+                "bcdedit"
+            ]
+        },
+        "persistence": {
+            "technique": "T1547",
+            "name": "Boot or Logon Autostart Execution",
+            "confidence": "high",
+            "indicators": [
+                "RegCreateKey",
+                "RegSetValue",
+                "CreateService",
+                "StartService",
+                "Run",
+                "RunOnce"
+            ]
+        },
+        "credential_access": {
+            "technique": "T1003",
+            "name": "Credential Dumping",
+            "confidence": "medium",
+            "indicators": [
+                "password",
+                "credential",
+                "cookie",
+                "log",
+                "dump"
+            ]
+        },
+        "command_execution": {
+            "technique": "T1059",
+            "name": "Command and Scripting Interpreter",
+            "confidence": "medium",
+            "indicators": [
+                "CreateProcess",
+                "WinExec",
+                "ShellExecute",
+                "system",
+                "cmd.exe",
+                "powershell"
+            ]
+        },
+        "file_manipulation": {
+            "technique": "T1070",
+            "name": "Indicator Removal on Host",
+            "confidence": "medium",
+            "indicators": [
+                "DeleteFile",
+                "MoveFile",
+                "WriteFile"
+            ]
+        },
+        "network_communication": {
+            "technique": "S0105",
+            "name": "Network Communication",
+            "confidence": "medium",
+            "indicators": [
+                "socket",
+                "connect",
+                "send",
+                "recv",
+                "InternetOpen",
+                "URLDownloadToFile"
+            ]
+        }
+    }
+}

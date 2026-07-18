@@ -64,6 +64,20 @@ class IndicatorInfo:
     anti_debug: List[Dict[str, str]] = field(default_factory=list)
     anti_vm: List[Dict[str, str]] = field(default_factory=list)
     ransomware_indicators: List[Dict[str, str]] = field(default_factory=list)
+    anti_sandbox: List[Dict[str, str]] = field(default_factory=list)
+    anti_vm_strings: List[Dict[str, str]] = field(default_factory=list)
+    anti_sandbox_strings: List[Dict[str, str]] = field(default_factory=list)
+    sleep_functions: List[Dict[str, str]] = field(default_factory=list)
+
+
+@dataclass
+class YaraResult:
+    """YARA scan results."""
+    matches: List[Dict[str, Any]] = field(default_factory=list)
+    matched_rules: List[str] = field(default_factory=list)
+    packer_detected: bool = False
+    packers: List[Dict[str, str]] = field(default_factory=list)
+    attck_mapping: List[Dict[str, str]] = field(default_factory=list)
 
 
 @dataclass
@@ -77,6 +91,9 @@ class StaticReport:
     sha1: str
     sha256: str
     ssdeep: Optional[str] = None
+    tlsh: Optional[str] = None
+    imphash: Optional[str] = None
+    is_dotnet: bool = False
     metadata: Dict[str, Any] = field(default_factory=dict)
     sections: List[SectionInfo] = field(default_factory=list)
     imports: List[ImportInfo] = field(default_factory=list)
@@ -85,6 +102,8 @@ class StaticReport:
     strings: StringInfo = field(default_factory=StringInfo)
     packer: PackerInfo = field(default_factory=PackerInfo)
     indicators: IndicatorInfo = field(default_factory=IndicatorInfo)
+    yara: YaraResult = field(default_factory=YaraResult)
+    config: Dict[str, Any] = field(default_factory=dict)  # <-- Added config field
     analysis_timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
     errors: List[str] = field(default_factory=list)
 

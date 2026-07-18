@@ -1,4 +1,5 @@
-"""PE file parsing module"""
+"""PE file parsing module."""
+
 import hashlib
 import pefile
 from typing import Optional, List, Dict, Any
@@ -6,10 +7,10 @@ from pathlib import Path
 
 from ..models.report import SectionInfo, ImportInfo, ExportInfo
 
-"""Parser for PE (Portable Executable) files"""
-class PEParser:
 
-    # Machine type mapping
+class PEParser:
+    """Parser for PE (Portable Executable) files."""
+
     MACHINE_TYPES = {
         0x14c: 'Intel 386',
         0x8664: 'AMD64',
@@ -23,7 +24,6 @@ class PEParser:
         0x1a4: 'Hitachi SH4',
     }
 
-    # Subsystem types
     SUBSYSTEM_TYPES = {
         0: 'Unknown',
         1: 'Native',
@@ -46,9 +46,8 @@ class PEParser:
         self.pe: Optional[pefile.PE] = None
         self.errors: List[str] = []
 
-
-    """Parse PE file and extract metadata"""
     def parse(self) -> Dict[str, Any]:
+        """Parse PE file and extract metadata."""
         try:
             self.pe = pefile.PE(str(self.file_path))
         except pefile.PEFormatError as e:
@@ -63,53 +62,67 @@ class PEParser:
             'sections': self._get_sections(),
             'imports': self._get_imports(),
             'exports': self._get_exports(),
-            'resources': self._get_resources()
+            'resources': self._get_resources(),
+            'is_dotnet': self._is_dotnet()
         }
 
+    def _is_dotnet(self) -> bool:
+        """Check if the PE file is a .NET assembly."""
+        if not self.pe:
+            return False
+        try:
+            # Check for COR20 header (COM_DESCRIPTOR directory entry)
+            if hasattr(self.pe, 'OPTIONAL_HEADER') and hasattr(self.pe.OPTIONAL_HEADER, 'DataDirectory'):
+                # DataDirectory index 14 is COM_DESCRIPTOR (CLR runtime header)
+                if len(self.pe.OPTIONAL_HEADER.DataDirectory) > 14:
+                    entry = self.pe.OPTIONAL_HEADER.DataDirectory[14]
+                    if entry.VirtualAddress != 0 and entry.Size != 0:
+                        return True
+            return False
+        except Exception:
+            return False
 
-    """Extract PE header metadata"""
     def _get_metadata(self) -> Dict[str, Any]:
-        pe = self.pe
-        if not pe:
+        """Extract PE header metadata."""
+        if not self.pe:
             return {}
 
         return {
             'machine': {
-                'value': hex(pe.FILE_HEADER.Machine),
+                'value': hex(self.pe.FILE_HEADER.Machine),
                 'description': self.MACHINE_TYPES.get(
-                    pe.FILE_HEADER.Machine,
-                    f'Unknown (0x{pe.FILE_HEADER.Machine:x})'
+                    self.pe.FILE_HEADER.Machine,
+                    f'Unknown (0x{self.pe.FILE_HEADER.Machine:x})'
                 )
             },
-            'number_of_sections': pe.FILE_HEADER.NumberOfSections,
+            'number_of_sections': self.pe.FILE_HEADER.NumberOfSections,
             'time_date_stamp': {
-                'raw': pe.FILE_HEADER.TimeDateStamp,
-                'formatted': self._format_timestamp(pe.FILE_HEADER.TimeDateStamp)
+                'raw': self.pe.FILE_HEADER.TimeDateStamp,
+                'formatted': self._format_timestamp(self.pe.FILE_HEADER.TimeDateStamp)
             },
-            'characteristics': hex(pe.FILE_HEADER.Characteristics),
-            'image_base': hex(pe.OPTIONAL_HEADER.ImageBase),
-            'entry_point': hex(pe.OPTIONAL_HEADER.AddressOfEntryPoint),
-            'size_of_code': pe.OPTIONAL_HEADER.SizeOfCode,
-            'size_of_initialized_data': pe.OPTIONAL_HEADER.SizeOfInitializedData,
-            'size_of_uninitialized_data': pe.OPTIONAL_HEADER.SizeOfUninitializedData,
+            'characteristics': hex(self.pe.FILE_HEADER.Characteristics),
+            'image_base': hex(self.pe.OPTIONAL_HEADER.ImageBase),
+            'entry_point': hex(self.pe.OPTIONAL_HEADER.AddressOfEntryPoint),
+            'size_of_code': self.pe.OPTIONAL_HEADER.SizeOfCode,
+            'size_of_initialized_data': self.pe.OPTIONAL_HEADER.SizeOfInitializedData,
+            'size_of_uninitialized_data': self.pe.OPTIONAL_HEADER.SizeOfUninitializedData,
             'subsystem': {
-                'value': pe.OPTIONAL_HEADER.Subsystem,
+                'value': self.pe.OPTIONAL_HEADER.Subsystem,
                 'description': self.SUBSYSTEM_TYPES.get(
-                    pe.OPTIONAL_HEADER.Subsystem,
-                    f'Unknown (0x{pe.OPTIONAL_HEADER.Subsystem:x})'
+                    self.pe.OPTIONAL_HEADER.Subsystem,
+                    f'Unknown (0x{self.pe.OPTIONAL_HEADER.Subsystem:x})'
                 )
             },
-            'dll_characteristics': hex(pe.OPTIONAL_HEADER.DllCharacteristics),
-            'image_size': pe.OPTIONAL_HEADER.SizeOfImage,
-            'headers_size': pe.OPTIONAL_HEADER.SizeOfHeaders,
-            'checksum': pe.OPTIONAL_HEADER.CheckSum,
-            'is_dll': pe.is_dll(),
-            'is_driver': pe.is_driver()
+            'dll_characteristics': hex(self.pe.OPTIONAL_HEADER.DllCharacteristics),
+            'image_size': self.pe.OPTIONAL_HEADER.SizeOfImage,
+            'headers_size': self.pe.OPTIONAL_HEADER.SizeOfHeaders,
+            'checksum': self.pe.OPTIONAL_HEADER.CheckSum,
+            'is_dll': self.pe.is_dll(),
+            'is_driver': self.pe.is_driver()
         }
 
-
-    """Extract section information"""
     def _get_sections(self) -> List[SectionInfo]:
+        """Extract section information."""
         if not self.pe:
             return []
 
@@ -135,9 +148,8 @@ class PEParser:
 
         return sections
 
-
-    """Extract imported functions"""
     def _get_imports(self) -> List[ImportInfo]:
+        """Extract imported functions."""
         imports = []
         if not self.pe or not hasattr(self.pe, 'DIRECTORY_ENTRY_IMPORT'):
             return imports
@@ -158,9 +170,8 @@ class PEParser:
 
         return imports
 
-
-    """Extract exported functions"""
     def _get_exports(self) -> List[ExportInfo]:
+        """Extract exported functions."""
         exports = []
         if not self.pe or not hasattr(self.pe, 'DIRECTORY_ENTRY_EXPORT'):
             return exports
@@ -178,9 +189,8 @@ class PEParser:
 
         return exports
 
-
-    """Extract resource information"""
     def _get_resources(self) -> List[Dict[str, Any]]:
+        """Extract resource information."""
         resources = []
         if not self.pe or not hasattr(self.pe, 'DIRECTORY_ENTRY_RESOURCE'):
             return resources
@@ -205,16 +215,14 @@ class PEParser:
 
         return resources
 
-
-    """Format Unix timestamp to ISO string"""
     @staticmethod
     def _format_timestamp(timestamp: int) -> Optional[str]:
+        """Format Unix timestamp to ISO string."""
         if timestamp:
             from datetime import datetime
             return datetime.fromtimestamp(timestamp).isoformat()
         return None
 
-
-    """Get parsing errors"""
     def get_errors(self) -> List[str]:
+        """Get parsing errors."""
         return self.errors
