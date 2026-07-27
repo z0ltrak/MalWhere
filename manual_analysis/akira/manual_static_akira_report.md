@@ -6,7 +6,7 @@
 
 **Analysis Date:** July 2025
 
-**Analyst:** [Your Name]
+**Analyst:** z0ltrak
 
 ---
 
