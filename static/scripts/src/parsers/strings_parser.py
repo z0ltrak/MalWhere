@@ -5,6 +5,8 @@ import subprocess
 import re
 from typing import List, Dict, Any
 from pathlib import Path
+from ..deobfuscators.string_deobfuscator import StringDeobfuscator
+from ..detectors.crypto_detector import CryptoDetector
 
 
 class StringsParser:
@@ -30,13 +32,24 @@ class StringsParser:
         (r'(?i)wine|getversion|getproductinfo', 'Environment Detection'),
         (r'(?i)svchost|explorer|winlogon|lsass|services', 'Process Spoofing'),
         (r'[A-Za-z0-9+/]{16,}={0,2}', 'Base64 Pattern'),
+        (r'expand 32-byte k', 'ChaCha20 encryption (T1486)'),
+        (r'expand 16-byte k', 'ChaCha20 encryption (T1486)'),
+        (r'RC4', 'RC4 encryption (T1486)'),
+        (r'AES', 'AES encryption (T1486)'),
+        (r'RSA', 'RSA encryption (T1486)'),
+        (r'XOR', 'XOR encryption (T1140)'),
+        (r'SHA-?256', 'SHA-256 hashing (T1486)'),
+        (r'MD5', 'MD5 hashing (T1486)'),
     ]
+
 
     def __init__(self, file_path: Path, timeout: int = 300):
         """Initialize the strings parser."""
         self.file_path = file_path
         self.timeout = timeout
         self.errors: List[str] = []
+        self.deobfuscator = StringDeobfuscator()
+        self.crypto_detector = CryptoDetector()
 
     def extract(self, include_floss: bool = True) -> Dict[str, List[str]]:
         """Extract strings using strings command and optionally FLOSS."""
@@ -50,6 +63,11 @@ class StringsParser:
             floss_result = self._extract_floss_strings()
             result['floss'] = floss_result['stack_strings']
             result['decoded'] = floss_result['decoded_strings']
+
+        deobfuscated = self.deobfuscator.deobfuscate(result['standard'])
+        result['deobfuscated'] = deobfuscated.get('xor_decoded', []) + \
+                                deobfuscated.get('base64_decoded', []) + \
+                                deobfuscated.get('hex_decoded', [])
 
         return result
 
@@ -198,3 +216,11 @@ class StringsParser:
     def get_errors(self) -> List[str]:
         """Get extraction errors."""
         return self.errors
+
+    def find_crypto_patterns(self, strings: List[str]) -> List[Dict[str, str]]:
+        """Find cryptographic algorithm patterns in strings."""
+        return self.crypto_detector.detect_in_strings(strings)
+
+    def find_potential_keys(self, strings: List[str]) -> List[Dict[str, str]]:
+        """Find potential encryption keys in strings."""
+        return self.crypto_detector.detect_keys(strings)

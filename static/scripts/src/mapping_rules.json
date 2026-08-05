@@ -118,6 +118,81 @@
                 "InternetOpen",
                 "URLDownloadToFile"
             ]
+        },
+        "process_enumeration": {
+            "technique": "T1057",
+            "name": "Process Discovery",
+            "confidence": "high",
+            "indicators": [
+                "WTSEnumerateProcessesW",
+                "CreateToolhelp32Snapshot",
+                "Process32First",
+                "Process32Next",
+                "EnumProcesses",
+                "NtQuerySystemInformation"
+            ]
+        },
+        "network_share_enumeration": {
+            "technique": "T1135",
+            "name": "Network Share Discovery",
+            "confidence": "high",
+            "indicators": [
+                "WNetGetConnectionW",
+                "NetShareEnum",
+                "NetShareGetInfo",
+                "NetUseEnum"
+            ]
+        },
+        "service_stop": {
+            "technique": "T1489",
+            "name": "Service Stop",
+            "confidence": "high",
+            "indicators": [
+                "RmStartSession",
+                "RmShutdown",
+                "RmEndSession",
+                "RmRegisterResources",
+                "RmGetList",
+                "ControlService",
+                "ScStopService"
+            ]
+        },
+        "registry_persistence": {
+            "technique": "T1547.001",
+            "name": "Registry Run Keys / Startup Folder",
+            "confidence": "high",
+            "indicators": [
+                "RegCreateKeyExW",
+                "RegSetValueExW",
+                "RegOpenKeyExW",
+                "RegDeleteKeyW",
+                "Run",
+                "RunOnce"
+            ]
+        },
+        "screenshot_capture": {
+            "technique": "T1113",
+            "name": "Screen Capture",
+            "confidence": "high",
+            "indicators": [
+                "CopyFromScreen",
+                "GetDC",
+                "CreateCompatibleDC",
+                "BitBlt",
+                "CaptureScreen"
+            ]
+        },
+        "clipboard_theft": {
+            "technique": "T1115",
+            "name": "Clipboard Data",
+            "confidence": "high",
+            "indicators": [
+                "OpenClipboard",
+                "SetClipboardData",
+                "GetClipboardData",
+                "EmptyClipboard",
+                "CloseClipboard"
+            ]
         }
     }
 }

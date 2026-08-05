@@ -6,7 +6,7 @@ from typing import Optional, List, Dict, Any
 from pathlib import Path
 
 from ..models.report import SectionInfo, ImportInfo, ExportInfo
-
+from .config_parser import ConfigExtractor
 
 class PEParser:
     """Parser for PE (Portable Executable) files."""
@@ -67,20 +67,65 @@ class PEParser:
         }
 
     def _is_dotnet(self) -> bool:
-        """Check if the PE file is a .NET assembly."""
         if not self.pe:
             return False
+
+        # Method 1: Check COR20 header (existing)
         try:
-            # Check for COR20 header (COM_DESCRIPTOR directory entry)
             if hasattr(self.pe, 'OPTIONAL_HEADER') and hasattr(self.pe.OPTIONAL_HEADER, 'DataDirectory'):
-                # DataDirectory index 14 is COM_DESCRIPTOR (CLR runtime header)
                 if len(self.pe.OPTIONAL_HEADER.DataDirectory) > 14:
                     entry = self.pe.OPTIONAL_HEADER.DataDirectory[14]
                     if entry.VirtualAddress != 0 and entry.Size != 0:
                         return True
+        except Exception:
+            pass
+
+        # NEW: Method 2 - Check for mscoree.dll import
+        try:
+            if hasattr(self.pe, 'DIRECTORY_ENTRY_IMPORT'):
+                for entry in self.pe.DIRECTORY_ENTRY_IMPORT:
+                    dll_name = entry.dll.decode('utf-8', errors='ignore').lower()
+                    if dll_name == 'mscoree.dll':
+                        # Check if it imports _CorExeMain or _CorDllMain
+                        for imp in entry.imports:
+                            if imp.name:
+                                func_name = imp.name.decode('utf-8', errors='ignore')
+                                if func_name in ('_CorExeMain', '_CorDllMain'):
+                                    return True
+        except Exception:
+            pass
+
+        return False
+
+
+    def _is_nsis_installer(self) -> bool:
+        """Check if the file is an NSIS installer."""
+        try:
+            # Remove the problematic PE resource check
+            # and directly check the binary data
+
+            # Method 1: Check binary data for NSIS signature
+            with open(self.file_path, 'rb') as f:
+                data = f.read()
+                if b'Nullsoft.NSIS.exehead' in data or b'NullsoftInst' in data:
+                    return True
+
+            # Method 2: Check extracted strings (if we have them)
+            # Use the strings parser instead of ConfigExtractor
+            try:
+                from ..parsers.strings_parser import StringsParser
+                strings_parser = StringsParser(self.file_path)
+                strings = strings_parser._extract_standard_strings()
+                for s in strings:
+                    if 'Nullsoft.NSIS.exehead' in s or 'NullsoftInst' in s:
+                        return True
+            except:
+                pass
+
             return False
         except Exception:
             return False
+
 
     def _get_metadata(self) -> Dict[str, Any]:
         """Extract PE header metadata."""

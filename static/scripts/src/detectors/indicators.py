@@ -71,6 +71,20 @@ class IndicatorDetector:
 
         # VSS/Ransomware specific
         'VssSnapshot': 'VSS manipulation (T1490)',
+
+        'WTSEnumerateProcessesW': 'Process enumeration (T1057)',
+        'WTSFreeMemory': 'Process enumeration (T1057)',
+        'WNetGetConnectionW': 'Network share enumeration (T1135)',
+        'RmStartSession': 'Service stop via Restart Manager (T1489)',
+        'RmShutdown': 'Service stop via Restart Manager (T1489)',
+        'RmEndSession': 'Service stop via Restart Manager (T1489)',
+        'RmRegisterResources': 'Service stop via Restart Manager (T1489)',
+        'RmGetList': 'Service stop via Restart Manager (T1489)',
+        'RegCreateKeyExW': 'Registry persistence (T1547.001)',
+        'RegSetValueExW': 'Registry persistence (T1547.001)',
+        'RegOpenKeyExW': 'Registry persistence (T1547.001)',
+        'CreateProcessW': 'Process creation (T1059)',
+        'ShellExecuteW': 'Process creation (T1059)',
     }
 
     # Ransomware-specific indicators
@@ -104,8 +118,14 @@ class IndicatorDetector:
     ]
 
     ANTI_SANDBOX_STRINGS = [
-        'sandbox', 'cuckoo', 'vms', 'analysis', 'submit', 'malware',
-        'sample', 'test', 'debug', 'run', 'exec', 'process'
+        'IsDebuggerPresent',
+        'CheckRemoteDebuggerPresent',
+        'GetTickCount',
+        'QueryPerformanceCounter',
+        'Sleep',
+        'NtDelayExecution',
+        'WaitForSingleObject',
+        'WaitForMultipleObjects'
     ]
 
     SLEEP_FUNCTIONS = ['Sleep', 'NtDelayExecution', 'WaitForSingleObject', 'WaitForMultipleObjects']
@@ -140,20 +160,19 @@ class IndicatorDetector:
         return found[:50]
 
     def check_anti_sandbox_strings(self, strings: List[str]) -> List[Dict[str, str]]:
-        """Check for anti-sandbox indicators in strings."""
         found = []
+        # Only match exact function names from the API list
+        api_set = set(self.ANTI_SANDBOX_STRINGS)  # For O(1) lookup
         for s in strings:
-            s_lower = s.lower()
-            for indicator in self.ANTI_SANDBOX_STRINGS:
-                if indicator in s_lower:
-                    found.append({
-                        'string': s[:50] + '...' if len(s) > 50 else s,
-                        'indicator': indicator,
-                        'description': f'Anti-sandbox detection: {indicator} (T1497)',
-                        'confidence': 'medium'
-                    })
-                    break
-        return found[:50]
+            # Check if the string is an exact match to an anti-sandbox function
+            if s in api_set:
+                found.append({
+                    'string': s,
+                    'indicator': s,
+                    'description': f'Anti-sandbox detection: {s} (T1497)',
+                    'confidence': 'high'
+                })
+        return found
 
     def check_sleep_functions(self, imports: List[ImportInfo]) -> List[Dict[str, str]]:
         """Check for sleep/delay functions used for anti-sandbox."""

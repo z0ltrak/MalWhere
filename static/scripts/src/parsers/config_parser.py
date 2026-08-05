@@ -13,6 +13,7 @@ class ConfigExtractor:
         self.file_path = file_path
         self.data = None
         self.errors: List[str] = []
+        self.DOMAIN_PATTERN = r'\b[a-zA-Z0-9][-a-zA-Z0-9]*\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?\b'
 
     def extract(self) -> Dict[str, Any]:
         """Extract configuration data from the file."""
@@ -83,31 +84,70 @@ class ConfigExtractor:
         return strings
 
     def _find_ips(self, strings: List[str]) -> List[str]:
-        """Find IP addresses in strings."""
         ip_pattern = r'\b(?:\d{1,3}\.){3}\d{1,3}\b'
         ips = set()
         for s in strings:
             matches = re.findall(ip_pattern, s)
             for ip in matches:
-                # Validate IP
                 parts = ip.split('.')
                 if all(0 <= int(p) <= 255 for p in parts):
+                    # Skip version strings (like 1.1.2.2, 17.9.0.0)
+                    if ip.startswith('1.') and len(ip) <= 7:
+                        continue
+                    if ip.startswith('17.9.') or ip.startswith('1.1.'):
+                        continue
                     ips.add(ip)
         return list(ips)[:20]
 
     def _find_domains(self, strings: List[str]) -> List[str]:
-        """Find domain names in strings."""
-        domain_pattern = r'\b[a-zA-Z0-9][-a-zA-Z0-9]*\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?\b'
+        """Find domain names in strings with noise filtering."""
         domains = set()
+
+        # Noise patterns to ignore
+        NOISE_PATTERNS = [
+            r'^[a-z]{1,3}\.[a-z]{1,3}$',      # 2-3 letter random domains (e.g., "tb.kf")
+            r'^[0-9]+\.[0-9]+\.[0-9]+',        # Version strings (e.g., "1.1.2.2")
+            r'^[a-z]+\.[a-z]{1,2}$',           # Short domain (e.g., "i.xo", "g.kx")
+            r'(?i)system\.',                   # System.* namespaces
+            r'(?i)runtime\.',                  # Runtime.* namespaces
+            r'(?i)microsoft\.',                # Microsoft.* namespaces
+            r'(?i)collections\.',              # Collections.* namespaces
+            r'(?i)configuration\.',            # Configuration.* namespaces
+            r'(?i)diagnostics\.',              # Diagnostics.* namespaces
+            r'(?i)management\.',               # Management.* namespaces
+            r'(?i)net\.',                      # Net.* namespaces
+            r'(?i)security\.',                 # Security.* namespaces
+            r'(?i)threading\.',                # Threading.* namespaces
+            r'(?i)xml\.',                      # XML.* namespaces
+            r'(?i)io\.',                       # IO.* namespaces
+            r'(?i)text\.',                     # Text.* namespaces
+            r'(?i)windows\.',                  # Windows.* namespaces
+            r'(?i)aspnet\.',                   # ASP.NET namespaces
+            r'(?i)system\.',                   # System.* namespaces
+        ]
+
         for s in strings:
-            matches = re.findall(domain_pattern, s)
+            matches = re.findall(self.DOMAIN_PATTERN, s)
             for domain in matches:
-                # Filter out common false positives
+                domain_lower = domain.lower()
+
+                # Skip obvious noise
                 if domain.endswith('.exe') or domain.endswith('.dll'):
                     continue
                 if domain.startswith('www') or domain.startswith('http'):
                     continue
-                domains.add(domain.lower())
+
+                # Skip noise patterns
+                is_noise = False
+                for pattern in NOISE_PATTERNS:
+                    if re.match(pattern, domain_lower):
+                        is_noise = True
+                        break
+                if is_noise:
+                    continue
+
+                domains.add(domain_lower)
+
         return list(domains)[:20]
 
     def _find_urls(self, strings: List[str]) -> List[str]:

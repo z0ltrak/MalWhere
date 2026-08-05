@@ -45,6 +45,7 @@ class StringInfo:
     standard: List[str] = field(default_factory=list)
     floss: List[str] = field(default_factory=list)
     decoded: List[str] = field(default_factory=list)
+    deobfuscated: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -53,6 +54,42 @@ class PackerInfo:
     detected: bool = False
     packers: List[Dict[str, str]] = field(default_factory=list)
     confidence: str = "none"
+
+
+# NEW: Entropy Analysis Models
+@dataclass
+class EntropyFinding:
+    """Individual entropy finding."""
+    name: str
+    entropy: float
+    threshold: str
+    likely: str
+    confidence: str
+    justification: str = ""
+
+
+@dataclass
+class EntropyAnalysis:
+    """Complete entropy analysis results."""
+    high_entropy_sections: List[EntropyFinding] = field(default_factory=list)
+    suspicious_entropy: List[EntropyFinding] = field(default_factory=list)
+    packed_sections: List[EntropyFinding] = field(default_factory=list)
+    encrypted_data: List[EntropyFinding] = field(default_factory=list)
+    overall_entropy: Optional[float] = None
+    justification: str = ""
+    crypto_indicators: List[Dict[str, str]] = field(default_factory=list)
+
+
+# NEW: ATT&CK Mapping with Justification
+@dataclass
+class ATTACKMapping:
+    """MITRE ATT&CK technique mapping with justification."""
+    technique: str
+    name: str
+    source: str  # 'import', 'string_pattern', 'yara', 'config', 'entropy'
+    evidence: str
+    confidence: str  # 'high', 'medium', 'low'
+    justification: str = ""
 
 
 @dataclass
@@ -77,7 +114,24 @@ class YaraResult:
     matched_rules: List[str] = field(default_factory=list)
     packer_detected: bool = False
     packers: List[Dict[str, str]] = field(default_factory=list)
-    attck_mapping: List[Dict[str, str]] = field(default_factory=list)
+    attck_mapping: List[Dict[str, str]] = field(default_factory=list)  # Legacy, keep for compatibility
+
+
+@dataclass
+class EmbeddedFile:
+    """Information about an embedded file found during analysis."""
+    offset: int
+    type: str
+    original_type: Optional[str] = None
+    size: int = 0
+    md5: str = ""
+    sha256: str = ""
+    is_dotnet: bool = False
+    imphash: Optional[str] = None
+    suspicious_imports: List[str] = field(default_factory=list)
+    suspicious_strings: List[str] = field(default_factory=list)
+    yara_matches: List[str] = field(default_factory=list)
+    full_report: Optional[Dict[str, Any]] = None
 
 
 @dataclass
@@ -102,8 +156,17 @@ class StaticReport:
     strings: StringInfo = field(default_factory=StringInfo)
     packer: PackerInfo = field(default_factory=PackerInfo)
     indicators: IndicatorInfo = field(default_factory=IndicatorInfo)
+    embedded_files: List[Dict[str, Any]] = field(default_factory=list)
+    discovered_keys: List[Dict[str, Any]] = field(default_factory=list)
     yara: YaraResult = field(default_factory=YaraResult)
-    config: Dict[str, Any] = field(default_factory=dict)  # <-- Added config field
+
+    # NEW: Entropy analysis
+    entropy_analysis: EntropyAnalysis = field(default_factory=EntropyAnalysis)
+
+    # NEW: ATT&CK mapping with justification (replaces yara.attck_mapping)
+    attck_mappings: List[ATTACKMapping] = field(default_factory=list)
+
+    config: Dict[str, Any] = field(default_factory=dict)
     analysis_timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
     errors: List[str] = field(default_factory=list)
 
