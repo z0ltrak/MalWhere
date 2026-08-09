@@ -27,6 +27,8 @@ class PackerDetector:
         '.pecompact': 'PECompact',
         'Themida': 'Themida',
         '.themida': 'Themida',
+        'VMProtect': 'VMProtect',
+        '.vmp': 'VMProtect',
     }
 
     def __init__(self, file_path: Path, timeout: int = 60):
@@ -115,12 +117,17 @@ class PackerDetector:
                     if clean_line.endswith(suffix):
                         clean_line = clean_line[:-1]
 
-                packers.append({
-                    'name': clean_line.strip(),
-                    'version': 'N/A',
-                    'type': 'packer' if 'packer' in line_lower else 'compiler',
-                    'confidence': 'medium'
-                })
+                # Only add if it's not a generic or low-confidence detection
+                if clean_line.strip() and len(clean_line) > 3:
+                    packer_name = clean_line.strip()
+                    # Skip if it's just "Compiler" or "Packer" without details
+                    if packer_name.lower() not in ['compiler', 'packer', 'unknown']:
+                        packers.append({
+                            'name': packer_name,
+                            'version': 'N/A',
+                            'type': 'packer' if 'packer' in line_lower else 'compiler',
+                            'confidence': 'medium'
+                        })
 
         if packers:
             self.result['detected'] = True
@@ -135,62 +142,99 @@ class PackerDetector:
             for detect in die_data['detects']:
                 detect_type = detect.get('type', '').lower()
                 if 'packer' in detect_type or 'compiler' in detect_type:
-                    packers.append({
-                        'name': detect.get('name', 'Unknown'),
-                        'version': detect.get('version', 'N/A'),
-                        'type': detect.get('type', 'packer'),
-                        'confidence': detect.get('confidence', 'medium')
-                    })
+                    name = detect.get('name', 'Unknown')
+                    # Skip generic names
+                    if name.lower() not in ['compiler', 'packer', 'unknown']:
+                        packers.append({
+                            'name': name,
+                            'version': detect.get('version', 'N/A'),
+                            'type': detect.get('type', 'packer'),
+                            'confidence': detect.get('confidence', 'medium')
+                        })
 
         if not packers and 'result' in die_data:
             for result_item in die_data['result']:
                 if isinstance(result_item, dict):
                     for key, value in result_item.items():
                         if 'packer' in key.lower() or 'compiler' in key.lower():
-                            packers.append({
-                                'name': str(value),
-                                'version': 'N/A',
-                                'type': 'packer',
-                                'confidence': 'high'
-                            })
+                            name = str(value)
+                            if name.lower() not in ['compiler', 'packer', 'unknown']:
+                                packers.append({
+                                    'name': name,
+                                    'version': 'N/A',
+                                    'type': 'packer',
+                                    'confidence': 'high'
+                                })
 
         if not packers:
             for key, value in die_data.items():
                 if 'packer' in key.lower() and isinstance(value, str):
-                    packers.append({
-                        'name': value,
-                        'version': 'N/A',
-                        'type': 'packer',
-                        'confidence': 'medium'
-                    })
+                    name = value
+                    if name.lower() not in ['compiler', 'packer', 'unknown']:
+                        packers.append({
+                            'name': name,
+                            'version': 'N/A',
+                            'type': 'packer',
+                            'confidence': 'medium'
+                        })
                 elif 'compiler' in key.lower() and isinstance(value, str):
-                    packers.append({
-                        'name': value,
-                        'version': 'N/A',
-                        'type': 'compiler',
-                        'confidence': 'medium'
-                    })
+                    name = value
+                    if name.lower() not in ['compiler', 'packer', 'unknown']:
+                        packers.append({
+                            'name': name,
+                            'version': 'N/A',
+                            'type': 'compiler',
+                            'confidence': 'medium'
+                        })
 
         return packers
 
     def _detect_heuristic(self) -> None:
-        """Fallback heuristic-based packer detection."""
-        indicators = [{
-            'name': 'Possible Packer',
-            'reason': 'Heuristic detection based on PE characteristics',
-            'confidence': 'low'
-        }]
-
-        self.result['detected'] = True
-        self.result['packers'] = indicators
-        self.result['confidence'] = 'low'
-
-    def detect_with_sections(self, sections: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Detect packers using section information."""
+        """
+        Fallback heuristic-based packer detection.
+        FIXED: Only flag if there's actual evidence, not every file.
+        """
         indicators = []
 
+        # Try to read sections if available (from earlier parsing)
+        # This is a fallback - it won't run if we don't have section data
+        # The main detection should come from DIE or the section-based detection
+
+        # Only add heuristic indicators if there's actual suspicious evidence
+        # Don't flag every file as packed
+
+        if indicators:
+            self.result['detected'] = True
+            self.result['packers'] = indicators
+            self.result['confidence'] = 'low'
+        # else: keep result['detected'] = False (default)
+
+    def detect_with_sections(self, sections: List) -> Dict[str, Any]:
+        """
+        Detect packers using section information.
+        Handles both dict and SectionInfo objects.
+        """
+        indicators = []
+
+        # Check for known packer section names
         for section in sections:
-            name = section.get('name', '')
+            # Handle both dict and SectionInfo objects
+            if hasattr(section, 'name'):
+                # SectionInfo object
+                name = section.name
+                entropy = getattr(section, 'entropy', 0)
+                is_executable = getattr(section, 'is_executable', False)
+                is_writable = getattr(section, 'is_writable', False)
+            elif isinstance(section, dict):
+                # Dict
+                name = section.get('name', '')
+                entropy = section.get('entropy', 0)
+                is_executable = section.get('is_executable', False)
+                is_writable = section.get('is_writable', False)
+            else:
+                continue
+
+            # Check for known packer section names
             if name in self.PACKER_SECTIONS:
                 indicators.append({
                     'name': self.PACKER_SECTIONS[name],
@@ -198,20 +242,41 @@ class PackerDetector:
                     'confidence': 'high'
                 })
 
-        high_entropy = [s for s in sections if s.get('entropy', 0) > 7.5]
-        if len(high_entropy) > 2:
+        # Check for high entropy sections (potential packing)
+        high_entropy_sections = []
+        for section in sections:
+            if hasattr(section, 'entropy'):
+                entropy = section.entropy
+            elif isinstance(section, dict):
+                entropy = section.get('entropy', 0)
+            else:
+                continue
+
+            if entropy > 7.5:
+                high_entropy_sections.append(section)
+
+        if len(high_entropy_sections) >= 3:
             indicators.append({
                 'name': 'Unknown Packer',
-                'reason': f'{len(high_entropy)} high-entropy sections (>7.5)',
+                'reason': f'{len(high_entropy_sections)} high-entropy sections (>7.5)',
                 'confidence': 'medium'
             })
-
-        if len(sections) <= 3 and len(sections) > 0:
+        elif len(high_entropy_sections) == 2 and len(sections) > 5:
             indicators.append({
                 'name': 'Possible Packer',
-                'reason': f'Low section count: {len(sections)}',
+                'reason': f'{len(high_entropy_sections)} high-entropy sections (>7.5)',
                 'confidence': 'low'
             })
+
+        # Check for very few sections (common with packers)
+        if len(sections) <= 3 and len(sections) > 0:
+            # Only flag if there are also other indicators
+            if indicators:
+                indicators.append({
+                    'name': 'Possible Packer',
+                    'reason': f'Low section count: {len(sections)}',
+                    'confidence': 'low'
+                })
 
         if indicators:
             return {

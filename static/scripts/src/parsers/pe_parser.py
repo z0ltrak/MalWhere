@@ -7,6 +7,8 @@ from pathlib import Path
 
 from ..models.report import SectionInfo, ImportInfo, ExportInfo
 from .config_parser import ConfigExtractor
+from .dotnet_parser import DotNetParser
+
 
 class PEParser:
     """Parser for PE (Portable Executable) files."""
@@ -41,8 +43,9 @@ class PEParser:
         16: 'Windows Boot Application'
     }
 
-    def __init__(self, file_path: Path):
+    def __init__(self, file_path: Path, verbose: bool = False):
         self.file_path = file_path
+        self.verbose = verbose
         self.pe: Optional[pefile.PE] = None
         self.errors: List[str] = []
 
@@ -57,20 +60,45 @@ class PEParser:
             self.errors.append(f"Error parsing PE: {e}")
             return {'error': str(e)}
 
+        # Check if .NET
+        is_dotnet = self._is_dotnet()
+        net_imports = []
+        net_strings = []
+        net_types = []
+        net_methods = []
+
+        # If .NET, extract P/Invoke imports and strings
+        if is_dotnet:
+            self._log("Detected .NET assembly, extracting P/Invoke imports...")
+            dotnet_parser = DotNetParser(self.file_path, verbose=self.verbose)
+            net_data = dotnet_parser.parse()
+            net_imports = net_data.get('imports', [])
+            net_strings = net_data.get('strings', [])
+            net_types = net_data.get('types', [])
+            net_methods = net_data.get('methods', [])
+            self.errors.extend(dotnet_parser.get_errors())
+            self._log(f"Extracted {len(net_imports)} P/Invoke imports, "
+                     f"{len(net_strings)} strings, "
+                     f"{len(net_types)} types")
+
         return {
             'metadata': self._get_metadata(),
             'sections': self._get_sections(),
             'imports': self._get_imports(),
             'exports': self._get_exports(),
             'resources': self._get_resources(),
-            'is_dotnet': self._is_dotnet()
+            'is_dotnet': is_dotnet,
+            'net_imports': net_imports,      # P/Invoke imports
+            'net_strings': net_strings,      # .NET user strings
+            'net_types': net_types,          # .NET type names
+            'net_methods': net_methods,      # .NET method names
         }
 
     def _is_dotnet(self) -> bool:
         if not self.pe:
             return False
 
-        # Method 1: Check COR20 header (existing)
+        # Method 1: Check COR20 header
         try:
             if hasattr(self.pe, 'OPTIONAL_HEADER') and hasattr(self.pe.OPTIONAL_HEADER, 'DataDirectory'):
                 if len(self.pe.OPTIONAL_HEADER.DataDirectory) > 14:
@@ -80,13 +108,12 @@ class PEParser:
         except Exception:
             pass
 
-        # NEW: Method 2 - Check for mscoree.dll import
+        # Method 2: Check for mscoree.dll import
         try:
             if hasattr(self.pe, 'DIRECTORY_ENTRY_IMPORT'):
                 for entry in self.pe.DIRECTORY_ENTRY_IMPORT:
                     dll_name = entry.dll.decode('utf-8', errors='ignore').lower()
                     if dll_name == 'mscoree.dll':
-                        # Check if it imports _CorExeMain or _CorDllMain
                         for imp in entry.imports:
                             if imp.name:
                                 func_name = imp.name.decode('utf-8', errors='ignore')
@@ -97,21 +124,16 @@ class PEParser:
 
         return False
 
-
     def _is_nsis_installer(self) -> bool:
         """Check if the file is an NSIS installer."""
         try:
-            # Remove the problematic PE resource check
-            # and directly check the binary data
-
             # Method 1: Check binary data for NSIS signature
             with open(self.file_path, 'rb') as f:
-                data = f.read()
+                data = f.read(65536)  # Read first 64KB
                 if b'Nullsoft.NSIS.exehead' in data or b'NullsoftInst' in data:
                     return True
 
-            # Method 2: Check extracted strings (if we have them)
-            # Use the strings parser instead of ConfigExtractor
+            # Method 2: Check extracted strings
             try:
                 from ..parsers.strings_parser import StringsParser
                 strings_parser = StringsParser(self.file_path)
@@ -125,7 +147,6 @@ class PEParser:
             return False
         except Exception:
             return False
-
 
     def _get_metadata(self) -> Dict[str, Any]:
         """Extract PE header metadata."""
@@ -260,6 +281,26 @@ class PEParser:
 
         return resources
 
+    def sections_to_dicts(self, sections: List[SectionInfo]) -> List[Dict[str, Any]]:
+        """Convert SectionInfo objects to dictionaries for compatibility."""
+        return [
+            {
+                'name': s.name,
+                'virtual_address': s.virtual_address,
+                'virtual_size': s.virtual_size,
+                'raw_size': s.raw_size,
+                'entropy': s.entropy,
+                'characteristics': s.characteristics,
+                'is_executable': s.is_executable,
+                'is_writable': s.is_writable,
+                'is_readable': s.is_readable,
+                'md5': s.md5,
+                'sha1': s.sha1,
+                'ssdeep': getattr(s, 'ssdeep', None)
+            }
+            for s in sections
+        ]
+
     @staticmethod
     def _format_timestamp(timestamp: int) -> Optional[str]:
         """Format Unix timestamp to ISO string."""
@@ -267,6 +308,11 @@ class PEParser:
             from datetime import datetime
             return datetime.fromtimestamp(timestamp).isoformat()
         return None
+
+    def _log(self, message: str):
+        """Log message if verbose."""
+        if self.verbose:
+            print(f"[*] PEParser: {message}")
 
     def get_errors(self) -> List[str]:
         """Get parsing errors."""

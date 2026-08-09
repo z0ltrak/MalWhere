@@ -56,7 +56,6 @@ class PackerInfo:
     confidence: str = "none"
 
 
-# NEW: Entropy Analysis Models
 @dataclass
 class EntropyFinding:
     """Individual entropy finding."""
@@ -80,7 +79,6 @@ class EntropyAnalysis:
     crypto_indicators: List[Dict[str, str]] = field(default_factory=list)
 
 
-# NEW: ATT&CK Mapping with Justification
 @dataclass
 class ATTACKMapping:
     """MITRE ATT&CK technique mapping with justification."""
@@ -114,7 +112,7 @@ class YaraResult:
     matched_rules: List[str] = field(default_factory=list)
     packer_detected: bool = False
     packers: List[Dict[str, str]] = field(default_factory=list)
-    attck_mapping: List[Dict[str, str]] = field(default_factory=list)  # Legacy, keep for compatibility
+    attck_mapping: List[Dict[str, str]] = field(default_factory=list)
 
 
 @dataclass
@@ -135,15 +133,25 @@ class EmbeddedFile:
 
 
 @dataclass
+class InstallerInfo:
+    """Information about installer extraction."""
+    type: str = ""
+    extracted_files: List[Dict[str, Any]] = field(default_factory=list)
+    extraction_errors: List[str] = field(default_factory=list)
+
+
+@dataclass
 class StaticReport:
     """Complete static analysis report."""
     filename: str
     size_bytes: int
     size_mb: float
     extension: str
-    md5: str
-    sha1: str
-    sha256: str
+    file_type: str = "unknown"
+    file_type_info: Dict[str, Any] = field(default_factory=dict)
+    md5: str = ""
+    sha1: str = ""
+    sha256: str = ""
     ssdeep: Optional[str] = None
     tlsh: Optional[str] = None
     imphash: Optional[str] = None
@@ -159,14 +167,10 @@ class StaticReport:
     embedded_files: List[Dict[str, Any]] = field(default_factory=list)
     discovered_keys: List[Dict[str, Any]] = field(default_factory=list)
     yara: YaraResult = field(default_factory=YaraResult)
-
-    # NEW: Entropy analysis
     entropy_analysis: EntropyAnalysis = field(default_factory=EntropyAnalysis)
-
-    # NEW: ATT&CK mapping with justification (replaces yara.attck_mapping)
     attck_mappings: List[ATTACKMapping] = field(default_factory=list)
-
     config: Dict[str, Any] = field(default_factory=dict)
+    nsis_detected: bool = False  # NEW: Track if NSIS was detected
     analysis_timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
     errors: List[str] = field(default_factory=list)
 
