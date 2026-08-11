@@ -214,6 +214,11 @@ services:
     volumes:
       - ../results:/results:ro
       - navigator_data:/usr/src/app/nav-app/src/assets/generated
+      # Full replacement of the image's own conf.d/default.conf, adding the
+      # location /results/ block it doesn't ship with — see
+      # docker/navigator/default.conf's own header comment for why this
+      # can't be a smaller drop-in addition instead.
+      - ./navigator/default.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - malwhere_web
     restart: unless-stopped
