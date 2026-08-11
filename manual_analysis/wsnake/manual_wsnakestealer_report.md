@@ -833,6 +833,8 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | Technique | ID | Implementation |
 |-----------|-----|----------------|
 | **System Information Discovery** | T1082 | 20+ system data fields |
+| **System Owner/User Discovery** | T1033 | Checks own process token for Administrator/UAC elevation status |
+| **Application Layer Protocol** | T1071 | HTTP POST traffic to C2 nodes (protocol layer underlying the T1041 exfil channel) |
 | **File and Directory Discovery** | T1083 | `jg` recursive search |
 | **Process Discovery** | T1057 | Process list, active window |
 | **Software Discovery** | T1518 | Installed AV list |

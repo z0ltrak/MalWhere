@@ -25,11 +25,15 @@ class StringATTACKMapper:
         'WTSEnumerateProcessesW': {'technique': 'T1057', 'confidence': 'medium'},
         'WTSFreeMemory': {'technique': 'T1057', 'confidence': 'medium'},
         'WNetGetConnectionW': {'technique': 'T1135', 'confidence': 'medium'},
-        'RmStartSession': {'technique': 'T1489', 'confidence': 'medium'},
-        'RmShutdown': {'technique': 'T1489', 'confidence': 'medium'},
-        'RmEndSession': {'technique': 'T1489', 'confidence': 'medium'},
-        'RmRegisterResources': {'technique': 'T1489', 'confidence': 'medium'},
-        'RmGetList': {'technique': 'T1489', 'confidence': 'medium'},
+        # Restart Manager API (Rm*) was previously mapped to T1489 "Service
+        # Stop" -- wrong. These APIs identify/close processes holding a
+        # FILE lock (e.g. to delete/replace it), not stop a Windows
+        # service; confirmed against real evidence in manual_analysis/
+        # wsnake's own notes (rstrtmgr.dll used to unlock a file for
+        # deletion, nothing service-related). No single ATT&CK technique
+        # cleanly covers "uses Restart Manager to unlock a file" -- same
+        # judgment call already made dropping the equivalent manual
+        # ground-truth finding rather than force-fitting a wrong ID.
         'RegCreateKeyExW': {'technique': 'T1547.001', 'confidence': 'medium'},
         'RegSetValueExW': {'technique': 'T1547.001', 'confidence': 'medium'},
         'RegOpenKeyExW': {'technique': 'T1547.001', 'confidence': 'medium'},
@@ -52,7 +56,13 @@ class StringATTACKMapper:
         'OpenProcessToken': {'technique': 'T1134', 'confidence': 'medium'},
         'GetTickCount': {'technique': 'T1497', 'confidence': 'medium'},
         'QueryPerformanceCounter': {'technique': 'T1497', 'confidence': 'medium'},
-        'TerminateProcess': {'technique': 'T1489', 'confidence': 'medium'},
+        # TerminateProcess previously mapped to T1489 "Service Stop" -- also
+        # wrong, same root cause as the Rm* fix above. It's a fully generic
+        # process-kill API; string presence alone can't tell you the target
+        # (an AV process -> T1562.001, a locked-file holder -> no clean ID,
+        # its own child process -> no clean ID). Dropped rather than
+        # reassigned, same call already made for the equivalent WhiteSnake
+        # ground-truth finding.
         'DeleteFile': {'technique': 'T1070', 'confidence': 'medium'},
 
         # LOW Confidence — Too generic (only map with other evidence)

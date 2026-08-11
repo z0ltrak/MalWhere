@@ -522,6 +522,8 @@ struct custom_string {
 | Process Discovery | T1057 | Process enumeration |
 | Indicator Removal | T1070 | Event log clearing |
 | Command and Scripting Interpreter | T1059 | PowerShell execution |
+| System Owner/User Discovery | T1033 | Checks own process token for Administrator/UAC elevation status |
+| Application Layer Protocol | T1071 | 2 `.onion` URLs embedded in the binary (Tor-based C2/leak-site channel) |
 | Obfuscated Files or Information | T1027 | Anti-debugging, obfuscation |
 
 ---

@@ -555,6 +555,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v Enab
 | File and Directory Discovery | T1083 | Directory enumeration |
 | Process Discovery | T1057 | Process enumeration via snapshot |
 | System Information Discovery | T1082 | OS, CPU, hardware ID collection |
+| System Owner/User Discovery | T1033 | Checks own process token for Administrator/UAC elevation status |
 | Input Capture | T1056 | DirectInput keylogger |
 | Clipboard Data | T1115 | Clipboard monitoring and hijacking |
 | Impair Defenses | T1562 | Terminate AV processes, disable firewall |

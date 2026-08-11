@@ -89,12 +89,14 @@ class ATTACKMapper:
         'QueueUserAPC': 'T1055',
 
         # Impact
-        'RmStartSession': 'T1489',
-        'RmShutdown': 'T1489',
-        'RmEndSession': 'T1489',
-        'RmRegisterResources': 'T1489',
-        'RmGetList': 'T1489',
-        'TerminateProcess': 'T1489',
+        # Rm*/TerminateProcess -> T1489 "Service Stop" removed: same fix as
+        # string_attck_mapper.py's STRING_MAPPING (duplicated bug, two
+        # independent mapping tables had the identical wrong entries).
+        # Restart Manager APIs are about file-lock handling, not stopping a
+        # Windows service; TerminateProcess is too generic to safely
+        # auto-map to any single technique from import presence alone. See
+        # string_attck_mapper.py's comment at the same fix for the full
+        # reasoning.
 
         # Discovery (Network)
         'WNetGetConnectionW': 'T1135',
