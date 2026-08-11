@@ -1,0 +1,142 @@
+# =============================================================================
+# malwhere — cape image overlay
+#
+# Builds FROM celyrin/cape-docker's kvm image and bakes in six fixes
+# discovered during initial bring-up, so a fresh `docker compose up` doesn't
+# require re-discovering any of them by hand:
+#
+#   1. MongoDB 8.x crashes on startup on Linux kernel >= 6.19 (a TCMalloc/
+#      rseq ABI bug — MongoDB SERVER-121912, hit by many unrelated projects,
+#      not something specific to this setup). Community-reported workaround
+#      via a systemd drop-in; MongoDB's own official fix is downgrading the
+#      HOST kernel below 6.19, which isn't something a container image can
+#      do. This tunable is expected to be harmless on unaffected kernels —
+#      not verified against one here, but low-risk given what it does.
+#
+#   2. libvirt-python isn't installed in the poetry venv CAPE's own systemd
+#      units actually invoke (confirmed via
+#      `poetry run python -c "import libvirt"` -> ModuleNotFoundError),
+#      so cape-processor.service's KVM/QEMU machinery check fails on every
+#      startup.
+#
+#   3. cape.service, cape-web.service, and cape-processor.service don't
+#      inherit the container's env vars (LIBVIRT_GATEWAY etc.) unless told
+#      to via PassEnvironment — needed for %(ENV:...)s interpolation in
+#      kvm.conf/routing.conf/auxiliary.conf to actually resolve instead of
+#      raising configparser.InterpolationMissingOptionError.
+#
+#   4. This image ships its OWN libvirtd.service/.socket, enabled. Since
+#      /var/run/libvirt is bind-mounted from the HOST (see docker-compose.yml),
+#      both this image's libvirtd and the host's are racing to own the exact
+#      same socket file — whichever one (re)creates it last wins, stamping
+#      it with ITS OWN idea of the "libvirt" group's GID. That's the real
+#      cause behind an otherwise-inexplicable flip-flop where the host's
+#      socket kept alternating group ownership independent of anything done
+#      host-side. Masking the image's own units (never needed — CAPE inside
+#      this container talks to the HOST's libvirtd, not one of its own) is
+#      the actual fix; the GID-matching step below is necessary but not
+#      sufficient without this.
+#
+#   5. The image's baked-in "libvirt" group GID doesn't match the HOST's —
+#      confirmed to differ in practice (122 in this image vs 126 on the
+#      machine this was first deployed on), and there's no reason to expect
+#      any two machines to agree, since it's just whatever number each
+#      host's package manager happened to assign. The host's libvirt-sock
+#      is bind-mounted in (see docker-compose.yml), and AF_UNIX permission
+#      checks are purely numeric — a name match ("libvirt" == "libvirt")
+#      means nothing if the GIDs disagree, so cape/cape-web/cape-processor
+#      get a silent Permission Denied connecting to libvirt with no hint
+#      that a GID mismatch is the cause. fix-libvirt-gid.sh realigns the
+#      container's group to whatever this host's socket actually says, at
+#      every service start (can't be done at build time — the host isn't
+#      known yet).
+#
+#   6. Named volumes mounted over an existing image path don't reliably
+#      inherit that path's ownership — /opt/CAPEv2/db (SQLite, the actual
+#      task DB CAPE uses by default; see docker-compose.yml's volumes:
+#      comment) was cape:cape in the image but came up root:root on first
+#      use of its volume. Postgres/Mongo don't hit this since their own
+#      startup scripts chown as root before dropping privileges; CAPE's own
+#      units just exec straight as User=cape with no equivalent step.
+#
+# Update docker-compose.yml's cape service to `build: {context: ./cape}`
+# instead of `image: cape:kvm` to use this.
+# =============================================================================
+
+FROM cape:kvm
+
+# --- Fix 1: MongoDB kernel 6.19+ crash --------------------------------------
+COPY mongodb-override.conf /etc/systemd/system/mongodb.service.d/override.conf
+
+# --- Fix 2: libvirt-python missing in the poetry venv -----------------------
+# Build deps for compiling the libvirt-python extension against the image's
+# already-installed libvirt. This image is KVM-configured already, so
+# libvirt-dev may already be present — installing again is a harmless no-op
+# either way, not worth a conditional check.
+USER root
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libvirt-dev pkg-config gcc python3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+
+# --- Fix 3: none of CAPE's systemd units inherit container env vars needed
+# for %(ENV:...)s interpolation in CAPE's conf files (LIBVIRT_GATEWAY etc.)
+# — systemd units don't inherit PID 1's environment unless told to. This
+# has to cover all three services, not just cape.service: cape-processor
+# reads routing.conf/auxiliary.conf (inetsim gateway IP) when processing
+# network artifacts, and cape-web reads the same machinery config for the
+# submission form's route list.
+RUN for svc in cape cape-web cape-processor; do \
+        mkdir -p "/etc/systemd/system/${svc}.service.d"; \
+    done
+
+# --- Fix 4: this image's own libvirtd must never run ------------------------
+# It's enabled by default, but CAPE inside this container is meant to talk to
+# the HOST's libvirtd via the bind-mounted socket (see docker-compose.yml),
+# not run one internally. Left enabled, the two race to own the same socket
+# file at container boot and corrupt its ownership unpredictably. `mask`
+# (not just `disable`) so nothing — not even another unit's dependency — can
+# start it.
+RUN systemctl mask libvirtd.service libvirtd.socket libvirtd-ro.socket libvirtd-admin.socket
+
+# --- Fix 5: this image's "libvirt" group GID won't match the host's ---------
+COPY fix-libvirt-gid.sh /usr/local/bin/fix-libvirt-gid.sh
+RUN chmod +x /usr/local/bin/fix-libvirt-gid.sh
+
+# --- Fix 6: named volumes lose /opt/CAPEv2/db's cape:cape ownership --------
+COPY fix-volume-ownership.sh /usr/local/bin/fix-volume-ownership.sh
+RUN chmod +x /usr/local/bin/fix-volume-ownership.sh
+
+# ExecStartPre's `+` prefix runs each line as root regardless of the unit's
+# own User=cape — groupmod/chown both need privileges cape doesn't have.
+#
+# RestartSec=10s: cape.service's base unit uses the stock 5m backoff, meant
+# for real crashes, not this. All three services' ExecStartPre fixups land
+# within the same couple hundred ms of container boot, and cape.service has
+# occasionally forked its main process a beat before they settled, crashing
+# once on stale state — self-healing, but not inside 5 minutes. 10s means a
+# fresh `docker compose up` recovers on its own well within the time it
+# takes to notice, instead of needing a manual `systemctl restart` nudge.
+RUN for svc in cape cape-web cape-processor; do \
+        printf '[Service]\nExecStartPre=+/usr/local/bin/fix-libvirt-gid.sh\nExecStartPre=+/usr/local/bin/fix-volume-ownership.sh\nPassEnvironment=LIBVIRT_GATEWAY LIBVIRT_BRIDGE GUEST_VM_IP\nRestartSec=10s\n' \
+            > "/etc/systemd/system/${svc}.service.d/override.conf"; \
+    done
+
+# Install into the SAME venv the systemd units actually invoke — confirmed
+# via `systemctl cat cape-processor.service`: ExecStart uses
+# /etc/poetry/bin/poetry run, working directory /opt/CAPEv2. Using
+# `pip install` inside that venv rather than `poetry add` deliberately —
+# this doesn't touch pyproject.toml/poetry.lock, which we don't want to
+# perturb for an environment-compatibility fix that has nothing to do with
+# the project's actual declared dependencies.
+USER cape
+WORKDIR /opt/CAPEv2
+RUN /etc/poetry/bin/poetry run pip install libvirt-python
+
+# Fail the BUILD, loudly, if this doesn't actually work — rather than
+# produce an image that looks fine and only reveals the problem at runtime
+# inside a systemd crash loop, which is exactly how we lost time on this
+# earlier today.
+RUN /etc/poetry/bin/poetry run python -c "import libvirt; print('libvirt-python OK:', libvirt.__file__)"
+
+USER root

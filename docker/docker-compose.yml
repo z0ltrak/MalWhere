@@ -12,6 +12,27 @@
 #
 #   Tear down:
 #     docker compose --profile core --profile sandbox down
+#
+# RAM BUDGET (16GB host constraint):
+#   core:    static 3g + pipeline 1g + navigator 512m           =  4.5g
+#   sandbox: redis 256m + cape 6g + mysql 1g + misp 2g
+#            + inetsim 256m                                     =  9.5g
+#   both profiles up together                                   = ~14g
+#   Leaves ~2g for host OS/Docker overhead — tight. This only works
+#   because detonation is sequential, never concurrent VMs (see
+#   dynamic pipeline design v1 §5/§7). If cape's 6g limit proves too
+#   tight for CAPE + one guest VM in testing, raise cape's mem_limit
+#   and reclaim it from navigator (only needed when viewing results —
+#   safe to stop it between sessions) before touching anything else.
+#   Note: cape and inetsim run with network_mode: host (see the
+#   networks: comment below) — their mem_limit/cpus caps still apply,
+#   only the networking is different.
+#
+# NOTE ON REDIS: it's a MISP dependency (background jobs/cache), not a
+# CAPE one — CAPE's own default config has no redis integration at all.
+# Earlier drafts of this file had cape reading CAPE_REDIS_HOST/PORT env
+# vars; those didn't correspond to anything CAPE actually reads and have
+# been removed.
 # =============================================================================
 
 name: malwhere
@@ -20,12 +41,27 @@ name: malwhere
 # Networks
 # ---------------------------------------------------------------------------
 networks:
+  # Management network: static, pipeline, navigator, MISP, mysql, redis.
+  # internal: true actually enforces "no internet egress" (the old
+  # driver_opts comment only named the bridge interface, it didn't block
+  # anything). Nothing on this network needs to reach the internet.
+  #
+  # cape and inetsim are NOT on this network — they use network_mode: host
+  # instead. This is a deliberate, scoped exception: upstream CAPEv2 has no
+  # officially supported Docker deployment (kevoreilly/CAPEv2 issue #617),
+  # and every community KVM-in-Docker pattern we found converges on host
+  # networking + direct /dev/kvm + host libvirtd access, because that's how
+  # libvirt actually expects to manage VM networking. We isolate everything
+  # we can at the Docker level; the KVM/libvirt detonation boundary is
+  # isolated at the host network/iptables level instead — see
+  # scripts/host-prereqs.sh, which is the reproducibility story for that
+  # part of the stack.
   malwhere_net:
     driver: bridge
+    internal: true
     ipam:
       config:
         - subnet: 172.20.0.0/16
-    # No internet egress from analysis containers
     driver_opts:
       com.docker.network.bridge.name: malwhere0
 
@@ -33,14 +69,39 @@ networks:
 # Volumes (persistent data survives container restarts)
 # ---------------------------------------------------------------------------
 volumes:
-  cape_data:
-  cape_work:
   misp_data:
   misp_logs:
   mysql_data:
   redis_data:
   navigator_data:
   pipeline_results:
+  # Feedback loop: pipeline writes newly-discovered dynamic artifacts here
+  # (dropped files, injected/reflectively-loaded PE dumps + a manifest with
+  # parent hash, discovery mechanism, timestamp). static watches it and
+  # resubmits anything not already in its corpus.
+  resubmit_queue:
+  # CAPE's data stores. NOT under ./cape/work like conf/storage are — these
+  # three live on the container's own overlay filesystem by default, so
+  # every rebuild/recreate silently wiped them while leaving the raw report
+  # files under work/storage orphaned (present on disk, but with no DB row
+  # pointing at them, so the API/web UI can't see them). Named volumes, not
+  # bind mounts: Docker seeds a fresh named volume from whatever's already
+  # at that path in the image (already-initialized, correct ownership baked
+  # in at build time), so first boot behaves exactly as it did before —
+  # nothing extra to initialize by hand.
+  #
+  # cape_task_db is the one that actually matters day-to-day: cuckoo.conf's
+  # [database] connection is blank, so CAPE defaults to SQLite at
+  # /opt/CAPEv2/db/cuckoo.db (lib/cuckoo/core/database.py) rather than the
+  # postgres role/db entrypoint.sh pre-creates — that postgres db sits ready
+  # in case connection is ever pointed at it (cuckoo.conf's own comment:
+  # "For production we strongly suggest go with PostgreSQL"), but is unused
+  # by default. cape_mongo_data is real either way — it's the report index
+  # the web UI's analysis view queries, independent of which task-queue
+  # backend is active.
+  cape_task_db:
+  cape_postgres_data:
+  cape_mongo_data:
 
 # ---------------------------------------------------------------------------
 # Services
@@ -61,15 +122,21 @@ services:
       - ../samples:/samples:ro # read-only samples
       - ../static/reports:/reports # output from the análisis
       - ../static/scripts:/scripts:ro
+      - resubmit_queue:/resubmit:ro # artifacts fed back from dynamic analysis
     networks:
       malwhere_net:
         ipv4_address: 172.20.0.10
     environment:
       - PYTHONUNBUFFERED=1
+      - RESUBMIT_WATCH_DIR=/resubmit
     restart: unless-stopped
     mem_limit: 3g
     cpus: 2.0
     # No port exposure — acceso via docker exec o CLI
+    # static should watch /resubmit for new manifest entries (in addition
+    # to whatever triggers it on /samples) and tag its output with the
+    # parent_hash + discovery_mechanism from the manifest, so lineage
+    # survives into /reports for the pipeline to merge.
 
   # -------------------------------------------------------------------------
   # PIPELINE (normalizer + mapper + exporter)
@@ -85,9 +152,11 @@ services:
     volumes:
       - ../static/reports:/input/static:ro
       - ../dynamic/reports:/input/dynamic:ro
+      - ./cape/work/storage:/input/dynamic/storage:ro # dropped/injected/dumped binaries — lives under cape's /work bind mount, not a separate named volume (see cape service's comment on why)
       - ../pipeline:/app:ro
       - ../results:/results
       - pipeline_results:/output
+      - resubmit_queue:/resubmit:rw # writes new artifacts here for static to pick up
     networks:
       malwhere_net:
         ipv4_address: 172.20.0.11
@@ -97,6 +166,10 @@ services:
       - MISP_KEY=${MISP_API_KEY:-changeme}
       - MISP_VERIFYCERT=false
       - ATTCK_VERSION=14.1
+      # Resubmission loop bounds (see dynamic pipeline design v1, §4/§7)
+      - RESUBMIT_MAX_DEPTH=5
+      - RESUBMIT_MAX_ARTIFACTS=25
+      - RESUBMIT_TIME_BUDGET_MIN=45
     depends_on:
       - static
     restart: unless-stopped
@@ -125,7 +198,8 @@ services:
 
   # -------------------------------------------------------------------------
   # REDIS
-  # Backend for CAPE; sandbox profile only
+  # MISP's dependency (background jobs/cache) — NOT CAPE's. CAPE's own
+  # default config has no redis integration; see the header note.
   # Profile: sandbox
   # -------------------------------------------------------------------------
   redis:
@@ -142,34 +216,109 @@ services:
     command: redis-server --save 60 1 --loglevel warning --requirepass redispassword
 
   # -------------------------------------------------------------------------
+  # INETSIM
+  # Simulated network for guest detonations: fake DNS/HTTP/HTTPS responses,
+  # every outbound attempt still logged. Default containment mode — see
+  # dynamic pipeline design v1 §5. Live/controlled-egress detonation is a
+  # separate, explicitly-justified, isolated exception, not the default.
+  #
+  # network_mode: host, not malwhere_detonation_net — guest VM traffic
+  # terminates on the host's own libvirt bridge (virbr0 or similar), which
+  # a Docker bridge network can't reach. See the top-level networks:
+  # comment for why. This means inetsim's ports (53/80/443) bind directly
+  # on the host — confirm nothing else on the host already uses them.
+  # Profile: sandbox
+  # -------------------------------------------------------------------------
+  inetsim:
+    build:
+      context: ./inetsim
+      dockerfile: Dockerfile
+    container_name: malwhere-inetsim
+    profiles: [sandbox]
+    network_mode: host
+    environment:
+      # Written to .env by scripts/host-prereqs.sh once libvirt is set up.
+      # Same value CAPE's own conf files reference as %(ENV:LIBVIRT_GATEWAY)s
+      # — one name for one fact, read in both places. ${VAR:?msg} fails
+      # `docker compose up` immediately with a clear message if it's
+      # missing, on top of entrypoint.sh's own check.
+      - LIBVIRT_GATEWAY=${LIBVIRT_GATEWAY:?Run scripts/host-prereqs.sh first to discover this}
+    volumes:
+      - ../dynamic/reports/inetsim:/var/log/inetsim
+    restart: unless-stopped
+    mem_limit: 256m
+
+  # -------------------------------------------------------------------------
   # CAPE SANDBOX
-  # Dynamic analysis with KVM; requires VT-x enabled on the host
+  # Dynamic analysis with KVM; requires VT-x enabled on the host and
+  # libvirtd running on the host (see scripts/host-prereqs.sh — this is
+  # NOT set up by docker-compose, it's a host-level prerequisite).
+  #
+  # PREREQUISITE: ./cape/Dockerfile builds FROM cape:kvm, which must
+  # already exist as a local image — it's not published to a registry.
+  # Build it first from celyrin/cape-docker's kvm branch (`make all` in
+  # that repo), THEN `docker compose build cape` here. Our Dockerfile
+  # layers two fixes on top (see its own header comment) discovered
+  # during initial bring-up: a MongoDB kernel-compatibility workaround and
+  # a missing libvirt-python install. Building our own layer instead of
+  # using cape:kvm directly means a fresh clone of this repo gets both
+  # fixes automatically instead of rediscovering them by hand.
+  #
+  # network_mode: host, not malwhere_net — matches celyrin/cape-docker's
+  # documented run command (see top-level networks: comment for why).
+  # Also needs systemd support inside the container (cape.service,
+  # cape-web.service, cape-processor.service run under it): the cgroup
+  # mount, cgroupns, and tmpfs entries below are not optional extras.
   # Profile: sandbox
   # -------------------------------------------------------------------------
   cape:
-    image: cape:kvm
+    build:
+      context: ./cape
+      dockerfile: Dockerfile
     container_name: malwhere-cape
     profiles: [sandbox]
     privileged: true # necesary for KVM
+    network_mode: host
+    cgroup: host
+    tmpfs:
+      - /run
+      - /run/lock
     devices:
       - /dev/kvm:/dev/kvm # KVM access from container
-    ports:
-      - "8000:8000" # API + Web UI
+    env_file:
+      # LIBVIRT_GATEWAY / LIBVIRT_BRIDGE (from scripts/host-prereqs.sh) and
+      # GUEST_VM_IP (set by hand once the guest VM exists) — CAPE's own
+      # conf files reference these via %(ENV:VARNAME)s, so they need to be
+      # real env vars inside this container, not just compose-file
+      # substitutions.
+      - .env
     volumes:
       - ../samples:/samples:ro
       - ../dynamic/reports:/reports
-      - cape_data:/opt/CAPEv2/storage
-      - cape_work:/work
-      #- ./cape/conf:/opt/CAPEv2/conf:ro
-    networks:
-      malwhere_net:
-        ipv4_address: 172.20.0.21
-    environment:
-      - CAPE_REDIS_HOST=redis
-      - CAPE_REDIS_PORT=6379
-    depends_on:
-      - redis
+      # NOT a cape_data volume mounted at /opt/CAPEv2/storage — that was
+      # wrong. This image symlinks /opt/CAPEv2/storage -> /work/storage on
+      # boot, same pattern as conf (confirmed by finding a stray
+      # storage/storage -> /work/storage symlink after the mount forced a
+      # real directory onto the path the symlink wanted). Mounting
+      # anything at /opt/CAPEv2/storage directly blocks that symlink and
+      # breaks CAPE's own folder creation on startup. /work below is
+      # enough — storage/ lives inside it once the container's own
+      # bootstrap (or the manual fix in cape/README.md) creates the
+      # symlink correctly.
+      - ./cape/work:/work # bind mount, not a named volume — you need to
+        # edit work/conf/*.conf directly from the host after first boot
+        # (see cape/README.md); NOT :ro, first boot writes conf/ here
+      - /var/run/libvirt:/var/run/libvirt # host's libvirtd socket
+      # Task DB + report index — see the top-level volumes: comment for why
+      # these are separate from /work despite both being "cape data".
+      - cape_task_db:/opt/CAPEv2/db
+      - cape_postgres_data:/var/lib/postgresql/18/main
+      - cape_mongo_data:/var/lib/mongodb
     restart: unless-stopped
+    # 6g must cover CAPE itself + one guest VM (sequential detonation only,
+    # see dynamic pipeline design v1 §5/§7 — no concurrent VMs). Provision
+    # the Windows guest at ~3-4g RAM to leave CAPE's own overhead room;
+    # if that's too tight in testing, raise this before shrinking the VM.
     mem_limit: 6g
     cpus: 4.0
 

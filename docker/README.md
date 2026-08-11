@@ -5,14 +5,16 @@
 
 ## 📋 Table of Contents
 1. [Host Requirements](#host-requirements)
-2. [Building the CAPE Image (Required First Step)](#building-the-cape-image-required-first-step)
-3. [Available Profiles](#available-profiles)
-4. [Quickstart](#quickstart)
-5. [Service Access](#service-access)
-6. [Daily Workflow](#daily-workflow)
-7. [Running Static Analysis](#running-static-analysis)
-8. [Stopping the Environment](#stopping-the-environment)
-9. [Known Issues & Fixes](#known-issues--fixes)
+2. [Host Setup: libvirt/KVM](#host-setup-libvirtkvm)
+3. [Building the CAPE Image (Required First Step)](#building-the-cape-image-required-first-step)
+4. [Creating the Guest VM](#creating-the-guest-vm)
+5. [Available Profiles](#available-profiles)
+6. [Quickstart](#quickstart)
+7. [Service Access](#service-access)
+8. [Daily Workflow](#daily-workflow)
+9. [Running Static Analysis](#running-static-analysis)
+10. [Stopping the Environment](#stopping-the-environment)
+11. [Known Issues & Fixes](#known-issues--fixes)
 
 ---
 
@@ -34,6 +36,31 @@ ls -la /dev/kvm                       # must exist
 # Install make if not present
 sudo apt-get install -y make
 ```
+
+---
+
+## Host Setup: libvirt/KVM
+
+`cape` and `inetsim` run with `network_mode: host` and talk directly to the
+HOST's libvirt/KVM — docker-compose cannot set this part up, because it's
+outside any container. Run this once, before building or starting anything:
+
+```bash
+sudo ./docker/scripts/host-prereqs.sh
+```
+
+It installs qemu-kvm/libvirt if missing, verifies `/dev/kvm` actually works
+(not just exists), makes sure libvirt's default network is up, and — the
+part that matters for reproducibility — **discovers your machine's actual
+bridge interface and gateway IP** (this varies per machine, it's not
+guessable in advance) and writes `LIBVIRT_GATEWAY`/`LIBVIRT_BRIDGE` into
+`docker/.env`. CAPE's own conf files and inetsim's entrypoint both read
+these via `%(ENV:LIBVIRT_GATEWAY)s`-style interpolation, so nothing needs
+hand-editing afterwards. Safe to re-run any time.
+
+If it added you to the `libvirt`/`kvm` groups, **log out and back in**
+before continuing — group membership doesn't apply to your current shell
+session otherwise (`virsh` will fail with "Permission denied" until you do).
 
 ---
 
@@ -122,6 +149,124 @@ curl -s http://localhost:8000/apiv2/tasks/list/ | python3 -m json.tool
 
 ---
 
+## Creating the Guest VM
+
+> ⚠️ **This step cannot be automated by docker-compose or any script in this
+> repo** — it's an interactive Windows install done once per machine. Skip
+> it and CAPE starts up only to crash-loop with `CuckooStartupError: ...
+> Domain not found: no domain with matching name 'win10x64'` — `kvm.conf`
+> names the machine `win10x64`, but naming it in config doesn't create it.
+
+**Windows ISO**: Microsoft pulled the Windows 10 Enterprise evaluation from its
+default Evaluation Center flow (Windows 10 hit end of support Oct 2025) — grab
+the plain consumer ISO instead, from **microsoft.com/software-download/windows10iso**.
+No sign-in, no product key needed; it installs and runs fully functional
+unactivated (just a desktop watermark), which is irrelevant for a sandbox VM.
+Never vendor the ISO in this repo — same reasoning as `cape:kvm` not being
+published to a registry: it's a multi-GB proprietary binary you're not
+licensed to redistribute, so each machine fetches its own.
+
+1. Create a libvirt storage pool if this host doesn't have one yet (`virsh
+   pool-list --all` — if empty):
+   ```bash
+   virsh pool-define-as default dir --target /var/lib/libvirt/images
+   virsh pool-build default && virsh pool-start default && virsh pool-autostart default
+   ```
+2. The ISO needs to be readable by the `libvirt-qemu` user, which your home
+   directory normally blocks. Grant traversal (as the file's owner, no sudo
+   needed):
+   ```bash
+   chmod o+x ~ && chmod o+rx ~/Downloads && chmod o+r ~/Downloads/your-win10.iso
+   ```
+3. On the **host** (not inside a container), create a Windows 10 x64 VM under
+   libvirt named exactly `win10x64` (matches `docker/cape/work/conf/kvm.conf`'s
+   `[win10x64]` section — rename both together if you change it). Pick a disk
+   size that actually fits in your free space (`df -h /var/lib/libvirt` first)
+   — 50GB is comfortable for Windows 10 + agent + tools. **Use `model=e1000`
+   for the network device, not the virtio default** — Windows 10 has no
+   built-in virtio-net driver, so a virtio NIC shows up as unrecognized and
+   "Change adapter settings" is empty; e1000 has an in-box driver and, as a
+   side benefit, doesn't announce itself as a VM to samples doing basic
+   anti-analysis checks the way "Red Hat VirtIO Ethernet Adapter" does:
+   ```bash
+   virt-install --name win10x64 --os-variant win10 --ram 4096 --vcpus 2 \
+     --disk pool=default,size=50,format=qcow2 --cdrom ~/Downloads/your-win10.iso \
+     --network network=default,model=e1000 --graphics vnc,listen=127.0.0.1 \
+     --noautoconsole
+   ```
+4. Connect to the install with `virt-viewer --connect qemu:///system win10x64`
+   and click through Setup normally. It reboots partway through (copies
+   files, then continues from disk instead of the ISO) — the domain may show
+   `shut off` rather than auto-restarting depending on whether Windows issued
+   a reboot or a full poweroff; `virsh start win10x64` brings it back either
+   way, and boot order is `hd`-first by default so it resumes instead of
+   re-running Setup.
+5. Once at the desktop: set the static IP to match `GUEST_VM_IP` in
+   `docker/.env` (`192.168.122.100` by default, gateway/DNS `192.168.122.1` —
+   that's inetsim, matching `routing.conf`'s `[inetsim] server`).
+6. Enable auto-login — `netplwiz`'s checkbox doesn't render on some Windows 10
+   builds; the reliable fallback is the registry directly (elevated cmd):
+   ```cmd
+   reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 1 /f
+   reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultUserName /t REG_SZ /d "YOUR_USERNAME" /f
+   reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /t REG_SZ /d "YOUR_PASSWORD" /f
+   ```
+7. Disable Windows Update, Defender (real-time/cloud-delivered protection,
+   automatic sample submission, tamper protection), and the firewall
+   (`netsh advfirewall set allprofiles state off`) — a live Defender will
+   flag/quarantine samples before CAPE's agent gets a look at them.
+8. **Fully disable UAC**, not just the "Never notify" slider — that slider
+   still leaves processes with a filtered (non-admin) token. Confirmed via
+   the agent's own `is_user_admin` field in its status response:
+   ```cmd
+   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d 0 /f
+   ```
+   Needs a reboot to take effect. This matters concretely for this sample
+   set — RoningLoader disables Driver Signature Enforcement and installs a
+   kernel driver, which needs a real admin token, not a filtered one.
+9. Install Python 3 (check "Add to PATH"), save
+   [`agent.py`](https://raw.githubusercontent.com/kevoreilly/CAPEv2/master/agent/agent.py)
+   as `C:\agent.py`, and put a shortcut to `pythonw.exe C:\agent.py` in the
+   Startup folder (`shell:startup`) so it relaunches on every logon. Verify
+   from the **host** once it's running:
+   ```bash
+   curl -s http://192.168.122.100:8000/ | python3 -m json.tool
+   # expect: {"message": "CAPE Agent!", ..., "is_user_admin": true}
+   ```
+10. With the VM in exactly this state — logged in, agent listening, nothing
+    left to configure — take a **live** snapshot (VM running, not shut down).
+    CAPE reverts straight into this ready state instead of cold-booting per
+    task:
+    ```bash
+    virsh snapshot-create-as win10x64 clean_baseline --atomic
+    ```
+    Then uncomment `snapshot = clean_baseline` in `kvm.conf`'s `[win10x64]`
+    section so CAPE targets it explicitly rather than "whatever's latest."
+
+Only after this exists does `docker exec malwhere-cape virsh -c qemu:///system list --all`
+show the domain, and only then will `cape.service` get past its startup
+snapshot check.
+
+### A libvirt host quirk worth knowing about
+
+If `virsh`/CAPE intermittently fail with `Permission denied` or `Connection
+refused` on `/var/run/libvirt/libvirt-sock`, and the socket's group keeps
+flip-flopping between `libvirt` and something unrelated (e.g. `nm-openvpn`)
+independent of anything you're doing — that's what happens when something
+else on the host recreates `libvirtd.socket` mid-session (its unit uses
+`SocketMode=0660`/`SocketGroup=libvirt`, freshly resolved from `/etc/group`
+each time it's (re)created). The `cape` image's own fixes (masking its
+internal `libvirtd` so it can't compete for the same bind-mounted socket, and
+realigning its `libvirt` group GID to match the host's on every service
+start — see `docker/cape/Dockerfile`) handle the container side automatically.
+If it's still happening, `sudo systemctl restart libvirtd.socket libvirtd.service`
+on the host resolves it — a "Job failed" message from restarting both units
+together is usually just an ordering race, not a real failure; check
+`systemctl is-active libvirtd.socket libvirtd.service` afterward before
+assuming it didn't work.
+
+---
+
 ## Available Profiles
 
 | Profile | Services | Estimated RAM | When to use |
@@ -137,17 +282,25 @@ curl -s http://localhost:8000/apiv2/tasks/list/ | python3 -m json.tool
 ## Quickstart
 
 ```bash
-# 1. Copy environment variables
-cp .env.example .env
-# Edit .env with your values (MISP API key, passwords)
+# 1. Copy environment variables, then edit docker/.env with your MISP API
+#    key and passwords (leave LIBVIRT_GATEWAY/LIBVIRT_BRIDGE as-is — the
+#    next step overwrites just those two lines in place with real values,
+#    without touching what you just set here)
+cp docker/.env.example docker/.env
 
-# 2. Start core services (daily development)
+# 2. Host libvirt/KVM setup — see "Host Setup: libvirt/KVM" above (one-time,
+#    needs sudo; safe to re-run). Writes the real LIBVIRT_GATEWAY/
+#    LIBVIRT_BRIDGE into docker/.env, discovered from this machine.
+sudo ./docker/scripts/host-prereqs.sh
+
+# 3. Start core services (daily development)
 docker compose -f docker/docker-compose.yml --profile core up -d
 
-# 3. Start full environment (when dynamic analysis is needed)
+# 4. Start full environment (when dynamic analysis is needed — requires the
+#    cape:kvm image built and the win10x64 guest VM created, see above)
 docker compose -f docker/docker-compose.yml --profile core --profile sandbox up -d
 
-# 4. Verify everything is running
+# 5. Verify everything is running
 docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 ```
 

@@ -32,6 +32,21 @@ docker/*/logs/
 *.env.local
 .secrets/
 
+# cape-docker (celyrin/cape-docker, kvm branch) is built separately per
+# docker/README.md's "Building the CAPE Image" step — never vendored here.
+# It was accidentally committed once as a dangling gitlink (no .gitmodules,
+# so `git clone` left it empty); ignoring it keeps that from recurring.
+/cape-docker/
+
+# CAPE runtime state under docker/cape/work — analysis output, logs, and
+# CAPE's own regenerated conf/default/ boilerplate. The hand-tuned conf/*.conf
+# files ARE tracked (see docker/cape/work/conf/) since they carry real
+# TFM-specific setup that a fresh clone needs; only the generated/runtime
+# parts are ignored here.
+docker/cape/work/log/
+docker/cape/work/storage/
+docker/cape/work/conf/default/
+
 # Analysis artifacts with PII or sensitive IOCs
 results/**/raw/
 
