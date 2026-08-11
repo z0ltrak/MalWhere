@@ -155,7 +155,13 @@ class CapeReportParser:
                     by_sha256[sha256]["roles"].append(role)
                 return
             by_sha256[sha256] = {
-                "name": entry.get("name", ""),
+                # CAPE's own "name" field is a list, not a string, when the
+                # same dropped file was observed written under more than one
+                # name/path — confirmed in real data (dropped[].name ==
+                # ["report.lock"]). Flatten rather than pass a list through:
+                # every downstream consumer (normalizer, STIX/MISP export)
+                # expects a scalar string here.
+                "name": "; ".join(entry["name"]) if isinstance(entry.get("name"), list) else entry.get("name", ""),
                 "sha256": sha256,
                 "md5": entry.get("md5", ""),
                 "sha1": entry.get("sha1", ""),

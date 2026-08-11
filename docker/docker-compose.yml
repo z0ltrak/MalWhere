@@ -237,6 +237,17 @@ services:
     restart: unless-stopped
     mem_limit: 256m
     command: redis-server --save 60 1 --loglevel warning --requirepass redispassword
+    # MISP's session backend — without this healthy, MISP's web/API layer
+    # fails session_start() on every request (confirmed: "Failed to read
+    # session data: redis... Failed to connect" breaks auth even for pure
+    # API calls, not just the browser session). misp's depends_on below
+    # needs this to actually catch "redis container exists but isn't up
+    # yet/isn't reachable", not just "container was started".
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redispassword", "--no-auth-warning", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   # -------------------------------------------------------------------------
   # INETSIM
@@ -402,6 +413,8 @@ services:
       - REDIS_PASSWORD=redispassword
     depends_on:
       mysql:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     restart: unless-stopped
     mem_limit: 2g
