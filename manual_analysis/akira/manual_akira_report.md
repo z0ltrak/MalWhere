@@ -215,7 +215,7 @@ Get-WinEvent -ListLog * | where { $_.RecordCount } | ForEach-Object -Process{
 }
 ```
 
-**ATT&CK Mapping:** T1070 (Indicator Removal on Host)
+**ATT&CK Mapping:** T1070 (Indicator Removal)
 
 ### Volume Shadow Copy (VSS) Deletion
 
@@ -520,7 +520,7 @@ struct custom_string {
 | Virtualization/Sandbox Evasion | T1497 | CPU/AVX checks |
 | Impair Defenses | T1562 | Process termination |
 | Process Discovery | T1057 | Process enumeration |
-| Indicator Removal on Host | T1070 | Event log clearing |
+| Indicator Removal | T1070 | Event log clearing |
 | Command and Scripting Interpreter | T1059 | PowerShell execution |
 | Obfuscated Files or Information | T1027 | Anti-debugging, obfuscation |
 

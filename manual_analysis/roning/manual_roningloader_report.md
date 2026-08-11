@@ -561,13 +561,13 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v Enab
 | Debugger Evasion | T1622 | Anti-debugging in driver |
 | Modify Registry | T1112 | C2 configuration via registry |
 | Command and Scripting Interpreter | T1059 | `cmd /c`, `PowerShell`, batch scripts |
-| Indicator Removal on Host | T1070 | Event log clearing via PowerShell |
+| Indicator Removal | T1070 | Event log clearing via PowerShell |
 | Inhibit System Recovery | T1490 | VSS deletion |
 | Web Protocols | T1071.001 | HTTP to Baidu for time sync |
 | Non-Standard Port | T1571 | C2 on port 5552 |
 | Data Encoding | T1132 | Base64 + XOR for C2 commands |
 | Deobfuscate/Decode Files or Information | T1140 | RC4, zlib, Base64, XOR |
-| Subvert Trust Controls | T1553.006 | Code Integrity policy to disable DSE |
+| Code Signing Policy Modification | T1553.006 | Code Integrity policy to disable DSE |
 | Credentials from Password Stores | T1555 | MetaMask extension targeting |
 
 ---

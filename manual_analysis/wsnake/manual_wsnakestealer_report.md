@@ -837,14 +837,12 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | **Process Discovery** | T1057 | Process list, active window |
 | **Software Discovery** | T1518 | Installed AV list |
 | **Input Capture: Keylogging** | T1056.001 | WH_KEYBOARD_LL hook |
-| **Input Capture: Clipboard** | T1056.002 | Clipboard monitor + hijack |
 | **Credentials from Web Browsers** | T1555.003 | Chrome/Edge/Firefox/Opera |
 | **Credentials from Password Stores** | T1555 | Windows Credential Manager |
-| **Credentials from Registry** | T1555.001 | Thunderbird credentials |
 | **Screen Capture** | T1113 | JPEG screenshots |
 | **Clipboard Data** | T1115 | Monitor and modify clipboard |
 | **Data Compressed** | T1560.001 | GZip + ZIP compression |
-| **Data Encrypted** | T1560.001 | RC4 + RSA encryption |
+| **Data Encrypted** | T1022 | RC4 + RSA encryption |
 | **Exfiltration Over C2 Channel** | T1041 | HTTP POST to 31 nodes |
 | **Exfiltration Over Alternative Protocol** | T1048 | Telegram Bot API |
 | **Email Collection** | T1114 | Thunderbird emails |
@@ -860,7 +858,6 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | **Deobfuscate/Decode** | T1140 | XOR, RC4, RSA, Base64 |
 | **Obfuscated Files or Information** | T1027 | Custom XOR strings |
 | **Indicator Removal** | T1070 | Self-destruct, event log |
-| **Kill Process** | T1489 | Process termination |
 | **Registry Modification** | T1112 | C2 config + UAC bypass |
 | **Modify Registry** | T1112 | Configuration storage |
 | **Bypass User Account Control** | T1548.002 | MSI installer hijack |
