@@ -1,7 +1,7 @@
 # =============================================================================
 # malwhere — cape image overlay
 #
-# Builds FROM celyrin/cape-docker's kvm image and bakes in six fixes
+# Builds FROM celyrin/cape-docker's kvm image and bakes in seven fixes
 # discovered during initial bring-up, so a fresh `docker compose up` doesn't
 # require re-discovering any of them by hand:
 #
@@ -58,6 +58,23 @@
 #      use of its volume. Postgres/Mongo don't hit this since their own
 #      startup scripts chown as root before dropping privileges; CAPE's own
 #      units just exec straight as User=cape with no equivalent step.
+#
+#   7. This image ships CAPE's own bare core with only 8 signature files
+#      total (mostly __init__.py package markers) — none of the real
+#      detection content. CAPESandbox's actual signature/YARA-rule set
+#      (600+ signatures, 650+ YARA rules) lives in a SEPARATE "community"
+#      repo, pulled in via utils/community.py, which upstream's own
+#      Dockerfile never runs. Confirmed in practice: a RoningLoader
+#      detonation that visibly installed a kernel driver service scored
+#      malscore 0 with zero signatures matched pre-fix; after installing
+#      the community content and reprocessing the SAME captured data (no
+#      re-detonation needed), 55 signatures matched including
+#      install_kernel_driver_service, malscore 9.0. Installing at BUILD
+#      time, not container-start: it's static content, not something that
+#      needs to be network-fetched on every boot, and it means the sandbox
+#      doesn't need outbound internet access at runtime to have real
+#      detection content — worth keeping true for a sandbox that's
+#      otherwise deliberately network-contained (see routing.conf).
 #
 # Update docker-compose.yml's cape service to `build: {context: ./cape}`
 # instead of `image: cape:kvm` to use this.
@@ -129,6 +146,16 @@ RUN for svc in cape cape-web cape-processor; do \
 # this doesn't touch pyproject.toml/poetry.lock, which we don't want to
 # perturb for an environment-compatibility fix that has nothing to do with
 # the project's actual declared dependencies.
+#
+# USER/WORKDIR matter here beyond just "the right venv": poetry resolves
+# its cache location from the CURRENT user's HOME, and running the same
+# `poetry run` command as a different user (e.g. root, or via `docker exec`
+# with no -u) silently creates/uses a SEPARATE venv at a different path —
+# confirmed the hard way debugging fix 7's install below, chasing a string
+# of "missing dependency" errors that were really just python packages
+# installed into a venv nothing actually uses. USER cape here is what
+# makes this land in the venv cape.service/cape-web.service/
+# cape-processor.service actually invoke.
 USER cape
 WORKDIR /opt/CAPEv2
 RUN /etc/poetry/bin/poetry run pip install libvirt-python
@@ -138,5 +165,19 @@ RUN /etc/poetry/bin/poetry run pip install libvirt-python
 # inside a systemd crash loop, which is exactly how we lost time on this
 # earlier today.
 RUN /etc/poetry/bin/poetry run python -c "import libvirt; print('libvirt-python OK:', libvirt.__file__)"
+
+# --- Fix 7: real signature/YARA detection content -------------------------
+# community.py needs urllib3, which (like libvirt-python above) isn't in
+# this image's poetry install. -af = download everything (signatures,
+# processing/reporting modules, machinery, YARA rules, MITRE data, etc.),
+# -f = don't prompt for confirmation on each file.
+RUN /etc/poetry/bin/poetry run pip install urllib3 && \
+    /etc/poetry/bin/poetry run python utils/community.py -af
+
+# Fail the BUILD, loudly, if this doesn't actually work — same reasoning as
+# the libvirt-python check above.
+RUN count=$(find /opt/CAPEv2/modules/signatures -name "*.py" -not -path "*__pycache__*" | wc -l) && \
+    echo "signature files installed: $count" && \
+    [ "$count" -gt 100 ]
 
 USER root
