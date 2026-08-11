@@ -836,12 +836,12 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | **File and Directory Discovery** | T1083 | `jg` recursive search |
 | **Process Discovery** | T1057 | Process list, active window |
 | **Software Discovery** | T1518 | Installed AV list |
-| **Input Capture: Keylogging** | T1056.001 | WH_KEYBOARD_LL hook |
+| **Keylogging** | T1056.001 | WH_KEYBOARD_LL hook |
 | **Credentials from Web Browsers** | T1555.003 | Chrome/Edge/Firefox/Opera |
 | **Credentials from Password Stores** | T1555 | Windows Credential Manager |
 | **Screen Capture** | T1113 | JPEG screenshots |
 | **Clipboard Data** | T1115 | Monitor and modify clipboard |
-| **Data Compressed** | T1560.001 | GZip + ZIP compression |
+| **Archive via Utility** | T1560.001 | GZip + ZIP compression |
 | **Data Encrypted** | T1022 | RC4 + RSA encryption |
 | **Exfiltration Over C2 Channel** | T1041 | HTTP POST to 31 nodes |
 | **Exfiltration Over Alternative Protocol** | T1048 | Telegram Bot API |
@@ -850,30 +850,30 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | **Automated Collection** | T1119 | Keylogger + clipboard |
 | **Data Staged** | T1074 | XML reports + ZIP archives |
 | **Scheduled Task** | T1053.005 | Persistence via schtasks |
-| **Boot/Logon Autostart Execution** | T1547 | Startup folder drop |
-| **Create or Modify System Process** | T1543.003 | Service creation |
+| **Boot or Logon Autostart Execution** | T1547 | Startup folder drop |
+| **Windows Service** | T1543.003 | Service creation |
 | **Windows Management Instrumentation** | T1047 | WMI queries |
 | **PowerShell** | T1059.001 | Script execution |
 | **Command and Scripting Interpreter** | T1059 | cmd /c |
-| **Deobfuscate/Decode** | T1140 | XOR, RC4, RSA, Base64 |
+| **Deobfuscate/Decode Files or Information** | T1140 | XOR, RC4, RSA, Base64 |
 | **Obfuscated Files or Information** | T1027 | Custom XOR strings |
 | **Indicator Removal** | T1070 | Self-destruct, event log |
-| **Registry Modification** | T1112 | C2 config + UAC bypass |
+| **Modify Registry** | T1112 | C2 config + UAC bypass |
 | **Modify Registry** | T1112 | Configuration storage |
 | **Bypass User Account Control** | T1548.002 | MSI installer hijack |
 | **Virtualization/Sandbox Evasion** | T1497 | 12 VM indicators |
 | **System Checks** | T1497.001 | VM detection |
-| **File Transfer** | T1105 | Payload download |
+| **Ingress Tool Transfer** | T1105 | Payload download |
 | **Ingress Tool Transfer** | T1105 | GitHub SOCKS5 download |
 | **Proxy** | T1090 | Tor, Serveo, ngrok |
 | **Protocol Tunneling** | T1572 | SSH, HTTP tunnels |
 | **Non-Standard Port** | T1571 | Port 5552 (not used) |
 | **Data Encoding** | T1132 | Base64 + XOR for C2 |
-| **Remote Access Software** | T1219 | Custom C2 client |
+| **Remote Access Tools** | T1219 | Custom C2 client |
 | **System Network Configuration Discovery** | T1016 | LAN scanning |
-| **Network Service Scanning** | T1046 | 70-port scanner |
+| **Network Service Discovery** | T1046 | 70-port scanner |
 | **Password Policy Discovery** | T1201 | WiFi password extraction |
-| **Credentials in Files** | T1552.001 | Browser credential files |
+| **Credentials In Files** | T1552.001 | Browser credential files |
 | **Credentials in Registry** | T1552.002 | Thunderbird credentials |
 
 ---
