@@ -41,10 +41,22 @@ name: malwhere
 # Networks
 # ---------------------------------------------------------------------------
 networks:
-  # Management network: static, pipeline, navigator, MISP, mysql, redis.
-  # internal: true actually enforces "no internet egress" (the old
-  # driver_opts comment only named the bridge interface, it didn't block
-  # anything). Nothing on this network needs to reach the internet.
+  # Backend/management network: static, pipeline, MISP, mysql, redis.
+  # internal: true enforces "no internet egress" for these — none of them
+  # need to reach the internet, and none of them need to be reached FROM
+  # the host either (they're either headless tooling or, for MISP, reached
+  # indirectly via malwhere_web below).
+  #
+  # IMPORTANT — internal: true has a side effect beyond blocking egress: it
+  # also disables Docker's host-port-publishing NAT rule for EVERYTHING on
+  # the network, not just outbound traffic. Confirmed the hard way: MISP's
+  # and Navigator's `ports:` mappings looked correct but `docker port`
+  # showed nothing actually published — neither web UI was ever reachable
+  # from a browser, since Docker can't set up ingress DNAT without also
+  # giving the network a real route, which internal:true specifically
+  # withholds. That's what malwhere_web (below) exists to fix, without
+  # loosening egress for the services that have no reason to need it
+  # (static, pipeline, mysql, redis stay internal-only, unaffected).
   #
   # cape and inetsim are NOT on this network — they use network_mode: host
   # instead. This is a deliberate, scoped exception: upstream CAPEv2 has no
@@ -64,6 +76,18 @@ networks:
         - subnet: 172.20.0.0/16
     driver_opts:
       com.docker.network.bridge.name: malwhere0
+
+  # Host-facing network for the two services a human actually needs to open
+  # in a browser: MISP and the ATT&CK Navigator. NOT internal — a network a
+  # host-published port could reach necessarily has a real route, so this
+  # network trades "no egress" for "actually reachable from the host",
+  # scoped to exactly the two services that need it. Static/pipeline/mysql/
+  # redis are never attached here and keep the stricter malwhere_net-only
+  # isolation. MISP is on BOTH networks (malwhere_web for the browser,
+  # malwhere_net to reach mysql/redis); Navigator only needs malwhere_web —
+  # it's a static file server with no backend dependency of its own.
+  malwhere_web:
+    driver: bridge
 
 # ---------------------------------------------------------------------------
 # Volumes (persistent data survives container restarts)
@@ -191,8 +215,7 @@ services:
       - ../results:/results:ro
       - navigator_data:/usr/src/app/nav-app/src/assets/generated
     networks:
-      malwhere_net:
-        ipv4_address: 172.20.0.12
+      - malwhere_web
     restart: unless-stopped
     mem_limit: 512m
 
@@ -366,6 +389,7 @@ services:
     networks:
       malwhere_net:
         ipv4_address: 172.20.0.31
+      malwhere_web:
     environment:
       - MYSQL_HOST=mysql
       - MYSQL_DATABASE=misp
