@@ -26,6 +26,32 @@ _INJECTION_CATEGORIES = {"injection", "process hollowing", "shellcode"}
 # behavioral match.
 _UNRELIABLE_SIGNATURES = {"accesses_public_folder"}
 
+# Per-technique corrections applied within an otherwise-kept signature's
+# ttps list (unlike _UNRELIABLE_SIGNATURES, these signatures' OTHER
+# technique tags are fine — only these two specific IDs are wrong).
+#
+# T1129 "Shared Modules" requires the module be backed by an on-disk file
+# (MITRE's own T1620 description literally contrasts itself with T1129:
+# "vice creating a thread or process backed by a file path on disk (e.g.,
+# Shared Modules [T1129])"). CAPE's unbacked_api_resolution/
+# unbacked_library_load signatures are — per their own names — about
+# exactly the opposite: API/library resolution from memory NOT backed by a
+# file. That's T1620's textbook definition, not T1129's.
+_TECHNIQUE_REMAP = {"T1129": "T1620"}
+
+# T1568 "Dynamic Resolution" is specifically about C2 infrastructure using
+# an algorithm to calculate addressing (DGA-style), per MITRE's own
+# description. unbacked_dns_resolution's evidence ("resolved a domain name
+# from dynamically allocated (unbacked) memory") is about WHERE the DNS
+# call originates from (a fileless-execution signal), not about the C2
+# domain being algorithmically calculated — a different concept entirely.
+# No clean replacement technique for "DNS call made from unbacked memory"
+# specifically, and the same signature already separately maps to the
+# correct T1071 for the network/C2 angle — dropped rather than force-fit,
+# same precedent as accesses_public_folder and the WhiteSnake Kill Process
+# ground-truth finding.
+_TECHNIQUE_DROP = {"T1568"}
+
 
 class CapeReportParser:
     def __init__(self, report: Dict[str, Any], source_report_path: str, max_list_items: int = 200):
@@ -139,6 +165,9 @@ class CapeReportParser:
                 f"(severity={severity}, confidence={confidence_pct}%, categories={categories})"
             )
             for technique in technique_ids:
+                if technique in _TECHNIQUE_DROP:
+                    continue
+                technique = _TECHNIQUE_REMAP.get(technique, technique)
                 mappings.append(
                     ATTACKMapping(
                         technique=technique,
