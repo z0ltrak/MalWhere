@@ -171,57 +171,103 @@ class ATTACKMapper:
         self.mappings = []
 
     def map_strings(self, strings: List[str]) -> List[ATTACKMapping]:
-        """Map strings to ATT&CK techniques."""
+        """Map strings to ATT&CK techniques.
+
+        Each matched pattern keeps its own evidence entry (unlike
+        map_imports, which now aggregates into one entry per technique) —
+        string patterns are typically specific enough on their own
+        (a ChaCha20 constant, a decryption key) that per-evidence detail is
+        worth preserving. But confidence per-pattern was still scored in
+        isolation, same root problem as map_imports before its fix: found
+        auditing WhiteSnake's T1055, whose static evidence was 3 distinct
+        patterns (OpenProcess, VirtualQueryEx, ReadProcessMemory) each
+        individually scored 'medium' with no awareness that all 3
+        corroborate each other. Patterns matching techniques with 2+
+        distinct corroborating patterns present get promoted to 'high'.
+        """
         from .string_attck_mapper import StringATTACKMapper
         string_mapper = StringATTACKMapper()
         string_results = string_mapper.map_strings(strings)
 
+        pattern_count_by_technique: Dict[str, int] = {}
+        for item in string_results:
+            technique = item['technique']
+            pattern_count_by_technique[technique] = pattern_count_by_technique.get(technique, 0) + 1
+
         mappings = []
         for item in string_results:
+            technique = item['technique']
+            evidence = item.get('pattern', item.get('string', ''))
+            corroborating = pattern_count_by_technique[technique]
+            confidence = 'high' if corroborating >= 2 else item.get('confidence', 'medium')
+
             mappings.append(ATTACKMapping(
-                technique=item['technique'],
-                name=self._get_technique_name(item['technique']),
+                technique=technique,
+                name=self._get_technique_name(technique),
                 source='string_pattern',
-                evidence=item.get('pattern', item.get('string', '')),
-                confidence=item.get('confidence', 'medium'),
+                evidence=evidence,
+                confidence=confidence,
                 justification=self._generate_justification(
-                    technique=item['technique'],
+                    technique=technique,
                     source='string_pattern',
-                    evidence=item.get('pattern', item.get('string', '')),
-                    confidence=item.get('confidence', 'medium')
+                    evidence=evidence,
+                    confidence=confidence,
+                    count=corroborating
                 )
             ))
 
         return mappings
 
     def map_imports(self, imports: List) -> List[ATTACKMapping]:
-        """Map imports to ATT&CK techniques."""
-        mappings = []
-        seen = set()
+        """Map imports to ATT&CK techniques.
 
+        Confidence is combination-aware, not single-import-triggered: this
+        directly implements the README's own stated 3-tier methodology
+        ("VirtualAllocEx + WriteProcessMemory + CreateRemoteThread -> T1055"
+        as the worked HIGH-confidence example — multiple corroborating
+        artifacts, not any one import alone). Previously this method took
+        confidence from a single hardcoded list per import AND discarded
+        all but the FIRST matching import per technique via a `seen` set —
+        so even when e.g. OpenProcess, VirtualQueryEx, and ReadProcessMemory
+        were ALL present together, only one of them was ever recorded and
+        the co-occurrence itself, the actual corroborating signal, was
+        silently thrown away before confidence was even computed. Found
+        auditing a real false positive (Akira's T1055, sourced from a lone
+        OpenProcess) and a real missed finding (WhiteSnake's genuine T1055,
+        where three imports co-occurring was the strongest static evidence
+        available and the old code never surfaced it as such).
+        """
+        by_technique: Dict[str, List[str]] = {}
         for imp in imports:
-            # Access attributes directly (not .get())
-            function = imp.function  # <-- FIX: attribute, not dict key
-
+            function = imp.function  # attribute, not dict key
             technique = self.IMPORT_MAPPING.get(function)
+            if technique:
+                by_technique.setdefault(technique, [])
+                if function not in by_technique[technique]:
+                    by_technique[technique].append(function)
 
-            if technique and technique not in seen:
-                confidence = self._determine_import_confidence(function)
+        mappings = []
+        for technique, functions in by_technique.items():
+            if len(functions) >= 2:
+                confidence = 'high'
+            else:
+                confidence = self._determine_import_confidence(functions[0])
+            evidence = ', '.join(functions)
 
-                mappings.append(ATTACKMapping(
+            mappings.append(ATTACKMapping(
+                technique=technique,
+                name=self._get_technique_name(technique),
+                source='import',
+                evidence=evidence,
+                confidence=confidence,
+                justification=self._generate_justification(
                     technique=technique,
-                    name=self._get_technique_name(technique),
                     source='import',
-                    evidence=function,
+                    evidence=evidence,
                     confidence=confidence,
-                    justification=self._generate_justification(
-                        technique=technique,
-                        source='import',
-                        evidence=function,
-                        confidence=confidence
-                    )
-                ))
-                seen.add(technique)
+                    count=len(functions)
+                )
+            ))
 
         return mappings
 
@@ -379,15 +425,20 @@ class ATTACKMapper:
         return self.TECHNIQUE_NAMES.get(technique_id, f'Unknown ({technique_id})')
 
     def _generate_justification(self, technique: str, source: str,
-                                evidence: str, confidence: str) -> str:
+                                evidence: str, confidence: str,
+                                count: int = 1) -> str:
         """Generate human-readable justification for an ATT&CK mapping."""
         technique_name = self._get_technique_name(technique)
 
         if source == 'string_pattern':
-            return f"The malware string '{evidence}' was found in the binary. This string is characteristic of {technique_name} behavior. The presence of this specific string indicates the malware has capabilities associated with this technique."
+            if count >= 2:
+                return f"The malware string '{evidence}' was found in the binary, alongside {count - 1} other string(s) also characteristic of {technique_name}. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+            return f"The malware string '{evidence}' was found in the binary. This string is characteristic of {technique_name} behavior. The presence of this specific string alone (no other {technique_name}-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
 
         elif source == 'import':
-            return f"The API function '{evidence}' is imported by the binary. This API is commonly used to perform {technique_name}. Importing this function indicates the malware has the capability to execute this technique."
+            if count >= 2:
+                return f"The API functions {evidence} are all imported by the binary. This combination is characteristic of {technique_name} — multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+            return f"The API function '{evidence}' is imported by the binary. This API is commonly used to perform {technique_name}. Importing this function alone (no other {technique_name}-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
 
         elif source == 'yara':
             return f"YARA rule '{evidence}' matched the sample. This rule was specifically designed to detect {technique_name} patterns, confirming the presence of this capability."
