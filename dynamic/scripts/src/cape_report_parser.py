@@ -52,6 +52,20 @@ _TECHNIQUE_REMAP = {"T1129": "T1620"}
 # ground-truth finding.
 _TECHNIQUE_DROP = {"T1568"}
 
+# Like _TECHNIQUE_DROP, but scoped to one specific signature rather than
+# every signature that happens to tag this technique — other signatures
+# legitimately mapping to T1055 (e.g. creates_suspended_process, a real,
+# specific process-hollowing precursor) must stay untouched.
+#
+# pe_tls_callbacks tags both T1027 and T1055. The T1027 half is solid (TLS
+# callbacks executing before the entry point/before a debugger attaches is
+# a real packer/anti-analysis signal). T1055 is a stretch: TLS callbacks
+# run within the SAME process/module before main(), they're not a
+# cross-process injection mechanism — nothing about "this PE has TLS
+# callbacks" is evidence of injecting into ANOTHER process. No mention of
+# injection anywhere in Akira's own manual report either.
+_SIGNATURE_TECHNIQUE_DROP = {("pe_tls_callbacks", "T1055")}
+
 
 class CapeReportParser:
     def __init__(self, report: Dict[str, Any], source_report_path: str, max_list_items: int = 200):
@@ -165,7 +179,7 @@ class CapeReportParser:
                 f"(severity={severity}, confidence={confidence_pct}%, categories={categories})"
             )
             for technique in technique_ids:
-                if technique in _TECHNIQUE_DROP:
+                if technique in _TECHNIQUE_DROP or (sig_name, technique) in _SIGNATURE_TECHNIQUE_DROP:
                     continue
                 technique = _TECHNIQUE_REMAP.get(technique, technique)
                 mappings.append(

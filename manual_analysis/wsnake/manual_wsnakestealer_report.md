@@ -838,6 +838,7 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | **File and Directory Discovery** | T1083 | `jg` recursive search |
 | **Process Discovery** | T1057 | Process list, active window |
 | **Software Discovery** | T1518 | Installed AV list |
+| **Process Injection** | T1055 | Creates a process in suspended state (process-hollowing precursor); confirmed dynamically via CAPE's `creates_suspended_process`, not caught in manual static RE — corroborated by `OpenProcess`/`VirtualQueryEx`/`ReadProcessMemory` used together |
 | **Keylogging** | T1056.001 | WH_KEYBOARD_LL hook |
 | **Credentials from Web Browsers** | T1555.003 | Chrome/Edge/Firefox/Opera |
 | **Credentials from Password Stores** | T1555 | Windows Credential Manager |
