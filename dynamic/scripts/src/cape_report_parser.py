@@ -11,6 +11,21 @@ from .models import ATTACKMapping
 
 _INJECTION_CATEGORIES = {"injection", "process hollowing", "shellcode"}
 
+# Signature names whose CAPE-community ttps mapping is unreliable enough to
+# drop entirely, verified individually rather than via a blanket severity/
+# category rule. A blanket "exclude severity<=1" or "exclude category
+# 'generic'" filter was tried first and rejected: it would have also
+# dropped antivm_checks_available_memory -> T1082 and cmdline_terminate ->
+# T1059, both of which are genuinely correct matches against real ground
+# truth (roning, wsnake) despite sharing the same low severity/category as
+# the actually-bad signature below. accesses_public_folder's own evidence
+# ("a file was accessed within the Public folder") isn't diagnostic of
+# either technique it's mapped to, and mapping one vague trigger to two
+# techniques at once (T1548 Abuse Elevation Control, T1036 Masquerading)
+# is itself a sign of an overly broad community rule, not a specific
+# behavioral match.
+_UNRELIABLE_SIGNATURES = {"accesses_public_folder"}
+
 
 class CapeReportParser:
     def __init__(self, report: Dict[str, Any], source_report_path: str, max_list_items: int = 200):
@@ -111,6 +126,8 @@ class CapeReportParser:
 
         for entry in r.get("ttps") or []:
             sig_name = entry.get("signature", "")
+            if sig_name in _UNRELIABLE_SIGNATURES:
+                continue
             technique_ids = entry.get("ttps", [])
             sig = sig_by_name.get(sig_name, {})
             severity = sig.get("severity") or 1
