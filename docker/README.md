@@ -320,6 +320,22 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 > Accessing via `https://localhost:8443` will fail due to internal redirect behaviour.
 > Accept the self-signed certificate warning in your browser on first access.
 
+> **MISP login gotcha:** the real bootstrap admin account is `admin@admin.test`,
+> not the `MISP_EMAIL` value set in docker-compose.yml (`admin@malwhere.local`)
+> — MISP's own image defaults win over that env var on first init. Worse,
+> `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to that account
+> either, so "log in with the password from `.env`" may just fail. If it does,
+> reset both credentials directly against the running container — this is a
+> live fix against the `mysql_data` volume, not something a `docker-compose.yml`
+> change can set once and forget:
+> ```bash
+> docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_pw admin@admin.test 'YOUR_PASSWORD'
+> docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey admin@admin.test 'YOUR_API_KEY'
+> ```
+> Same category of issue as the MISP MySQL password drift (see Known Issues
+> below) — if `mysql_data` is ever rebuilt from scratch, both resets need
+> to be redone.
+
 > **CAPE note:** PostgreSQL `cape` role must exist before cape-web starts.
 > If CAPE fails after a fresh deploy, run the PostgreSQL setup commands from the Post-Build section above.
 
@@ -420,6 +436,20 @@ docker compose -f docker/docker-compose.yml --profile core up -d pipeline
 
 ### MISP redirects to wrong port
 MISP must run on port 443 directly. The `MISP_BASEURL` env var is ignored if the internal port differs from the external port. Keep the mapping as `443:443`.
+
+### MISP's MySQL password drifts from `.env`
+The `misp` MySQL user's actual password is set once, during `mysql_data`'s very first init, to whatever `MYSQL_PASSWORD` was *at that time* — it does not get updated on later container recreates just because `.env` changed. If MISP's logs show `ERROR 1045 (28000): Access denied for user 'misp'@'...'` in a loop (`docker logs malwhere-misp`), that's this — the password baked into the volume no longer matches `.env`. Fix directly against MySQL:
+```bash
+docker exec malwhere-mysql mysql -uroot -p"$MYSQL_ROOT_PASSWORD" \
+  -e "ALTER USER 'misp'@'%' IDENTIFIED BY '$MYSQL_PASSWORD'; FLUSH PRIVILEGES;"
+docker restart malwhere-misp
+```
+
+### MISP web UI login doesn't match `.env`
+Related to the above but separate: the real bootstrap admin account is `admin@admin.test`, not the `MISP_EMAIL` value in docker-compose.yml — and `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to it either. See the MISP login gotcha under Service Access above for the reset commands.
+
+### `redis` needs to be running before `misp` starts
+MISP uses `redis` for session storage — if it's down, MISP's web/API layer fails on *every* request (including pure API calls) with a misleading "Authentication failed" error that has nothing to do with the API key. `docker-compose.yml`'s `misp` service now has `depends_on: redis` with a healthcheck, so a fresh `docker compose up` won't hit this — but if you ever stop `redis` manually while `misp` keeps running, you'll need to restart `misp` too, not just `redis`.
 
 ### CAPE workers crash on first boot
 The `cape-entry` service needs `/work` to exist as a Docker volume. Ensure `cape_work:/work` is defined in both the `volumes:` section and the cape service.
