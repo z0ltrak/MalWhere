@@ -82,7 +82,7 @@ malwhere/
 │   ├── cape/                 # CAPE sandbox configuration
 │   ├── misp/                 # MISP instance configuration
 │   ├── navigator/             # ATT&CK Navigator instance
-│   └── resubmit_queue/       # Dropped-file resubmission queue (gitignored, generated)
+│   └── resubmit_queue/        # Dropped-file resubmission queue (gitignored, generated)
 ├── results/
 │   ├── roning/
 │   │   ├── iocs/             # Normalized IOC JSON
@@ -108,18 +108,34 @@ malwhere/
 - CPU with VT-x/AMD-V enabled (required for CAPE)
 - 16 GB RAM minimum
 
-### Deploy the full environment
+### Deploy the environment
+
+Every service sits behind a Compose `profiles:` gate — `docker compose up -d`
+with no `--profile` flag starts nothing at all. `core` is the clone-and-go
+part (static analysis, the normalize/map/export pipeline, ATT&CK Navigator);
+`sandbox` (CAPE, MISP) needs real one-time host setup first — libvirt/KVM,
+building the `cape:kvm` image, an interactive Windows guest VM install —
+walked through start to finish in [`docker/README.md`](docker/README.md).
 
 ```bash
 git clone https://github.com/<your-username>/malwhere.git
 cd malwhere/docker
-docker compose up -d
+
+# Clone-and-go: static analysis + pipeline + Navigator
+docker compose --profile core up -d
+
+# Needs docker/README.md's host setup done first (CAPE + MISP)
+docker compose --profile core --profile sandbox up -d
 ```
 
-This starts:
+`core` alone starts:
+- **static** — static analysis container (internal only, via `docker exec`)
+- **pipeline** — normalizer/mapper/exporter (internal only, via `docker exec`)
+- **ATT&CK Navigator** — layer visualization (`:4200`)
+
+`sandbox` adds:
 - **CAPE Sandbox** — dynamic analysis (`:8000`)
 - **MISP** — threat intel platform (`:443`)
-- **ATT&CK Navigator** — layer visualization (`:4200`)
 
 ### Run the pipeline on a sample
 
@@ -170,9 +186,13 @@ python3 pipeline/exporter/export_misp.py \
 ```
 
 `--task-id` maps to CAPE's own analysis IDs (`1`=wsnake, `2`=roning,
-`3`=akira in this project's validated runs); `normalize.py`/`map_attck.py`
-run in the host's `.venv` (`source .venv/bin/activate` first), not inside
-a container.
+`3`=akira in this project's validated runs). `parse_cape.py`, `normalize.py`,
+and `map_attck.py` are all pure-stdlib and run with plain `python3` — no
+venv, no container. `export_stix.py`/`export_misp.py` are the ones that
+need third-party packages (`stix2`, `pymisp`): `pip install -r
+docker/pipeline/requirements.txt` into a venv first, or run them inside
+the `pipeline` container (`docker exec malwhere-pipeline python3
+/app/exporter/export_stix.py ...`), which already has them installed.
 
 ### Resubmitting dropped files for their own analysis
 
