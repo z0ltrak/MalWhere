@@ -157,6 +157,7 @@ class ATTACKMapper:
         'T1048': 'Exfiltration Over Alternative Protocol',
         'T1132': 'Data Encoding',
         'T1560.001': 'Archive via Utility',
+        'T1074': 'Data Staged',
         'T1036.005': 'Masquerading as Legitimate Software',
         'T1543.003': 'Windows Service',
         'T1053.005': 'Scheduled Task',
@@ -231,6 +232,34 @@ class ATTACKMapper:
                     evidence=evidence,
                     confidence=confidence,
                     count=corroborating
+                )
+            ))
+
+        # An archive-utility engine (T1560.001) built to bundle collected
+        # data before it moves is, by the same evidence, staging that data
+        # (T1074) -- the two techniques describe different facets (how vs.
+        # what) of one action, not two independent claims from one weak
+        # signal (unlike the CAPE signature overreaches fixed elsewhere in
+        # this pipeline). Found auditing WhiteSnake's T1074: real, strong
+        # ground-truth support (a custom ZIP engine building XML reports
+        # before exfil) but no detection source anywhere -- a genuine
+        # capability gap, not a mis-mapping. Requires the same 2+
+        # corroborating pattern threshold as the confidence promotion
+        # above, on the same evidence.
+        archive_patterns = [i for i in string_results if i['technique'] == 'T1560.001']
+        if len(archive_patterns) >= 2:
+            evidence = ', '.join(p.get('pattern', p.get('string', '')) for p in archive_patterns)
+            mappings.append(ATTACKMapping(
+                technique='T1074',
+                name=self._get_technique_name('T1074'),
+                source='string_pattern',
+                evidence=evidence,
+                confidence='medium',
+                justification=(
+                    f"The malware strings {evidence} indicate an archive-building engine bundling "
+                    f"data prior to transfer. The same evidence that supports Archive via Utility "
+                    f"(T1560.001) also supports Data Staged (T1074) -- collecting data into an "
+                    f"archive format is a form of staging it before exfiltration."
                 )
             ))
 
