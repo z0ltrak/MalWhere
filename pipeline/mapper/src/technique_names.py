@@ -63,6 +63,7 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1564.003": "Hide Artifacts: Hidden Window",
     "T1568": "Dynamic Resolution",
     "T1573": "Encrypted Channel",
+    "T1620": "Reflective Code Loading",
     "T1574": "Hijack Execution Flow",
     "T1622": "Debugger Evasion",
 }

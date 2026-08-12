@@ -166,6 +166,24 @@ class ATTACKMapper:
         'T1119': 'Automated Collection',
     }
 
+    # T1055's imports aren't equally diagnostic. OpenProcess is ubiquitous
+    # (termination, enumeration, memory reads, injection — dozens of
+    # legitimate reasons) and QueueUserAPC operates on a THREAD handle, not
+    # the process handle OpenProcess supplies, so "OpenProcess +
+    # QueueUserAPC" doesn't actually compose into one coherent injection
+    # primitive despite both appearing in the same import table. Found
+    # auditing a real regression this pairing caused: promoted to high
+    # confidence in Akira, a sample whose manual RE report found no process
+    # injection at all. These 4 each take a *foreign* process handle by
+    # their own signature (VirtualAllocEx/WriteProcessMemory) or are only
+    # meaningful as part of an injection chain (CreateRemoteThread/
+    # NtCreateThread) — any one of them plus a second corroborating import
+    # is a coherent signal. The read-primitive trio below is the alternate
+    # qualifying combination, matching WhiteSnake's validated genuine
+    # finding (reading another process's memory, all 3 co-present).
+    _T1055_STRONG_IMPORTS = {'WriteProcessMemory', 'VirtualAllocEx', 'CreateRemoteThread', 'NtCreateThread'}
+    _T1055_READ_TRIO = {'OpenProcess', 'VirtualQueryEx', 'ReadProcessMemory'}
+
     def __init__(self):
         """Initialize ATT&CK mapper."""
         self.mappings = []
@@ -248,7 +266,19 @@ class ATTACKMapper:
 
         mappings = []
         for technique, functions in by_technique.items():
-            if len(functions) >= 2:
+            func_set = set(functions)
+            if technique == 'T1055':
+                qualifying_combo = (
+                    (func_set & self._T1055_STRONG_IMPORTS and len(functions) >= 2)
+                    or self._T1055_READ_TRIO.issubset(func_set)
+                )
+                if qualifying_combo:
+                    confidence = 'high'
+                elif len(functions) >= 2:
+                    confidence = 'medium'
+                else:
+                    confidence = self._determine_import_confidence(functions[0])
+            elif len(functions) >= 2:
                 confidence = 'high'
             else:
                 confidence = self._determine_import_confidence(functions[0])
@@ -436,8 +466,10 @@ class ATTACKMapper:
             return f"The malware string '{evidence}' was found in the binary. This string is characteristic of {technique_name} behavior. The presence of this specific string alone (no other {technique_name}-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
 
         elif source == 'import':
-            if count >= 2:
+            if count >= 2 and confidence == 'high':
                 return f"The API functions {evidence} are all imported by the binary. This combination is characteristic of {technique_name} — multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+            if count >= 2:
+                return f"The API functions {evidence} are imported by the binary. Each is individually associated with {technique_name}, but this specific combination doesn't form one of the corroborating patterns known to indicate {technique_name} with high confidence — treat this as suggestive rather than conclusive."
             return f"The API function '{evidence}' is imported by the binary. This API is commonly used to perform {technique_name}. Importing this function alone (no other {technique_name}-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
 
         elif source == 'yara':

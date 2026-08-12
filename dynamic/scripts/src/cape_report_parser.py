@@ -64,7 +64,45 @@ _TECHNIQUE_DROP = {"T1568"}
 # cross-process injection mechanism — nothing about "this PE has TLS
 # callbacks" is evidence of injecting into ANOTHER process. No mention of
 # injection anywhere in Akira's own manual report either.
-_SIGNATURE_TECHNIQUE_DROP = {("pe_tls_callbacks", "T1055")}
+#
+# The next three follow the same pattern: each signature's OWN description
+# (checked directly against the raw CAPE report.json, not assumed) hedges
+# its secondary technique with "possibly" while its primary technique is
+# solidly evidenced — same shape as pe_tls_callbacks above.
+#   - unbacked_process_creation ("spawned a new child process from
+#     dynamically allocated (unbacked) memory") supports T1055
+#     (injection/loader behavior) but not T1106 Native API: the evidence
+#     is about WHERE the code lives, not whether it called the OS via
+#     native (Nt*/Zw*) vs Win32 APIs — CAPE never actually observes that.
+#   - unbacked_crypto_operations ("possible encryption/decryption of
+#     payloads, c2, files or data") supports T1027 (decrypting a packed
+#     payload) but the signature itself lists 4 possible purposes, only
+#     one of which (c2) would justify T1573 Encrypted Channel — mapping
+#     to T1573 picks the least-supported of the 4 without evidence which
+#     one actually applies.
+#   - registers_vectored_exception_handler ("possibly to hijack execution
+#     flow") supports T1055 (VEH is a known injection/execution primitive)
+#     but not T1574 Hijack Execution Flow, which specifically means DLL
+#     search-order hijacking, side-loading, PATH interception, etc. — a
+#     persistence/execution-redirection concept VEH registration has
+#     nothing to do with.
+#
+# infostealer_ftp/infostealer_mail ("harvests credentials from local FTP
+# client software(s)" / "...installed mail clients") tag T1003 OS
+# Credential Dumping alongside T1552/T1552.001 Unsecured Credentials —
+# reading a saved password out of an FTP or mail client's own config file
+# is exactly T1552.001's textbook case, not T1003 (which specifically
+# means dumping credentials from OS-level stores like LSASS/SAM). T1552.001
+# is already correctly present in the same signature's ttps list, so
+# dropping T1003 loses no coverage.
+_SIGNATURE_TECHNIQUE_DROP = {
+    ("pe_tls_callbacks", "T1055"),
+    ("unbacked_process_creation", "T1106"),
+    ("unbacked_crypto_operations", "T1573"),
+    ("registers_vectored_exception_handler", "T1574"),
+    ("infostealer_ftp", "T1003"),
+    ("infostealer_mail", "T1003"),
+}
 
 
 class CapeReportParser:
