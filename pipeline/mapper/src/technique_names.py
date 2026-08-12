@@ -57,6 +57,7 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1552": "Unsecured Credentials",
     "T1552.001": "Unsecured Credentials: Credentials In Files",
     "T1555": "Credentials from Password Stores",
+    "T1560.001": "Archive Collected Data: Archive via Utility",
     "T1562": "Impair Defenses",
     "T1562.001": "Impair Defenses: Disable or Modify Tools",
     "T1564": "Hide Artifacts",

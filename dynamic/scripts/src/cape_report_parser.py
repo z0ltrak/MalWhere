@@ -174,6 +174,18 @@ _SIGNATURE_TECHNIQUE_DROP = {
     ("unbacked_bind_shell", "T1090"),
     ("suspicious_iocontrol_codes", "T1542.003"),
     ("persistence_autorun_tasks", "T1053"),
+    # suspicious_command_tools ("Uses suspicious command line tools or
+    # Windows utilities") and uses_windows_utilities ("Uses Windows
+    # utilities for basic functionality") both tag T1202 Indirect Command
+    # Execution -- but T1202 specifically means using a utility (forfiles,
+    # pcalua, mshta, etc.) to execute a command in a way that bypasses
+    # normal process-monitoring/parent-child tracking. Both signatures'
+    # own descriptions are generic ("suspicious tools", "basic
+    # functionality") and never describe an actual indirection/bypass
+    # mechanism -- just that some command-line tool ran, which is already
+    # T1059's territory. No clean replacement for either; dropped.
+    ("suspicious_command_tools", "T1202"),
+    ("uses_windows_utilities", "T1202"),
 }
 
 

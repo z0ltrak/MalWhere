@@ -20,6 +20,16 @@ class StringATTACKMapper:
         '.onion': {'technique': 'T1071', 'confidence': 'high'},
         'Get-WmiObject Win32_Shadowcopy': {'technique': 'T1490', 'confidence': 'high'},
         'Remove-WmiObject': {'technique': 'T1490', 'confidence': 'high'},
+        # Found auditing WhiteSnake's missing T1560.001: it was in ground
+        # truth (a custom ZIP engine, verified via manual RE) but had zero
+        # source of static or dynamic evidence anywhere in the pipeline --
+        # a pure recall gap, not a mis-mapping. These are class/field names
+        # from the ZIP library actually used (confirmed present in
+        # wsnake's extracted strings), specific enough to be a real signal
+        # rather than a generic "zip" substring match.
+        'ZipFileEntry': {'technique': 'T1560.001', 'confidence': 'medium'},
+        'FilenameInZip': {'technique': 'T1560.001', 'confidence': 'medium'},
+        'GZipStream': {'technique': 'T1560.001', 'confidence': 'medium'},
 
         # MEDIUM Confidence — Suspicious API calls
         'WTSEnumerateProcessesW': {'technique': 'T1057', 'confidence': 'medium'},
