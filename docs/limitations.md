@@ -304,7 +304,7 @@ legitimate uses was rejected outright or paired with a corroborating
 pattern (e.g. `msbuild.exe` alone at medium, `-EncodedCommand` +
 `-WindowStyle Hidden` needing both, `mshta.exe` + `.hta` needing both).
 
-Four batches so far, 38 new technique IDs, by tactic:
+Five batches so far, 42 new technique IDs, by tactic:
 - **Persistence + Defense Evasion** (11): AppInit DLLs, Winlogon Helper
   DLL, Security Support Provider, Authentication Package, IFEO Injection,
   WMI Event Subscription, BITS Jobs, Clear Windows Event Logs, Regsvr32
@@ -334,8 +334,15 @@ Four batches so far, 38 new technique IDs, by tactic:
   by retrieving account usernames"). Moved. Confirmed safe (none of the
   3 samples currently import either function) and correct (all 3
   samples' ground truth expects T1033 for this, none expect T1082).
+- **Impact** (4): System Shutdown/Reboot, Account Access Removal, Disk
+  Content Wipe, Resource Hijacking. Chosen for direct relevance to
+  ransomware/wiper malware, given Akira is exactly that class — verified
+  its hit count by hand rather than just trusting a zero, since it's the
+  one sample where a real overlap was actually plausible. Consistent with
+  its documented behavior (PowerShell-based VSS deletion, rename-based
+  encryption): no raw disk access, reboot, account tampering, or mining.
 
-None of the 38 fired on any of the 3 validated samples when re-run after
+None of the 42 fired on any of the 3 validated samples when re-run after
 each batch — expected, since none of the 3 documented families use these
 specific mechanisms, and confirms the extension didn't introduce new
 false-positive risk on the set this project's numbers are measured
@@ -344,8 +351,8 @@ something that moves the headline P/R/F1 numbers today — a different kind
 of contribution than §3's audit, worth stating as such rather than
 implying it improved validated accuracy.
 
-~406 Windows-relevant techniques remain uncovered (474 total, ~68 now
-covered: ~30 original + 38 added across these four batches). Continuing this
+~402 Windows-relevant techniques remain uncovered (474 total, ~72 now
+covered: ~30 original + 42 added across these five batches). Continuing this
 extension (by tactic, same sourcing discipline, re-verified against the 3
 samples after each batch) is the clearest remaining lever for pipeline
 robustness against genuinely new malware, as distinct from further tuning
