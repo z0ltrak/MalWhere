@@ -121,25 +121,53 @@ This starts:
 
 ### Run the pipeline on a sample
 
+Static analysis runs inside its container (scripts are volume-mounted, so
+edits on the host reflect immediately — no rebuild needed):
+
 ```bash
-# Static analysis
-python static/scripts/analyze.py --sample /path/to/sample.exe --output results/roning/
-
-# Dynamic analysis (requires CAPE running)
-python dynamic/scripts/parse_cape.py --report results/roning/cape_report.json --output results/roning/
-
-# Normalize and map to ATT&CK
-python pipeline/normalizer/normalize.py --static results/roning/static_report.json \
-                                         --dynamic results/roning/dynamic_report.json \
-                                         --output results/roning/iocs/
-
-python pipeline/mapper/map_attck.py --iocs results/roning/iocs/normalized.json \
-                                     --output results/roning/attck/
-
-# Export to STIX 2.1
-python pipeline/exporter/export_stix.py --mapping results/roning/attck/mapping.json \
-                                          --output results/roning/stix/
+docker cp /path/to/sample.exe malwhere-static:/samples/roning/sample.exe
+docker exec malwhere-static python3 /scripts/analyze.py \
+    --sample /samples/roning/sample.exe --output /reports/roning/
+# -> static/reports/roning/sample_static.json (host path, via the volume mount)
 ```
+
+Dynamic analysis parses a CAPE report already produced by the sandbox —
+either by CAPE task ID or a direct path to its `report.json`:
+
+```bash
+python3 dynamic/scripts/parse_cape.py --task-id 2 --output dynamic/reports/roning/
+# or: --report docker/cape/work/storage/analyses/2/reports/report.json
+# -> dynamic/reports/roning/dynamic_report.json
+```
+
+Normalize both sources, map to ATT&CK, then export:
+
+```bash
+python3 pipeline/normalizer/normalize.py \
+    --static static/reports/roning/sample_static.json \
+    --dynamic dynamic/reports/roning/dynamic_report.json \
+    --output results/roning/iocs/
+# -> results/roning/iocs/normalized_iocs.json
+
+python3 pipeline/mapper/map_attck.py \
+    --iocs results/roning/iocs/normalized_iocs.json \
+    --output results/roning/attck/
+# -> results/roning/attck/attck_mapping.json + navigator_layer.json
+
+python3 pipeline/exporter/export_stix.py \
+    --mapping results/roning/attck/attck_mapping.json \
+    --output results/roning/stix/
+# -> results/roning/stix/bundle.stix2
+
+# Optional: push live to MISP (needs the sandbox profile's MISP running)
+python3 pipeline/exporter/export_misp.py \
+    --mapping results/roning/attck/attck_mapping.json --publish
+```
+
+`--task-id` maps to CAPE's own analysis IDs (`1`=wsnake, `2`=roning,
+`3`=akira in this project's validated runs); `normalize.py`/`map_attck.py`
+run in the host's `.venv` (`source .venv/bin/activate` first), not inside
+a container.
 
 ---
 

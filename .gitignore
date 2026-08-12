@@ -18,6 +18,18 @@ samples/*/*.zip
 samples/*.7z
 samples/*/*.7z
 
+# manual_analysis/*/ holds a working copy of each sample (and, for
+# RoningLoader, its NSIS-extracted files) alongside the RE report --
+# never covered by the samples/ patterns above since it's a different
+# directory. Found never actually committed, but only by luck (no rule
+# stopped a future `git add -A`), while working through this project's
+# static pipeline this session.
+manual_analysis/*/*.exe
+manual_analysis/*/*.dll
+# RoningLoader's own encrypted-payload extension (9ZUPMq.3w) -- unique
+# enough to blanket-ignore anywhere in the repo.
+*.3w
+
 # Python
 __pycache__/
 *.py[cod]
