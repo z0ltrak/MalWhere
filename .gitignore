@@ -59,6 +59,10 @@ docker/cape/work/log/
 docker/cape/work/storage/
 docker/cape/work/conf/default/
 
+# Resubmission queue: raw dropped-file bytes copied out of CAPE storage,
+# same reasoning as docker/cape/work/storage/ above.
+docker/resubmit_queue/
+
 # Analysis artifacts with PII or sensitive IOCs
 results/**/raw/
 

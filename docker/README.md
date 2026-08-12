@@ -13,8 +13,9 @@
 7. [Service Access](#service-access)
 8. [Daily Workflow](#daily-workflow)
 9. [Running Static Analysis](#running-static-analysis)
-10. [Stopping the Environment](#stopping-the-environment)
-11. [Known Issues & Fixes](#known-issues--fixes)
+10. [Resubmission Loop](#resubmission-loop)
+11. [Stopping the Environment](#stopping-the-environment)
+12. [Known Issues & Fixes](#known-issues--fixes)
 
 ---
 
@@ -374,6 +375,75 @@ docker exec malwhere-static python3 /scripts/analyze.py \
   --output /reports/akira/ \
   --verbose
 ```
+
+---
+
+## Resubmission Loop
+
+Multi-stage malware drops payloads with real capabilities of their own —
+this sample set's own RoningLoader drops a rootkit driver (`vally3dka.sys`),
+an AV-killer DLL (`goldendays.dll`), and a Gh0st RAT client. Without this
+loop, dropped files only ever show up as hashes in `normalized_iocs.json`;
+none of their own imports, strings, or ATT&CK techniques get extracted. The
+loop is two independent halves, split across the two `core` containers by
+what each one has installed — `static` has pefile/YARA/FLOSS/Ghidra,
+`pipeline`'s normalize+map stages are pure-stdlib:
+
+```
+dynamic/scripts/parse_cape.py --resubmit-dir
+        │  (runs on the host — pure stdlib, and CAPE storage +
+        │   docker/resubmit_queue are both host-accessible bind mounts)
+        ▼
+docker/resubmit_queue/{manifest,artifacts}/
+        │
+        ▼
+static/scripts/process_resubmissions.py           (inside `static`, needs pefile etc.)
+        │  reads /resubmit (ro), writes static/reports/{family}/{sha256}_static.json
+        │  tagged with a resubmission_lineage block (parent_hash, discovery_mechanism, ...)
+        ▼
+pipeline/process_resubmissions.py                  (inside `pipeline`, pure stdlib)
+        │  scans /input/static for resubmission_lineage-tagged reports,
+        │  runs each through normalize.py + map_attck.py independently
+        ▼
+results/{family}/resubmitted/{sha256}/{iocs,attck}/
+```
+
+Each resubmitted file gets its **own** `attck_mapping.json` rather than
+being merged into the parent sample's — a dropped payload's own
+capabilities aren't evidence the *parent* binary performs those techniques,
+and blending the two would misattribute confidence in
+`pipeline/mapper/src/reconcile.py`'s cross-source model.
+
+```bash
+# 1. Queue dropped files from an already-run dynamic analysis (--task-id 2
+#    resolves docker/cape/work/storage/analyses/2/reports/report.json)
+python3 dynamic/scripts/parse_cape.py --task-id 2 --output dynamic/reports/roning/ \
+    --resubmit-dir docker/resubmit_queue --family roning --verbose
+# -> docker/resubmit_queue/manifest/{sha256}.json + artifacts/{sha256}
+#    Executables/scripts are prioritized; RESUBMIT_MAX_ARTIFACTS (default 25,
+#    also settable via --resubmit-max-artifacts) caps how many get queued
+#    per run — safe to re-run later, already-queued files are skipped.
+
+# 2. Static half: analyze each queued artifact, tag it with lineage
+docker exec malwhere-static python3 /scripts/process_resubmissions.py --verbose
+# -> static/reports/roning/{sha256}_static.json (already-analyzed files skipped)
+
+# 3. Merge half: normalize + map ATT&CK for anything newly tagged
+docker exec malwhere-pipeline python3 /app/process_resubmissions.py --verbose
+# -> results/roning/resubmitted/{sha256}/iocs/normalized_iocs.json
+# -> results/roning/resubmitted/{sha256}/attck/attck_mapping.json
+```
+
+Both halves respect `RESUBMIT_TIME_BUDGET_MIN` (default 45 minutes,
+see the `static`/`pipeline` service `environment:` blocks) — they stop
+*starting* new files once the budget is spent rather than cutting one off
+mid-analysis, so a run is safe to just re-invoke later to pick up where
+it left off. `docker/resubmit_queue/` is gitignored (raw dropped-file
+bytes, same reasoning as `docker/cape/work/storage/`).
+
+Only *static* analysis runs on resubmitted files — they aren't themselves
+detonated in CAPE, so `RESUBMIT_MAX_DEPTH` is reserved for a future
+chained dynamic-resubmission loop and isn't consumed by any script yet.
 
 ---
 

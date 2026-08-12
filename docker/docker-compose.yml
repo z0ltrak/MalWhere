@@ -99,11 +99,6 @@ volumes:
   redis_data:
   navigator_data:
   pipeline_results:
-  # Feedback loop: pipeline writes newly-discovered dynamic artifacts here
-  # (dropped files, injected/reflectively-loaded PE dumps + a manifest with
-  # parent hash, discovery mechanism, timestamp). static watches it and
-  # resubmits anything not already in its corpus.
-  resubmit_queue:
   # CAPE's data stores. NOT under ./cape/work like conf/storage are — these
   # three live on the container's own overlay filesystem by default, so
   # every rebuild/recreate silently wiped them while leaving the raw report
@@ -146,21 +141,27 @@ services:
       - ../samples:/samples:ro # read-only samples
       - ../static/reports:/reports # output from the análisis
       - ../static/scripts:/scripts:ro
-      - resubmit_queue:/resubmit:ro # artifacts fed back from dynamic analysis
+      - ./resubmit_queue:/resubmit:ro # artifacts fed back from dynamic analysis (bind mount,
+      # not a named volume — dynamic/scripts/parse_cape.py writes to it directly from the
+      # host, no container needed, since it's a pure-stdlib script and CAPE storage is
+      # already a host-accessible bind mount)
     networks:
       malwhere_net:
         ipv4_address: 172.20.0.10
     environment:
       - PYTHONUNBUFFERED=1
       - RESUBMIT_WATCH_DIR=/resubmit
+      - RESUBMIT_TIME_BUDGET_MIN=45
     restart: unless-stopped
     mem_limit: 3g
     cpus: 2.0
     # No port exposure — acceso via docker exec o CLI
-    # static should watch /resubmit for new manifest entries (in addition
-    # to whatever triggers it on /samples) and tag its output with the
-    # parent_hash + discovery_mechanism from the manifest, so lineage
-    # survives into /reports for the pipeline to merge.
+    # Run static/scripts/process_resubmissions.py (docker compose exec static
+    # python3 /scripts/process_resubmissions.py -v) to statically analyze
+    # anything dynamic/scripts/parse_cape.py queued into /resubmit, tagging
+    # each report with the parent_hash + discovery_mechanism from its
+    # manifest so lineage survives into /reports for the pipeline to merge
+    # (pipeline/process_resubmissions.py).
 
   # -------------------------------------------------------------------------
   # PIPELINE (normalizer + mapper + exporter)
@@ -180,7 +181,6 @@ services:
       - ../pipeline:/app:ro
       - ../results:/results
       - pipeline_results:/output
-      - resubmit_queue:/resubmit:rw # writes new artifacts here for static to pick up
     networks:
       malwhere_net:
         ipv4_address: 172.20.0.11
@@ -190,9 +190,11 @@ services:
       - MISP_KEY=${MISP_API_KEY:-changeme}
       - MISP_VERIFYCERT=false
       - ATTCK_VERSION=14.1
-      # Resubmission loop bounds (see dynamic pipeline design v1, §4/§7)
-      - RESUBMIT_MAX_DEPTH=5
-      - RESUBMIT_MAX_ARTIFACTS=25
+      # Resubmission loop bound for pipeline/process_resubmissions.py.
+      # RESUBMIT_MAX_DEPTH/RESUBMIT_MAX_ARTIFACTS are consumed by
+      # dynamic/scripts/parse_cape.py instead (see its --resubmit-* flags) —
+      # that script runs on the host, not in this container, since it's
+      # pure-stdlib and CAPE storage/./resubmit_queue are host bind mounts.
       - RESUBMIT_TIME_BUDGET_MIN=45
     depends_on:
       - static

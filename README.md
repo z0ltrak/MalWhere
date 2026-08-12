@@ -81,12 +81,14 @@ malwhere/
 │   ├── docker-compose.yml    # Full environment definition
 │   ├── cape/                 # CAPE sandbox configuration
 │   ├── misp/                 # MISP instance configuration
-│   └── navigator/            # ATT&CK Navigator instance
+│   ├── navigator/             # ATT&CK Navigator instance
+│   └── resubmit_queue/       # Dropped-file resubmission queue (gitignored, generated)
 ├── results/
 │   ├── roning/
 │   │   ├── iocs/             # Normalized IOC JSON
 │   │   ├── attck/            # ATT&CK mappings + Navigator layers
-│   │   └── stix/             # STIX 2.1 bundles
+│   │   ├── stix/             # STIX 2.1 bundles
+│   │   └── resubmitted/      # Per-dropped-file iocs/+attck/, one dir per sha256
 │   ├── wsnake/
 │   └── akira/
 ├── paper/                    # Academic paper (LaTeX source)
@@ -158,6 +160,9 @@ python3 pipeline/exporter/export_stix.py \
     --mapping results/roning/attck/attck_mapping.json \
     --output results/roning/stix/
 # -> results/roning/stix/bundle.stix2
+# WARNING printed here means real content was truncated (hash/network IOCs
+# past --max-iocs, or a >10000-char technique justification) — see the
+# printed note for which, and either raise --max-iocs or accept the cut.
 
 # Optional: push live to MISP (needs the sandbox profile's MISP running)
 python3 pipeline/exporter/export_misp.py \
@@ -168,6 +173,47 @@ python3 pipeline/exporter/export_misp.py \
 `3`=akira in this project's validated runs); `normalize.py`/`map_attck.py`
 run in the host's `.venv` (`source .venv/bin/activate` first), not inside
 a container.
+
+### Resubmitting dropped files for their own analysis
+
+Multi-stage malware drops payloads with real capabilities of their own —
+RoningLoader alone drops a rootkit driver, an AV-killer DLL, and a Gh0st
+RAT client. `parse_cape.py` can queue every dropped/CAPE-extracted file
+for its own independent static-analysis run, tagged with lineage back to
+the parent sample, instead of only recording their hashes as IOCs:
+
+```bash
+python3 dynamic/scripts/parse_cape.py --task-id 2 --output dynamic/reports/roning/ \
+    --resubmit-dir docker/resubmit_queue --family roning
+# -> docker/resubmit_queue/manifest/{sha256}.json + artifacts/{sha256}
+#    (bind-mounted into the static/pipeline containers at /resubmit)
+```
+
+Then, run each half of the loop in its own container — static analysis
+needs `static`'s pefile/YARA/FLOSS/Ghidra environment; normalize+map is
+pure-stdlib and reads the tagged output back out via `pipeline`'s mounts:
+
+```bash
+# Static half: analyzes each queued artifact, tags it with parent_hash +
+# discovery_mechanism, writes to static/reports/roning/{sha256}_static.json
+docker exec malwhere-static python3 /scripts/process_resubmissions.py --verbose
+
+# Merge half: finds anything tagged with resubmission_lineage that hasn't
+# been normalized+mapped yet, runs it through the same pipeline as a
+# top-level sample would go through
+docker exec malwhere-pipeline python3 /app/process_resubmissions.py --verbose
+# -> results/roning/resubmitted/{sha256}/iocs/normalized_iocs.json
+# -> results/roning/resubmitted/{sha256}/attck/attck_mapping.json
+```
+
+Each resubmitted file gets its own independent `attck_mapping.json` rather
+than being merged into the parent's — a dropped payload's own capabilities
+aren't evidence the *parent* binary performs those techniques, and blending
+the two would misattribute confidence in `pipeline/mapper/src/reconcile.py`'s
+cross-source model. `RESUBMIT_MAX_ARTIFACTS`/`RESUBMIT_TIME_BUDGET_MIN` bound
+how much a single run queues/processes — see `docker/docker-compose.yml`'s
+`static`/`pipeline` service `environment:` blocks, or override per-invocation
+with `--resubmit-max-artifacts`/`--time-budget-min`.
 
 ---
 

@@ -8,6 +8,7 @@ attck_mappings field mirrors static analysis's ATTACKMapping shape so the
 normalizer can treat both sources symmetrically.
 """
 
+import os
 import sys
 import json
 import argparse
@@ -15,6 +16,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from src.cape_report_parser import CapeReportParser
+from src.resubmit_writer import ResubmitWriter
 
 
 def resolve_report_path(args: argparse.Namespace) -> Path:
@@ -59,6 +61,23 @@ def main():
         "--verbose", "-v",
         action="store_true",
         help="Enable verbose output"
+    )
+    parser.add_argument(
+        "--resubmit-dir",
+        default=os.environ.get("RESUBMIT_WATCH_DIR"),
+        help="Resubmission queue directory to write dropped-file manifests/artifacts into "
+             "(default: $RESUBMIT_WATCH_DIR). Omit to skip resubmission entirely. Requires --task-id."
+    )
+    parser.add_argument(
+        "--resubmit-max-artifacts",
+        type=int,
+        default=int(os.environ.get("RESUBMIT_MAX_ARTIFACTS", "25")),
+        help="Cap on dropped files queued for resubmission per run (default: $RESUBMIT_MAX_ARTIFACTS or 25)"
+    )
+    parser.add_argument(
+        "--family",
+        default="unknown",
+        help="Family label recorded in resubmission manifests for lineage (default: unknown)"
     )
 
     args = parser.parse_args()
@@ -105,6 +124,32 @@ def main():
     print("=" * 60)
     print(f"Results saved to: {output_file}")
     print(f"Size: {output_file.stat().st_size / 1000:.1f} KB (source was {report_path.stat().st_size / 1_000_000:.1f} MB)")
+
+    if args.resubmit_dir:
+        if args.task_id is None:
+            print("\nWarning: --resubmit-dir given without --task-id, skipping resubmission "
+                  "(dropped-file bytes are located via <cape-storage-dir>/<task-id>/{files,CAPE}/<sha256>).")
+        else:
+            writer = ResubmitWriter(
+                resubmit_dir=Path(args.resubmit_dir),
+                cape_storage_dir=Path(args.cape_storage_dir),
+            )
+            summary = writer.write_manifest_entries(
+                dynamic_report=dynamic_report,
+                cape_task_id=args.task_id,
+                parent_hash=dynamic_report["target"]["sha256"],
+                parent_family=args.family,
+                max_artifacts=args.resubmit_max_artifacts,
+            )
+            print("\n" + "-" * 60)
+            print(f"RESUBMISSION QUEUE: {args.resubmit_dir}")
+            print(f"  Queued: {summary['written']}")
+            print(f"  Already queued: {summary['skipped_existing']}")
+            print(f"  Skipped (junk): {summary['skipped_junk']}")
+            print(f"  Skipped (bytes not found in CAPE storage): {summary['skipped_missing_bytes']}")
+            for err in writer.errors:
+                print(f"  Error: {err}")
+            print("-" * 60)
 
     return 0
 
