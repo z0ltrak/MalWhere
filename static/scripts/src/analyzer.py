@@ -760,7 +760,8 @@ class StaticAnalyzer:
             standard=strings_dict.get('standard', []),
             floss=strings_dict.get('floss', []),
             decoded=strings_dict.get('decoded', []),
-            deobfuscated=strings_dict.get('deobfuscated', [])
+            deobfuscated=strings_dict.get('deobfuscated', []),
+            dotnet_strings=strings_dict.get('dotnet_strings', [])
         )
 
         indicators_dict = report_dict.get('indicators', {})

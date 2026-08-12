@@ -34,6 +34,16 @@ class ATTACKMapper:
         'CallNextHookEx': 'T1056.001',
         'ToUnicodeEx': 'T1056.001',
         'GetAsyncKeyState': 'T1056.001',
+        # mciSendString(A/W) is the classic simple-audio-recording API
+        # ("open new type waveaudio ... record" MCI command strings) --
+        # essentially no common non-multimedia legitimate use, same
+        # single-import-sufficient precedent as WH_KEYBOARD_LL for
+        # keylogging. Found auditing WhiteSnake's missing T1123: its
+        # report documents exactly this (class `dt`, command "open new
+        # type waveaudio alias recorder"), and the API was only just made
+        # visible by fixing dotnet_parser.py's P/Invoke extraction.
+        'mciSendStringA': 'T1123',
+        'mciSendStringW': 'T1123',
 
         # Credential Access
         'CredEnumerateW': 'T1555',

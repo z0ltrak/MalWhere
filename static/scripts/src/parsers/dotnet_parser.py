@@ -26,6 +26,7 @@ except ImportError:
 try:
     import dnfile
     from dnfile import dnPE
+    from dnfile.enums import MetadataTables
     DNFILE_AVAILABLE = True
 except (ImportError, ModuleNotFoundError, AttributeError, Exception) as e:
     DNFILE_AVAILABLE = False
@@ -98,11 +99,22 @@ class DotNetParser:
             result['is_dotnet'] = True
 
             # Extract assembly info from Assembly table
+            #
+            # This dnfile version (0.18.0, per this file's own docstring)
+            # keys mdtables.tables by NUMERIC ECMA-335 table ID
+            # (MetadataTables.Assembly.value == 0x20), not by string name.
+            # Every "'X' in mdtables.tables" check in this file used to be
+            # comparing a string against a dict of ints -- always False,
+            # meaning every extraction method below silently returned
+            # empty results no matter what the assembly actually contained.
+            # Verified directly against a real .NET sample (WhiteSnake):
+            # TypeDef had 98 rows, MethodDef 400, ImplMap 13 -- all real,
+            # all previously invisible to the ATT&CK mapper.
             try:
                 if hasattr(self.pe.net, 'mdtables'):
                     mdtables = self.pe.net.mdtables
-                    if 'Assembly' in mdtables.tables:
-                        assembly_table = mdtables.tables['Assembly']
+                    if MetadataTables.Assembly.value in mdtables.tables:
+                        assembly_table = mdtables.tables[MetadataTables.Assembly.value]
                         if assembly_table and len(assembly_table.rows) > 0:
                             row = assembly_table.rows[0]
                             if hasattr(row, 'Name'):
@@ -142,11 +154,13 @@ class DotNetParser:
 
     def _extract_pinvoke_imports(self) -> List[Dict[str, Any]]:
         """
-        Extract P/Invoke imports from ImplMap table using dnfile 0.18.0 API.
+        Extract P/Invoke imports from the ImplMap table.
 
-        In dnfile 0.18.0, P/Invoke imports are found in:
-        - ImplMap table: maps methods to imported DLLs
-        - ModuleRef table: contains the DLL names
+        row.ImportScope is an MDTableIndex (this dnfile version resolves
+        coded indices to a structured object with .table/.row_index/.row,
+        not a raw combined integer) -- .row is the already-resolved
+        ModuleRefRow, so no manual bit-masking or index lookup table is
+        needed at all.
         """
         imports = []
         seen = set()
@@ -157,38 +171,19 @@ class DotNetParser:
         try:
             mdtables = self.pe.net.mdtables
 
-            # Check if we have the ImplMap table
-            if 'ImplMap' not in mdtables.tables:
+            if MetadataTables.ImplMap.value not in mdtables.tables:
                 return imports
 
-            impl_map_table = mdtables.tables['ImplMap']
-            module_ref_table = mdtables.tables.get('ModuleRef', None)
+            impl_map_table = mdtables.tables[MetadataTables.ImplMap.value]
 
-            if module_ref_table is None:
-                return imports
-
-            # Build a map of ModuleRef indices to names
-            module_names = {}
-            for idx, row in enumerate(module_ref_table.rows, 1):
-                if hasattr(row, 'Name') and row.Name:
-                    name = row.Name.value if hasattr(row.Name, 'value') else str(row.Name)
-                    module_names[idx] = name
-
-            # Iterate through ImplMap rows
             for row in impl_map_table.rows:
-                # Get the DLL name from the ModuleRef
-                if not hasattr(row, 'ImportScope') or not row.ImportScope:
+                if not hasattr(row, 'ImportScope') or row.ImportScope is None:
                     continue
 
-                # ImportScope is a coded index pointing to a ModuleRef
-                # For ImplMap, the ImportScope is a ModuleRef
-                # We need to extract the ModuleRef index from the coded index
-                module_ref_idx = row.ImportScope & 0xFFFFFF
-
-                if module_ref_idx in module_names:
-                    dll_name = module_names[module_ref_idx]
-                else:
+                module_ref_row = row.ImportScope.row
+                if module_ref_row is None or not hasattr(module_ref_row, 'Name') or not module_ref_row.Name:
                     continue
+                dll_name = module_ref_row.Name.value if hasattr(module_ref_row.Name, 'value') else str(module_ref_row.Name)
 
                 # Get the method name from the ImplMap row
                 method_name = None
@@ -219,9 +214,21 @@ class DotNetParser:
 
         return imports
 
-    # In _extract_user_strings method, change to:
     def _extract_user_strings(self) -> List[str]:
-        """Extract user strings from #US heap using dnfile 0.18.0 API."""
+        """Extract user strings from the #US heap.
+
+        The heap has no direct "iterate everything" API (`pe.net.us`
+        doesn't exist in this dnfile version -- the real attribute is
+        `user_strings`, and it's an offset-indexed heap, not an iterable).
+        Each entry is a ECMA-335-compressed length prefix followed by that
+        many bytes of UTF-16LE data; walk it sequentially from offset 1
+        (offset 0 is always a single null byte) using each entry's own
+        reported size to find the next one, rather than assuming a layout.
+        Verified against a real sample: the first two entries recovered
+        this way were 'bdf' and 'nooo:' -- WhiteSnake's own documented
+        string-obfuscation key components (see
+        manual_wsnakestealer_report.md), previously never seen at all.
+        """
         strings = []
         seen = set()
 
@@ -229,20 +236,27 @@ class DotNetParser:
             return strings
 
         try:
-            # Access the #US heap directly
-            if hasattr(self.pe.net, 'us'):
-                us_heap = self.pe.net.us
-                # In dnfile 0.18.0, us_heap is iterable
-                for us_item in us_heap:
-                    if us_item and hasattr(us_item, 'value') and us_item.value:
-                        s = us_item.value
-                        if len(s) >= 4 and s not in seen:
-                            seen.add(s)
-                            strings.append(s)
+            if not hasattr(self.pe.net, 'user_strings'):
+                return strings
 
-            # Limit to prevent explosion
-            if len(strings) > 5000:
-                strings = strings[:5000]
+            heap = self.pe.net.user_strings
+            heap_size = heap.sizeof()
+            offset = 1
+
+            while offset < heap_size and len(strings) < 5000:
+                item = heap.get(offset)
+                if item is None:
+                    break
+
+                consumed = item.item_size.raw_size + int(item.item_size)
+                if consumed <= 0:
+                    break  # malformed entry -- stop rather than loop forever
+
+                if item.value and len(item.value) >= 4 and item.value not in seen:
+                    seen.add(item.value)
+                    strings.append(item.value)
+
+                offset += consumed
 
         except Exception as e:
             self.errors.append(f"Error extracting user strings: {e}")
@@ -260,8 +274,8 @@ class DotNetParser:
         try:
             mdtables = self.pe.net.mdtables
 
-            if 'TypeDef' in mdtables.tables:
-                table = mdtables.tables['TypeDef']
+            if MetadataTables.TypeDef.value in mdtables.tables:
+                table = mdtables.tables[MetadataTables.TypeDef.value]
                 for row in table.rows:
                     # Get the type name and namespace
                     type_name = None
@@ -305,8 +319,8 @@ class DotNetParser:
         try:
             mdtables = self.pe.net.mdtables
 
-            if 'MethodDef' in mdtables.tables:
-                table = mdtables.tables['MethodDef']
+            if MetadataTables.MethodDef.value in mdtables.tables:
+                table = mdtables.tables[MetadataTables.MethodDef.value]
                 for row in table.rows:
                     if hasattr(row, 'Name') and row.Name:
                         name = row.Name.value if hasattr(row.Name, 'value') else str(row.Name)

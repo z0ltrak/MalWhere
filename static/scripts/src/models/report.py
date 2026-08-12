@@ -46,6 +46,7 @@ class StringInfo:
     floss: List[str] = field(default_factory=list)
     decoded: List[str] = field(default_factory=list)
     deobfuscated: List[str] = field(default_factory=list)
+    dotnet_strings: List[str] = field(default_factory=list)
 
 
 @dataclass
