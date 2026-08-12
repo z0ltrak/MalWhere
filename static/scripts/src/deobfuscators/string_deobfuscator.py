@@ -40,8 +40,8 @@ class StringDeobfuscator:
                     result['xor_decoded'].append(xor_result)
                     break
 
-            # 2. Try auto-XOR pattern detection (like WhiteSnakeStealer "bdf" pattern)
-            xor_pattern = self._try_xor_pattern_detection(s)
+            # 2. Try single-byte XOR bruteforce (fully generic)
+            xor_pattern = self._try_single_byte_xor_bruteforce(s)
             if xor_pattern:
                 result['pattern_decoded'].append(xor_pattern)
 
@@ -69,49 +69,40 @@ class StringDeobfuscator:
             decoded = ''.join(result)
             if self._is_plaintext(decoded) and len(decoded) > 4:
                 return decoded
-        except:
+        except Exception:
             pass
         return None
 
-    def _try_xor_pattern_detection(self, s: str) -> Optional[str]:
-        """Try to detect XOR pattern automatically (like WhiteSnakeStealer's "bdf" + "nooo:")."""
-        # Try common XOR key lengths
-        for key_len in [3, 4, 5, 6, 7, 8]:
-            # Try all possible first bytes (ASCII printable)
-            for first_byte in range(32, 127):
-                try:
-                    # Build key with pattern detection
-                    key = bytearray([first_byte])
+    def _try_single_byte_xor_bruteforce(self, s: str) -> Optional[str]:
+        """Bruteforce single-byte XOR over all 256 key values.
 
-                    # Try to determine rest of key from pattern
-                    # Look for "nooo:" prefix after XOR
-                    for i in range(1, key_len):
-                        # Try common patterns (bdf pattern)
-                        if i == 1:
-                            key.append(0x62)  # 'b'
-                        elif i == 2:
-                            key.append(0x64)  # 'd'
-                        else:
-                            key.append(0x66)  # 'f'
+        Previously this tried a hardcoded multi-byte key pattern
+        (first byte brute-forced, remaining bytes fixed to the literal
+        ASCII values 'b'/'d'/'f') and only accepted a result that started
+        with the literal prefix "nooo:" -- a real, verified finding for
+        one specific sample (WhiteSnakeStealer's own string-obfuscation
+        scheme, see manual_wsnakestealer_report.md), but hardcoded as if
+        it were generic pattern detection. It could structurally never
+        find any other key. Genuine multi-byte XOR key discovery needs a
+        crib or repeated-byte statistics a single short string doesn't
+        provide -- KeyReconstructor already does that properly at the
+        binary-section level, and its output reaches _try_xor_with_key()
+        above. This just covers the one thing a lone string realistically
+        can self-validate: a single-byte key, brute-forced generically.
+        """
+        # Skip strings that already look like plaintext -- nothing to
+        # decode, and bruteforcing them risks scrambling valid text into
+        # different-but-still-printable-looking text (a false "decode").
+        if self._is_plaintext(s):
+            return None
 
-                    result = []
-                    for i, c in enumerate(s):
-                        decoded_char = chr(ord(c) ^ key[i % len(key)])
-                        result.append(decoded_char)
-
-                    decoded = ''.join(result)
-
-                    # Check if it starts with "nooo:" (WhiteSnakeStealer pattern)
-                    if decoded.startswith('nooo:'):
-                        # Remove prefix and return
-                        return decoded[5:]  # Remove "nooo:" prefix
-
-                    # Check if it's plaintext
-                    if self._is_plaintext(decoded) and len(decoded) > 4:
-                        return decoded
-
-                except:
-                    continue
+        for key_byte in range(1, 256):  # skip 0: XOR with 0 is a no-op
+            try:
+                decoded = ''.join(chr(ord(c) ^ key_byte) for c in s)
+                if decoded != s and self._is_plaintext(decoded) and len(decoded) > 4:
+                    return decoded
+            except Exception:
+                continue
 
         return None
 
@@ -122,7 +113,7 @@ class StringDeobfuscator:
             decoded = base64.b64decode(s).decode('utf-8', errors='ignore')
             if self._is_plaintext(decoded) and len(decoded) > 4:
                 return decoded
-        except:
+        except Exception:
             pass
 
         try:
@@ -130,7 +121,7 @@ class StringDeobfuscator:
             decoded = base64.urlsafe_b64decode(s).decode('utf-8', errors='ignore')
             if self._is_plaintext(decoded) and len(decoded) > 4:
                 return decoded
-        except:
+        except Exception:
             pass
 
         return None
@@ -143,7 +134,7 @@ class StringDeobfuscator:
                 decoded = bytes.fromhex(s).decode('utf-8', errors='ignore')
                 if self._is_plaintext(decoded) and len(decoded) > 4:
                     return decoded
-        except:
+        except Exception:
             pass
         return None
 

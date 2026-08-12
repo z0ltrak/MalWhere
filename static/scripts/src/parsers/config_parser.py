@@ -219,7 +219,7 @@ class ConfigExtractor:
                         'length': len(match),
                         'description': description
                     })
-                except:
+                except Exception:
                     pass
 
         return patterns[:20]

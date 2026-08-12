@@ -138,7 +138,7 @@ class Analyzer:
                             'string': text,
                             'offset': s.getAddress().getOffset()
                         })
-                except:
+                except Exception:
                     pass
 
     def _analyze_xor_strings(self):
@@ -163,9 +163,9 @@ class Analyzer:
                                 'decrypted': s,
                                 'offset': item.getAddress().getOffset()
                             })
-                    except:
+                    except Exception:
                         pass
-            except:
+            except Exception:
                 pass
 
     def _analyze_rc4(self):
@@ -191,7 +191,7 @@ class Analyzer:
                                         'address': str(func.getEntryPoint())
                                     })
                                     break
-                            except:
+                            except Exception:
                                 pass
 
     def _analyze_exports(self):

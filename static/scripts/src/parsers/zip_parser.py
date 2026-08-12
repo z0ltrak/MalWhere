@@ -48,7 +48,7 @@ class ZIPParser:
         try:
             if zip_ref.comment:
                 metadata['comment'] = zip_ref.comment.decode('utf-8', errors='ignore')[:200]
-        except:
+        except Exception:
             pass
 
         try:
@@ -139,7 +139,7 @@ class ZIPParser:
 
             return 'unknown'
 
-        except:
+        except Exception:
             return 'unknown'
 
     def get_errors(self) -> List[str]:

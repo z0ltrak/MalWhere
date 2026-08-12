@@ -245,7 +245,7 @@ class FileTypeDetector:
         # Convert to string for searching
         try:
             data_str = self.data.decode('utf-8', errors='ignore')
-        except:
+        except Exception:
             return None
 
         for sig in self.NSIS_SIGNATURES:
@@ -275,7 +275,7 @@ class FileTypeDetector:
 
         try:
             data_str = self.data.decode('utf-8', errors='ignore')
-        except:
+        except Exception:
             return None
 
         for sig in self.INNO_SIGNATURES:
@@ -311,7 +311,7 @@ class FileTypeDetector:
                             'confidence': 'medium',
                             'matched_string': 'MSI OLE header'
                         }
-                except:
+                except Exception:
                     pass
 
         return None
@@ -327,7 +327,7 @@ class FileTypeDetector:
 
         try:
             text = self.data[:8192].decode('utf-8', errors='ignore')
-        except:
+        except Exception:
             return None
 
         # PowerShell
@@ -449,7 +449,7 @@ class FileTypeDetector:
                 text = self.data.decode('utf-8', errors='ignore')
                 if 'mscoree.dll' in text.lower():
                     return True
-            except:
+            except Exception:
                 pass
 
             # Method 3: Check for .NET strings
@@ -457,7 +457,7 @@ class FileTypeDetector:
                 text = self.data.decode('utf-8', errors='ignore')
                 if any(s in text for s in ['.NET', 'System.', 'mscorlib', 'System.Collections']):
                     return True
-            except:
+            except Exception:
                 pass
 
             # Method 4: Check for .NET assembly attributes
@@ -466,7 +466,7 @@ class FileTypeDetector:
                 text = self.data.decode('utf-8', errors='ignore')
                 if any(s in text for s in ['AssemblyTitle', 'AssemblyDescription', 'AssemblyCompany']):
                     return True
-            except:
+            except Exception:
                 pass
 
             return False
@@ -577,7 +577,7 @@ class FileTypeDetector:
                 if text.lstrip().startswith('<?xml') or text.lstrip().startswith('<'):
                     if '>' in text and '<' in text:
                         return {'type': 'data_xml', 'confidence': 'medium'}
-            except:
+            except Exception:
                 pass
 
             return {'type': 'plaintext', 'confidence': 'medium'}

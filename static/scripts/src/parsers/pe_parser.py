@@ -141,7 +141,7 @@ class PEParser:
                 for s in strings:
                     if 'Nullsoft.NSIS.exehead' in s or 'NullsoftInst' in s:
                         return True
-            except:
+            except Exception:
                 pass
 
             return False
@@ -274,7 +274,7 @@ class PEParser:
                         'name': resource_type.name.decode('utf-8', errors='ignore')
                                 if resource_type.name else None
                     })
-                except:
+                except Exception:
                     pass
         except Exception as e:
             self.errors.append(f"Error extracting resources: {e}")

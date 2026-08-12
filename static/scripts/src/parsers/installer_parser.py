@@ -26,7 +26,7 @@ class InstallerParser:
             with open(self.file_path, 'rb') as f:
                 # Read more data for better detection
                 self.data = f.read(1048576)  # 1MB
-        except:
+        except Exception:
             self.errors.append("Failed to read file")
 
         # Detect installer type
@@ -238,7 +238,7 @@ class InstallerParser:
 
             return 'unknown'
 
-        except:
+        except Exception:
             return 'unknown'
 
     def get_errors(self) -> List[str]:

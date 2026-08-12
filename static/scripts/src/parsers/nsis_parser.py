@@ -361,7 +361,7 @@ class NSISParser:
 
             return 'unknown'
 
-        except:
+        except Exception:
             return 'unknown'
 
     def get_errors(self) -> List[str]:

@@ -14,6 +14,8 @@ import math
 from typing import List, Dict, Any, Optional, Tuple
 from pathlib import Path
 
+from ..constants import HIGH_ENTROPY_THRESHOLD, SKIP_CARVING_THRESHOLD
+
 
 class MagicCarver:
     """Carve embedded files using binwalk with entropy-based skipping for encrypted data."""
@@ -35,10 +37,10 @@ class MagicCarver:
         'unknown': 0,
     }
 
-    # Entropy thresholds
-    HIGH_ENTROPY_THRESHOLD = 7.5
+    # Entropy thresholds -- see src/constants.py
+    HIGH_ENTROPY_THRESHOLD = HIGH_ENTROPY_THRESHOLD
     SUSPICIOUS_ENTROPY_THRESHOLD = 6.5
-    SKIP_CARVING_THRESHOLD = 7.8  # If overall entropy > this, skip carving entirely
+    SKIP_CARVING_THRESHOLD = SKIP_CARVING_THRESHOLD  # If overall entropy > this, skip carving entirely
 
     # Maximum embedded files to extract
     MAX_EMBEDDED_FILES = 20
@@ -210,7 +212,7 @@ class MagicCarver:
             pe_offset = struct.unpack('<I', self.data[0x3C:0x40])[0]
             if pe_offset + 4 < len(self.data) and self.data[pe_offset:pe_offset+4] == b'PE\x00\x00':
                 return True
-        except:
+        except Exception:
             pass
         return False
 
@@ -555,7 +557,7 @@ class MagicCarver:
                 pe_offset = int.from_bytes(data[0x3C:0x40], 'little')
                 if pe_offset + 4 < len(data) and data[pe_offset:pe_offset+4] == b'PE\x00\x00':
                     return 'pe_file'
-            except:
+            except Exception:
                 pass
 
         # Check for ZIP
@@ -708,7 +710,7 @@ class MagicCarver:
                 if 'Nullsoft.NSIS' in data_str or 'NullsoftInst' in data_str:
                     self._log(f"  NSIS installer detected - enabling carving")
                     return False
-        except:
+        except Exception:
             pass
 
         # ============================================================

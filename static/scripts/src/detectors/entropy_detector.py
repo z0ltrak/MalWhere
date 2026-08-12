@@ -5,13 +5,14 @@ from typing import List, Dict, Any, Optional
 from pathlib import Path
 
 from ..models.report import EntropyFinding, EntropyAnalysis
+from ..constants import HIGH_ENTROPY_THRESHOLD
 
 
 class EntropyDetector:
     """Detect obfuscated/encrypted sections using entropy analysis."""
 
-    # Entropy thresholds
-    HIGH_ENTROPY_THRESHOLD = 7.5
+    # Entropy thresholds -- see src/constants.py
+    HIGH_ENTROPY_THRESHOLD = HIGH_ENTROPY_THRESHOLD
     SUSPICIOUS_ENTROPY_THRESHOLD = 6.0
 
     # Known packed section names

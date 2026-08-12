@@ -21,15 +21,17 @@ class FilesystemExtractor:
         (b'<?xml', 'xml_data', 65536),       # XML
     ]
 
-    # NSIS specific signatures
+    # NSIS specific signatures -- generic NSIS/installer boilerplate only.
+    # Previously included 'Starlabs'/'DiamondAge'/'goldendays'/'diamondage':
+    # all RoningLoader-specific product/dropped-file names, not signatures
+    # of NSIS itself. _is_nsis_file_system() below already has 2 independent
+    # structural fallbacks (file-path scanning, file-table pattern matching)
+    # that don't depend on any sample's specific strings -- verified those
+    # alone still detect roning's real NSIS payload.
     NSIS_SIGNATURES = [
         b'Nullsoft.NSIS',
         b'NSIS',
         b'installer',
-        b'Starlabs',
-        b'DiamondAge',
-        b'goldendays',
-        b'diamondage',
     ]
 
     def __init__(self):
@@ -111,7 +113,7 @@ class FilesystemExtractor:
                     path = path.strip()
                     if len(path) > 5 and len(path) < 260:
                         paths.add(path)
-                except:
+                except Exception:
                     pass
 
         return list(paths)[:50]
@@ -146,7 +148,7 @@ class FilesystemExtractor:
                 pe_offset = int.from_bytes(data[0x3C:0x40], 'little')
                 if pe_offset + 4 < len(data) and data[pe_offset:pe_offset+4] == b'PE\x00\x00':
                     return True
-            except:
+            except Exception:
                 pass
 
         # Check for DLL
@@ -225,7 +227,7 @@ class FilesystemExtractor:
                             })
                             current_offset = file_offset + size
                             continue
-                    except:
+                    except Exception:
                         pass
 
             current_offset += 1
@@ -265,7 +267,7 @@ class FilesystemExtractor:
                                 'offset': base_offset + file_offset,
                                 'type': self._detect_file_type(file_data)
                             })
-                except:
+                except Exception:
                     pass
 
         return files
@@ -333,7 +335,7 @@ class FilesystemExtractor:
                 pe_offset = int.from_bytes(data[0x3C:0x40], 'little')
                 if pe_offset + 4 < len(data) and data[pe_offset:pe_offset+4] == b'PE\x00\x00':
                     return 'pe_file'
-            except:
+            except Exception:
                 pass
 
         # Check for DLL (PE with .dll in strings)
@@ -358,7 +360,7 @@ class FilesystemExtractor:
                 import json
                 json.loads(data[:1024].decode('utf-8', errors='ignore'))
                 return 'json_data'
-            except:
+            except Exception:
                 pass
 
         # Check for XML
@@ -387,7 +389,7 @@ class FilesystemExtractor:
             if dll_match:
                 try:
                     filename = dll_match.group(1).decode('utf-8', errors='ignore')
-                except:
+                except Exception:
                     pass
 
         return [{
