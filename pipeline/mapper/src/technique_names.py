@@ -101,6 +101,14 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1102.002": "Web Service: Bidirectional Communication",
     "T1572": "Protocol Tunneling",
     "T1090.002": "Proxy: External Proxy",
+    # Discovery coverage extension.
+    "T1120": "Peripheral Device Discovery",
+    "T1614.001": "System Location Discovery: System Language Discovery",
+    "T1049": "System Network Connections Discovery",
+    "T1087.001": "Account Discovery: Local Account",
+    "T1018": "Remote System Discovery",
+    "T1010": "Application Window Discovery",
+    "T1518.001": "Software Discovery: Security Software Discovery",
 }
 
 _attck_bundle_cache = None

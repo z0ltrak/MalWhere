@@ -17,8 +17,45 @@ class ATTACKMapper:
         'Process32Next': 'T1057',
         'GetComputerNameW': 'T1082',
         'GetComputerNameA': 'T1082',
-        'GetUserNameW': 'T1082',
-        'GetUserNameA': 'T1082',
+        # Moved from T1082 to T1033 (System Owner/User Discovery): MITRE's
+        # own T1033 page describes exactly this -- "identify the primary
+        # user... by retrieving account usernames." T1082 is specifically
+        # OS/hardware version, patches, architecture; a username isn't
+        # that. Found while extending Discovery coverage and checking this
+        # pairing against MITRE's real definitions rather than assuming
+        # the two belonged together just because they're both "identity"
+        # APIs. Confirmed safe: none of the 3 validated samples currently
+        # import either function, so this changes nothing live -- but all
+        # 3 samples' ground truth expects T1033 for this exact behavior
+        # (and none expect T1082 from it), so a future sample using this
+        # API will now score correctly instead of contributing to the
+        # wrong technique.
+        'GetUserNameW': 'T1033',
+        'GetUserNameA': 'T1033',
+        # Peripheral Device Discovery (T1120): enumerates attached
+        # hardware via the Setup API -- MITRE's page cites exactly this
+        # class of device-enumeration call.
+        'SetupDiGetClassDevsW': 'T1120',
+        'SetupDiGetClassDevsA': 'T1120',
+        # System Language Discovery (T1614.001): MITRE's page describes
+        # geofencing malware inferring victim location this way -- these
+        # are the specific APIs for reading the system/UI language.
+        'GetSystemDefaultLangID': 'T1614.001',
+        'GetUserDefaultUILanguage': 'T1614.001',
+        # System Network Connections Discovery (T1049): MITRE's page
+        # describes enumerating active network connections -- these are
+        # the real IP Helper API for it, distinct from the network-
+        # interface-configuration APIs already covering T1016.
+        'GetTcpTable': 'T1049',
+        'GetExtendedTcpTable': 'T1049',
+        'GetUdpTable': 'T1049',
+        # Local Account Discovery (T1087.001): MITRE's page names net user
+        # directly; NetUserEnum is the underlying Win32 API that command
+        # implements.
+        'NetUserEnum': 'T1087.001',
+        # Remote System Discovery (T1018): the Win32 API behind net view,
+        # enumerating other hosts on the network by name.
+        'NetServerEnum': 'T1018',
 
         # Collection
         'CopyFromScreen': 'T1113',
@@ -297,6 +334,15 @@ class ATTACKMapper:
         'T1102.002': 'Web Service: Bidirectional Communication',
         'T1572': 'Protocol Tunneling',
         'T1090.002': 'Proxy: External Proxy',
+        # Discovery coverage extension.
+        'T1033': 'System Owner/User Discovery',
+        'T1120': 'Peripheral Device Discovery',
+        'T1614.001': 'System Location Discovery: System Language Discovery',
+        'T1049': 'System Network Connections Discovery',
+        'T1087.001': 'Account Discovery: Local Account',
+        'T1018': 'Remote System Discovery',
+        'T1010': 'Application Window Discovery',
+        'T1518.001': 'Software Discovery: Security Software Discovery',
     }
 
     # Chrome Web Store assigns each extension a permanent, unique ID at
@@ -359,6 +405,15 @@ class ATTACKMapper:
     # not an evasive one.
     _T1055_HOLLOW_COMBO = {'CreateProcessW', 'WriteProcessMemory', 'SetThreadContext', 'ResumeThread'}
     _T1055_HOLLOW_UNMAP = {'NtUnmapViewOfSection', 'ZwUnmapViewOfSection'}
+
+    # Application Window Discovery (T1010). GetWindowTextW alone is
+    # ubiquitous -- any GUI app reads its OWN window's title. EnumWindows
+    # enumerating EVERY top-level window on the desktop, combined with
+    # reading each one's title, is what turns this into actual recon of
+    # what's running on the system (MITRE's own example: identifying
+    # security tooling by window title) rather than a program managing
+    # its own UI.
+    _T1010_WINDOW_COMBO = {'EnumWindows', 'GetWindowTextW'}
 
     def __init__(self):
         """Initialize ATT&CK mapper."""
@@ -560,6 +615,23 @@ class ATTACKMapper:
                     f"create a process suspended, unmap its memory ({unmap_api}), write the "
                     f"replacement payload in, set its thread context, then resume it. All 5 steps "
                     f"together have no legitimate non-hollowing purpose."
+                )
+            ))
+
+        if self._T1010_WINDOW_COMBO.issubset(all_function_names):
+            window_evidence = ', '.join(sorted(self._T1010_WINDOW_COMBO))
+            mappings.append(ATTACKMapping(
+                technique='T1010',
+                name=self._get_technique_name('T1010'),
+                source='import',
+                evidence=window_evidence,
+                confidence='medium',
+                justification=(
+                    f"The API functions {window_evidence} are both imported by the binary. "
+                    f"EnumWindows enumerates every top-level window on the desktop, not just the "
+                    f"program's own; combined with reading each one's title (GetWindowTextW), this "
+                    f"is active discovery of what's running on the system -- MITRE's own T1010 page "
+                    f"cites identifying security tooling by window title as a concrete example."
                 )
             ))
 

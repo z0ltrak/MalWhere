@@ -288,6 +288,16 @@ class StringATTACKMapper:
         # they distinguish "routes traffic through Tor" from a bare
         # mention of an onion address.
         ':9050': {'technique': 'T1090.002', 'confidence': 'medium'},
+
+        # --- Discovery coverage extension ---
+        # Security Software Discovery (T1518.001): MITRE's page describes
+        # enumerating installed AV/EDR to shape follow-on behavior --
+        # these are specific product process names and the WMI namespace
+        # Windows itself uses to register installed security products,
+        # not a generic "antivirus" string match.
+        'MsMpEng.exe': {'technique': 'T1518.001', 'confidence': 'medium'},
+        'avp.exe': {'technique': 'T1518.001', 'confidence': 'medium'},
+        'SecurityCenter2': {'technique': 'T1518.001', 'confidence': 'medium'},
     }
 
     def map_strings(self, strings: List[str]) -> List[Dict[str, str]]:
