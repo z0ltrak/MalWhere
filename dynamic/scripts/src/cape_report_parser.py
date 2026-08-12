@@ -273,6 +273,33 @@ _SIGNATURE_TECHNIQUE_DROP = {
 }
 
 
+# Known LOLBin/recon command patterns, checked against CAPE's own
+# behavior.summary.executed_commands (already parsed into
+# host_activity.commands_executed) -- a real evidence source no rule here
+# used before, since every existing dynamic finding is signature-based
+# and CAPE has no community signature for "ran netsh wlan show". A
+# generic capability, not a per-sample patch: any future sample using
+# one of these well-known command patterns gets picked up the same way.
+# Found auditing WhiteSnake's missing T1201: its manual report documents
+# "WiFi password extraction" via `netsh wlan show profile <name> key=clear`,
+# and CAPE's own executed_commands for this exact run shows both
+# reconnaissance steps that precede it (`netsh wlan show profiles`,
+# `netsh wlan show networks mode=bssid`) -- string-based static detection
+# can't reach this at all here (every one of WhiteSnake's command/config
+# strings is obfuscated; confirmed absent even after an exhaustive
+# single-byte XOR brute-force pass, so the obfuscation isn't single-byte
+# XOR), but CAPE observed the plaintext command directly at runtime.
+_COMMAND_PATTERN_MAPPING = [
+    # (substring to match, case-insensitive, technique, confidence)
+    ("netsh wlan show", "T1201", "medium"),
+    ("schtasks", "T1053.005", "medium"),
+    ("vssadmin", "T1490", "high"),
+    ("wbadmin", "T1490", "high"),
+    ("wmic shadowcopy", "T1490", "high"),
+    ("bcdedit", "T1490", "medium"),
+]
+
+
 class CapeReportParser:
     def __init__(self, report: Dict[str, Any], source_report_path: str, max_list_items: int = 200):
         self.report = report
@@ -398,7 +425,39 @@ class CapeReportParser:
                         justification=justification,
                     )
                 )
+
+        mappings.extend(self._map_commands_to_attck(r))
         return [m.__dict__ for m in mappings]
+
+    def _map_commands_to_attck(self, r: Dict[str, Any]) -> List[ATTACKMapping]:
+        """Check CAPE's raw executed_commands against known LOLBin/recon
+        patterns -- see _COMMAND_PATTERN_MAPPING for why this exists.
+        """
+        commands = r.get("behavior", {}).get("summary", {}).get("executed_commands", []) or []
+        mappings: List[ATTACKMapping] = []
+        matched_techniques: set = set()
+
+        for command in commands:
+            if not isinstance(command, str):
+                continue
+            command_lower = command.lower()
+            for pattern, technique, confidence in _COMMAND_PATTERN_MAPPING:
+                if pattern in command_lower and (technique, command) not in matched_techniques:
+                    matched_techniques.add((technique, command))
+                    mappings.append(
+                        ATTACKMapping(
+                            technique=technique,
+                            name="",
+                            source="dynamic_command",
+                            evidence=command[:200],
+                            confidence=confidence,
+                            justification=(
+                                f"Executed command '{command[:200]}' matches the known pattern "
+                                f"'{pattern}'."
+                            ),
+                        )
+                    )
+        return mappings
 
     def _parse_network(self, r: Dict[str, Any]) -> Dict[str, Any]:
         net = r.get("network", {}) or {}

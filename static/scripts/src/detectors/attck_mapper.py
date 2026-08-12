@@ -186,6 +186,19 @@ class ATTACKMapper:
         'System.Net.HttpListener::GetContext': 'T1090',
         'System.Management.ManagementObjectSearcher::Get': 'T1047',
         'System.Management.ManagementClass::GetInstances': 'T1047',
+        # Found auditing WhiteSnake's missing T1132/T1140: its manual
+        # report documents "Base64 + XOR for C2" (T1132) and "XOR, RC4,
+        # RSA, Base64" more broadly (T1140) but nothing in either the
+        # native import table (near-empty -- just the CLR bootstrap stub)
+        # or plaintext strings (every command/config string is obfuscated,
+        # confirmed absent even after an exhaustive single-byte XOR
+        # brute-force pass) evidenced it. The .NET BCL calls that
+        # actually perform the encode/decode do, though, and split
+        # naturally by direction: ToBase64String encodes outbound data
+        # (T1132, Data Encoding), FromBase64String decodes inbound/stored
+        # data (T1140, Deobfuscate/Decode Files or Information).
+        'System.Convert::ToBase64String': 'T1132',
+        'System.Convert::FromBase64String': 'T1140',
     }
 
     # Technique names for justification
