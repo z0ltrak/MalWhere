@@ -551,8 +551,8 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v Enab
 | Reflective Code Loading | T1620 | PE loaded from memory without touching disk |
 | Ingress Tool Transfer | T1105 | C2 command 0x07 "Download & Execute"; `dispatch_file_transfer`/Reflective PE Loader (0x23/0x25/0xEC/0xF8) fetches and loads additional DLL/EXE payloads from C2 |
 | Process Injection | T1055 | IO Completion Port injection into svchost.exe |
-| Boot or Logon Autostart Execution | T1547 | Windows service persistence |
 | Kernel Modules and Extensions | T1547.006 | `vmservice.sys` kernel driver |
+| Create or Modify System Process: Windows Service | T1543.003 | `install_vm_service`/`install_minifilter_driver` register `vmservice.sys` and `minifilter_driver.sys` as kernel-driver services via SCM, separate from the `start_vmservice`/`start_minifilter` calls that start them |
 | File and Directory Discovery | T1083 | Directory enumeration |
 | Process Discovery | T1057 | Process enumeration via snapshot |
 | System Information Discovery | T1082 | OS, CPU, hardware ID collection |

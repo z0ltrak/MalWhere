@@ -148,6 +148,17 @@ _TECHNIQUE_DROP = {"T1568"}
 #     policy check isn't system fingerprinting either, and the hedge itself
 #     means CAPE can't tell which (if either) purpose applies — no clean
 #     replacement technique, dropped rather than force-fit.
+#
+# One more, found continuing the roning FP sweep: persistence_autorun_tasks
+# ("Installs itself for autorun at Windows startup", category
+# 'persistence') tags T1053 Scheduled Task/Job. "Autorun at startup" is
+# T1547's textbook definition (Registry Run Keys/Startup Folder etc.) —
+# T1053 specifically means Task Scheduler (schtasks/ITaskService), a
+# distinct persistence mechanism this signature's own wording doesn't
+# describe at all. roning already has solid, independent T1547/T1547.001
+# evidence (unbacked_registry_modification, persistence_autorun, plus
+# static RegCreateKeyExW/RegSetValueExW/RegOpenKeyExW imports), so dropping
+# T1053 here loses no coverage.
 _SIGNATURE_TECHNIQUE_DROP = {
     ("pe_tls_callbacks", "T1055"),
     ("unbacked_process_creation", "T1106"),
@@ -162,6 +173,7 @@ _SIGNATURE_TECHNIQUE_DROP = {
     ("unbacked_file_dropping", "T1074"),
     ("unbacked_bind_shell", "T1090"),
     ("suspicious_iocontrol_codes", "T1542.003"),
+    ("persistence_autorun_tasks", "T1053"),
 }
 
 
