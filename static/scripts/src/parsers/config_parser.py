@@ -119,18 +119,32 @@ class ConfigExtractor:
     # binary when the C2-config region it's meant to catch is always tiny.
     _XOR_SCAN_MAX_SIZE = 10_000_000
 
+    # A key whose decode produces more than this many dotted-quad-shaped
+    # regex matches gets discarded outright, not just filtered hit-by-hit.
+    # Verified this is necessary, not just extra caution: on a real sample,
+    # key 0x2e (0x00 XORs to '.', i.e. this key turns any run of null
+    # padding into literal dots) decoded a repeating table of small
+    # integers into an unbroken chain of 8 "IPs" -- 9.8.6.8, 4.7.5.7,
+    # 2.7.3.7, ... -- every single one individually passing the boundary
+    # check below, because the null bytes that make it a "clean boundary"
+    # are exactly what's generating the fake dots in the first place. A
+    # real embedded C2 string is isolated; a cascade of matches from one
+    # key is structural noise. The true positive this method is built
+    # for (RoningLoader's C2 address) produced exactly 1 match for its key.
+    _XOR_MAX_MATCHES_PER_KEY = 2
+
     def _find_xor_obfuscated_ips(self) -> List[Dict[str, Any]]:
         """Brute-force all 256 single-byte XOR keys looking for an IPv4
         address that decodes cleanly -- i.e. immediately bounded by bytes
         that are either 0x00 or equal to the XOR key itself (both are what
         zero-padding around the string looks like once XOR'd: 0x00 stays
         0x00 if it's outside the XOR'd region, or becomes the key's own
-        byte value if it's zero-padding *inside* the XOR'd region).
-        Without that boundary check this produces constant false-positive
-        noise -- packed/compiled code XOR'd with the "wrong" key routinely
-        decodes into coincidental-looking dotted-quads (verified: key 0x6f
-        against a real sample produced "0.1.2.30" six separate times,
-        purely from repeating header/padding bytes).
+        byte value if it's zero-padding *inside* the XOR'd region), AND
+        that key doesn't also decode a run of other dotted-quad-shaped
+        matches nearby (see _XOR_MAX_MATCHES_PER_KEY) -- packed/compiled
+        code XOR'd with the "wrong" key routinely decodes into
+        coincidental-looking dotted-quads, and without both filters this
+        produces constant false-positive noise.
         """
         if not self.data or len(self.data) > self._XOR_SCAN_MAX_SIZE:
             return []
@@ -141,7 +155,11 @@ class ConfigExtractor:
         for key in range(1, 256):
             table = bytes(b ^ key for b in range(256))
             xored = self.data.translate(table)
-            for m in ip_re.finditer(xored):
+            raw_matches = list(ip_re.finditer(xored))
+            if len(raw_matches) > self._XOR_MAX_MATCHES_PER_KEY:
+                continue
+
+            for m in raw_matches:
                 ip = m.group().decode()
                 parts = ip.split('.')
                 if not all(0 <= int(p) <= 255 for p in parts):
