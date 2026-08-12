@@ -213,6 +213,17 @@ class ATTACKMapper:
         'T1112': 'Modify Registry',
         'T1123': 'Audio Capture',
         'T1119': 'Automated Collection',
+        'T1555': 'Credentials from Password Stores',
+        'T1140': 'Deobfuscate/Decode Files or Information',
+    }
+
+    # Chrome Web Store assigns each extension a permanent, unique ID at
+    # publish time -- these are public, stable, and verifiable directly
+    # against the store (chrome.google.com/webstore/detail/<name>/<id>).
+    # Kept intentionally short: only extensions confirmed here, not a
+    # broad scrape, since a wrong ID would create a false T1555 finding.
+    KNOWN_WALLET_EXTENSION_IDS = {
+        'nkbihfbeogaeaoehlefnkodbefgpgknn': 'MetaMask',
     }
 
     # T1055's imports aren't equally diagnostic. OpenProcess is ubiquitous
@@ -530,6 +541,67 @@ class ATTACKMapper:
                     confidence='medium',
                     justification=f"Found {len(mutexes)} mutex names in the configuration. Mutexes are often used to check for a running instance (single-instance enforcement) and for sandbox detection (T1497)."
                 ))
+
+        # Cryptocurrency wallet browser extension IDs -> T1555 (Credentials
+        # from Password Stores). MITRE names browser-extension wallet
+        # targeting explicitly under T1555; a reference to one of these
+        # fixed, public extension IDs in an extracted file path is a
+        # reliable, low-noise signal (these IDs are assigned once by the
+        # extension store and never legitimately appear in an unrelated
+        # binary's file paths). Found auditing RoningLoader's diamondage.exe:
+        # config_extractor already captured the file path referencing
+        # MetaMask's extension ID, but nothing mapped it to a technique.
+        # Deliberately a short, high-confidence-only list, not a scrape of
+        # every wallet extension that exists -- wrong IDs here would be
+        # worse than no rule at all.
+        if config.get('file_paths'):
+            wallet_hits = [
+                (path, name)
+                for path in config['file_paths']
+                for ext_id, name in self.KNOWN_WALLET_EXTENSION_IDS.items()
+                if ext_id in path
+            ]
+            if wallet_hits:
+                names = ', '.join(sorted({name for _, name in wallet_hits}))
+                mappings.append(ATTACKMapping(
+                    technique='T1555',
+                    name='Credentials from Password Stores',
+                    source='config',
+                    evidence=f"Browser extension path(s) referencing: {names}",
+                    confidence='high',
+                    justification=(
+                        f"A file path referencing the {names} browser extension's fixed store ID "
+                        f"was found in the binary. Checking for or targeting a specific cryptocurrency "
+                        f"wallet extension's installation path is characteristic of Credentials from "
+                        f"Password Stores (T1555) -- these extension IDs are assigned once by the "
+                        f"browser's extension store and have no legitimate reason to appear hardcoded "
+                        f"in unrelated software."
+                    )
+                ))
+
+        # An IP/domain only recoverable by brute-forcing every possible
+        # single-byte XOR key is, by construction, evidence the malware
+        # itself reverses that same obfuscation at runtime to use the
+        # value it needs -- a direct, first-party observation of
+        # Deobfuscate/Decode Files or Information (T1140), not a fragile
+        # string-pattern guess.
+        if config.get('xor_recovered_iocs'):
+            hits = config['xor_recovered_iocs']
+            evidence = ', '.join(f"{h['ip']} (XOR key {h['xor_key']})" for h in hits)
+            mappings.append(ATTACKMapping(
+                technique='T1140',
+                name='Deobfuscate/Decode Files or Information',
+                source='config',
+                evidence=evidence,
+                confidence='high',
+                justification=(
+                    f"Recovered {evidence} by brute-forcing every possible single-byte XOR key "
+                    f"against the binary and requiring a clean null-padded boundary around the "
+                    f"match (not just a coincidental decode). A network address stored obfuscated "
+                    f"like this is unusable to the malware until it reverses the same encoding at "
+                    f"runtime -- direct evidence of Deobfuscate/Decode Files or Information (T1140)."
+                )
+            ))
 
         return mappings
 

@@ -19,6 +19,7 @@ import sys
 import json
 import argparse
 from pathlib import Path
+from typing import Any, Dict
 
 sys.path.insert(0, str(Path(__file__).parent))
 from src.matcher import evaluate_sample
@@ -27,6 +28,54 @@ from src.matcher import evaluate_sample
 def load_json(path: Path) -> dict:
     with open(path) as f:
         return json.load(f)
+
+
+def load_family_total_techniques(results_dir: Path, family: str, parent_techniques: list) -> list:
+    """Parent techniques plus every resubmitted (dropped/extracted) file's
+    own techniques, pooled together.
+
+    Ground truth is built from a manual RE report that covers the WHOLE
+    sample -- every dropped component, not just the outermost binary --
+    so parent-only recall structurally can't reach it for multi-stage
+    malware: a dropped payload's own capabilities (e.g. RoningLoader's
+    diamondage.exe, its C2 client) are real findings but deliberately kept
+    out of the parent's OWN scored attck_mapping.json (see
+    pipeline/mapper/src/reconcile.py's cross-source confidence model --
+    blending them in would misattribute confidence to the wrong binary).
+    That separation is correct for the threat-intel export (STIX/MISP
+    should never claim a dropped payload's behavior is the parent's own),
+    but it means parent-only recall understates what the pipeline, as a
+    whole system including the resubmission loop, actually found. This
+    pools everything for evaluation purposes only -- it never touches
+    results/<family>/attck/attck_mapping.json itself.
+    """
+    pooled = list(parent_techniques)
+    resubmitted_dir = results_dir / family / "resubmitted"
+    if resubmitted_dir.is_dir():
+        for sample_dir in sorted(resubmitted_dir.iterdir()):
+            mapping_file = sample_dir / "attck" / "attck_mapping.json"
+            if mapping_file.exists():
+                child_mapping = load_json(mapping_file)
+                pooled.extend(child_mapping.get("techniques", []))
+
+    # _match_mode counts false_positive/matched by INSTANCE, not unique
+    # technique_id -- true for a single attck_mapping.json (map_attck.py
+    # already groups by technique before scoring, one entry per ID) but
+    # not for this pool, where e.g. T1497 legitimately shows up in most
+    # of two dozen resubmitted files independently. Left undeduplicated,
+    # every one of those inflates both tp and fp by instance count,
+    # distorting precision/recall away from what "does the family, as a
+    # whole, cover this technique" actually means. Collapse to one entry
+    # per technique_id, keeping the highest-confidence occurrence.
+    _TIER_RANK = {"high": 2, "medium": 1, "low": 0}
+    best_by_id: Dict[str, Any] = {}
+    for t in pooled:
+        tid = t["technique_id"]
+        existing = best_by_id.get(tid)
+        if existing is None or _TIER_RANK.get(t.get("final_confidence"), -1) > _TIER_RANK.get(existing.get("final_confidence"), -1):
+            best_by_id[tid] = t
+
+    return list(best_by_id.values())
 
 
 def render_summary_md(all_results: dict) -> str:
@@ -55,6 +104,15 @@ def render_summary_md(all_results: dict) -> str:
         "",
         "## Precision / Recall / F1",
         "",
+        "> \"Sample\" rows score `results/<family>/attck/attck_mapping.json` alone --",
+        "> the parent binary's own confidence-scored findings, which is also what gets",
+        "> exported to STIX/MISP. \"Sample + resubmitted\" rows additionally pool in",
+        "> every dropped/extracted component's own attck_mapping.json (see",
+        "> `static/scripts/process_resubmissions.py`) purely for measuring against",
+        "> ground truth, which is written from a manual report covering the whole",
+        "> infection chain -- this number is never fed back into the exported bundle,",
+        "> only shown here so recall isn't understated for multi-stage samples.",
+        "",
         "| Sample | Auto | GT | Strict P | Strict R | Strict F1 | Family P | Family R | Family F1 |",
         "|---|---|---|---|---|---|---|---|---|",
     ]
@@ -67,6 +125,14 @@ def render_summary_md(all_results: dict) -> str:
             f"{s['precision']:.2f} | {s['recall']:.2f} | {s['f1']:.2f} | "
             f"{fam['precision']:.2f} | {fam['recall']:.2f} | {fam['f1']:.2f} |"
         )
+        ft = r.get("family_total")
+        if ft:
+            c2, s2, fam2 = ft["counts"], ft["strict"], ft["family_level"]
+            lines.append(
+                f"| {family} + resubmitted | {c2['automated']} | {c2['ground_truth']} | "
+                f"{s2['precision']:.2f} | {s2['recall']:.2f} | {s2['f1']:.2f} | "
+                f"{fam2['precision']:.2f} | {fam2['recall']:.2f} | {fam2['f1']:.2f} |"
+            )
 
     lines += ["", "## Precision by confidence tier (family-level match)", ""]
     for family, r in all_results.items():
@@ -143,8 +209,14 @@ def main():
 
         gt = load_json(gt_file)
         mapping = load_json(mapping_file)
+        parent_techniques = mapping.get("techniques", [])
 
-        result = evaluate_sample(mapping.get("techniques", []), gt.get("techniques", []))
+        result = evaluate_sample(parent_techniques, gt.get("techniques", []))
+
+        family_total_techniques = load_family_total_techniques(results_dir, family, parent_techniques)
+        if len(family_total_techniques) > len(parent_techniques):
+            result["family_total"] = evaluate_sample(family_total_techniques, gt.get("techniques", []))
+
         all_results[family] = result
 
         with open(output_dir / f"{family}_evaluation.json", "w") as f:
@@ -169,6 +241,14 @@ def main():
         if args.verbose:
             print(f"  missed (family-level): {fam['missed_techniques']}")
             print(f"  false positives (family-level): {fam['false_positive_techniques']}")
+        ft = r.get("family_total")
+        if ft:
+            s2, fam2 = ft["strict"], ft["family_level"]
+            print(f"{family} + resubmitted: strict P/R/F1 = {s2['precision']:.2f}/{s2['recall']:.2f}/{s2['f1']:.2f}  "
+                  f"family P/R/F1 = {fam2['precision']:.2f}/{fam2['recall']:.2f}/{fam2['f1']:.2f}")
+            if args.verbose:
+                print(f"  missed (family-level): {fam2['missed_techniques']}")
+                print(f"  false positives (family-level): {fam2['false_positive_techniques']}")
     print("=" * 60)
     print(f"Per-sample results: {output_dir}/<family>_evaluation.json")
     print(f"Summary: {summary_path}")

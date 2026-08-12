@@ -26,7 +26,8 @@ class ConfigExtractor:
             'file_paths': [],
             'mutexes': [],
             'encryption_keys': [],
-            'patterns': []
+            'patterns': [],
+            'xor_recovered_iocs': [],
         }
 
         try:
@@ -38,6 +39,19 @@ class ConfigExtractor:
 
             # Find IP addresses
             result['ips'] = self._find_ips(ascii_strings)
+
+            # Find IPs hidden behind single-byte XOR obfuscation -- a
+            # generic recovery technique (256 keys is exhaustive, no
+            # sample-specific key needed), not something scoped to any
+            # one family. Found auditing RoningLoader's diamondage.exe:
+            # its C2 address is 202.95.11.173, single-byte XOR'd with
+            # 0x61, invisible to plain ASCII string extraction but
+            # trivially recoverable this way.
+            xor_ips = self._find_xor_obfuscated_ips()
+            for hit in xor_ips:
+                if hit['ip'] not in result['ips']:
+                    result['ips'].append(hit['ip'])
+            result['xor_recovered_iocs'] = xor_ips
 
             # Find domains
             result['domains'] = self._find_domains(ascii_strings)
@@ -98,6 +112,55 @@ class ConfigExtractor:
                         continue
                     ips.add(ip)
         return list(ips)[:20]
+
+    # Cap the exhaustive 256-key scan to files where it stays fast --
+    # bytes.translate() is C-speed so even a few MB is well under a
+    # second per key, but there's no reason to run it against a 50MB+
+    # binary when the C2-config region it's meant to catch is always tiny.
+    _XOR_SCAN_MAX_SIZE = 10_000_000
+
+    def _find_xor_obfuscated_ips(self) -> List[Dict[str, Any]]:
+        """Brute-force all 256 single-byte XOR keys looking for an IPv4
+        address that decodes cleanly -- i.e. immediately bounded by bytes
+        that are either 0x00 or equal to the XOR key itself (both are what
+        zero-padding around the string looks like once XOR'd: 0x00 stays
+        0x00 if it's outside the XOR'd region, or becomes the key's own
+        byte value if it's zero-padding *inside* the XOR'd region).
+        Without that boundary check this produces constant false-positive
+        noise -- packed/compiled code XOR'd with the "wrong" key routinely
+        decodes into coincidental-looking dotted-quads (verified: key 0x6f
+        against a real sample produced "0.1.2.30" six separate times,
+        purely from repeating header/padding bytes).
+        """
+        if not self.data or len(self.data) > self._XOR_SCAN_MAX_SIZE:
+            return []
+
+        ip_re = re.compile(rb'(?:\d{1,3}\.){3}\d{1,3}')
+        found: Dict[str, int] = {}
+
+        for key in range(1, 256):
+            table = bytes(b ^ key for b in range(256))
+            xored = self.data.translate(table)
+            for m in ip_re.finditer(xored):
+                ip = m.group().decode()
+                parts = ip.split('.')
+                if not all(0 <= int(p) <= 255 for p in parts):
+                    continue
+                # Same junk filter _find_ips applies to plaintext hits.
+                if ip.startswith('1.') and len(ip) <= 7:
+                    continue
+                if ip.startswith('17.9.') or ip.startswith('1.1.') or ip.startswith('0.'):
+                    continue
+
+                start, end = m.span()
+                raw_before = self.data[start - 1] if start > 0 else 0
+                raw_after = self.data[end] if end < len(self.data) else 0
+                clean_boundary = raw_before in (0, key) and raw_after in (0, key)
+
+                if clean_boundary and ip not in found:
+                    found[ip] = key
+
+        return [{'ip': ip, 'xor_key': f'0x{key:02x}'} for ip, key in found.items()][:10]
 
     def _find_domains(self, strings: List[str]) -> List[str]:
         """Find domain names in strings with noise filtering."""
