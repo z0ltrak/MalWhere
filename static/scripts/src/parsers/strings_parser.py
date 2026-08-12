@@ -43,10 +43,11 @@ class StringsParser:
     ]
 
 
-    def __init__(self, file_path: Path, timeout: int = 300):
+    def __init__(self, file_path: Path, timeout: int = 300, verbose: bool = False):
         """Initialize the strings parser."""
         self.file_path = file_path
         self.timeout = timeout
+        self.verbose = verbose
         self.errors: List[str] = []
         self.deobfuscator = StringDeobfuscator()
         self.crypto_detector = CryptoDetector()
@@ -64,8 +65,13 @@ class StringsParser:
             result['floss'] = floss_result['stack_strings']
             result['decoded'] = floss_result['decoded_strings']
 
+        # Previously omitted 'pattern_decoded' (single-byte XOR bruteforce
+        # results) from this merge entirely -- its output was computed but
+        # then silently discarded before reaching the report or the ATT&CK
+        # mapper, making that whole code path dead weight.
         deobfuscated = self.deobfuscator.deobfuscate(result['standard'])
         result['deobfuscated'] = deobfuscated.get('xor_decoded', []) + \
+                                deobfuscated.get('pattern_decoded', []) + \
                                 deobfuscated.get('base64_decoded', []) + \
                                 deobfuscated.get('hex_decoded', [])
 
@@ -88,30 +94,48 @@ class StringsParser:
             return []
 
     def _extract_floss_strings(self) -> Dict[str, List[str]]:
-        """Extract deobfuscated strings using FLOSS."""
+        """Extract deobfuscated strings using FLOSS.
+
+        Previously used `--no-static`/`--json` as single hyphenated
+        tokens -- neither exists in the installed FLOSS version (3.1.1);
+        its real CLI takes `--no static` (a value-taking flag, needs a
+        `--` separator before the positional sample path or argparse
+        swallows the path as another value) and `-j`/`--json` (which
+        WAS valid, it just never got read because argument parsing
+        failed before that point). Every one of the 4 old fallback
+        attempts either hit this same broken `--no-static` token or (the
+        4th, flag-free one) silently became FLOSS's slowest possible
+        invocation -- full static+stack+tight+decoded analysis -- run as
+        a last resort on every single file, every single time, its
+        result then discarded because the surrounding retry logic still
+        logged "FLOSS all approaches failed" whenever text-mode parsing
+        didn't find anything (also just fixed by trusting JSON, which
+        now actually gets reached). FLOSS only supports PE for
+        string-decoding/stackstrings -- skip it entirely for non-PE data
+        instead of letting it fail on, say, a BMP resource.
+        """
         result = {'stack_strings': [], 'decoded_strings': []}
 
-        # Check if FLOSS is installed
         import shutil
         if not shutil.which('floss'):
             self.errors.append("FLOSS not installed")
             return result
 
-        # Try multiple approaches with different timeouts
+        if not self._looks_like_pe():
+            self._log("Skipping FLOSS: not a PE file (FLOSS only supports PE for string decoding)")
+            return result
+
+        # Fast mode first (skip static strings -- the `strings` command
+        # already covers those; FLOSS's real value is stack/tight/decoded
+        # strings). Full mode only as a fallback if that finds nothing.
         approaches = [
-            # Approach 1: Fastest - only stack strings
-            (['floss', '--no-static', '--json', str(self.file_path)], 60),
-            # Approach 2: Moderate - stack + decoded
-            (['floss', '--json', str(self.file_path)], 120),
-            # Approach 3: Fallback - text mode (no JSON parsing)
-            (['floss', '--no-static', str(self.file_path)], 90),
-            # Approach 4: Simplest - just run with defaults
-            (['floss', str(self.file_path)], 60),
+            (['floss', '--no', 'static', '--json', '--', str(self.file_path)], 60),
+            (['floss', '--json', '--', str(self.file_path)], 90),
         ]
 
         for cmd, timeout in approaches:
             try:
-                self.errors.append(f"Trying FLOSS with: {' '.join(cmd)} (timeout: {timeout}s)")
+                self._log(f"Trying FLOSS with: {' '.join(cmd)} (timeout: {timeout}s)")
 
                 proc = subprocess.run(
                     cmd,
@@ -119,37 +143,30 @@ class StringsParser:
                 )
 
                 if proc.returncode == 0 and proc.stdout:
-                    # Try JSON parsing first
-                    if '--json' in cmd:
-                        try:
-                            data = json.loads(proc.stdout)
-                            strings_data = data.get('strings', {})
+                    try:
+                        data = json.loads(proc.stdout)
+                        strings_data = data.get('strings', {})
 
-                            stack_strings = strings_data.get('stack_strings', [])
-                            result['stack_strings'] = [
-                                s.get('string', str(s)) if isinstance(s, dict) else str(s)
-                                for s in stack_strings
-                            ][:1000]
+                        stack_strings = strings_data.get('stack_strings', [])
+                        result['stack_strings'] = [
+                            s.get('string', str(s)) if isinstance(s, dict) else str(s)
+                            for s in stack_strings
+                        ][:1000]
 
-                            decoded_strings = strings_data.get('decoded_strings', [])
-                            result['decoded_strings'] = [
-                                s.get('string', str(s)) if isinstance(s, dict) else str(s)
-                                for s in decoded_strings
-                            ][:1000]
+                        decoded_strings = strings_data.get('decoded_strings', [])
+                        result['decoded_strings'] = [
+                            s.get('string', str(s)) if isinstance(s, dict) else str(s)
+                            for s in decoded_strings
+                        ][:1000]
 
-                            if result['stack_strings'] or result['decoded_strings']:
-                                self.errors.append(f"FLOSS JSON succeeded with {len(result['stack_strings'])} strings")
-                                return result
+                        if result['stack_strings'] or result['decoded_strings']:
+                            self._log(f"FLOSS succeeded with {len(result['stack_strings'])} stack strings")
+                            return result
 
-                        except json.JSONDecodeError:
-                            # Fall through to text parsing
-                            pass
-
-                    # Text parsing
-                    self._parse_floss_text_output(proc.stdout, result)
-                    if result['stack_strings'] or result['decoded_strings']:
-                        self.errors.append(f"FLOSS text succeeded with {len(result['stack_strings'])} strings")
-                        return result
+                    except json.JSONDecodeError:
+                        self._parse_floss_text_output(proc.stdout, result)
+                        if result['stack_strings'] or result['decoded_strings']:
+                            return result
 
             except subprocess.TimeoutExpired:
                 self.errors.append(f"FLOSS timed out with: {' '.join(cmd)}")
@@ -158,20 +175,21 @@ class StringsParser:
                 self.errors.append(f"FLOSS error: {str(e)[:100]}")
                 continue
 
-        # If we get here, all approaches failed
-        self.errors.append("FLOSS all approaches failed - using standard strings only")
+        self._log("FLOSS found no stack/decoded strings -- using standard strings only")
         return result
 
-    def _extract_floss_text_fallback(self, result: Dict[str, List[str]]) -> None:
-        """Fallback to text mode if JSON is not supported."""
+    def _looks_like_pe(self) -> bool:
+        """Cheap MZ-header check -- FLOSS only supports PE for string decoding."""
         try:
-            proc = subprocess.run(
-                ['floss', str(self.file_path)],
-                capture_output=True, text=True, timeout=self.timeout
-            )
-            self._parse_floss_text_output(proc.stdout, result)
-        except Exception as e:
-            self.errors.append(f"FLOSS text fallback failed: {e}")
+            with open(self.file_path, 'rb') as f:
+                return f.read(2) == b'MZ'
+        except Exception:
+            return False
+
+    def _log(self, message: str) -> None:
+        """Verbose-gated progress logging -- NOT an error, don't append to self.errors."""
+        if self.verbose:
+            print(f"[*] StringsParser: {message}")
 
     def _parse_floss_text_output(self, text_output: str, result: Dict[str, List[str]]) -> None:
         """Parse FLOSS text output as fallback."""

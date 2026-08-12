@@ -9,6 +9,10 @@ import math
 import base64
 import struct
 
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+
+from ..constants import HIGH_ENTROPY_THRESHOLD, SKIP_CARVING_THRESHOLD
+
 
 class DecryptionEngine:
     """Decrypt data using discovered keys with algorithm context and entropy detection."""
@@ -50,18 +54,24 @@ class DecryptionEngine:
         b'password123', b'letmein', b'welcome', b'monkey',
     }
 
-    # Entropy thresholds
-    HIGH_ENTROPY_THRESHOLD = 7.5
-    SKIP_CARVING_THRESHOLD = 7.8
+    # Entropy thresholds -- see src/constants.py
+    HIGH_ENTROPY_THRESHOLD = HIGH_ENTROPY_THRESHOLD
+    SKIP_CARVING_THRESHOLD = SKIP_CARVING_THRESHOLD
 
-    def __init__(self, file_path: Path):
+    def __init__(self, file_path: Path, verbose: bool = False):
         self.file_path = file_path
+        self.verbose = verbose
         self.data = None
         self.errors: List[str] = []
         self._rc4_cache = {}
         self._candidate_keys: List[Dict[str, Any]] = []
         self._successful_keys: List[Dict[str, Any]] = []
         self._cache = {}
+
+    def _log(self, msg: str) -> None:
+        """Verbose-gated progress logging -- NOT an error, don't append to self.errors."""
+        if self.verbose:
+            print(f"[*] DecryptionEngine: {msg}")
 
     def detect_encrypted_data(self, data: bytes) -> Dict[str, Any]:
         """
@@ -133,11 +143,11 @@ class DecryptionEngine:
         detection = self.detect_encrypted_data(data)
 
         if not detection['is_encrypted']:
-            self.errors.append(f"Data doesn't appear encrypted: {detection['reason']}")
+            self._log(f"Data doesn't appear encrypted: {detection['reason']}")
             return None
 
-        self.errors.append(f"Data appears encrypted: {detection['reason']}")
-        self.errors.append(f"Trying {len(self._candidate_keys)} candidate keys")
+        self._log(f"Data appears encrypted: {detection['reason']}")
+        self._log(f"Trying {len(self._candidate_keys)} candidate keys")
 
         # Try all candidate keys
         for key_info in self._candidate_keys[:50]:  # Limit to 50 keys
@@ -153,7 +163,7 @@ class DecryptionEngine:
                 # Try RC4
                 decrypted = self._decrypt_rc4(data, key_bytes)
                 if decrypted and self._is_valid_data(decrypted):
-                    self.errors.append(f"Success with RC4 key: {key_data[:20]}...")
+                    self._log(f"Success with RC4 key: {key_data[:20]}...")
                     self._successful_keys.append({
                         'algorithm': 'rc4',
                         'key': key_data,
@@ -164,7 +174,7 @@ class DecryptionEngine:
                 # Try XOR
                 decrypted = self._decrypt_xor(data, key_bytes)
                 if decrypted and self._is_valid_data(decrypted):
-                    self.errors.append(f"Success with XOR key: {key_data[:20]}...")
+                    self._log(f"Success with XOR key: {key_data[:20]}...")
                     self._successful_keys.append({
                         'algorithm': 'xor',
                         'key': key_data,
@@ -172,22 +182,34 @@ class DecryptionEngine:
                     })
                     return decrypted
 
-        self.errors.append("No candidate key successfully decrypted the data")
+        self._log("No candidate key successfully decrypted the data")
         return None
 
-    def decrypt_with_key(self, data: bytes, key: bytes, algorithm: str) -> Optional[bytes]:
-        """Decrypt data using the specified algorithm and key."""
+    def decrypt_with_key(self, data: bytes, key: bytes, algorithm: str,
+                         nonce_or_iv: Optional[bytes] = None) -> Optional[bytes]:
+        """Decrypt data using the specified algorithm and key.
+
+        nonce_or_iv is optional -- ChaCha20/AES-CBC need one but this engine
+        has no way to discover a real one from the sample (that would need
+        per-payload analysis, e.g. reading it from the ciphertext's own
+        header, which no caller currently does). Defaults to zero bytes,
+        which is a real, honest limitation: it will only succeed against
+        payloads actually encrypted with a zero nonce/IV. That's strictly
+        better than the old behavior (ChaCha20 silently running RC4
+        instead, AES being a hard no-op) -- it fails closed instead of
+        succeeding on the wrong algorithm.
+        """
         if not key or len(key) == 0:
             return None
 
         # Validate key for the algorithm
         validation = self.validate_key(key, algorithm)
         if not validation.get('valid', False):
-            self.errors.append(f"Key validation failed for {algorithm}: {validation.get('reason')}")
+            self._log(f"Key validation failed for {algorithm}: {validation.get('reason')}")
             return None
 
         # Check cache
-        cache_key = f"{algorithm}_{key.hex()}_{len(data)}"
+        cache_key = f"{algorithm}_{key.hex()}_{len(data)}_{(nonce_or_iv or b'').hex()}"
         if cache_key in self._cache:
             return self._cache[cache_key]
 
@@ -196,9 +218,9 @@ class DecryptionEngine:
             if algorithm == 'rc4':
                 decrypted = self._decrypt_rc4(data, key)
             elif algorithm == 'chacha20':
-                decrypted = self._decrypt_chacha20(data, key)
+                decrypted = self._decrypt_chacha20(data, key, nonce_or_iv)
             elif algorithm == 'aes':
-                decrypted = self._decrypt_aes(data, key)
+                decrypted = self._decrypt_aes(data, key, nonce_or_iv)
             elif algorithm == 'xor':
                 decrypted = self._decrypt_xor(data, key)
             elif algorithm == 'base64':
@@ -240,8 +262,13 @@ class DecryptionEngine:
             if tried >= max_tries:
                 break
 
-            # Extract key and algorithm
-            key_data = candidate.get('key', '')
+            # Extract key and algorithm. Some KeyReconstructor candidate
+            # types (high_entropy_binary, chacha20_key_candidate) never
+            # populate 'key', only 'key_hex' -- those were silently
+            # skipped entirely before this fallback existed, meaning
+            # ChaCha20 key candidates specifically (directly relevant to
+            # Akira) never even reached decryption.
+            key_data = candidate.get('key', '') or candidate.get('key_hex', '')
             algorithm = candidate.get('algorithm', 'rc4')
 
             if not key_data:
@@ -276,30 +303,37 @@ class DecryptionEngine:
                 # Keep trying other keys to find the best one
                 # Only stop if we find a PE/executable
                 if decrypted[:2] == b'MZ':
-                    self.errors.append(f"Found valid PE using {algorithm} key: {key_data[:20]}...")
+                    self._log(f"Found valid PE using {algorithm} key: {key_data[:20]}...")
                     break
 
         return results
 
     def _key_to_bytes(self, key_data: str, key_type: str) -> Optional[bytes]:
-        """Convert key string to bytes based on type."""
+        """Convert key string to bytes based on KeyReconstructor's candidate type.
+
+        Previously dispatched on type strings ('hex_key', 'roning_rc4_key',
+        'base64_key', 'rdata_key', 'pattern_key', 'string_key',
+        'binary_key_hex') that KeyReconstructor has never actually produced
+        -- 'roning_rc4_key' in particular was never a real type, just a
+        sample-specific name that looked like a leftover from an earlier
+        version. Every real candidate silently fell through to the ASCII
+        `else` branch, which is wrong for hex/base64-encoded candidates
+        (it would treat the encoded STRING itself as the key bytes,
+        rather than decoding it first) -- fixed to match the type names
+        key_reconstructor.py actually emits.
+        """
         try:
-            if key_type in ['hex_key', 'roning_rc4_key']:
-                # Hex string
+            if key_type in ('hex_encoded', 'high_entropy_binary', 'chacha20_key_candidate'):
                 return bytes.fromhex(key_data)
-            elif key_type == 'base64_key':
-                # Base64 decoded
+            elif key_type == 'base64_encoded':
                 return base64.b64decode(key_data)
-            elif key_type in ['printable_key', 'rdata_key', 'pattern_key', 'string_key']:
-                # ASCII string
+            elif key_type in ('plaintext_all_strings', 'xor_single_byte', 'xor_sub_key',
+                              'printable_ascii', 'rc4_ksa_key'):
                 return key_data.encode('ascii', errors='ignore')
-            elif key_type == 'binary_key_hex':
-                # Already hex
-                return bytes.fromhex(key_data)
             else:
-                # Try as ASCII
+                # Unknown/future type -- best-effort ASCII.
                 return key_data.encode('ascii', errors='ignore')
-        except:
+        except Exception:
             # Try as ASCII as fallback
             return key_data.encode('ascii', errors='ignore')
 
@@ -310,20 +344,20 @@ class DecryptionEngine:
         # Try as raw string
         try:
             variants.append(key_data.encode('ascii'))
-        except:
+        except Exception:
             pass
 
         # Try as hex
         try:
             if len(key_data) % 2 == 0:
                 variants.append(bytes.fromhex(key_data))
-        except:
+        except Exception:
             pass
 
         # Try as UTF-8
         try:
             variants.append(key_data.encode('utf-8'))
-        except:
+        except Exception:
             pass
 
         return variants
@@ -382,18 +416,75 @@ class DecryptionEngine:
             self.errors.append(f"RC4 decryption error: {e}")
             return None
 
-    def _decrypt_chacha20(self, data: bytes, key: bytes) -> Optional[bytes]:
-        """ChaCha20 decrypt using key (simplified - requires actual implementation)."""
-        # This is a placeholder - full ChaCha20 implementation would be here
-        # For now, try RC4 as a fallback
-        self.errors.append("ChaCha20 decryption not fully implemented, trying RC4 fallback")
-        return self._decrypt_rc4(data, key)
+    def _decrypt_chacha20(self, data: bytes, key: bytes, nonce: Optional[bytes] = None) -> Optional[bytes]:
+        """Real ChaCha20 decrypt via the `cryptography` library.
 
-    def _decrypt_aes(self, data: bytes, key: bytes) -> Optional[bytes]:
-        """AES decrypt using key (simplified - requires actual implementation)."""
-        # This is a placeholder - full AES implementation would be here
-        self.errors.append("AES decryption not fully implemented")
-        return None
+        Requires a 32-byte key (ChaCha20 has no variable key size) and a
+        16-byte nonce (`cryptography`'s API: 4-byte LE block counter +
+        12-byte RFC7539 nonce, concatenated). We have no way to discover
+        the real per-payload nonce from static analysis alone, so this
+        defaults to all-zero -- correct only for payloads that happen to
+        use a zero nonce. That's an honest, narrower capability, not the
+        previous silent "run RC4 instead" behavior.
+        """
+        if len(key) != 32:
+            self._log(f"ChaCha20 requires a 32-byte key, got {len(key)} -- skipping")
+            return None
+        try:
+            nonce = (nonce or b'\x00' * 16).ljust(16, b'\x00')[:16]
+            cipher = Cipher(algorithms.ChaCha20(key, nonce), mode=None)
+            decryptor = cipher.decryptor()
+            return decryptor.update(data) + decryptor.finalize()
+        except Exception as e:
+            self.errors.append(f"ChaCha20 decryption error: {e}")
+            return None
+
+    def _decrypt_aes(self, data: bytes, key: bytes, iv: Optional[bytes] = None) -> Optional[bytes]:
+        """Real AES decrypt via the `cryptography` library.
+
+        Tries ECB first (needs only the key, no IV to guess), then CBC
+        with the given IV (or all-zero if none discovered) as a
+        best-effort fallback -- same "correct but narrower than a full
+        implementation would be" tradeoff as ChaCha20 above: this cannot
+        recover payloads encrypted with a real random IV we never
+        discovered, but it no longer silently no-ops either.
+        """
+        if len(key) not in (16, 24, 32):
+            self._log(f"AES requires a 16/24/32-byte key, got {len(key)} -- skipping")
+            return None
+
+        block_size = 16
+        truncated = data[: len(data) - (len(data) % block_size)]
+        if not truncated:
+            return None
+
+        try:
+            cipher = Cipher(algorithms.AES(key), modes.ECB())
+            decryptor = cipher.decryptor()
+            ecb_result = decryptor.update(truncated) + decryptor.finalize()
+            if self._is_valid_data(ecb_result):
+                return ecb_result
+        except Exception as e:
+            self.errors.append(f"AES-ECB decryption error: {e}")
+            ecb_result = None
+
+        try:
+            cbc_iv = (iv or b'\x00' * block_size).ljust(block_size, b'\x00')[:block_size]
+            cipher = Cipher(algorithms.AES(key), modes.CBC(cbc_iv))
+            decryptor = cipher.decryptor()
+            cbc_result = decryptor.update(truncated) + decryptor.finalize()
+            if self._is_valid_data(cbc_result):
+                return cbc_result
+        except Exception as e:
+            self.errors.append(f"AES-CBC decryption error: {e}")
+            cbc_result = None
+
+        # Neither produced recognizably valid output -- return the ECB
+        # attempt (block-cipher default) so callers relying on entropy
+        # comparisons still have something to inspect, same contract as
+        # the other _decrypt_* methods (they return their best attempt,
+        # validity is checked by the caller via _is_valid_data).
+        return ecb_result
 
     def _decrypt_xor(self, data: bytes, key: bytes) -> Optional[bytes]:
         """XOR decrypt using key."""
@@ -412,7 +503,7 @@ class DecryptionEngine:
         """Base64 decode (key is used as separator)."""
         try:
             return base64.b64decode(data)
-        except:
+        except Exception:
             return None
 
     def _candidate_priority(self, candidate: Dict[str, Any]) -> float:
@@ -462,13 +553,13 @@ class DecryptionEngine:
                 from io import BytesIO
                 pe = pefile.PE(data=BytesIO(data))
                 return True
-            except:
+            except Exception:
                 # Check if it looks like a PE even if pefile fails
                 try:
                     pe_offset = struct.unpack('<I', data[0x3C:0x40])[0]
                     if pe_offset + 4 < len(data) and data[pe_offset:pe_offset+4] == b'PE\x00\x00':
                         return True
-                except:
+                except Exception:
                     pass
                 return False
 
@@ -489,7 +580,7 @@ class DecryptionEngine:
             import json
             json.loads(data[:1024].decode('utf-8', errors='ignore'))
             return True
-        except:
+        except Exception:
             pass
 
         # Check for valid XML

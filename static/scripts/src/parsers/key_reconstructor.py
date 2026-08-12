@@ -21,6 +21,8 @@ import struct
 from typing import List, Dict, Any, Optional, Set
 from pathlib import Path
 
+import numpy as np
+
 
 # ---- Tunable thresholds ----
 MIN_PRINTABLE_RATIO = 0.95      # v2 was 0.80 — main FP source
@@ -62,8 +64,9 @@ ALGORITHM_KEY_SIZES = {
 class KeyReconstructor:
     """Generic encryption key discovery from binary data."""
 
-    def __init__(self, file_path: Path):
+    def __init__(self, file_path: Path, verbose: bool = False):
         self.file_path = file_path
+        self.verbose = verbose
         self.data: Optional[bytes] = None
         self.errors: List[str] = []
         self.keys: List[Dict[str, Any]] = []
@@ -150,12 +153,21 @@ class KeyReconstructor:
         Generic - works for any file, not malware-specific.
 
         Performance: Only scans first 1MB of each data section (keys are usually near start).
+
+        Vectorized with numpy: previously a step=1 scan (every byte
+        position) x 8 key lengths in pure Python -- up to 8M+ iterations
+        per section even with the 1MB cap. Same technique as
+        _find_xor_single_byte_keys: the printability pre-filter (the
+        cheapest, most-frequently-failed check) becomes one rolling-window
+        cumsum over the whole section, all positions and lengths at once;
+        only positions that pass get the original per-candidate checks.
         """
         candidates = []
         seen = set()
 
         # Key lengths to consider (common for crypto keys)
         key_lengths = [8, 10, 12, 15, 16, 20, 24, 32]
+        min_printable = {kl: math.ceil(0.85 * kl) for kl in key_lengths}
 
         # Only scan data sections
         for section in self._sections:
@@ -171,24 +183,29 @@ class KeyReconstructor:
             # This keeps performance reasonable even with step=1
             scan_limit = min(len(data), 1024 * 1024)
             data = data[:scan_limit]
+            if not data:
+                continue
 
             self._log(f"  Scanning {section['name']} ({len(data)} bytes) for printable strings")
+
+            data_arr = np.frombuffer(data, dtype=np.uint8)
+            printable_mask = (data_arr >= 0x20) & (data_arr <= 0x7E)
+            cumsum = np.concatenate(([0], np.cumsum(printable_mask, dtype=np.int32)))
 
             for key_len in key_lengths:
                 if len(data) < key_len:
                     continue
+                if len(candidates) >= MAX_CANDIDATES_PER_TECHNIQUE * 2:
+                    break
 
-                # Scan EVERY byte (step=1) - but limited to 1MB sections
-                for i in range(0, len(data) - key_len + 1):
+                window_counts = cumsum[key_len:] - cumsum[:-key_len]
+                candidate_positions = np.flatnonzero(window_counts >= min_printable[key_len])
+
+                for i in candidate_positions.tolist():
                     if len(candidates) >= MAX_CANDIDATES_PER_TECHNIQUE * 2:
                         break
 
                     chunk = data[i:i + key_len]
-
-                    # Check if it's printable ASCII (slightly lower threshold for plaintext)
-                    if not self._is_printable_bytes(chunk, 0.85):
-                        continue
-
                     decoded_str = chunk.decode('ascii', errors='replace')
 
                     # Skip if it's common text
@@ -317,6 +334,21 @@ class KeyReconstructor:
         Bruteforce single-byte XOR on data sections with step=4.
         Finds keys like RONINGLOADER's 0x5A-obfuscated RC4 key.
         Capped at MAX_CANDIDATES_PER_TECHNIQUE.
+
+        Vectorized with numpy: the original scanned every (xor_byte,
+        key_len, position) combination in pure Python -- up to
+        255 x ~9 lengths x len(data)/4 iterations, each doing a per-byte
+        XOR via a Python generator expression. That's the single biggest
+        contributor to static analysis runs repeatedly taking 90-120s+ this
+        session. The printability pre-filter (the cheapest possible
+        rejection test, and the one nearly every position fails) is now a
+        single rolling-window count computed over the whole section at
+        once via cumsum, for all positions and all key lengths
+        simultaneously, per xor_byte. Only positions that PASS get the
+        original, unchanged, more expensive per-candidate checks (entropy,
+        common-text, distinct-char count) -- so the accept/reject logic
+        itself is untouched, just reached without a Python-level scan over
+        every byte position.
         """
         candidates = []
         seen = set()
@@ -335,27 +367,45 @@ class KeyReconstructor:
             valid_lengths = set(XOR_KEY_LENGTHS)
         # Always include 15 (common RC4 key length)
         valid_lengths.add(15)
+        sorted_lengths = sorted(valid_lengths)
+
+        min_printable = {kl: math.ceil(MIN_PRINTABLE_RATIO * kl) for kl in sorted_lengths}
 
         for section in data_sections:
             data = section['data']
             base_offset = section['offset']
+            if not data:
+                continue
+
+            data_arr = np.frombuffer(data, dtype=np.uint8)
 
             for xor_byte in range(1, 256):
-                for key_len in sorted(valid_lengths):
+                if len(candidates) >= MAX_CANDIDATES_PER_TECHNIQUE * 3:
+                    break
+
+                translated = data_arr ^ xor_byte
+                printable_mask = (translated >= 0x20) & (translated <= 0x7E)
+                cumsum = np.concatenate(([0], np.cumsum(printable_mask, dtype=np.int32)))
+                xor_table = bytes(b ^ xor_byte for b in range(256))
+
+                for key_len in sorted_lengths:
                     if len(data) < key_len:
                         continue
+                    if len(candidates) >= MAX_CANDIDATES_PER_TECHNIQUE * 3:
+                        break
 
-                    # Step = 4 for performance (was 1 in v2)
-                    for i in range(0, len(data) - key_len + 1, 4):
+                    # Printable-byte count in the window starting at every
+                    # position, all at once (cumsum[i+key_len] - cumsum[i]).
+                    window_counts = cumsum[key_len:] - cumsum[:-key_len]
+                    step_positions = np.arange(0, len(window_counts), 4)  # preserve original step=4
+                    candidate_positions = step_positions[window_counts[step_positions] >= min_printable[key_len]]
+
+                    for i in candidate_positions.tolist():
                         if len(candidates) >= MAX_CANDIDATES_PER_TECHNIQUE * 3:
                             break
 
                         chunk = data[i:i + key_len]
-                        decoded = bytes(b ^ xor_byte for b in chunk)
-
-                        # Tighter printability check (0.95 vs 0.80 in v2)
-                        if not self._is_printable_bytes(decoded, MIN_PRINTABLE_RATIO):
-                            continue
+                        decoded = chunk.translate(xor_table)
 
                         decoded_str = decoded.decode('ascii', errors='replace')
 
@@ -884,7 +934,9 @@ class KeyReconstructor:
         return unique
 
     def _log(self, msg: str) -> None:
-        self.errors.append(f"KeyReconstructor: {msg}")
+        """Verbose-gated progress logging -- NOT an error, don't append to self.errors."""
+        if self.verbose:
+            print(f"[*] KeyReconstructor: {msg}")
 
     def get_errors(self) -> List[str]:
         return self.errors
