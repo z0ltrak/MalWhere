@@ -541,12 +541,43 @@ class DecryptionEngine:
 
         return score
 
+    # Reflective loaders commonly prepend a stub (shellcode, a loader
+    # header) before the actual PE they carry -- verified on a real
+    # sample: roning's RC4-encrypted payload decrypts correctly with its
+    # known key, but the resulting PE's MZ header sits at offset 4841, not
+    # 0. A correct decryption was never recognized as one because every
+    # validity check here only ever looked at the very start of the
+    # buffer. Search a bounded window instead of just offset 0.
+    MAX_EMBEDDED_PE_SEARCH = 8192
+
+    def _find_embedded_pe_offset(self, data: bytes) -> Optional[int]:
+        """Find a real PE header within the first MAX_EMBEDDED_PE_SEARCH bytes.
+
+        Requires the full e_lfanew/PE\\0\\0 structure to line up, not just
+        the 2-byte 'MZ' match -- a coincidental 'MZ' in random decryption
+        garbage is plausible in an 8KB window; a *matching* PE signature
+        at the offset it points to is not.
+        """
+        search_limit = min(len(data) - 4, self.MAX_EMBEDDED_PE_SEARCH)
+        start = 0
+        while True:
+            idx = data.find(b'MZ', start, search_limit)
+            if idx == -1:
+                return None
+            try:
+                pe_offset = idx + struct.unpack('<I', data[idx + 0x3C:idx + 0x40])[0]
+                if pe_offset + 4 < len(data) and data[pe_offset:pe_offset + 4] == b'PE\x00\x00':
+                    return idx
+            except Exception:
+                pass
+            start = idx + 1
+
     def _is_valid_data(self, data: bytes) -> bool:
         """Check if data is valid and worth keeping."""
         if len(data) < 1024:
             return False
 
-        # Check for PE
+        # Check for PE, at offset 0 or embedded behind a loader stub
         if data[:2] == b'MZ':
             try:
                 import pefile
@@ -562,6 +593,9 @@ class DecryptionEngine:
                 except Exception:
                     pass
                 return False
+
+        if self._find_embedded_pe_offset(data) is not None:
+            return True
 
         # Check for ZIP
         if data[:4] == b'PK\x03\x04':
