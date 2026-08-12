@@ -14,6 +14,18 @@ class MappedTechnique:
     static_best_confidence: Optional[str] = None
     dynamic_best_confidence: Optional[str] = None
     evidence: List[Dict[str, Any]] = field(default_factory=list)
+    # Set by reconcile.apply_cross_level_corroboration when this exact
+    # technique_id was promoted using a SIBLING technique's evidence (its
+    # base/parent or another sub-technique under the same base) rather
+    # than evidence for this exact ID -- e.g. dynamic evidence tagged the
+    # parent T1547 while static evidence separately tagged the specific
+    # T1547.001, and neither alone reached both sources at its own exact
+    # ID. Kept separate from sources/static_best_confidence/
+    # dynamic_best_confidence, which stay factually accurate to what was
+    # directly observed for THIS id -- this field is what makes the
+    # promotion auditable rather than silently blended in.
+    cross_level_corroboration: bool = False
+    cross_level_sibling: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -25,4 +37,6 @@ class MappedTechnique:
             "static_best_confidence": self.static_best_confidence,
             "dynamic_best_confidence": self.dynamic_best_confidence,
             "evidence": self.evidence,
+            "cross_level_corroboration": self.cross_level_corroboration,
+            "cross_level_sibling": self.cross_level_sibling,
         }

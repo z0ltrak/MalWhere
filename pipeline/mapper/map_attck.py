@@ -18,7 +18,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from src.models import MappedTechnique
 from src.navigator_layer import build_navigator_layer
-from src.reconcile import CONFIDENCE_MODEL_RULE, CONFIDENCE_MODEL_VERSION, reconcile
+from src.reconcile import CONFIDENCE_MODEL_RULE, CONFIDENCE_MODEL_VERSION, apply_cross_level_corroboration, reconcile
 from src.technique_names import resolve_technique_name
 
 
@@ -82,6 +82,8 @@ def main():
             )
         )
 
+    apply_cross_level_corroboration(mapped)
+
     _TIER_ORDER = {"low": 0, "medium": 1, "high": 2}
     mapped.sort(key=lambda t: (-_TIER_ORDER[t.final_confidence], t.technique_id))
 
@@ -134,7 +136,11 @@ def main():
     print(f"  Static only: {summary['static_only']}  Dynamic only: {summary['dynamic_only']}")
     if args.verbose:
         for t in mapped:
-            print(f"   [{t.final_confidence.upper():6}] {t.technique_id} {t.technique_name} (sources: {', '.join(t.sources)})")
+            cross_note = f" [cross-level via {t.cross_level_sibling}]" if t.cross_level_corroboration else ""
+            print(f"   [{t.final_confidence.upper():6}] {t.technique_id} {t.technique_name} (sources: {', '.join(t.sources)}){cross_note}")
+    cross_level_count = sum(1 for t in mapped if t.cross_level_corroboration)
+    if cross_level_count:
+        print(f"Cross-level corroborated (promoted via a sibling technique): {cross_level_count}")
     print("=" * 60)
     print(f"Mapping saved to: {mapping_file}")
     print(f"Navigator layer saved to: {layer_file}")
