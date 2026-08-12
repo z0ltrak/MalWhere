@@ -315,6 +315,49 @@ class StringATTACKMapper:
         # samples that shell out to shutdown.exe instead of calling the
         # API directly.
         'shutdown /r': {'technique': 'T1529', 'confidence': 'medium'},
+
+        # --- Privilege Escalation coverage extension ---
+        # Bypass User Account Control (T1548.002): the "fodhelper"
+        # technique's registry path -- a fake ms-settings protocol
+        # handler that fodhelper.exe (an auto-elevating Windows binary)
+        # launches without a UAC prompt. The single most commonly cited
+        # UAC bypass in malware analysis literature; narrow enough that
+        # legitimate software has no reason to reference it.
+        'ms-settings\\Shell\\Open\\command': {'technique': 'T1548.002', 'confidence': 'high'},
+        # Accessibility Features (T1546.008): the classic "sticky keys"
+        # backdoor -- replacing or hijacking sethc.exe, which Windows
+        # launches from the logon screen (before authentication) via a
+        # key combination.
+        'sethc.exe': {'technique': 'T1546.008', 'confidence': 'high'},
+        # AppCert DLLs (T1546.009): MITRE's page names this exact
+        # registry value -- a DLL listed here loads into every process
+        # that calls CreateProcess, a narrow and specific persistence/
+        # privesc registry key with no ordinary application use.
+        'AppCertDlls': {'technique': 'T1546.009', 'confidence': 'high'},
+        # Active Setup (T1547.014): MITRE's page names this exact
+        # registry path -- programs listed here execute once per user at
+        # first logon after being registered.
+        'Active Setup\\Installed Components': {'technique': 'T1547.014', 'confidence': 'high'},
+        # Account Manipulation (T1098): the exact command that adds an
+        # account to the local Administrators group -- MITRE's page cites
+        # modifying permission groups as a concrete mechanism.
+        'net localgroup administrators': {'technique': 'T1098', 'confidence': 'high'},
+
+        # --- Exfiltration coverage extension ---
+        # Exfiltration to Code Repository (T1567.001): MITRE's own page
+        # cites this exact API endpoint as the example.
+        'api.github.com': {'technique': 'T1567.001', 'confidence': 'medium'},
+        # Exfiltration to Cloud Storage (T1567.002): well-known cloud
+        # storage API hosts -- MITRE's page cites Dropbox/Google Docs by
+        # name as the example services.
+        'dropboxapi.com': {'technique': 'T1567.002', 'confidence': 'medium'},
+        'storage.googleapis.com': {'technique': 'T1567.002', 'confidence': 'medium'},
+        # Exfiltration to Text Storage Sites (T1567.003): Pastebin's
+        # actual paste-creation API endpoint -- distinct from the
+        # read-only pastebin.com/raw pattern already covering T1102.002's
+        # C2-retrieval angle, this is the upload/exfil direction
+        # specifically.
+        'pastebin.com/api/api_post.php': {'technique': 'T1567.003', 'confidence': 'high'},
     }
 
     def map_strings(self, strings: List[str]) -> List[Dict[str, str]]:

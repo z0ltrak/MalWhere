@@ -131,6 +131,24 @@ class ATTACKMapper:
         'LookupPrivilegeValueW': 'T1134',
         'LookupPrivilegeValueA': 'T1134',
         'OpenProcessToken': 'T1134',
+        # Create Process with Token (T1134.002): MITRE's page names
+        # CreateProcessWithTokenW directly as the API for this -- fairly
+        # specific alone, real non-injection uses (e.g. `runas`-style
+        # tools) exist but are rare in this project's malware corpus.
+        'CreateProcessWithTokenW': 'T1134.002',
+        # Token Impersonation/Theft and Make and Impersonate Token
+        # (T1134.001/.003) need combination checks below (ImpersonateLoggedOnUser
+        # alone is too generic -- legitimate service/IIS-style impersonation
+        # code uses it too; paired with DuplicateTokenEx or LogonUserW it
+        # becomes the specific technique MITRE's pages describe).
+
+        # Exfiltration Over Unencrypted Non-C2 Protocol (T1048.003):
+        # MITRE's page describes exfiltrating over a protocol separate
+        # from the C2 channel -- FtpPutFile is the WinINet API for a
+        # direct FTP upload, distinct from and narrower than the generic
+        # WebClient::UploadData already covering T1041's C2-channel case.
+        'FtpPutFileW': 'T1048.003',
+        'FtpPutFileA': 'T1048.003',
 
         # Defense Evasion
         'IsDebuggerPresent': 'T1622',
@@ -361,6 +379,19 @@ class ATTACKMapper:
         'T1531': 'Account Access Removal',
         'T1561.001': 'Disk Wipe: Disk Content Wipe',
         'T1496': 'Resource Hijacking',
+        # Privilege Escalation / Exfiltration coverage extension.
+        'T1134.001': 'Access Token Manipulation: Token Impersonation/Theft',
+        'T1134.002': 'Access Token Manipulation: Create Process with Token',
+        'T1134.003': 'Access Token Manipulation: Make and Impersonate Token',
+        'T1546.008': 'Event Triggered Execution: Accessibility Features',
+        'T1546.009': 'Event Triggered Execution: AppCert DLLs',
+        'T1547.014': 'Boot or Logon Autostart Execution: Active Setup',
+        'T1098': 'Account Manipulation',
+        'T1567.001': 'Exfiltration Over Web Service: Exfiltration to Code Repository',
+        'T1567.002': 'Exfiltration Over Web Service: Exfiltration to Cloud Storage',
+        'T1567.003': 'Exfiltration Over Web Service: Exfiltration to Text Storage Sites',
+        'T1567.004': 'Exfiltration Over Web Service: Exfiltration Over Webhook',
+        'T1048.003': 'Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol',
     }
 
     # Chrome Web Store assigns each extension a permanent, unique ID at
@@ -432,6 +463,18 @@ class ATTACKMapper:
     # security tooling by window title) rather than a program managing
     # its own UI.
     _T1010_WINDOW_COMBO = {'EnumWindows', 'GetWindowTextW'}
+
+    # Token Impersonation/Theft (T1134.001) and Make and Impersonate
+    # Token (T1134.003). ImpersonateLoggedOnUser alone is too generic --
+    # legitimate service/IIS-style impersonation code calls it too.
+    # MITRE's own pages describe each as a specific pairing: duplicate an
+    # existing token then impersonate it (.001), or create a brand new
+    # logon session via LogonUserW then impersonate that (.003) -- the
+    # second API in each pair is what makes it one of these two specific
+    # techniques rather than ordinary impersonation.
+    _T1134_IMPERSONATE = 'ImpersonateLoggedOnUser'
+    _T1134_DUPLICATE_TOKEN = {'DuplicateToken', 'DuplicateTokenEx'}
+    _T1134_LOGON_USER = {'LogonUserW', 'LogonUserA'}
 
     def __init__(self):
         """Initialize ATT&CK mapper."""
@@ -508,6 +551,32 @@ class ATTACKMapper:
                     f"data prior to transfer. The same evidence that supports Archive via Utility "
                     f"(T1560.001) also supports Data Staged (T1074) -- collecting data into an "
                     f"archive format is a form of staging it before exfiltration."
+                )
+            ))
+
+        # A Discord webhook is a push endpoint with no read/download
+        # side -- data only ever flows TO it. The same evidence that
+        # shows a webhook URL is present therefore supports both C2
+        # command delivery (T1102.002, if the malware polls responses)
+        # and Exfiltration Over Webhook (T1567.004, MITRE's own page
+        # names Discord webhooks specifically) -- two facets of one
+        # webhook-based channel, not two independent claims from one
+        # weak signal.
+        webhook_patterns = [i for i in string_results if i['technique'] == 'T1102.002' and 'webhooks' in i.get('pattern', '')]
+        if webhook_patterns:
+            evidence = ', '.join(p.get('pattern', p.get('string', '')) for p in webhook_patterns)
+            mappings.append(ATTACKMapping(
+                technique='T1567.004',
+                name=self._get_technique_name('T1567.004'),
+                source='string_pattern',
+                evidence=evidence,
+                confidence='medium',
+                justification=(
+                    f"The malware string {evidence} was found in the binary. A webhook is a "
+                    f"push-only endpoint; the same evidence that supports Web Service/Bidirectional "
+                    f"Communication (T1102.002) also supports Exfiltration Over Webhook (T1567.004) "
+                    f"-- MITRE's own page names Discord webhooks specifically as this technique's "
+                    f"example."
                 )
             ))
 
@@ -652,6 +721,40 @@ class ATTACKMapper:
                     f"cites identifying security tooling by window title as a concrete example."
                 )
             ))
+
+        if self._T1134_IMPERSONATE in all_function_names:
+            duplicate_api = self._T1134_DUPLICATE_TOKEN & all_function_names
+            logon_api = self._T1134_LOGON_USER & all_function_names
+            if duplicate_api:
+                api = next(iter(duplicate_api))
+                evidence = f"{api}, {self._T1134_IMPERSONATE}"
+                mappings.append(ATTACKMapping(
+                    technique='T1134.001',
+                    name=self._get_technique_name('T1134.001'),
+                    source='import',
+                    evidence=evidence,
+                    confidence='high',
+                    justification=(
+                        f"The API functions {evidence} are both imported by the binary. Duplicating "
+                        f"an existing token then impersonating it is MITRE's own T1134.001 example "
+                        f"exactly."
+                    )
+                ))
+            if logon_api:
+                api = next(iter(logon_api))
+                evidence = f"{api}, {self._T1134_IMPERSONATE}"
+                mappings.append(ATTACKMapping(
+                    technique='T1134.003',
+                    name=self._get_technique_name('T1134.003'),
+                    source='import',
+                    evidence=evidence,
+                    confidence='high',
+                    justification=(
+                        f"The API functions {evidence} are both imported by the binary. Creating a "
+                        f"new logon session via {api} then impersonating it is MITRE's own T1134.003 "
+                        f"example exactly."
+                    )
+                ))
 
         return mappings
 

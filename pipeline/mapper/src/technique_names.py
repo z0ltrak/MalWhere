@@ -114,6 +114,19 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1531": "Account Access Removal",
     "T1561.001": "Disk Wipe: Disk Content Wipe",
     "T1496": "Resource Hijacking",
+    # Privilege Escalation / Exfiltration coverage extension.
+    "T1134.001": "Access Token Manipulation: Token Impersonation/Theft",
+    "T1134.002": "Access Token Manipulation: Create Process with Token",
+    "T1134.003": "Access Token Manipulation: Make and Impersonate Token",
+    "T1546.008": "Event Triggered Execution: Accessibility Features",
+    "T1546.009": "Event Triggered Execution: AppCert DLLs",
+    "T1547.014": "Boot or Logon Autostart Execution: Active Setup",
+    "T1098": "Account Manipulation",
+    "T1567.001": "Exfiltration Over Web Service: Exfiltration to Code Repository",
+    "T1567.002": "Exfiltration Over Web Service: Exfiltration to Cloud Storage",
+    "T1567.003": "Exfiltration Over Web Service: Exfiltration to Text Storage Sites",
+    "T1567.004": "Exfiltration Over Web Service: Exfiltration Over Webhook",
+    "T1048.003": "Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol",
 }
 
 _attck_bundle_cache = None
