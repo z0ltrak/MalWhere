@@ -298,6 +298,23 @@ class StringATTACKMapper:
         'MsMpEng.exe': {'technique': 'T1518.001', 'confidence': 'medium'},
         'avp.exe': {'technique': 'T1518.001', 'confidence': 'medium'},
         'SecurityCenter2': {'technique': 'T1518.001', 'confidence': 'medium'},
+
+        # --- Impact coverage extension ---
+        # Disk Content Wipe (T1561.001): the raw physical-disk device
+        # path -- MITRE's page describes overwriting a storage device's
+        # contents directly, which requires exactly this kind of raw
+        # device access rather than going through the normal filesystem
+        # API. Essentially never appears in ordinary application strings.
+        '\\\\.\\PhysicalDrive': {'technique': 'T1561.001', 'confidence': 'high'},
+        # Resource Hijacking (T1496): the Stratum mining-pool protocol
+        # scheme -- unambiguous cryptocurrency-mining C2 indicator, no
+        # other real-world use for this exact string.
+        'stratum+tcp://': {'technique': 'T1496', 'confidence': 'high'},
+        # System Shutdown/Reboot (T1529): the exact command-line
+        # invocation, complementing the ExitWindowsEx import above for
+        # samples that shell out to shutdown.exe instead of calling the
+        # API directly.
+        'shutdown /r': {'technique': 'T1529', 'confidence': 'medium'},
     }
 
     def map_strings(self, strings: List[str]) -> List[Dict[str, str]]:

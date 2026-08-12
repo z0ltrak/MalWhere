@@ -109,6 +109,11 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1018": "Remote System Discovery",
     "T1010": "Application Window Discovery",
     "T1518.001": "Software Discovery: Security Software Discovery",
+    # Impact coverage extension.
+    "T1529": "System Shutdown/Reboot",
+    "T1531": "Account Access Removal",
+    "T1561.001": "Disk Wipe: Disk Content Wipe",
+    "T1496": "Resource Hijacking",
 }
 
 _attck_bundle_cache = None

@@ -174,6 +174,19 @@ class ATTACKMapper:
         # auto-map to any single technique from import presence alone. See
         # string_attck_mapper.py's comment at the same fix for the full
         # reasoning.
+        #
+        # System Shutdown/Reboot (T1529): MITRE's page describes exactly
+        # this -- shutting down/rebooting to interrupt access or aid
+        # destruction (the classic post-ransomware-encryption reboot).
+        # ExitWindowsEx is the real Win32 API behind it; essentially no
+        # legitimate malware-adjacent use outside actual power-state
+        # changes.
+        'ExitWindowsEx': 'T1529',
+        # Account Access Removal (T1531): MITRE's page names changed
+        # credentials as one of the concrete mechanisms -- NetUserChangePassword
+        # is the Win32 API for it. Has legitimate password-management-tool
+        # uses, kept at medium rather than high for that reason.
+        'NetUserChangePassword': 'T1531',
 
         # Discovery (Network)
         # WNetGetConnectionW/A removed from here: it resolves the remote
@@ -343,6 +356,11 @@ class ATTACKMapper:
         'T1018': 'Remote System Discovery',
         'T1010': 'Application Window Discovery',
         'T1518.001': 'Software Discovery: Security Software Discovery',
+        # Impact coverage extension.
+        'T1529': 'System Shutdown/Reboot',
+        'T1531': 'Account Access Removal',
+        'T1561.001': 'Disk Wipe: Disk Content Wipe',
+        'T1496': 'Resource Hijacking',
     }
 
     # Chrome Web Store assigns each extension a permanent, unique ID at
