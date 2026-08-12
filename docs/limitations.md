@@ -280,3 +280,42 @@ clone-and-go; the `sandbox` profile (CAPE, MISP) requires the one-time
 manual host setup by design — dynamic analysis needs a real, snapshot-able
 Windows VM, which cannot be provisioned by `docker-compose` alone. All
 commits in this session are pushed to the tracked GitHub remote.
+
+## 11. Static rule coverage is deliberately narrow, and how it's being widened
+
+Every static rule before this pass existed because evidence in one of the 3
+validated samples justified it — sound methodology for avoiding the
+overfitting risk in §1, but it means coverage was narrow relative to the
+full matrix, not just relative to what any single malware family needs.
+Checked precisely rather than estimated: downloaded the current official
+MITRE Enterprise ATT&CK STIX bundle (`mitre/cti`) and counted directly — 474
+Windows-relevant techniques (including sub-techniques) in the present
+matrix, ~30 with a dedicated static rule as of the false-positive audit in
+§3.
+
+Extending this without care would reproduce §3's false positives at scale —
+every one of those came from a rule that *could* apply reaching too far
+without narrow enough evidence. The extension instead pulls from MITRE's
+own per-technique description for the literal mechanism each names (a
+specific registry value, WMI class combination, file marker, or DLL — not
+a generic API name), same bar the original ~30 rules were held to. Two
+batches so far, 22 new technique IDs: Persistence + Defense Evasion (AppInit
+DLLs, Winlogon Helper DLL, IFEO Injection, WMI Event Subscription, BITS
+Jobs, Clear Windows Event Logs, Regsvr32/Squiblydoo, Mshta, Process
+Hollowing, ...), then Credential Access + Collection (LSASS Memory, SAM,
+LSA Secrets, Credentials in Registry, Private Keys, Windows Credential
+Manager, Password Filter DLL, Network Sniffing, Video Capture, Local Email
+Collection, Data from Network Shared Drive). None of the 22 fired on any of
+the 3 validated samples when re-run after each batch — expected, since none
+of the 3 documented families use these specific mechanisms, and confirms
+the extension didn't introduce new false-positive risk on the set this
+project's numbers are measured against. This is deliberately coverage for
+samples not yet seen, not something that moves the headline P/R/F1 numbers
+today — a different kind of contribution than §3's audit, worth stating as
+such rather than implying it improved validated accuracy.
+
+~452 Windows-relevant techniques remain uncovered. Continuing this
+extension (by tactic, same sourcing discipline, re-verified against the 3
+samples after each batch) is the clearest remaining lever for pipeline
+robustness against genuinely new malware, as distinct from further tuning
+against the 3 already-validated families.
