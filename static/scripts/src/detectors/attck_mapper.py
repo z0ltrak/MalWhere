@@ -49,6 +49,27 @@ class ATTACKMapper:
         'CredEnumerateA': 'T1555',
         'CredReadW': 'T1555',
         'CredReadA': 'T1555',
+        # MiniDumpWriteDump targeting lsass.exe is the textbook LSASS
+        # memory-dump technique (T1003.001) -- also legitimately used by
+        # crash-reporting tools, which is why the corroborating 'lsass.exe'
+        # string pattern below matters (see string_attck_mapper.py):
+        # medium alone, the combination is what makes this a strong signal.
+        'MiniDumpWriteDump': 'T1003.001',
+        # Windows Credential Manager (T1555.004): VaultOpenVault is the
+        # vault-API entry point MITRE's own page names, narrower than the
+        # generic Cred* APIs above (those cover the older, separate
+        # Credential Manager store, not Vaults specifically).
+        'VaultOpenVault': 'T1555.004',
+
+        # Collection (Network Shared Drive, T1039): all three together is
+        # the actual share-enumeration sequence MITRE's page describes --
+        # generic 2+-import promotion already applies since all three map
+        # to the same technique.
+        'WNetOpenEnumW': 'T1039',
+        'WNetOpenEnumA': 'T1039',
+        'WNetEnumResourceW': 'T1039',
+        'WNetEnumResourceA': 'T1039',
+        'WNetCloseEnum': 'T1039',
 
         # Execution
         'CreateProcessW': 'T1059',
@@ -256,6 +277,18 @@ class ATTACKMapper:
         'T1218.010': 'System Binary Proxy Execution: Regsvr32',
         'T1218.005': 'System Binary Proxy Execution: Mshta',
         'T1055.012': 'Process Injection: Process Hollowing',
+        # Credential Access / Collection coverage extension.
+        'T1003.001': 'OS Credential Dumping: LSASS Memory',
+        'T1003.002': 'OS Credential Dumping: Security Account Manager',
+        'T1003.004': 'OS Credential Dumping: LSA Secrets',
+        'T1552.002': 'Unsecured Credentials: Credentials in Registry',
+        'T1552.004': 'Unsecured Credentials: Private Keys',
+        'T1555.004': 'Credentials from Password Stores: Windows Credential Manager',
+        'T1556.002': 'Modify Authentication Process: Password Filter DLL',
+        'T1040': 'Network Sniffing',
+        'T1125': 'Video Capture',
+        'T1114.001': 'Email Collection: Local Email Collection',
+        'T1039': 'Data from Network Shared Drive',
     }
 
     # Chrome Web Store assigns each extension a permanent, unique ID at

@@ -169,6 +169,64 @@ class StringATTACKMapper:
         # files).
         'mshta.exe': {'technique': 'T1218.005', 'confidence': 'medium'},
         '.hta': {'technique': 'T1218.005', 'confidence': 'medium'},
+
+        # --- Credential Access / Collection coverage extension ---
+        # Same sourcing discipline as the Persistence/Defense Evasion
+        # batch: each pattern is the literal registry path, file marker,
+        # or DLL MITRE's own technique page names as the mechanism.
+        #
+        # LSASS Memory (T1003.001): duplicates the import-table entry
+        # (attck_mapper.py's IMPORT_MAPPING) for samples where the string
+        # is present but the call isn't a plain static import (packed/
+        # obfuscated import table, or resolved via GetProcAddress) --
+        # same reasoning as WH_KEYBOARD_LL's own string-vs-import
+        # duplication above. Corroborating pair: MiniDumpWriteDump alone
+        # has legitimate crash-reporting uses, but paired with a direct
+        # 'lsass.exe' reference there's no other purpose.
+        'MiniDumpWriteDump': {'technique': 'T1003.001', 'confidence': 'medium'},
+        'lsass.exe': {'technique': 'T1003.001', 'confidence': 'medium'},
+        # SAM (T1003.002): the exact registry path 'reg save'/similar
+        # tools target to dump the local account database offline.
+        'hklm\\sam': {'technique': 'T1003.002', 'confidence': 'high'},
+        # LSA Secrets (T1003.004): MITRE's own page names this exact
+        # registry path as where LSA secrets are stored.
+        'SECURITY\\Policy\\Secrets': {'technique': 'T1003.004', 'confidence': 'high'},
+        # Credentials in Registry (T1552.002): two specific, well-known
+        # third-party credential storage locations MITRE's own examples
+        # cite -- narrower than a bare "password" registry-value scan,
+        # which would be far too generic to trust alone.
+        'SimonTatham\\PuTTY\\Sessions': {'technique': 'T1552.002', 'confidence': 'medium'},
+        'RealVNC\\WinVNC4': {'technique': 'T1552.002', 'confidence': 'medium'},
+        # Private Keys (T1552.004): PEM/OpenSSH key file markers -- MITRE's
+        # own page lists exactly these as the file content signature.
+        # No legitimate reason malware code would contain these strings
+        # unless searching for or handling key files.
+        '-----BEGIN RSA PRIVATE KEY-----': {'technique': 'T1552.004', 'confidence': 'high'},
+        '-----BEGIN PRIVATE KEY-----': {'technique': 'T1552.004', 'confidence': 'high'},
+        '-----BEGIN OPENSSH PRIVATE KEY-----': {'technique': 'T1552.004', 'confidence': 'high'},
+        '.ppk': {'technique': 'T1552.004', 'confidence': 'medium'},
+        # Windows Credential Manager (T1555.004): the vault client DLL
+        # MITRE's page names as the actual mechanism, narrower than the
+        # generic Cred* APIs already covering the separate, older store.
+        'VaultCli.dll': {'technique': 'T1555.004', 'confidence': 'medium'},
+        # Password Filter DLL (T1556.002): the exact LSA registry value
+        # that REGISTERS a password filter DLL to run on every password
+        # change -- MITRE's page names this as the installation mechanism.
+        'Notification Packages': {'technique': 'T1556.002', 'confidence': 'high'},
+        # Network Sniffing (T1040): these two DLLs are WinPcap/Npcap's
+        # actual packet-capture libraries -- raw packet capture has no
+        # purpose for ordinary application software.
+        'wpcap.dll': {'technique': 'T1040', 'confidence': 'medium'},
+        'Packet.dll': {'technique': 'T1040', 'confidence': 'medium'},
+        # Video Capture (T1125): the classic Video for Windows capture
+        # API, MITRE's own page cites webcam/video-call API abuse as the
+        # mechanism -- essentially no legitimate use outside actual
+        # camera-capture software.
+        'avicap32.dll': {'technique': 'T1125', 'confidence': 'high'},
+        # Local Email Collection (T1114.001): MITRE's page names Outlook's
+        # own local storage file extensions directly as the target.
+        '.ost': {'technique': 'T1114.001', 'confidence': 'medium'},
+        '.pst': {'technique': 'T1114.001', 'confidence': 'medium'},
     }
 
     def map_strings(self, strings: List[str]) -> List[Dict[str, str]]:

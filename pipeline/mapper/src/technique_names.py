@@ -81,6 +81,18 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1218.010": "System Binary Proxy Execution: Regsvr32",
     "T1218.005": "System Binary Proxy Execution: Mshta",
     "T1055.012": "Process Injection: Process Hollowing",
+    # Credential Access / Collection coverage extension.
+    "T1003.001": "OS Credential Dumping: LSASS Memory",
+    "T1003.002": "OS Credential Dumping: Security Account Manager",
+    "T1003.004": "OS Credential Dumping: LSA Secrets",
+    "T1552.002": "Unsecured Credentials: Credentials in Registry",
+    "T1552.004": "Unsecured Credentials: Private Keys",
+    "T1555.004": "Credentials from Password Stores: Windows Credential Manager",
+    "T1556.002": "Modify Authentication Process: Password Filter DLL",
+    "T1040": "Network Sniffing",
+    "T1125": "Video Capture",
+    "T1114.001": "Email Collection: Local Email Collection",
+    "T1039": "Data from Network Shared Drive",
 }
 
 _attck_bundle_cache = None
