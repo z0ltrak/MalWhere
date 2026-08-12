@@ -86,6 +86,17 @@ def main():
     print("=" * 60)
     print(f"Bundle saved to: {output_file}")
 
+    # Previously silent: max_iocs and the description length cap could
+    # both drop real threat-intel content with no trace in the output.
+    # Surfaced now so a truncated export is never mistaken for a complete one.
+    if builder.truncation_notes:
+        print("\n" + "!" * 60)
+        print("WARNING: this bundle is INCOMPLETE -- some data was truncated:")
+        for note in builder.truncation_notes:
+            print(f"  - {note}")
+        print("Increase --max-iocs if hash/network IOCs were cut.")
+        print("!" * 60)
+
     return 0
 
 

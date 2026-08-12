@@ -32,10 +32,26 @@ from stix2.v21 import (
 
 
 class StixBundleBuilder:
+    # AttackPattern.description has no real STIX 2.1 length limit -- this
+    # is a defensive cap against a genuinely pathological case, not a
+    # realistic one. Previously hard-truncated at 2000 with no indicator
+    # at all: with combination-aware evidence (imports, BCL calls, string
+    # patterns) now routinely producing several justification entries per
+    # technique, real analyst-facing content could silently vanish
+    # mid-sentence. None of the 3 validated samples' techniques currently
+    # exceed even the old 2000-char cap, but that was luck, not a
+    # guarantee -- raised the ceiling and, if it's ever actually hit, say
+    # so instead of staying silent.
+    MAX_DESCRIPTION_LENGTH = 10000
+
     def __init__(self, attck_mapping: Dict[str, Any], max_iocs: int = 100):
         self.mapping = attck_mapping
         self.max_iocs = max_iocs
         self.objects: List[Any] = []
+        # Populated during build() whenever a cap (max_iocs or
+        # MAX_DESCRIPTION_LENGTH) actually truncates real data -- callers
+        # should surface these, not just check bundle size.
+        self.truncation_notes: List[str] = []
 
         self.identity = Identity(name="MalWhere Threat Intelligence Pipeline", identity_class="organization")
         self.objects.append(self.identity)
@@ -120,31 +136,38 @@ class StixBundleBuilder:
         if sample.get("dynamic_sha256"):
             add_file(sample["dynamic_sha256"], sample.get("dynamic_md5", ""), name=sample.get("dynamic_filename"))
 
-        for h in iocs.get("hashes", [])[: self.max_iocs]:
+        all_hashes = iocs.get("hashes", [])
+        if len(all_hashes) > self.max_iocs:
+            self.truncation_notes.append(
+                f"hashes: {len(all_hashes)} total, only {self.max_iocs} converted to STIX File objects (--max-iocs)"
+            )
+        for h in all_hashes[: self.max_iocs]:
             add_file(h.get("sha256", ""), h.get("md5", ""), h.get("sha1", ""), h.get("filename"))
 
         return files
 
     def _build_network_scos(self, network_iocs: Dict[str, Any]) -> List[Any]:
         scos: List[Any] = []
-        for d in network_iocs.get("domains", [])[: self.max_iocs]:
-            value = d.get("value")
-            if value:
-                scos.append(DomainName(value=value))
-        for ip in network_iocs.get("ips", [])[: self.max_iocs]:
-            value = ip.get("value")
-            if value:
+
+        for label, key, sco_cls in (
+            ("domains", "domains", DomainName),
+            ("ips", "ips", IPv4Address),
+            ("urls", "urls", URL),
+        ):
+            items = network_iocs.get(key, [])
+            if len(items) > self.max_iocs:
+                self.truncation_notes.append(
+                    f"{label}: {len(items)} total, only {self.max_iocs} converted to STIX objects (--max-iocs)"
+                )
+            for item in items[: self.max_iocs]:
+                value = item.get("value")
+                if not value:
+                    continue
                 try:
-                    scos.append(IPv4Address(value=value))
+                    scos.append(sco_cls(value=value))
                 except Exception:
                     pass
-        for url in network_iocs.get("urls", [])[: self.max_iocs]:
-            value = url.get("value")
-            if value:
-                try:
-                    scos.append(URL(value=value))
-                except Exception:
-                    pass
+
         return scos
 
     def _build_indicators(self, file_scos: Dict[str, File], network_scos: List[Any]) -> List[Indicator]:
@@ -198,7 +221,13 @@ class StixBundleBuilder:
                 f"[confidence={t.get('final_confidence')}, "
                 f"sources={','.join(t.get('sources', []))}] "
             )
-            description = (header + " | ".join(justifications))[:2000]
+            full_description = header + " | ".join(justifications)
+            if len(full_description) > self.MAX_DESCRIPTION_LENGTH:
+                omitted = len(full_description) - self.MAX_DESCRIPTION_LENGTH
+                description = full_description[: self.MAX_DESCRIPTION_LENGTH] + f" ... [{omitted} more characters truncated]"
+                self.truncation_notes.append(f"{technique_id} justification: {omitted} characters truncated (MAX_DESCRIPTION_LENGTH)")
+            else:
+                description = full_description
             patterns.append(
                 AttackPattern(
                     name=t.get("technique_name", technique_id),

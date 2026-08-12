@@ -20,10 +20,22 @@ _CONFIDENCE_TAG = {
 
 
 class MISPEventBuilder:
+    # Same reasoning as StixBundleBuilder.MAX_DESCRIPTION_LENGTH: MISP
+    # comment attributes have no meaningful length limit in practice, this
+    # is a defensive cap against a pathological case, not a realistic one.
+    # Previously hard-truncated at 2000 with no indicator -- see that
+    # class's comment for why that's no longer a safe assumption now that
+    # combination-aware evidence routinely produces several justification
+    # entries per technique.
+    MAX_COMMENT_LENGTH = 10000
+
     def __init__(self, galaxy_lookup: AttckGalaxyLookup, distribution: int = 0):
         self.galaxy_lookup = galaxy_lookup
         self.distribution = distribution
         self.unmapped_techniques: List[str] = []
+        # Populated during build() whenever MAX_COMMENT_LENGTH actually
+        # truncates real data -- callers should surface these.
+        self.truncation_notes: List[str] = []
 
     def build(self, attck_mapping: Dict[str, Any]) -> MISPEvent:
         sample = attck_mapping.get("sample", {})
@@ -96,9 +108,15 @@ class MISPEventBuilder:
             technique_id = t.get("technique_id", "")
             evidence = t.get("evidence", [])
             justifications = [e.get("justification", "") for e in evidence if e.get("justification")]
-            comment_value = f"[{technique_id}] {t.get('technique_name', '')} — " + " | ".join(justifications)
+            full_comment = f"[{technique_id}] {t.get('technique_name', '')} — " + " | ".join(justifications)
+            if len(full_comment) > self.MAX_COMMENT_LENGTH:
+                omitted = len(full_comment) - self.MAX_COMMENT_LENGTH
+                comment_value = full_comment[: self.MAX_COMMENT_LENGTH] + f" ... [{omitted} more characters truncated]"
+                self.truncation_notes.append(f"{technique_id} comment: {omitted} characters truncated (MAX_COMMENT_LENGTH)")
+            else:
+                comment_value = full_comment
 
-            attr = event.add_attribute("comment", comment_value[:2000], category="Other", to_ids=False)
+            attr = event.add_attribute("comment", comment_value, category="Other", to_ids=False)
             if isinstance(attr, list):
                 attr = attr[0]
 

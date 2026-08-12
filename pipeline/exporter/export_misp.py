@@ -135,6 +135,13 @@ def main():
     print("=" * 60)
     print(f"View at: {args.misp_url}/events/view/{result.id}")
 
+    if builder.truncation_notes:
+        print("\n" + "!" * 60)
+        print("WARNING: this event is INCOMPLETE -- some data was truncated:")
+        for note in builder.truncation_notes:
+            print(f"  - {note}")
+        print("!" * 60)
+
     return 0
 
 
