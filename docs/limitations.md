@@ -341,8 +341,26 @@ Five batches so far, 42 new technique IDs, by tactic:
   one sample where a real overlap was actually plausible. Consistent with
   its documented behavior (PowerShell-based VSS deletion, rename-based
   encryption): no raw disk access, reboot, account tampering, or mining.
+- **Privilege Escalation + Exfiltration** (13): Access Token Manipulation
+  sub-techniques (Token Impersonation/Theft, Create Process with Token,
+  Make and Impersonate Token — two new combo checks, since
+  ImpersonateLoggedOnUser alone is too generic: legitimate service/IIS
+  code calls it too), Bypass UAC (the fodhelper registry path, the most
+  commonly cited UAC bypass in malware analysis literature), Accessibility
+  Features (sticky-keys backdoor), AppCert DLLs, Active Setup, Account
+  Manipulation, and four Exfiltration Over Web Service sub-techniques
+  (Code Repository, Cloud Storage, Text Storage Sites, Webhook — the last
+  a new dual-mapping from the existing Discord-webhook C2 pattern, same
+  precedent as T1560.001/T1074: a webhook is push-only, so the same
+  evidence supports both C2 delivery and exfiltration) plus Exfiltration
+  Over Unencrypted Non-C2 Protocol (FTP upload). Checked carefully against
+  WhiteSnake specifically, since its own ground truth already expects
+  T1548.002 (documented as "MSI installer hijack") — confirmed the
+  fodhelper pattern genuinely doesn't fire, consistent with WhiteSnake
+  using a different, not-yet-covered UAC bypass mechanism rather than a
+  false negative in the new rule.
 
-None of the 42 fired on any of the 3 validated samples when re-run after
+None of the 55 fired on any of the 3 validated samples when re-run after
 each batch — expected, since none of the 3 documented families use these
 specific mechanisms, and confirms the extension didn't introduce new
 false-positive risk on the set this project's numbers are measured
@@ -351,9 +369,25 @@ something that moves the headline P/R/F1 numbers today — a different kind
 of contribution than §3's audit, worth stating as such rather than
 implying it improved validated accuracy.
 
-~402 Windows-relevant techniques remain uncovered (474 total, ~72 now
-covered: ~30 original + 42 added across these five batches). Continuing this
-extension (by tactic, same sourcing discipline, re-verified against the 3
-samples after each batch) is the clearest remaining lever for pipeline
-robustness against genuinely new malware, as distinct from further tuning
-against the 3 already-validated families.
+Coverage extension stopped here deliberately, not from running out of
+technique IDs to add. Checked real Windows-relevant technique counts for
+every remaining tactic before deciding: Reconnaissance (46) and Resource
+Development (50) are structurally out of scope regardless of effort spent
+— both describe attacker activity that happens *before* the malware
+sample exists (scanning the target organization, registering C2
+infrastructure), not something a compiled binary's imports, strings, or
+runtime behavior can reveal about itself. Initial Access (21) and Lateral
+Movement (17) are technically in-scope but poor fits for what single-
+binary detonation analysis observes — the former is mostly about delivery
+vector (phishing, exploits) rather than the payload's own code; the
+latter mostly requires live multi-host/AD context (Pass the Hash, SMB
+admin shares) this pipeline's one-sample-at-a-time design doesn't have
+visibility into.
+
+~389 Windows-relevant techniques remain uncovered (474 total, ~85 now
+covered: ~30 original + 55 added across six batches, spanning every
+tactic judged to have genuine single-host-malware relevance). Continuing
+within Initial Access/Lateral Movement's few genuinely-applicable
+sub-techniques (e.g. T1091 Removable Media, T1570 Lateral Tool Transfer)
+is the only realistic further increment; Reconnaissance/Resource
+Development are a hard boundary, not a backlog item.
