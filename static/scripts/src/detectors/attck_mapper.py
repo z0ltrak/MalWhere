@@ -289,6 +289,14 @@ class ATTACKMapper:
         'T1125': 'Video Capture',
         'T1114.001': 'Email Collection: Local Email Collection',
         'T1039': 'Data from Network Shared Drive',
+        # Execution / Command and Control coverage extension.
+        'T1059.001': 'Command and Scripting Interpreter: PowerShell',
+        'T1559.002': 'Inter-Process Communication: Dynamic Data Exchange',
+        'T1127.001': 'Trusted Developer Utilities Proxy Execution: MSBuild',
+        'T1569.002': 'System Services: Service Execution',
+        'T1102.002': 'Web Service: Bidirectional Communication',
+        'T1572': 'Protocol Tunneling',
+        'T1090.002': 'Proxy: External Proxy',
     }
 
     # Chrome Web Store assigns each extension a permanent, unique ID at
@@ -654,22 +662,6 @@ class ATTACKMapper:
                     confidence='high',
                     justification=f"Found {len(onion_urls)} .onion URLs in the binary. Onion URLs are characteristic of Tor-based command and control (T1071), indicating the malware can communicate via the Tor network."
                 ))
-
-        # Telegram bot token → T1071
-        if config.get('patterns'):
-            for pattern in config['patterns']:
-                if isinstance(pattern, dict):
-                    pattern_str = str(pattern)
-                    if 'telegram' in pattern_str.lower() or 'bot' in pattern_str.lower():
-                        mappings.append(ATTACKMapping(
-                            technique='T1071',
-                            name='Application Layer Protocol',
-                            source='config',
-                            evidence='Telegram bot token found',
-                            confidence='high',
-                            justification="A Telegram bot token was found in the configuration. This indicates the malware uses Telegram's API as a command and control channel (T1071)."
-                        ))
-                        break
 
         # C2 IPs → T1071
         if config.get('ips'):

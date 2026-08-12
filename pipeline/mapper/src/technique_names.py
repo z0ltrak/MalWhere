@@ -93,6 +93,14 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1125": "Video Capture",
     "T1114.001": "Email Collection: Local Email Collection",
     "T1039": "Data from Network Shared Drive",
+    # Execution / Command and Control coverage extension.
+    "T1059.001": "Command and Scripting Interpreter: PowerShell",
+    "T1559.002": "Inter-Process Communication: Dynamic Data Exchange",
+    "T1127.001": "Trusted Developer Utilities Proxy Execution: MSBuild",
+    "T1569.002": "System Services: Service Execution",
+    "T1102.002": "Web Service: Bidirectional Communication",
+    "T1572": "Protocol Tunneling",
+    "T1090.002": "Proxy: External Proxy",
 }
 
 _attck_bundle_cache = None

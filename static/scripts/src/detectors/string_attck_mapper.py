@@ -227,6 +227,67 @@ class StringATTACKMapper:
         # own local storage file extensions directly as the target.
         '.ost': {'technique': 'T1114.001', 'confidence': 'medium'},
         '.pst': {'technique': 'T1114.001', 'confidence': 'medium'},
+
+        # --- Execution / Command and Control coverage extension ---
+        # Same sourcing discipline: each pattern is the literal flag,
+        # library, or service MITRE's own technique page names.
+        #
+        # Scheduled Task (T1053.005): duplicates the dynamic command-
+        # pattern check in cape_report_parser.py's _COMMAND_PATTERN_MAPPING
+        # for when the string is present statically but wasn't (or
+        # couldn't be) observed executing in one CAPE run.
+        'schtasks': {'technique': 'T1053.005', 'confidence': 'medium'},
+        # PowerShell (T1059.001): MITRE's own page names Start-Process and
+        # similar cmdlets, but the two strongest real-world indicators are
+        # these launch flags -- -EncodedCommand smuggles a base64-encoded
+        # script past command-line logging/AMSI scanning, -WindowStyle
+        # Hidden suppresses the console window a legitimate interactive
+        # script would show. Neither is exclusively malicious alone
+        # (some legitimate automation uses -EncodedCommand), the
+        # combination is what corroborates.
+        '-EncodedCommand': {'technique': 'T1059.001', 'confidence': 'medium'},
+        '-WindowStyle Hidden': {'technique': 'T1059.001', 'confidence': 'medium'},
+        # Dynamic Data Exchange (T1059.001's sibling T1559.002): DDEAUTO
+        # is the specific Word/Excel field code that triggers command
+        # execution on document open -- the well-known malicious-document
+        # delivery mechanism, not ordinary DDE usage (which uses plain
+        # DDE, not DDEAUTO, and doesn't execute commands).
+        'DDEAUTO': {'technique': 'T1559.002', 'confidence': 'high'},
+        # MSBuild (T1127.001): MITRE's page describes proxying execution
+        # through this trusted, commonly-signed build tool.
+        'msbuild.exe': {'technique': 'T1127.001', 'confidence': 'medium'},
+        # Service Execution (T1569.002): the SCM command-line invocation
+        # that starts an already-installed service -- distinct from
+        # T1543.003 (already covered), which is about CREATING the
+        # service, not executing via it.
+        'sc start': {'technique': 'T1569.002', 'confidence': 'medium'},
+        'net start': {'technique': 'T1569.002', 'confidence': 'medium'},
+
+        # Web Service / Bidirectional Communication (T1102.002): using an
+        # existing, legitimate web service as a C2 relay -- MITRE's page
+        # names exactly this pattern (compromised systems leveraging
+        # popular websites for C2 instructions). Replaces a dead rule that
+        # used to live in attck_mapper.py's map_config, checking
+        # config['patterns'] for a 'telegram'/'bot' substring -- that
+        # field is only ever populated with hex-key-shaped strings by
+        # config_parser.py's _find_hex_patterns(), so the old rule could
+        # never actually fire. Moved to real string evidence instead.
+        'api.telegram.org': {'technique': 'T1102.002', 'confidence': 'high'},
+        'pastebin.com/raw': {'technique': 'T1102.002', 'confidence': 'high'},
+        'raw.githubusercontent.com': {'technique': 'T1102.002', 'confidence': 'medium'},
+        'discord.com/api/webhooks': {'technique': 'T1102.002', 'confidence': 'high'},
+        # Protocol Tunneling (T1572): Renci.SshNet is the standard, widely
+        # used .NET SSH client library -- essentially unambiguous when
+        # present. ngrok/serveo.net are the specific tunneling services
+        # MITRE's own C2 tooling references name.
+        'Renci.SshNet': {'technique': 'T1572', 'confidence': 'high'},
+        'ngrok': {'technique': 'T1572', 'confidence': 'medium'},
+        'serveo.net': {'technique': 'T1572', 'confidence': 'medium'},
+        # External Proxy (T1090.002): Tor's default SOCKS listener port,
+        # corroborating the existing '.onion' pattern above -- together
+        # they distinguish "routes traffic through Tor" from a bare
+        # mention of an onion address.
+        ':9050': {'technique': 'T1090.002', 'confidence': 'medium'},
     }
 
     def map_strings(self, strings: List[str]) -> List[Dict[str, str]]:
