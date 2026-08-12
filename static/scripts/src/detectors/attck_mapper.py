@@ -229,6 +229,7 @@ class ATTACKMapper:
         'T1119': 'Automated Collection',
         'T1555': 'Credentials from Password Stores',
         'T1140': 'Deobfuscate/Decode Files or Information',
+        'T1562.001': 'Impair Defenses: Disable or Modify Tools',
     }
 
     # Chrome Web Store assigns each extension a permanent, unique ID at
@@ -257,6 +258,23 @@ class ATTACKMapper:
     # finding (reading another process's memory, all 3 co-present).
     _T1055_STRONG_IMPORTS = {'WriteProcessMemory', 'VirtualAllocEx', 'CreateRemoteThread', 'NtCreateThread'}
     _T1055_READ_TRIO = {'OpenProcess', 'VirtualQueryEx', 'ReadProcessMemory'}
+
+    # TerminateProcess alone is too generic to map to any one technique --
+    # an AV process, a locked-file holder, its own child process are all
+    # plausible targets with nothing to tell them apart (see
+    # string_attck_mapper.py's comment on the same API, where it was
+    # dropped rather than reassigned). But TerminateProcess corroborated by
+    # BOTH a process-listing API (deliberately searching the process list,
+    # not just killing a handle you already have) AND OpenProcess (opening
+    # a handle to something found in that list) is a coherent
+    # enumerate-then-kill primitive, specific enough for Impair Defenses:
+    # Disable or Modify Tools (T1562.001) even without the decrypted
+    # target name. Found auditing Akira's missing T1562: its manual report
+    # documents exactly this combination (WTSEnumerateProcessesW +
+    # OpenProcess + TerminateProcess) as decrypt-and-terminate-a-hardcoded-
+    # process, mapped by the analyst to T1562 alongside T1057 for the same
+    # code -- not instead of it.
+    _T1562_KILL_COMBO = {'WTSEnumerateProcessesW', 'OpenProcess', 'TerminateProcess'}
 
     def __init__(self):
         """Initialize ATT&CK mapper."""
@@ -420,6 +438,26 @@ class ATTACKMapper:
                     evidence=evidence,
                     confidence=confidence,
                     count=len(functions)
+                )
+            ))
+
+        all_function_names = {imp.function for imp in imports}
+        if self._T1562_KILL_COMBO.issubset(all_function_names):
+            evidence = ', '.join(sorted(self._T1562_KILL_COMBO))
+            mappings.append(ATTACKMapping(
+                technique='T1562.001',
+                name=self._get_technique_name('T1562.001'),
+                source='import',
+                evidence=evidence,
+                confidence='medium',
+                justification=(
+                    f"The API functions {evidence} are all imported by the binary. This is a "
+                    f"coherent enumerate-then-kill primitive: deliberately searching the process "
+                    f"list (WTSEnumerateProcessesW) rather than acting on a handle already held, "
+                    f"then opening and terminating a match. Consistent with Impair Defenses: "
+                    f"Disable or Modify Tools (T1562.001) even without a decrypted target name to "
+                    f"confirm which process is targeted -- medium rather than high confidence for "
+                    f"that reason."
                 )
             ))
 
