@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import tempfile
 import uuid
 import shutil
@@ -447,6 +448,20 @@ class StaticAnalyzer:
         Pass 1: Extract all files, discover keys from all extracted files
         Pass 2: Use discovered keys to decrypt encrypted payloads
         Pass 3: Fully analyze the remaining (non-payload) extracted files
+
+        The returned report is the installer's OWN identity (its own
+        hash/filename -- what dynamic analysis will also report as the
+        sample, so normalize.py's hash_match stays meaningful) with
+        ATT&CK evidence, discovered keys, and config/IOCs aggregated
+        from every extracted child. Previously this substituted one
+        arbitrarily-picked child (_select_main_payload: first .dll,
+        by extraction order) as if IT were the whole analysis, silently
+        discarding every other child's findings and the installer's own
+        identity. Caught on RoningLoader: the "sample" report ended up
+        being D3D11InstallHelper.dll's own report (a side-loaded helper
+        DLL), not the NSIS installer actually detonated -- dynamic
+        analysis's hash never matched it, and 66VOAk0O.exe/uninstall.exe/
+        the bundled NSIS plugins' findings never reached attck_mappings.
         """
         self._log(f"*** EXTRACTING {installer_type.upper()} INSTALLER ***")
 
@@ -469,16 +484,113 @@ class StaticAnalyzer:
         )
 
         payload_report = self._decrypt_encrypted_payloads(encrypted_payloads, all_collected_keys, depth)
-        if payload_report is not None:
-            return payload_report
 
         embedded_analyses = self._analyze_extracted_files(file_analyses, all_collected_keys, depth, installer_type)
 
-        main_report_dict = self._select_main_payload(embedded_analyses)
-        if main_report_dict:
-            return self._dict_to_static_report(main_report_dict)
+        if payload_report is not None:
+            embedded_analyses.append({
+                'name': f"{payload_report.filename} (decrypted payload)",
+                'type': 'decrypted_payload',
+                'report': payload_report.to_dict(),
+            })
 
-        return self._analyze_as_binary(depth)
+        if not embedded_analyses:
+            return self._analyze_as_binary(depth)
+
+        return self._build_installer_report(installer_type, embedded_analyses, all_collected_keys)
+
+    def _build_installer_report(self, installer_type: str, embedded_analyses: List[Dict[str, Any]],
+                                 all_collected_keys: List[Dict[str, Any]]) -> StaticReport:
+        """Build the installer's own report, aggregating ATT&CK mappings,
+        discovered keys, and config/IOCs from every extracted child in
+        embedded_analyses. See _analyze_installer for why this replaced
+        picking a single "main payload" child.
+        """
+        from .models.report import ATTACKMapping
+
+        file_info = self._get_file_info()
+        hashes = self.hash_calculator.calculate_all(self.file_path)
+
+        aggregated_mappings: List[ATTACKMapping] = []
+        aggregated_keys = list(all_collected_keys)
+        aggregated_config: Dict[str, List[Any]] = {}
+
+        for entry in embedded_analyses:
+            child_report = entry.get('report') or {}
+            child_name = entry.get('name', 'unknown')
+            # Stock NSIS $PLUGINSDIR runtime plugins ship unmodified with
+            # the NSIS compiler and are common to virtually any installer
+            # -- still fully analyzed and kept in embedded_files below for
+            # transparency, just not treated as sample-specific evidence.
+            is_stock_plugin = entry.get('from_pluginsdir', False)
+
+            if not is_stock_plugin:
+                for m in child_report.get('attck_mappings', []) or []:
+                    aggregated_mappings.append(ATTACKMapping(
+                        technique=m.get('technique', ''),
+                        name=m.get('name', ''),
+                        source=m.get('source', ''),
+                        evidence=m.get('evidence', ''),
+                        confidence=m.get('confidence', 'low'),
+                        justification=f"[from {child_name}] {m.get('justification', '')}",
+                    ))
+
+                for k, v in (child_report.get('config') or {}).items():
+                    if isinstance(v, list) and v:
+                        aggregated_config.setdefault(k, []).extend(v)
+
+            for key in child_report.get('discovered_keys', []) or []:
+                key = dict(key)
+                key.setdefault('source_file', child_name)
+                aggregated_keys.append(key)
+
+        # De-dupe pooled keys by (algorithm, key) -- Pass 1 already
+        # contributed to all_collected_keys, so re-reading the same keys
+        # back out of each child's own discovered_keys would double them.
+        deduped_keys = []
+        seen_key_ids = set()
+        for key in aggregated_keys:
+            key_id = (key.get('algorithm', ''), key.get('key', ''))
+            if key_id in seen_key_ids:
+                continue
+            seen_key_ids.add(key_id)
+            deduped_keys.append(key)
+
+        for k, items in aggregated_config.items():
+            deduped_items = []
+            seen_vals = set()
+            for item in items:
+                val_id = json.dumps(item, sort_keys=True) if isinstance(item, dict) else item
+                if val_id in seen_vals:
+                    continue
+                seen_vals.add(val_id)
+                deduped_items.append(item)
+            aggregated_config[k] = deduped_items
+
+        self._log(
+            f"Installer report aggregates {len(aggregated_mappings)} ATT&CK mappings "
+            f"and {len(deduped_keys)} keys from {len(embedded_analyses)} extracted child files"
+        )
+
+        return StaticReport(
+            filename=self.file_path.name,
+            size_bytes=file_info['size_bytes'],
+            size_mb=file_info['size_mb'],
+            extension=self.file_path.suffix,
+            file_type=installer_type,
+            file_type_info=self.file_type_info,
+            md5=hashes.get('md5', ''),
+            sha1=hashes.get('sha1', ''),
+            sha256=hashes.get('sha256', ''),
+            ssdeep=hashes.get('ssdeep'),
+            tlsh=hashes.get('tlsh'),
+            nsis_detected=self._nsis_detected,
+            attck_mappings=aggregated_mappings,
+            discovered_keys=deduped_keys,
+            config=aggregated_config,
+            embedded_files=embedded_analyses,
+            errors=self.errors,
+        )
 
     def _collect_keys_from_extracted_files(self, extracted_files: List[Dict[str, Any]],
                                            depth: int, installer_type: str) -> tuple:
@@ -541,7 +653,19 @@ class StaticAnalyzer:
                 'path': file_path,
                 'type': file_type,
                 'keys': keys,
-                'size': extracted.get('size', 0)
+                'size': extracted.get('size', 0),
+                # NSIS's own installer stub extracts its bundled runtime
+                # plugins (UserInfo.dll, nsDialogs.dll, System.dll, ...)
+                # into $PLUGINSDIR -- these ship unmodified with the NSIS
+                # compiler itself and are common to virtually any NSIS
+                # installer, legitimate or malicious. Their generic Win32
+                # API usage (e.g. UserInfo.dll's OpenProcessToken privilege
+                # check) isn't sample-specific signal and shouldn't be
+                # aggregated as if the malware author wrote it -- caught on
+                # RoningLoader, where this classified UserInfo.dll's routine
+                # privilege check as a T1134 (Access Token Manipulation)
+                # finding.
+                'from_pluginsdir': '$PLUGINSDIR' in str(file_path),
             })
 
         seen_keys = set()
@@ -653,6 +777,7 @@ class StaticAnalyzer:
             file_path = file_info['path']
             file_name = file_info['name']
             file_type = file_info['type']
+            from_pluginsdir = file_info.get('from_pluginsdir', False)
 
             self._log(f"Analyzing extracted file: {file_name} ({file_type})")
 
@@ -684,41 +809,11 @@ class StaticAnalyzer:
                 'name': file_name,
                 'type': file_type,
                 'report': sub_report.to_dict(),
-                'keys_used': len(all_collected_keys)
+                'keys_used': len(all_collected_keys),
+                'from_pluginsdir': from_pluginsdir,
             })
 
         return embedded_analyses
-
-    def _select_main_payload(self, embedded_analyses: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-        """Pick which extracted file's report represents the installer as a whole.
-
-        Generic priority: DLL (installers commonly side-load a payload
-        DLL) > largest PE (by size, not just "first PE found" -- the old
-        code claimed "largest" in its comment but never actually sorted)
-        > first extracted file. Previously this list led with a hardcoded
-        `if 'D3D11InstallHelper' in analysis['name']` check -- that's
-        RoningLoader's specific side-loaded DLL name. Removed: it was
-        already fully redundant with the very next "any .dll" check
-        below (D3D11InstallHelper.dll matches that too), so this is a
-        behavior-preserving simplification for the validated samples,
-        not just a generalization.
-        """
-        for analysis in embedded_analyses:
-            if '.dll' in analysis['name'].lower():
-                self._log(f"Found DLL as main payload: {analysis['name']}")
-                return analysis['report']
-
-        pe_analyses = [a for a in embedded_analyses if a.get('type') == 'pe_file']
-        if pe_analyses:
-            largest = max(pe_analyses, key=lambda a: a.get('size', 0))
-            self._log(f"Found largest PE as main payload: {largest['name']} ({largest.get('size', 0)} bytes)")
-            return largest['report']
-
-        if embedded_analyses:
-            self._log("Using first extracted file as main report")
-            return embedded_analyses[0]['report']
-
-        return None
 
     def _is_encrypted_payload(self, file_name: str, file_type: str, file_path: Path) -> bool:
         """Determine if a file is likely an encrypted payload.
@@ -749,141 +844,6 @@ class StaticAnalyzer:
         except Exception as e:
             self._log(f"_is_encrypted_payload check failed for {file_name}: {e}")
             return False
-
-    def _dict_to_static_report(self, report_dict: Dict[str, Any]) -> StaticReport:
-        """Convert a dictionary back to a StaticReport with proper object reconstruction."""
-        from .models.report import (
-            StaticReport, SectionInfo, ImportInfo, ExportInfo, StringInfo,
-            PackerInfo, IndicatorInfo, YaraResult, EntropyAnalysis, ATTACKMapping
-        )
-
-        packer_dict = report_dict.get('packer', {})
-        packer_info = PackerInfo(
-            detected=packer_dict.get('detected', False),
-            packers=packer_dict.get('packers', []),
-            confidence=packer_dict.get('confidence', 'none')
-        )
-
-        strings_dict = report_dict.get('strings', {})
-        string_info = StringInfo(
-            standard=strings_dict.get('standard', []),
-            floss=strings_dict.get('floss', []),
-            decoded=strings_dict.get('decoded', []),
-            deobfuscated=strings_dict.get('deobfuscated', []),
-            dotnet_strings=strings_dict.get('dotnet_strings', [])
-        )
-
-        indicators_dict = report_dict.get('indicators', {})
-        indicator_info = IndicatorInfo(
-            suspicious_imports=indicators_dict.get('suspicious_imports', []),
-            suspicious_strings=indicators_dict.get('suspicious_strings', []),
-            high_entropy_sections=indicators_dict.get('high_entropy_sections', []),
-            anti_debug=indicators_dict.get('anti_debug', []),
-            anti_vm=indicators_dict.get('anti_vm', []),
-            ransomware_indicators=indicators_dict.get('ransomware_indicators', []),
-            anti_sandbox=indicators_dict.get('anti_sandbox', []),
-            anti_vm_strings=indicators_dict.get('anti_vm_strings', []),
-            anti_sandbox_strings=indicators_dict.get('anti_sandbox_strings', []),
-            sleep_functions=indicators_dict.get('sleep_functions', [])
-        )
-
-        yara_dict = report_dict.get('yara', {})
-        yara_result = YaraResult(
-            matches=yara_dict.get('matches', []),
-            matched_rules=yara_dict.get('matched_rules', []),
-            packer_detected=yara_dict.get('packer_detected', False),
-            packers=yara_dict.get('packers', []),
-            attck_mapping=yara_dict.get('attck_mapping', [])
-        )
-
-        entropy_dict = report_dict.get('entropy_analysis', {})
-        entropy_analysis = EntropyAnalysis(
-            high_entropy_sections=entropy_dict.get('high_entropy_sections', []),
-            suspicious_entropy=entropy_dict.get('suspicious_entropy', []),
-            packed_sections=entropy_dict.get('packed_sections', []),
-            encrypted_data=entropy_dict.get('encrypted_data', []),
-            overall_entropy=entropy_dict.get('overall_entropy'),
-            justification=entropy_dict.get('justification', ''),
-            crypto_indicators=entropy_dict.get('crypto_indicators', [])
-        )
-
-        attck_mappings = []
-        for mapping_dict in report_dict.get('attck_mappings', []):
-            attck_mappings.append(ATTACKMapping(
-                technique=mapping_dict.get('technique', ''),
-                name=mapping_dict.get('name', ''),
-                source=mapping_dict.get('source', ''),
-                evidence=mapping_dict.get('evidence', ''),
-                confidence=mapping_dict.get('confidence', ''),
-                justification=mapping_dict.get('justification', '')
-            ))
-
-        sections = []
-        for section_dict in report_dict.get('sections', []):
-            sections.append(SectionInfo(
-                name=section_dict.get('name', ''),
-                virtual_address=section_dict.get('virtual_address', ''),
-                virtual_size=section_dict.get('virtual_size', 0),
-                raw_size=section_dict.get('raw_size', 0),
-                entropy=section_dict.get('entropy', 0),
-                characteristics=section_dict.get('characteristics', ''),
-                is_executable=section_dict.get('is_executable', False),
-                is_writable=section_dict.get('is_writable', False),
-                is_readable=section_dict.get('is_readable', False),
-                md5=section_dict.get('md5', ''),
-                sha1=section_dict.get('sha1', ''),
-                ssdeep=section_dict.get('ssdeep')
-            ))
-
-        imports = []
-        for import_dict in report_dict.get('imports', []):
-            imports.append(ImportInfo(
-                dll=import_dict.get('dll', ''),
-                function=import_dict.get('function', ''),
-                address=import_dict.get('address', ''),
-                hint=import_dict.get('hint', 0)
-            ))
-
-        exports = []
-        for export_dict in report_dict.get('exports', []):
-            exports.append(ExportInfo(
-                name=export_dict.get('name', ''),
-                address=export_dict.get('address', ''),
-                ordinal=export_dict.get('ordinal', 0)
-            ))
-
-        return StaticReport(
-            filename=report_dict.get('filename', ''),
-            size_bytes=report_dict.get('size_bytes', 0),
-            size_mb=report_dict.get('size_mb', 0),
-            extension=report_dict.get('extension', ''),
-            file_type=report_dict.get('file_type', 'unknown'),
-            file_type_info=report_dict.get('file_type_info', {}),
-            md5=report_dict.get('md5', ''),
-            sha1=report_dict.get('sha1', ''),
-            sha256=report_dict.get('sha256', ''),
-            ssdeep=report_dict.get('ssdeep'),
-            tlsh=report_dict.get('tlsh'),
-            imphash=report_dict.get('imphash'),
-            is_dotnet=report_dict.get('is_dotnet', False),
-            metadata=report_dict.get('metadata', {}),
-            sections=sections,
-            imports=imports,
-            exports=exports,
-            resources=report_dict.get('resources', []),
-            strings=string_info,
-            packer=packer_info,
-            indicators=indicator_info,
-            embedded_files=report_dict.get('embedded_files', []),
-            discovered_keys=report_dict.get('discovered_keys', []),
-            yara=yara_result,
-            entropy_analysis=entropy_analysis,
-            attck_mappings=attck_mappings,
-            config=report_dict.get('config', {}),
-            nsis_detected=report_dict.get('nsis_detected', False),
-            analysis_timestamp=report_dict.get('analysis_timestamp', ''),
-            errors=report_dict.get('errors', [])
-        )
 
     def _analyze_as_binary(self, depth: int) -> StaticReport:
         """Fall back to binary analysis when file type is unknown or extraction fails."""
