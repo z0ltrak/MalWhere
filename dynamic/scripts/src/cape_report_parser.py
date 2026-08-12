@@ -229,6 +229,47 @@ _SIGNATURE_TECHNIQUE_DROP = {
     # T1059's territory. No clean replacement for either; dropped.
     ("suspicious_command_tools", "T1202"),
     ("uses_windows_utilities", "T1202"),
+
+    # Three more, found auditing roning's remaining false positives against
+    # its manual report and each signature's own raw `data` field:
+    #   - antiav_servicestop ("Attempts to stop active services") tags
+    #     T1489 Service Stop -- but its own raw data field for THIS sample
+    #     names the specific service: {"service": "vally3dka"}, which is
+    #     roning's own kernel driver (the one this project's own
+    #     resubmission analysis already identified and mapped). Stopping/
+    #     restarting your own driver service as part of normal install
+    #     lifecycle isn't "Service Stop" in T1489's sense (rendering a
+    #     legitimate service unavailable) -- the signature's generic
+    #     anti-av name doesn't hold once the actual target is checked.
+    #     T1543/T1543.003 already dropped above for the same signature.
+    #   - per_file_acl_token_check ("Performs high-volume
+    #     NtQueryInformationToken calls for TokenUser and TokenGroups,
+    #     indicative of wiper/ransomware checking whether it has write
+    #     permission to each file") tags both T1485 Data Destruction and
+    #     T1069 Permission Groups Discovery. Its own raw data shows
+    #     token_query_count: 230 -- close to roning's own 37 dropped
+    #     files times ~6 token queries each, consistent with a dropper
+    #     checking its OWN write permission before writing each file, not
+    #     a wiper checking before destroying data (no deletion evidence
+    #     anywhere) or a recon actor discovering group memberships
+    #     (TokenGroups here is being read on the process's OWN token, not
+    #     enumerated for other accounts/domains). The signature's own
+    #     "wiper/ransomware" category is a mismatch for a loader/RAT.
+    ("antiav_servicestop", "T1489"),
+    ("per_file_acl_token_check", "T1485"),
+    ("per_file_acl_token_check", "T1069"),
+    # unbacked_delay_execution ("Paused execution (sleep/delay) in a
+    # thread executing in dynamically allocated (unbacked) memory,
+    # indicative of sandbox evasion or C2 sleeping between callbacks")
+    # tags both T1497 and T1027. The T1497 half fits (delay-based sandbox
+    # evasion, corroborated by two other, more specific dynamic signatures
+    # -- mouse_movement_detect, antisandbox_windows_activation). T1027
+    # (Obfuscated Files or Information) doesn't: pausing execution isn't
+    # about obfuscating a file or its contents. roning's real T1027
+    # evidence (pe_section_vsize_rsize_anomaly's 84x virtual/raw size
+    # ratio, allocated_memory_protection_noaccess) stands on its own
+    # without this signature's contribution.
+    ("unbacked_delay_execution", "T1027"),
 }
 
 
