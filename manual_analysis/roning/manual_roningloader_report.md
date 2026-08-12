@@ -549,6 +549,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v Enab
 | Data Encrypted for Impact | T1486 | RC4-encrypted payload delivery |
 | DLL Side-Loading | T1574.002 | `D3D11InstallHelper.dll` side-loaded by signed EXE |
 | Reflective Code Loading | T1620 | PE loaded from memory without touching disk |
+| Ingress Tool Transfer | T1105 | C2 command 0x07 "Download & Execute"; `dispatch_file_transfer`/Reflective PE Loader (0x23/0x25/0xEC/0xF8) fetches and loads additional DLL/EXE payloads from C2 |
 | Process Injection | T1055 | IO Completion Port injection into svchost.exe |
 | Boot or Logon Autostart Execution | T1547 | Windows service persistence |
 | Kernel Modules and Extensions | T1547.006 | `vmservice.sys` kernel driver |

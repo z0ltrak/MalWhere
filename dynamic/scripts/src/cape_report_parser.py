@@ -95,6 +95,39 @@ _TECHNIQUE_DROP = {"T1568"}
 # means dumping credentials from OS-level stores like LSASS/SAM). T1552.001
 # is already correctly present in the same signature's ttps list, so
 # dropping T1003 loses no coverage.
+#
+# Four more, found auditing roning's remaining FPs and checked the same way
+# (raw signature description + roning's own manual report, not assumed):
+#   - antiav_servicestop ("Attempts to stop active services") tags T1489
+#     Service Stop (exact match), T1562/T1562.001 Impair Defenses (plausible
+#     — category is literally 'anti-av'), but ALSO T1543/T1543.003 Create or
+#     Modify System Process — backwards: stopping a service is neither
+#     creating nor modifying one, those are opposite actions.
+#   - unbacked_file_dropping ("writes data to the filesystem from
+#     dynamically allocated (unbacked) memory") tags T1105 Ingress Tool
+#     Transfer, well supported by roning's report (multiple embedded/
+#     dropped payloads, a "Download & Execute" C2 command) and T1074 Data
+#     Staged, unsupported — nothing in the evidence or the report indicates
+#     the written data is being collected/staged FOR exfiltration rather
+#     than simply a dropped secondary payload.
+#   - unbacked_bind_shell ("bound a network socket to listen for inbound
+#     connections... fileless TCP bind shell or P2P") tags T1090 Proxy,
+#     which is about relaying OTHER systems' traffic to obscure its
+#     direction/origin — not what a bind shell is (direct inbound remote
+#     access). roning's actual C2 is outbound (connect_to_server() to a
+#     hardcoded C2 IP), not an inbound listener, so this signature doesn't
+#     even match roning's documented C2 architecture. No clean replacement
+#     technique for "fileless bind shell" specifically — dropped rather
+#     than force-fit, same precedent as T1568.
+#   - suspicious_iocontrol_codes ("indicative of disk enumeration OR a
+#     bootkit/wiper" — the signature's own description hedges between two
+#     very different things) tags T1542.003 Pre-OS Boot: Bootkit. roning's
+#     actual verified IOCTL behavior (manual report's "IOCTL Commands"
+#     section) is a MiniFilter driver's ADD_PATH/REMOVE_PATH/QUERY_PATH
+#     file-hiding commands — real rootkit behavior, but nothing about the
+#     boot sector/MBR. Can't confirm this dynamic signature instance even
+#     corresponds to that specific driver's IOCTLs vs. some unrelated disk
+#     IOCTL, so dropped rather than force-fit to a different technique.
 _SIGNATURE_TECHNIQUE_DROP = {
     ("pe_tls_callbacks", "T1055"),
     ("unbacked_process_creation", "T1106"),
@@ -102,6 +135,11 @@ _SIGNATURE_TECHNIQUE_DROP = {
     ("registers_vectored_exception_handler", "T1574"),
     ("infostealer_ftp", "T1003"),
     ("infostealer_mail", "T1003"),
+    ("antiav_servicestop", "T1543"),
+    ("antiav_servicestop", "T1543.003"),
+    ("unbacked_file_dropping", "T1074"),
+    ("unbacked_bind_shell", "T1090"),
+    ("suspicious_iocontrol_codes", "T1542.003"),
 }
 
 
