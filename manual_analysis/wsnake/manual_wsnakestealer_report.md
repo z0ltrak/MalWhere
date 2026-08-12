@@ -871,7 +871,6 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | **Ingress Tool Transfer** | T1105 | GitHub SOCKS5 download |
 | **Proxy** | T1090 | Tor, Serveo, ngrok |
 | **Protocol Tunneling** | T1572 | SSH, HTTP tunnels |
-| **Non-Standard Port** | T1571 | Port 5552 (not used) |
 | **Data Encoding** | T1132 | Base64 + XOR for C2 |
 | **Remote Access Tools** | T1219 | Custom C2 client |
 | **System Network Configuration Discovery** | T1016 | LAN scanning |

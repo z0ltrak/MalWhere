@@ -7,7 +7,7 @@ as thesis prose itself.
 
 Current evaluation state (family-level P/R/F1, `evaluation/results/summary.md`):
 Akira 1.00/1.00/1.00 (zero missed, zero false positives), WhiteSnake
-1.00/0.78/0.88 (zero false positives, 10 missed techniques remaining),
+1.00/0.80/0.89 (zero false positives, 9 missed techniques remaining),
 RoningLoader 0.90/0.68/0.78 (0.88/0.84/0.86 counting the resubmission loop's
 dropped-component coverage — see §1; 2 open false positives, §4). RoningLoader
 is the only sample with any false positives left; both are deliberately
