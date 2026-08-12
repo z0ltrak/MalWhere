@@ -15,7 +15,6 @@ class ATTACKMapper:
         'CreateToolhelp32Snapshot': 'T1057',
         'Process32First': 'T1057',
         'Process32Next': 'T1057',
-        'GetSystemInfo': 'T1082',
         'GetComputerNameW': 'T1082',
         'GetComputerNameA': 'T1082',
         'GetUserNameW': 'T1082',
@@ -83,6 +82,16 @@ class ATTACKMapper:
         'QueryPerformanceFrequency': 'T1497',
         'Sleep': 'T1497',
         'NtDelayExecution': 'T1497',
+        # Was mapped to T1082 (System Information Discovery) -- wrong
+        # verb. GetSystemInfo returns CPU architecture/core count/page
+        # size, not host-identifying recon data the way GetComputerNameW/
+        # GetUserNameW are; its dominant real-world use is checking
+        # dwNumberOfProcessors for anti-VM purposes (VMs commonly report
+        # fewer cores). Found auditing a real false positive on Akira,
+        # where this import's only use context is CPU-feature/anti-VM
+        # checking already correctly captured under T1497 -- the manual
+        # report has zero mention of hostname/system-info harvesting.
+        'GetSystemInfo': 'T1497',
         'SetUnhandledExceptionFilter': 'T1622',
         'UnhandledExceptionFilter': 'T1622',
         'OutputDebugStringW': 'T1622',
@@ -109,8 +118,13 @@ class ATTACKMapper:
         # reasoning.
 
         # Discovery (Network)
-        'WNetGetConnectionW': 'T1135',
-        'WNetGetConnectionA': 'T1135',
+        # WNetGetConnectionW/A removed from here: it resolves the remote
+        # UNC path for an ALREADY-KNOWN local device/drive letter -- not
+        # an enumeration API, so its presence isn't evidence the malware
+        # discovers shares. NetShareEnum (below, Network Share section)
+        # is the real T1135 API. Found auditing a real false positive on
+        # Akira: its manual report shows share *targets* come from an
+        # operator-supplied --share_file argument, not discovery.
 
         # Network
         'WSAStartup': 'S0105',
@@ -362,10 +376,32 @@ class ATTACKMapper:
                 )
                 if qualifying_combo:
                     confidence = 'high'
-                elif len(functions) >= 2:
+                elif func_set & self._T1055_STRONG_IMPORTS:
+                    # One of the 4 specific injection primitives, alone
+                    # or alongside non-corroborating imports -- these 4
+                    # have essentially no legitimate non-injection use,
+                    # so still real signal even uncorroborated, just not
+                    # 'high'.
                     confidence = 'medium'
                 else:
-                    confidence = self._determine_import_confidence(functions[0])
+                    # Every other T1055-tagged import (OpenProcess,
+                    # VirtualQueryEx, ReadProcessMemory, QueueUserAPC) has
+                    # dozens of legitimate non-injection uses and isn't
+                    # specific enough to report on its own OR in a
+                    # combination that isn't one of the two recognized
+                    # coherent patterns above -- merely having 2+ of them
+                    # present isn't corroboration. Found auditing a real
+                    # false positive on Akira: OpenProcess+QueueUserAPC
+                    # got reported at 'medium' purely because 2+
+                    # T1055-tagged imports were present, despite
+                    # QueueUserAPC operating on a THREAD handle
+                    # OpenProcess never supplies -- not a coherent
+                    # injection primitive. Akira's manual report maps
+                    # this exact code (WTSEnumerateProcessesW + OpenProcess
+                    # + WaitForSingleObject + CloseHandle, a plain
+                    # enumerate-and-terminate loop) to T1057/T1562, never
+                    # T1055.
+                    continue
             elif len(functions) >= 2:
                 confidence = 'high'
             else:

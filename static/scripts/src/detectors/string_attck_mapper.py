@@ -34,7 +34,13 @@ class StringATTACKMapper:
         # MEDIUM Confidence — Suspicious API calls
         'WTSEnumerateProcessesW': {'technique': 'T1057', 'confidence': 'medium'},
         'WTSFreeMemory': {'technique': 'T1057', 'confidence': 'medium'},
-        'WNetGetConnectionW': {'technique': 'T1135', 'confidence': 'medium'},
+        # WNetGetConnectionW removed: same fix as attck_mapper.py's
+        # IMPORT_MAPPING (this table duplicates that one for string-form
+        # evidence) -- it resolves a remote UNC path for an ALREADY-KNOWN
+        # local drive letter, not an enumeration API. Found auditing a
+        # real false positive on Akira, whose manual report shows share
+        # targets come from an operator-supplied --share_file argument,
+        # not discovery.
         # Restart Manager API (Rm*) was previously mapped to T1489 "Service
         # Stop" -- wrong. These APIs identify/close processes holding a
         # FILE lock (e.g. to delete/replace it), not stop a Windows
@@ -60,7 +66,15 @@ class StringATTACKMapper:
         'NativeCredential': {'technique': 'T1555', 'confidence': 'medium'},
         'ReadProcessMemory': {'technique': 'T1055', 'confidence': 'medium'},
         'VirtualQueryEx': {'technique': 'T1055', 'confidence': 'medium'},
-        'OpenProcess': {'technique': 'T1055', 'confidence': 'medium'},
+        # OpenProcess removed: same fix as attck_mapper.py's map_imports
+        # (this table duplicates that one for string-form evidence, but
+        # without its coherent-combination check) -- OpenProcess alone
+        # has dozens of legitimate non-injection uses (enumeration,
+        # termination, memory reads). Found auditing a real false
+        # positive on Akira, whose manual report maps this exact code
+        # (WTSEnumerateProcessesW + OpenProcess + WaitForSingleObject +
+        # CloseHandle, a plain enumerate-and-terminate loop) to
+        # T1057/T1562, never T1055.
         'AdjustTokenPrivileges': {'technique': 'T1134', 'confidence': 'medium'},
         'LookupPrivilegeValue': {'technique': 'T1134', 'confidence': 'medium'},
         'OpenProcessToken': {'technique': 'T1134', 'confidence': 'medium'},
@@ -79,7 +93,14 @@ class StringATTACKMapper:
         'WriteFile': {'technique': 'T1486', 'confidence': 'low'},
         'CreateFile': {'technique': 'T1070', 'confidence': 'low'},
         'Sleep': {'technique': 'T1497', 'confidence': 'low'},
-        'GetSystemInfo': {'technique': 'T1082', 'confidence': 'low'},
+        # Moved from T1082 (System Information Discovery) to T1497 --
+        # same fix as attck_mapper.py's IMPORT_MAPPING, wrong verb:
+        # GetSystemInfo's dominant use is CPU-feature/core-count anti-VM
+        # checking, not host-identifying recon (that's GetComputerNameW/
+        # GetUserNameW's job). Found auditing a real false positive on
+        # Akira, whose only use context for this string is anti-VM
+        # checking already correctly captured under T1497.
+        'GetSystemInfo': {'technique': 'T1497', 'confidence': 'low'},
         'FindFirstFile': {'technique': 'T1083', 'confidence': 'low'},
         'FindNextFile': {'technique': 'T1083', 'confidence': 'low'},
         'IsDebuggerPresent': {'technique': 'T1622', 'confidence': 'low'},

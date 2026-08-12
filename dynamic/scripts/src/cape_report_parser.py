@@ -24,7 +24,50 @@ _INJECTION_CATEGORIES = {"injection", "process hollowing", "shellcode"}
 # techniques at once (T1548 Abuse Elevation Control, T1036 Masquerading)
 # is itself a sign of an overly broad community rule, not a specific
 # behavioral match.
-_UNRELIABLE_SIGNATURES = {"accesses_public_folder"}
+#
+# Three more, found auditing WhiteSnake's/Akira's false positives against
+# their manual reports directly (raw signature `data` field, not just
+# name/description):
+#   - unbacked_process_mitigation_alteration ("Manipulated process
+#     mitigation policies (CFG/DEP) from dynamically allocated (unbacked)
+#     memory") tags T1562. Its own raw evidence shows the "unbacked"
+#     caller addresses all sit in a single narrow high-memory range
+#     consistent with a system DLL (ntdll.dll commonly loads there on
+#     x64) — modern Windows applies several mitigation policies to a
+#     process automatically during its own startup, independent of
+#     anything the target binary does. WhiteSnake's report (built from
+#     .NET decompiled source, where an explicit P/Invoke to
+#     SetProcessMitigationPolicy would be plainly visible) has zero
+#     mention of mitigation-policy tampering. Same family of signature
+#     (unbacked_*) already had two other members' mis-mapped ttps fixed
+#     above (T1129->T1620, T1568 dropped) — this one's underlying
+#     caller-resolution heuristic misfiring on system-DLL addresses looks
+#     like the same root cause, just never individually reviewed before.
+#   - stealth_window ("A process created a hidden window") tags T1564 and
+#     T1564.003. Checked its raw `data` field directly for the specific
+#     process context that triggered it on WhiteSnake: `cmd.exe /c chcp
+#     65001 && netsh wlan show networks ... | findstr ...` — the WiFi
+#     credential stealer WhiteSnake's own report already documents and
+#     ground truth already credits elsewhere. A hidden console window
+#     from ordinary silent subprocess invocation (CREATE_NO_WINDOW / a
+#     redirected Process.Start) isn't the malware concealing its own UI,
+#     which is what T1564.003 actually means.
+#   - anomalous_deletefile ("Anomalous file deletion behavior detected
+#     (10+)") tags T1485 on Akira with a 122-call match count. Akira's
+#     manual report traces the encryption routine's terminal step in
+#     Ghidra as a file RENAME (file.txt -> file.txt.akira), not a
+#     separate delete-then-recreate, and documents no other bulk-deletion
+#     behavior at anything close to that scale. Less certain than the two
+#     above (no equally direct explanation for the 122 calls was found,
+#     just an absence of one in the documented workflow) but dropped on
+#     the same standard the rest of this table uses: no static or manual
+#     corroboration for the technique as mapped.
+_UNRELIABLE_SIGNATURES = {
+    "accesses_public_folder",
+    "unbacked_process_mitigation_alteration",
+    "stealth_window",
+    "anomalous_deletefile",
+}
 
 # Per-technique corrections applied within an otherwise-kept signature's
 # ttps list (unlike _UNRELIABLE_SIGNATURES, these signatures' OTHER

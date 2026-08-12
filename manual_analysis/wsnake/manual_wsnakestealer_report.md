@@ -879,6 +879,7 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | **Password Policy Discovery** | T1201 | WiFi password extraction |
 | **Credentials In Files** | T1552.001 | Browser credential files |
 | **Credentials in Registry** | T1552.002 | Thunderbird credentials |
+| **Reflective Code Loading** | T1620 | In-memory PE loading in `xEdACX` (see Appendix D Validation Summary — verified but not previously listed here) |
 
 ---
 
