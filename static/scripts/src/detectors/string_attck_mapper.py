@@ -104,6 +104,71 @@ class StringATTACKMapper:
         'FindFirstFile': {'technique': 'T1083', 'confidence': 'low'},
         'FindNextFile': {'technique': 'T1083', 'confidence': 'low'},
         'IsDebuggerPresent': {'technique': 'T1622', 'confidence': 'low'},
+
+        # --- Persistence / Defense Evasion coverage extension ---
+        # Only ~30 technique IDs had a dedicated static rule before this,
+        # all justified by evidence in the 3 validated samples -- narrower
+        # than the ~474 Windows-relevant techniques in the current MITRE
+        # Enterprise matrix (checked directly against the official STIX
+        # bundle, not estimated). These are added from MITRE's own
+        # technique descriptions instead: each pattern is the literal
+        # registry key/value name or WMI class name the technique's own
+        # page names as the mechanism, not a guess. None were seen in any
+        # of the 3 validated samples (checked after adding, see the
+        # commit message) -- kept to the same bar as every other rule
+        # here regardless: specific enough that presence alone is real
+        # signal, not a generic string a lot of unrelated software would
+        # also contain.
+        #
+        # Persistence — Boot or Logon Autostart Execution family
+        # (T1547): each of these boots a DLL via a specific, narrowly-
+        # named LSA/Winlogon registry value; MITRE's own page for each
+        # names the exact key.
+        'AppInit_DLLs': {'technique': 'T1546.010', 'confidence': 'high'},
+        'Winlogon\\Shell': {'technique': 'T1547.004', 'confidence': 'high'},
+        'Winlogon\\Userinit': {'technique': 'T1547.004', 'confidence': 'high'},
+        'Security Packages': {'technique': 'T1547.005', 'confidence': 'medium'},
+        'Authentication Packages': {'technique': 'T1547.002', 'confidence': 'medium'},
+        # Image File Execution Options Injection: IFEO's own "Debugger"
+        # value hijacks execution of a NAMED target binary -- persistence
+        # (or a defense-evasion crash-on-launch trick) via a debugger
+        # attached to (commonly) a security tool.
+        'Image File Execution Options': {'technique': 'T1546.012', 'confidence': 'high'},
+        # WMI Event Subscription: these three WMI class names only appear
+        # together when a program is programmatically creating a
+        # permanent WMI event subscription -- normal software has no
+        # reason to reference all three. Combination-aware promotion
+        # (map_strings, below) already applies: 2+ corroborating patterns
+        # -> high, matching the fileless-persistence pattern MITRE
+        # documents.
+        '__EventFilter': {'technique': 'T1546.003', 'confidence': 'medium'},
+        '__EventConsumer': {'technique': 'T1546.003', 'confidence': 'medium'},
+        '__FilterToConsumerBinding': {'technique': 'T1546.003', 'confidence': 'medium'},
+        # BITS Jobs: bitsadmin.exe is the CLI surface for the same COM
+        # (IBackgroundCopyManager) mechanism MITRE's T1197 page describes.
+        'bitsadmin': {'technique': 'T1197', 'confidence': 'medium'},
+
+        # Defense Evasion
+        # Clear Windows Event Logs: this exact invocation (wevtutil's
+        # "cl" subcommand) is the CLI mechanism MITRE's T1070.001 page
+        # names directly -- narrower than bare "wevtutil" (which also
+        # covers benign query/export operations).
+        'wevtutil cl': {'technique': 'T1070.001', 'confidence': 'high'},
+        # Regsvr32 (Squiblydoo): scrobj.dll is the specific legitimate
+        # Windows Script Component Runtime DLL this technique abuses to
+        # execute a scriptlet via regsvr32 -- narrower and more specific
+        # than bare "regsvr32" (a real, common installer/registration
+        # tool with legitimate uses this project already avoided treating
+        # as suspicious alone, same discipline as dropping bare
+        # TerminateProcess above).
+        'scrobj.dll': {'technique': 'T1218.010', 'confidence': 'medium'},
+        # Mshta: MITRE's own page describes mshta.exe proxying execution
+        # of .hta files specifically -- both patterns present together is
+        # the actual abuse pattern, not just mentioning the LOLBin name
+        # (which alone has legitimate uses, e.g. genuine HTA-based help
+        # files).
+        'mshta.exe': {'technique': 'T1218.005', 'confidence': 'medium'},
+        '.hta': {'technique': 'T1218.005', 'confidence': 'medium'},
     }
 
     def map_strings(self, strings: List[str]) -> List[Dict[str, str]]:

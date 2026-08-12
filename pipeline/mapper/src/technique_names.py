@@ -67,6 +67,20 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1620": "Reflective Code Loading",
     "T1574": "Hijack Execution Flow",
     "T1622": "Debugger Evasion",
+    # Persistence / Defense Evasion coverage extension -- see
+    # static/scripts/src/detectors/attck_mapper.py's TECHNIQUE_NAMES for
+    # the matching detection-side entries.
+    "T1546.010": "Event Triggered Execution: AppInit DLLs",
+    "T1547.004": "Boot or Logon Autostart Execution: Winlogon Helper DLL",
+    "T1547.005": "Boot or Logon Autostart Execution: Security Support Provider",
+    "T1547.002": "Boot or Logon Autostart Execution: Authentication Package",
+    "T1546.012": "Event Triggered Execution: Image File Execution Options Injection",
+    "T1546.003": "Event Triggered Execution: Windows Management Instrumentation Event Subscription",
+    "T1197": "BITS Jobs",
+    "T1070.001": "Indicator Removal: Clear Windows Event Logs",
+    "T1218.010": "System Binary Proxy Execution: Regsvr32",
+    "T1218.005": "System Binary Proxy Execution: Mshta",
+    "T1055.012": "Process Injection: Process Hollowing",
 }
 
 _attck_bundle_cache = None

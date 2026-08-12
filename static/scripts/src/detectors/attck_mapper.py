@@ -243,6 +243,19 @@ class ATTACKMapper:
         'T1555': 'Credentials from Password Stores',
         'T1140': 'Deobfuscate/Decode Files or Information',
         'T1562.001': 'Impair Defenses: Disable or Modify Tools',
+        # Persistence / Defense Evasion coverage extension -- see
+        # string_attck_mapper.py's STRING_MAPPING for the evidence tables.
+        'T1546.010': 'Event Triggered Execution: AppInit DLLs',
+        'T1547.004': 'Boot or Logon Autostart Execution: Winlogon Helper DLL',
+        'T1547.005': 'Boot or Logon Autostart Execution: Security Support Provider',
+        'T1547.002': 'Boot or Logon Autostart Execution: Authentication Package',
+        'T1546.012': 'Event Triggered Execution: Image File Execution Options Injection',
+        'T1546.003': 'Event Triggered Execution: Windows Management Instrumentation Event Subscription',
+        'T1197': 'BITS Jobs',
+        'T1070.001': 'Indicator Removal: Clear Windows Event Logs',
+        'T1218.010': 'System Binary Proxy Execution: Regsvr32',
+        'T1218.005': 'System Binary Proxy Execution: Mshta',
+        'T1055.012': 'Process Injection: Process Hollowing',
     }
 
     # Chrome Web Store assigns each extension a permanent, unique ID at
@@ -288,6 +301,23 @@ class ATTACKMapper:
     # process, mapped by the analyst to T1562 alongside T1057 for the same
     # code -- not instead of it.
     _T1562_KILL_COMBO = {'WTSEnumerateProcessesW', 'OpenProcess', 'TerminateProcess'}
+
+    # Process Hollowing (T1055.012), a specific sub-technique of the
+    # already-covered parent T1055. MITRE's own page describes the
+    # textbook sequence: create a process suspended, unmap/hollow its
+    # memory, write the replacement payload in, then resume it. All 5
+    # steps together have no legitimate non-hollowing purpose; any one
+    # alone (e.g. WriteProcessMemory) is already covered, less
+    # specifically, by the parent T1055 combo logic below. Either native
+    # unmap API name is accepted (Nt*/Zw* are the same call, both real
+    # exported names). Caveat worth keeping in mind: sophisticated
+    # hollowing resolves NtUnmapViewOfSection dynamically via
+    # GetProcAddress specifically to stay off the static import table
+    # (the same reason roning's own SetWindowsHookExW usage was invisible
+    # to this kind of check) -- this catches the unsophisticated case,
+    # not an evasive one.
+    _T1055_HOLLOW_COMBO = {'CreateProcessW', 'WriteProcessMemory', 'SetThreadContext', 'ResumeThread'}
+    _T1055_HOLLOW_UNMAP = {'NtUnmapViewOfSection', 'ZwUnmapViewOfSection'}
 
     def __init__(self):
         """Initialize ATT&CK mapper."""
@@ -471,6 +501,24 @@ class ATTACKMapper:
                     f"Disable or Modify Tools (T1562.001) even without a decrypted target name to "
                     f"confirm which process is targeted -- medium rather than high confidence for "
                     f"that reason."
+                )
+            ))
+
+        if self._T1055_HOLLOW_COMBO.issubset(all_function_names) and (self._T1055_HOLLOW_UNMAP & all_function_names):
+            unmap_api = next(iter(self._T1055_HOLLOW_UNMAP & all_function_names))
+            hollow_evidence = ', '.join(sorted(self._T1055_HOLLOW_COMBO | {unmap_api}))
+            mappings.append(ATTACKMapping(
+                technique='T1055.012',
+                name=self._get_technique_name('T1055.012'),
+                source='import',
+                evidence=hollow_evidence,
+                confidence='high',
+                justification=(
+                    f"The API functions {hollow_evidence} are all imported by the binary. This is "
+                    f"the textbook process hollowing sequence MITRE's own T1055.012 page describes: "
+                    f"create a process suspended, unmap its memory ({unmap_api}), write the "
+                    f"replacement payload in, set its thread context, then resume it. All 5 steps "
+                    f"together have no legitimate non-hollowing purpose."
                 )
             ))
 
