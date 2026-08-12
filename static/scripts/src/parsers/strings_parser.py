@@ -52,8 +52,14 @@ class StringsParser:
         self.deobfuscator = StringDeobfuscator()
         self.crypto_detector = CryptoDetector()
 
-    def extract(self, include_floss: bool = True) -> Dict[str, List[str]]:
-        """Extract strings using strings command and optionally FLOSS."""
+    def extract(self, include_floss: bool = True, discovered_keys: List[Dict[str, Any]] = None) -> Dict[str, List[str]]:
+        """Extract strings using strings command and optionally FLOSS.
+
+        discovered_keys (from KeyReconstructor, if the caller has already
+        run it) lets the deobfuscator try real, sample-specific keys via
+        _try_xor_with_key, not just the generic single-byte bruteforce.
+        Previously never passed here at all -- see StringDeobfuscator.
+        """
         result = {
             'standard': self._extract_standard_strings(),
             'floss': [],
@@ -69,7 +75,7 @@ class StringsParser:
         # results) from this merge entirely -- its output was computed but
         # then silently discarded before reaching the report or the ATT&CK
         # mapper, making that whole code path dead weight.
-        deobfuscated = self.deobfuscator.deobfuscate(result['standard'])
+        deobfuscated = self.deobfuscator.deobfuscate(result['standard'], discovered_keys=discovered_keys)
         result['deobfuscated'] = deobfuscated.get('xor_decoded', []) + \
                                 deobfuscated.get('pattern_decoded', []) + \
                                 deobfuscated.get('base64_decoded', []) + \

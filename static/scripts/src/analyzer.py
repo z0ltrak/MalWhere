@@ -112,6 +112,19 @@ class StaticAnalyzer:
         hashes = self.hash_calculator.calculate_all(self.file_path)
         imphash = self.hash_calculator.calculate_imphash(self.pe_parser.pe) if self.pe_parser.pe else None
 
+        # Key discovery moved ahead of string extraction (was after it) so
+        # discovered_keys can actually reach the string deobfuscator this
+        # analysis pass -- previously always ran second, so
+        # StringsParser.extract()'s discovered_keys argument was always
+        # omitted (defaulting to None) and _try_xor_with_key's real,
+        # already-discovered keys never got tried against any string.
+        # KeyReconstructor.find_keys() reads the file directly and has no
+        # dependency on string extraction, so this reordering is safe.
+        self.discovered_keys = self.key_reconstructor.find_keys()
+        self.errors.extend(self.key_reconstructor.get_errors())
+        if self.discovered_keys:
+            self._log(f"Discovered {len(self.discovered_keys)} potential keys with algorithm context")
+
         strings, all_strings = self._extract_all_strings(net_strings)
 
         packer_data = self._detect_packer(pe_data)
@@ -126,11 +139,6 @@ class StaticAnalyzer:
 
         yara_data = self.yara_parser.scan()
         self.errors.extend(self.yara_parser.get_errors())
-
-        self.discovered_keys = self.key_reconstructor.find_keys()
-        self.errors.extend(self.key_reconstructor.get_errors())
-        if self.discovered_keys:
-            self._log(f"Discovered {len(self.discovered_keys)} potential keys with algorithm context")
 
         carved_data = self.magic_carver.carve()  # respects self.use_binwalk, set above
         self.errors.extend(self.magic_carver.get_errors())
@@ -314,7 +322,7 @@ class StaticAnalyzer:
 
         Returns (strings_dict_for_report, all_strings_for_detection).
         """
-        strings = self.strings_parser.extract(include_floss=not self.no_floss)
+        strings = self.strings_parser.extract(include_floss=not self.no_floss, discovered_keys=self.discovered_keys)
         self.errors.extend(self.strings_parser.get_errors())
         all_strings = strings.get('standard', []) + strings.get('floss', [])
 
