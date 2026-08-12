@@ -6,9 +6,12 @@ Drafted as source material for the thesis's own limitations discussion, not
 as thesis prose itself.
 
 Current evaluation state (family-level P/R/F1, `evaluation/results/summary.md`):
-Akira 1.00/0.92/0.96, WhiteSnake 1.00/0.72/0.84, RoningLoader 0.90/0.68/0.78
-(0.88/0.84/0.86 counting the resubmission loop's dropped-component coverage —
-see §1). All three false-positive-free or near-free after the audit in §3.
+Akira 1.00/1.00/1.00 (zero missed, zero false positives), WhiteSnake
+1.00/0.78/0.88 (zero false positives, 10 missed techniques remaining),
+RoningLoader 0.90/0.68/0.78 (0.88/0.84/0.86 counting the resubmission loop's
+dropped-component coverage — see §1; 2 open false positives, §4). RoningLoader
+is the only sample with any false positives left; both are deliberately
+unresolved pending the analyst's own read of the evidence, not oversights.
 
 ## 1. Small validation set (N=3)
 
