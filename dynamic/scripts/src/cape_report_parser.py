@@ -128,11 +128,33 @@ _TECHNIQUE_DROP = {"T1568"}
 #     boot sector/MBR. Can't confirm this dynamic signature instance even
 #     corresponds to that specific driver's IOCTLs vs. some unrelated disk
 #     IOCTL, so dropped rather than force-fit to a different technique.
+#
+# Two more, found auditing Akira's dynamic+static agreement bucket (the
+# weakest-performing category — 0.33 precision on 3 findings — worth
+# checking directly since it's the bucket the reconciliation methodology
+# itself claims should be the strongest):
+#   - privilege_elevation_check ("Queries process token information to
+#     check for Administrator privileges or UAC elevation status") tags
+#     T1033 System Owner/User Discovery (correct — it's the exact, verbatim
+#     match for Akira's own ground truth line "Checks own process token for
+#     Administrator/UAC elevation status") AND T1082 System Information
+#     Discovery. Checking your OWN token's admin/UAC status isn't "system
+#     information" in T1082's sense (OS version, hardware, hostname) — it's
+#     T1033's textbook case, already correctly tagged on the same signature.
+#   - query_fips_reconnaissance ("Queried the FIPS cryptography policy, can
+#     be used to adapt C2 network encryption or by legitimate encryption
+#     software" — hedged in its own description between a C2 config check
+#     and ordinary crypto library behavior) tags only T1082. A narrow crypto
+#     policy check isn't system fingerprinting either, and the hedge itself
+#     means CAPE can't tell which (if either) purpose applies — no clean
+#     replacement technique, dropped rather than force-fit.
 _SIGNATURE_TECHNIQUE_DROP = {
     ("pe_tls_callbacks", "T1055"),
     ("unbacked_process_creation", "T1106"),
     ("unbacked_crypto_operations", "T1573"),
     ("registers_vectored_exception_handler", "T1574"),
+    ("privilege_elevation_check", "T1082"),
+    ("query_fips_reconnaissance", "T1082"),
     ("infostealer_ftp", "T1003"),
     ("infostealer_mail", "T1003"),
     ("antiav_servicestop", "T1543"),

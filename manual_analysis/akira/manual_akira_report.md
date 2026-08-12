@@ -520,6 +520,7 @@ struct custom_string {
 | Virtualization/Sandbox Evasion | T1497 | CPU/AVX checks |
 | Impair Defenses | T1562 | Process termination |
 | Process Discovery | T1057 | Process enumeration |
+| File and Directory Discovery | T1083 | `open_directory_iterator` walks target directories (wildcard-based, per-drive) to find files to encrypt — see Directory Traversal & File Processing |
 | Indicator Removal | T1070 | Event log clearing |
 | Command and Scripting Interpreter | T1059 | PowerShell execution |
 | System Owner/User Discovery | T1033 | Checks own process token for Administrator/UAC elevation status |
