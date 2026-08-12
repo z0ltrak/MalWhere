@@ -153,7 +153,8 @@ class StaticAnalyzer:
             imports=imports,
             yara_data=yara_data,
             entropy_findings=entropy_analysis.high_entropy_sections + entropy_analysis.suspicious_entropy,
-            config=config_data
+            config=config_data,
+            bcl_calls=pe_data.get('net_bcl_calls', [])
         )
         self._log(f"Generated {len(attck_mappings)} ATT&CK mappings with justification")
 

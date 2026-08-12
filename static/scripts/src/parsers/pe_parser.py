@@ -66,6 +66,7 @@ class PEParser:
         net_strings = []
         net_types = []
         net_methods = []
+        net_bcl_calls = []
 
         # If .NET, extract P/Invoke imports and strings
         if is_dotnet:
@@ -76,10 +77,12 @@ class PEParser:
             net_strings = net_data.get('strings', [])
             net_types = net_data.get('types', [])
             net_methods = net_data.get('methods', [])
+            net_bcl_calls = net_data.get('bcl_calls', [])
             self.errors.extend(dotnet_parser.get_errors())
             self._log(f"Extracted {len(net_imports)} P/Invoke imports, "
                      f"{len(net_strings)} strings, "
-                     f"{len(net_types)} types")
+                     f"{len(net_types)} types, "
+                     f"{len(net_bcl_calls)} BCL API calls")
 
         return {
             'metadata': self._get_metadata(),
@@ -92,6 +95,7 @@ class PEParser:
             'net_strings': net_strings,      # .NET user strings
             'net_types': net_types,          # .NET type names
             'net_methods': net_methods,      # .NET method names
+            'net_bcl_calls': net_bcl_calls,  # fully-qualified BCL API calls
         }
 
     def _is_dotnet(self) -> bool:

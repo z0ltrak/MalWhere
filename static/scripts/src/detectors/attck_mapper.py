@@ -140,6 +140,40 @@ class ATTACKMapper:
         'NetShareEnum': 'T1135',
     }
 
+    # Fully-qualified .NET BCL API calls -> technique. The managed-code
+    # equivalent of IMPORT_MAPPING above, fed by dotnet_parser.py's
+    # _extract_bcl_calls() (scans method bodies for call/callvirt/newobj
+    # targets, since import-table-based mapping has nothing to work with
+    # for .NET samples -- a .NET executable's native import table is
+    # typically just the CLR bootstrap stub, confirmed on WhiteSnake: one
+    # entry, mscoree.dll _CorExeMain, regardless of what the managed code
+    # actually does). Each entry chosen for being specific enough that a
+    # single occurrence is real signal, not incidental to virtually all
+    # software (deliberately excludes System.IO.File/System.Convert/
+    # System.DateTime-style BCL calls used by any .NET program for
+    # mundane reasons) -- same selectivity bar as IMPORT_MAPPING's own
+    # entries. Registry/WMI reads (GetValue, OpenSubKey, GetSubKeyNames)
+    # are deliberately excluded too: too common in legitimate .NET
+    # software to be diagnostic alone, unlike the write/enumerate-instance
+    # actions kept here.
+    DOTNET_API_MAPPING = {
+        'Microsoft.Win32.RegistryKey::SetValue': 'T1112',
+        'Microsoft.Win32.RegistryKey::CreateSubKey': 'T1112',
+        'Microsoft.Win32.RegistryKey::DeleteSubKeyTree': 'T1112',
+        'System.Windows.Forms.Clipboard::GetText': 'T1115',
+        'System.Windows.Forms.Clipboard::SetDataObject': 'T1115',
+        'System.Windows.Forms.Clipboard::GetDataObject': 'T1115',
+        'System.Net.NetworkInformation.NetworkInterface::GetAllNetworkInterfaces': 'T1016',
+        'System.Net.NetworkInformation.NetworkInterface::GetIPProperties': 'T1016',
+        'System.Security.Cryptography.RSACryptoServiceProvider::Encrypt': 'T1022',
+        'System.Net.WebClient::UploadData': 'T1041',
+        'System.Net.WebClient::UploadString': 'T1041',
+        'System.Net.HttpListener::Start': 'T1090',
+        'System.Net.HttpListener::GetContext': 'T1090',
+        'System.Management.ManagementObjectSearcher::Get': 'T1047',
+        'System.Management.ManagementClass::GetInstances': 'T1047',
+    }
+
     # Technique names for justification
     TECHNIQUE_NAMES = {
         'T1057': 'Process Discovery',
@@ -163,6 +197,10 @@ class ATTACKMapper:
         'T1490': 'Inhibit System Recovery',
         'T1071': 'Application Layer Protocol',
         'T1105': 'Ingress Tool Transfer',
+        'T1016': 'System Network Configuration Discovery',
+        'T1022': 'Data Encrypted',
+        'T1047': 'Windows Management Instrumentation',
+        'T1090': 'Proxy',
         'T1041': 'Exfiltration Over C2 Channel',
         'T1048': 'Exfiltration Over Alternative Protocol',
         'T1132': 'Data Encoding',
@@ -340,6 +378,48 @@ class ATTACKMapper:
 
         return mappings
 
+    def map_bcl_calls(self, bcl_calls: List[str]) -> List[ATTACKMapping]:
+        """Map fully-qualified .NET BCL API calls to ATT&CK techniques.
+
+        Same combination-aware confidence rule as map_imports: a
+        technique corroborated by 2+ distinct BCL calls is high
+        confidence, a single call gets 'medium' (each DOTNET_API_MAPPING
+        entry was already picked for being specific enough that one
+        occurrence is real signal, not the generic-vs-specific split
+        map_imports' _determine_import_confidence makes for native
+        imports -- there's no equivalent "generic .NET call" in this
+        table to begin with, since those were excluded when building it).
+        """
+        by_technique: Dict[str, List[str]] = {}
+        for call in bcl_calls:
+            technique = self.DOTNET_API_MAPPING.get(call)
+            if technique:
+                by_technique.setdefault(technique, [])
+                if call not in by_technique[technique]:
+                    by_technique[technique].append(call)
+
+        mappings = []
+        for technique, calls in by_technique.items():
+            confidence = 'high' if len(calls) >= 2 else 'medium'
+            evidence = ', '.join(calls)
+
+            mappings.append(ATTACKMapping(
+                technique=technique,
+                name=self._get_technique_name(technique),
+                source='dotnet_api',
+                evidence=evidence,
+                confidence=confidence,
+                justification=self._generate_justification(
+                    technique=technique,
+                    source='dotnet_api',
+                    evidence=evidence,
+                    confidence=confidence,
+                    count=len(calls)
+                )
+            ))
+
+        return mappings
+
     def map_yara(self, yara_data: Dict[str, Any]) -> List[ATTACKMapping]:
         """Map YARA rule matches to ATT&CK techniques."""
         mappings = []
@@ -455,11 +535,12 @@ class ATTACKMapper:
 
     def map_all(self, strings: List[str], imports: List[Dict[str, str]],
                 yara_data: Dict[str, Any], entropy_findings: List,
-                config: Dict[str, Any]) -> List[ATTACKMapping]:
+                config: Dict[str, Any], bcl_calls: Optional[List[str]] = None) -> List[ATTACKMapping]:
         """Run all mapping methods and combine results."""
         all_mappings = []
         all_mappings.extend(self.map_strings(strings))
         all_mappings.extend(self.map_imports(imports))
+        all_mappings.extend(self.map_bcl_calls(bcl_calls or []))
         all_mappings.extend(self.map_yara(yara_data))
         all_mappings.extend(self.map_entropy(entropy_findings))
         all_mappings.extend(self.map_config(config))
@@ -510,6 +591,11 @@ class ATTACKMapper:
             if count >= 2:
                 return f"The API functions {evidence} are imported by the binary. Each is individually associated with {technique_name}, but this specific combination doesn't form one of the corroborating patterns known to indicate {technique_name} with high confidence — treat this as suggestive rather than conclusive."
             return f"The API function '{evidence}' is imported by the binary. This API is commonly used to perform {technique_name}. Importing this function alone (no other {technique_name}-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+
+        elif source == 'dotnet_api':
+            if count >= 2:
+                return f"The managed .NET API calls {evidence} were resolved from the assembly's method bodies (call/callvirt/newobj targets, not just type/method names). Multiple corroborating BCL API calls, not one in isolation, is what makes this a strong signal for {technique_name}."
+            return f"The managed .NET API call '{evidence}' was resolved from the assembly's method bodies. This BCL API is specific enough to {technique_name} that its presence alone indicates the capability, but with less certainty than a corroborated combination would."
 
         elif source == 'yara':
             return f"YARA rule '{evidence}' matched the sample. This rule was specifically designed to detect {technique_name} patterns, confirming the presence of this capability."
