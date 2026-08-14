@@ -1,6 +1,6 @@
-# Akira Ransomware — Manual Static Analysis Report
+# Akira Ransomware: Manual Static Analysis Report
 
-**TFM 2025-2026 — Universidad Complutense de Madrid**
+**TFM 2025-2026: Universidad Complutense de Madrid**
 
 **SHA-256:** `06c2a137c31aae5d02b4d7df61ffd31f1af9a9e59978f15b3f7265cc751bff1f`
 
@@ -171,7 +171,7 @@ void entry(void)
 
 **Address:** `0x1400700d0`
 
-**What it does:** Creates two mutexes — `"akira"` and `"arika"` — for single-instance enforcement.
+**What it does:** Creates two mutexes, `"akira"` and `"arika"`, for single-instance enforcement.
 
 ### `create_mutex` (FUN_1400715a0)
 
@@ -197,11 +197,11 @@ void entry(void)
 | `terminate_specific_process` | `0x140079c10` | Decrypt and terminate a hardcoded process |
 
 **API calls:**
-- `WTSEnumerateProcessesW` — Enumerate processes
-- `CoInitializeEx` — Initialize COM
-- `OpenProcess` — Open process handle
-- `WaitForSingleObject` — Wait for process termination
-- `CloseHandle` — Close process handle
+- `WTSEnumerateProcessesW`: Enumerate processes
+- `CoInitializeEx`: Initialize COM
+- `OpenProcess`: Open process handle
+- `WaitForSingleObject`: Wait for process termination
+- `CloseHandle`: Close process handle
 
 **ATT&CK Mapping:** T1057 (Process Discovery), T1562 (Impair Defenses)
 
@@ -318,10 +318,10 @@ secure_free_buffer() → Clean up sensitive data
 The malware uses the Windows Restart Manager API to unlock files that are in use:
 
 **API calls:**
-- `RmStartSession` — Start Restart Manager session
-- `RmRegisterResources` — Register file with Restart Manager
-- `RmGetList` — Get list of processes using the file
-- `RmShutdown` — Shut down processes
+- `RmStartSession`: Start Restart Manager session
+- `RmRegisterResources`: Register file with Restart Manager
+- `RmGetList`: Get list of processes using the file
+- `RmShutdown`: Shut down processes
 
 ### ChaCha20 Encryption
 
@@ -414,7 +414,7 @@ The malware uses a thread pool with ASIO (Boost/standalone) for parallel encrypt
 **Ransom Note Content:**
 
 > *"Hi friends,*
-> 
+>
 > *Whatever who you are and what your title is if you're reading this it means the internal infrastructure of your company is fully or partially dead, all your backups - virtual, physical - everything that we managed to reach - are completely removed..."*
 
 ---
@@ -503,7 +503,7 @@ struct custom_string {
 
 **Contents:**
 - Double exit calls
-- `swi(3)` — ARM64 instruction in x64 binary
+- `swi(3)`: ARM64 instruction in x64 binary
 - Return statement (never executes)
 
 **Purpose:** Obfuscation to mislead analysts.
@@ -520,7 +520,7 @@ struct custom_string {
 | Virtualization/Sandbox Evasion | T1497 | CPU/AVX checks |
 | Impair Defenses | T1562 | Process termination |
 | Process Discovery | T1057 | Process enumeration |
-| File and Directory Discovery | T1083 | `open_directory_iterator` walks target directories (wildcard-based, per-drive) to find files to encrypt — see Directory Traversal & File Processing |
+| File and Directory Discovery | T1083 | `open_directory_iterator` walks target directories (wildcard-based, per-drive) to find files to encrypt, see Directory Traversal & File Processing |
 | Indicator Removal | T1070 | Event log clearing |
 | Command and Scripting Interpreter | T1059 | PowerShell execution |
 | System Owner/User Discovery | T1033 | Checks own process token for Administrator/UAC elevation status |
@@ -585,34 +585,34 @@ struct custom_string {
 
 | Finding | Status |
 |---------|--------|
-| Entry point | ✅ Verified |
-| Anti-debugging wrapper | ✅ Verified |
-| Command-line parsing | ✅ Verified |
-| Mutex creation | ✅ Verified |
-| Process enumeration | ✅ Verified |
-| Process termination | ✅ Verified |
-| Key generation | ✅ Verified |
-| Thread pool | ✅ Verified |
-| Directory traversal | ✅ Verified |
-| File filtering | ✅ Verified |
-| File unlocking | ✅ Verified |
-| ChaCha20 encryption | ✅ Verified |
-| File rename (`.akira`) | ✅ Verified |
-| Ransom note | ✅ Verified |
-| VSS deletion | ✅ Verified |
-| Event log clearing | ✅ Verified |
-| Exclusion list | ✅ Verified |
+| Entry point | yes Verified |
+| Anti-debugging wrapper | yes Verified |
+| Command-line parsing | yes Verified |
+| Mutex creation | yes Verified |
+| Process enumeration | yes Verified |
+| Process termination | yes Verified |
+| Key generation | yes Verified |
+| Thread pool | yes Verified |
+| Directory traversal | yes Verified |
+| File filtering | yes Verified |
+| File unlocking | yes Verified |
+| ChaCha20 encryption | yes Verified |
+| File rename (`.akira`) | yes Verified |
+| Ransom note | yes Verified |
+| VSS deletion | yes Verified |
+| Event log clearing | yes Verified |
+| Exclusion list | yes Verified |
 
 ### Manual Validation Notes
 
 The following key functions were manually validated using Ghidra:
 
-1. **`anti_debug_wrapper`** — Confirmed anti-debugging techniques
-2. **`process_arguments`** — Confirmed argument parsing
-3. **`init_crypto_key`** — Confirmed key derivation
-4. **`chacha20_encrypt`** — Confirmed ChaCha20 encryption
-5. **`process_file_encryption`** — Confirmed file encryption flow
-6. **`create_ransom_note`** — Confirmed ransom note content
+1. **`anti_debug_wrapper`**: Confirmed anti-debugging techniques
+2. **`process_arguments`**: Confirmed argument parsing
+3. **`init_crypto_key`**: Confirmed key derivation
+4. **`chacha20_encrypt`**: Confirmed ChaCha20 encryption
+5. **`process_file_encryption`**: Confirmed file encryption flow
+6. **`create_ransom_note`**: Confirmed ransom note content
 
 ---
 
@@ -636,11 +636,11 @@ The Akira ransomware sample analyzed in this work implements a sophisticated, mu
 
 Key characteristics include:
 
-- **No C2 communication** — The ransomware operates entirely offline
-- **No targeted file extensions** — All files are encrypted (except exclusions)
-- **Double extortion capability** — Ransom note includes threats to leak stolen data
-- **Optimized performance** — AVX instructions and multi-threading for speed
-- **Custom Base64 encoding** — Data obfuscation for C2 (observed but not used)
+- **No C2 communication**: The ransomware operates entirely offline
+- **No targeted file extensions**: All files are encrypted (except exclusions)
+- **Double extortion capability**: Ransom note includes threats to leak stolen data
+- **Optimized performance**: AVX instructions and multi-threading for speed
+- **Custom Base64 encoding**: Data obfuscation for C2 (observed but not used)
 
 The malware's design reflects a balance between speed, evasion, and impact, consistent with modern ransomware operations.
 

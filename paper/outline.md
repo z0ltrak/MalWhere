@@ -1,7 +1,7 @@
-# MalWhere — Paper Outline
+# MalWhere: Paper Outline
 
 TFM 2025-2026, Universidad Complutense de Madrid, MSc Cybersecurity.
-Working outline — section headers and the evidence/artifacts each one
+Working outline: section headers and the evidence/artifacts each one
 draws from, not prose. Populate from `docs/limitations.md`,
 `evaluation/results/summary.md`, and the git history (commit messages
 throughout this project are written with enough detail to lift directly
@@ -18,7 +18,7 @@ into methodology/results prose).
   function-level Ghidra tracing, not superficial scanning.
 - Headline result: family-level F1 1.00/0.89/0.86 (Akira/WhiteSnake/
   RoningLoader+resubmitted) after a systematic, evidence-based
-  false-positive audit — precision near-perfect across all three.
+  false-positive audit: precision near-perfect across all three.
 - Methodological contribution framed as much on the *audit trail* as
   the numbers: every detection rule traces to specific verifiable
   evidence, every false positive fixed was individually diagnosed
@@ -46,7 +46,7 @@ into methodology/results prose).
      not to regress the validated set.
   4. An evaluation methodology (§5) distinguishing strict vs.
      family-level matching, confidence-tier-stratified precision, and
-     source-agreement-stratified precision — testing whether the
+     source-agreement-stratified precision: testing whether the
      confidence model's own claims (agreement = more trustworthy)
      actually hold.
 
@@ -54,12 +54,12 @@ into methodology/results prose).
 
 - Sandboxing/dynamic analysis: CAPEv2 and its lineage (Cuckoo).
 - Static ATT&CK mapping approaches (community projects, commercial
-  EDR vendor writeups) — contrast with this project's evidence-cited,
+  EDR vendor writeups): contrast with this project's evidence-cited,
   narrowly-scoped rule philosophy vs. broad/heuristic scoring.
-- STIX 2.1 / MISP as CTI interchange standards — why export matters
+- STIX 2.1 / MISP as CTI interchange standards, why export matters
   beyond a standalone report.
 - Position this work: not a novel detection technique, but a
-  methodologically rigorous *integration* — the contribution is the
+  methodologically rigorous *integration*: the contribution is the
   reconciliation model, the audit discipline, and the reproducibility,
   not any single detection primitive.
 
@@ -75,18 +75,18 @@ Architecture diagram in root `README.md`.
 - Multi-pass installer handling (`_analyze_installer`): extraction,
   key discovery pooled across every extracted child, decrypt-with-
   discovered-keys, per-child analysis, evidence *aggregation* (not
-  substitution — see the installer-identity bug fixed this project,
+  substitution: see the installer-identity bug fixed this project,
   §6.2).
 - Key discovery / decryption (`KeyReconstructor`, `DecryptionEngine`):
-  what's tractable (small keyspaces, e.g. single-byte XOR — exhaustive
+  what's tractable (small keyspaces, e.g. single-byte XOR, exhaustive
   search) vs. what isn't (runtime-assembled keys never existing as
-  bytes in the file — see §7.1).
+  bytes in the file: see §7.1).
 - `.NET` handling: BCL call extraction from method bodies, since a
   .NET binary's native import table is typically just the CLR
   bootstrap stub.
 
 ### 4.3 Dynamic analysis engine
-- CAPE integration: report curation (`cape_report_parser.py`) —
+- CAPE integration: report curation (`cape_report_parser.py`),
   signature-to-ATT&CK mapping correction table (`_UNRELIABLE_SIGNATURES`
   / `_SIGNATURE_TECHNIQUE_DROP` / `_TECHNIQUE_REMAP`), each entry
   individually justified against the signature's own raw evidence, not
@@ -100,13 +100,13 @@ Architecture diagram in root `README.md`.
 - The core model (`reconcile.py`): high unless both sources' best
   confidence is low; single-source findings keep their own tier.
 - 4.4.1 **Cross-level extension**: the model originally only compared
-  observations tagged with the *exact same* technique ID — a dynamic
+  observations tagged with the *exact same* technique ID, a dynamic
   signature reporting a parent technique and a static rule reporting
   its specific sub-technique never corroborated each other, despite
   the evaluation harness's own family-level matching already treating
   them as equivalent. Fixed via `apply_cross_level_corroboration()`.
   Frame as a real, if currently unrealized-on-3-samples, consistency
-  fix — built ahead of the coverage extension specifically because
+  fix: built ahead of the coverage extension specifically because
   new sub-technique-specific rules would make the gap worse, not
   better, if left unfixed.
 
@@ -118,10 +118,10 @@ Architecture diagram in root `README.md`.
 - Architecture: `dynamic/scripts/src/resubmit_writer.py` (host-run,
   pure stdlib) → `static/scripts/process_resubmissions.py` (static
   container) → `pipeline/process_resubmissions.py` (pipeline
-  container) — split by dependency, not convenience.
+  container): split by dependency, not convenience.
 - Case study: RoningLoader's 26 resubmitted components, including
   `diamondage.exe` (its actual C2 client, RC4-encrypted and never
-  captured as a dropped file by CAPE — recovered via a manually
+  captured as a dropped file by CAPE: recovered via a manually
   verified key and fed through the same pipeline with explicit
   `manual_rc4_decryption` lineage tagging, never presented as
   something the pipeline discovered unaided).
@@ -129,13 +129,13 @@ Architecture diagram in root `README.md`.
 ### 4.6 ATT&CK detection rule methodology
 - Philosophy: every rule traces to specific evidence (a named API
   combination, a literal registry path/string, a CAPE signature's raw
-  data field) — never a generic single indicator alone unless
+  data field): never a generic single indicator alone unless
   genuinely unambiguous.
 - Combination-aware confidence: single generic import → low/medium;
   a *coherent* combination (e.g. the T1055.012 process-hollowing
   5-API sequence) → high. Concrete negative example: `OpenProcess` +
   `QueueUserAPC` alone doesn't cohere into an injection primitive
-  despite both being T1055-tagged imports — a real false positive
+  despite both being T1055-tagged imports: a real false positive
   found and fixed this project.
 - Coverage extension methodology: for each MITRE tactic, technique
   IDs sourced from the technique's own official description (not
@@ -147,14 +147,14 @@ Architecture diagram in root `README.md`.
 ### 5.1 Methodology
 - Ground truth: manual RE reports, function-level Ghidra-verified,
   not superficial. `extract_ground_truth.py` parses each report's
-  ATT&CK Techniques table — note the real limitation found here (§6.3):
+  ATT&CK Techniques table: note the real limitation found here (§6.3):
   an analyst-confirmed finding not promoted into that summary table is
   invisible to ground truth even though the analyst's own document
   says otherwise elsewhere.
 - Matching modes: strict (exact technique ID) vs. family-level (base
-  technique, sub-technique-tolerant) — `evaluation/scripts/src/
+  technique, sub-technique-tolerant), `evaluation/scripts/src/
   matcher.py`.
-- Confidence-tier and source-agreement stratified precision — tests
+- Confidence-tier and source-agreement stratified precision, tests
   whether the reconciliation model's central claim (cross-source
   agreement correlates with correctness) actually holds, independent
   of the raw P/R/F1 headline.
@@ -173,7 +173,7 @@ Architecture diagram in root `README.md`.
 | RoningLoader + resubmitted | 0.63 | **0.86** | 4 | 3 |
 
 (Pull final numbers from `evaluation/results/summary.md` at submission
-time — table above reflects the state as of this coverage-extension
+time: table above reflects the state as of this coverage-extension
 pass, re-verify before the paper is finalized.)
 
 ### 5.3 The false-positive audit as a methodological result
@@ -182,7 +182,7 @@ pass, re-verify before the paper is finalized.)
   evidence, fixed), 1 a ground-truth extraction gap (fixed at the
   source document, not by editing derived data), 2 left open on
   purpose pending independent confirmation (the RoningLoader T1027/
-  T1497 case — real supporting evidence, but no explicit analyst
+  T1497 case: real supporting evidence, but no explicit analyst
   statement to hang a ground-truth edit on; a deliberately higher bar
   than "the pipeline found it, so it's probably right").
 - Frame the RoningLoader installer-substitution bug (§6.2) as a case
@@ -200,7 +200,7 @@ key-recovery ceiling together.
 ### 6.2 The installer-substitution bug
 `_analyze_installer()` silently returning one arbitrarily-picked
 extracted child's report as if it were the whole installer's analysis
-— found via a `hash_match` field that had been silently `False` the
+, found via a `hash_match` field that had been silently `False` the
 entire time. Good worked example of methodology (verify sanity fields,
 don't just compute them) for the paper's discussion of validation
 practice.
@@ -213,7 +213,7 @@ as complete as the table, not the full document.
 
 ## 7. Limitations
 
-Pull directly from `docs/limitations.md` §1–§11 — already drafted at
+Pull directly from `docs/limitations.md` §1–§11, already drafted at
 thesis-appropriate rigor (each limitation diagnosed to a specific,
 verifiable cause, not asserted generally). Section numbers below map
 1:1 to that document:
@@ -231,7 +231,7 @@ verifiable cause, not asserted generally). Section numbers below map
    decryption, new-capability false-positive risk).
 10. Reproducibility (Docker `core`/`sandbox` profile split, what's
     genuinely clone-and-go vs. requires manual host setup).
-11. Static rule coverage extent — 474 Windows-relevant MITRE techniques,
+11. Static rule coverage extent: 474 Windows-relevant MITRE techniques,
     ~85 covered, and the explicit tactic-by-tactic scoping rationale
     (Reconnaissance/Resource Development structurally out of scope;
     Initial Access/Lateral Movement poor fits for single-binary
@@ -241,20 +241,20 @@ verifiable cause, not asserted generally). Section numbers below map
 
 - **Linux/ELF dynamic analysis for IoT botnet families** (e.g.
   Mirai-lineage). The architecture already has a natural extension
-  point — `analyzer.py` already dispatches on detected file type
+  point: `analyzer.py` already dispatches on detected file type
   (`pe_file`/`pe_native`/`pe_dotnet` vs. `elf_file`), and `elf_parser.py`
   already exists as a stub (header/section parsing only, no ATT&CK
   rules wired to it). Not pursued in this pass for three concrete,
   verified reasons rather than time alone: (1) every current detection
-  rule is Win32-specific and doesn't transfer — Linux persistence
+  rule is Win32-specific and doesn't transfer: Linux persistence
   looks nothing like Windows persistence (cron/systemd/`init.d`
   instead of Registry Run keys, `LD_PRELOAD` instead of AppInit_DLLs);
   (2) CAPE's own bundled configuration describes its Linux dynamic
   analysis support as "work in progress for fun," not the stable
   Windows detonation path this project depends on; (3) this project's
   entire methodology rests on verifying every rule against a real,
-  manually-reverse-engineered ground-truth sample before trusting it
-  — no such sample exists yet for an IoT/Linux family, and adding
+  manually-reverse-engineered ground-truth sample before trusting it,
+  no such sample exists yet for an IoT/Linux family, and adding
   detection rules without one would be exactly the unverified
   guessing this project has otherwise avoided throughout. A concrete
   next step: acquire and manually RE one Mirai-variant sample, then
@@ -262,17 +262,17 @@ verifiable cause, not asserted generally). Section numbers below map
   IMPORT_MAPPING/STRING_MAPPING-style rule architecture already
   validated for PE.
 - Emulation-based key recovery (e.g. Unicorn) for keys assembled at
-  runtime from scattered constants — the one class of key-recovery
+  runtime from scattered constants: the one class of key-recovery
   problem confirmed unreachable by any static byte-pattern method
   (§7.7 in limitations), demonstrated concretely on RoningLoader's own
   RC4 key.
-- Closing WhiteSnake's remaining 9 missed techniques — several
+- Closing WhiteSnake's remaining 9 missed techniques, several
   (T1056.001 keylogging in particular) were investigated but require
   either disassembly-level constant recovery or dynamic API-resolution
   tracing beyond what static string/import scanning reaches.
 - Extending coverage into Initial Access/Lateral Movement's few
   genuinely single-host-relevant sub-techniques (e.g. T1091 Removable
-  Media, T1570 Lateral Tool Transfer) — the remaining bulk of both
+  Media, T1570 Lateral Tool Transfer), the remaining bulk of both
   tactics judged out of scope for this pipeline's design (§11 in
   limitations).
 - A fourth+ validated sample family, to test whether the coverage
@@ -283,12 +283,12 @@ verifiable cause, not asserted generally). Section numbers below map
 ## 9. Conclusion
 
 - Restate the core methodological claim: a pipeline is only as
-  trustworthy as its audit trail, not its headline numbers alone —
+  trustworthy as its audit trail, not its headline numbers alone,
   every rule here traces to real evidence, every false positive fixed
   is documented with its root cause, and coverage was extended from
   cited MITRE sources rather than guessed.
 - The near-perfect precision across all 3 samples (2 open, deliberately
   unresolved false positives on RoningLoader being the only exception)
   is the more defensible claim for a threat-intelligence tool than
-  raw recall — a security analyst trusts a low-noise tool more than a
+  raw recall: a security analyst trusts a low-noise tool more than a
   high-recall, high-noise one.

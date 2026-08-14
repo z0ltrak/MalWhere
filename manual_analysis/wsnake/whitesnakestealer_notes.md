@@ -1,5 +1,5 @@
 .NET with obfuscated strings
-a54Cm — Crypto + RC4 Class
+a54Cm: Crypto + RC4 Class
 Encrypted: 08 0D 0B 09 5C 11 01 14 10 07 0B
 Decrypted: "tor" = 74 6F 72
 
@@ -17,15 +17,15 @@ Packet Format:
 
 Encryption Layers
 
-    XML Serialization — System info serialized to XML
+    XML Serialization: System info serialized to XML
 
-    Deflate/GZip — hhZ::aTnghe() compresses the XML
+    Deflate/GZip: hhZ::aTnghe() compresses the XML
 
-    RC4 Encryption — a54Cm::tFeWc() with random 32-byte key
+    RC4 Encryption: a54Cm::tFeWc() with random 32-byte key
 
-    RSA Encryption — The RC4 key is encrypted with RSA public key (stored in fz::neTc1)
+    RSA Encryption: The RC4 key is encrypted with RSA public key (stored in fz::neTc1)
 
-    Packaging — "WSR$" header + RC4 data + encrypted key
+    Packaging: "WSR$" header + RC4 data + encrypted key
 
 The Algorithm
 Component	Value
@@ -63,7 +63,7 @@ k4RA	1.6.3.4	Malware version
 tDocF	helloworld.txt	Temp/debug file
 xl1P	Starlabs	Browser profile directory name
 r3bb	ucv4nuoh0h	Browser data directory name
-Clipboard Hijacker (Clipper) — 15 Cryptocurrencies!
+Clipboard Hijacker (Clipper): 15 Cryptocurrencies!
 
 The malware replaces copied wallet addresses with the attacker's addresses:
 Coin	Wallet Address
@@ -90,9 +90,9 @@ string chatId = "7259165684";
 Summary
 Method	Purpose
 ikE	Count desktop monitors via WMI
-gKZ	Capture screenshot — simulate Print Screen, read clipboard, save as PNG
+gKZ	Capture screenshot: simulate Print Screen, read clipboard, save as PNG
 
-brIk4 — WiFi Password Stealer + Saved Networks Grabber
+brIk4: WiFi Password Stealer + Saved Networks Grabber
 Data	Format
 WiFi Profile Name	Base64 encoded
 WiFi Password	Base64 encoded
@@ -111,7 +111,7 @@ Encrypted	Decoded
 "\b\r\v\t\\1\r\u0001\b\u0003\b"	"Signal"
 "\b\r\v\t\\\u0019T\u001bJ\u0019U\u001bJ\u0019V\u001bl"	"{0}:{1}:{2}\n" (format string)
 
-d4w — Browser Extension/Plugin Stealer
+d4w: Browser Extension/Plugin Stealer
 Step	Action
 1	Gets system root drive (C:\)
 2	Enumerates all user directories (C:\Users\*\)
@@ -124,7 +124,7 @@ Encrypted	Decoded
 "\b\r\v\t\\>7\u0012\t\u0010\u0005\u0001\u0003"	"\\AppData\\Local"
 "\b\r\v\t\\>%\u0005\u0005\r\u0011\b\u0012\u00118"	"\\" + targetFile
 
-dt — Microphone Recorder
+dt: Microphone Recorder
 Command	Purpose
 open new type waveaudio alias recorder	Open microphone for recording
 set recorder bitspersample 16	Set 16-bit audio quality
@@ -138,7 +138,7 @@ Encrypted	Decoded
 "\b\r\v\t\\\u0011\u0005\u0010\u0003B\u0016\u0003\u0005\u0011\v\u0013\b\u0006D"	"save recorder "
 "\b\r\v\t\\\u0001\b\t\u0015\aD\u0014\u0003\u0001\u0017\t\u0013\f\0F"	"close recorder"
 
-dvn — THE MAIN ENTRY POINT
+dvn: THE MAIN ENTRY POINT
 Flag	Value	Meaning
 fz::aUEtx	"0"	Don't show fake popup
 fz::kKQpyF	"0"	Popup message
@@ -162,13 +162,13 @@ Encrypted	Decoded
 "\b\r\v\t\\* 1'.(#2BIF'\f\u0010\u000fK..."	"Already connected..."
 "\b\r\v\t\\* 1'.(#2BIF(\rD\u0005\u000e..."	"Cannot connect to server..."
 
-e2IF2 — Payload Downloader + Executor
+e2IF2: Payload Downloader + Executor
 Encrypted	Decoded
 "\b\r\v\t\\O\u0005FWPSHVLTHWX\u001fV\u001b"	"--port {0}"
 "\b\r\v\t\\SVQHRJVHS"	"PortOpened"
 "\b\r\v\t\\\u0012\u0016\t\u001e\u001bJ\u0003\u001e\a"	Something .exe (payload filename)
 Long string in .cctor	Download URL for next stage!
-e2IF2 — Complete Analysis
+e2IF2: Complete Analysis
 Field	Value
 Download URL	https://github.com/wzshiming/socks5/releases/download/v0.4.2/socks5_windows_amd64.exe
 Save Path	<browser_data_dir>\<something>.exe
@@ -187,7 +187,7 @@ The tool wzshiming/socks5 is an open-source SOCKS5 proxy server written in Go. T
     The C2 can then connect back through the SOCKS5 proxy to the victim's machine!
 
 
-g_Nx — File Exfiltration via Multiple C2 Nodes
+g_Nx: File Exfiltration via Multiple C2 Nodes
 Encrypted	Decoded
 "\b\r\v\t\\ \u0001\u0001\u000f\fD\u0012\u0014\u0003\n\u0015\0\a\u0016F"	"File size: "
 "\b\r\v\t\\B\u0006\u001f\u0012\a\u0017FHLJ"	" bytes"
@@ -199,37 +199,37 @@ Encrypted	Decoded
 31 C2 EXFILTRATION SERVERS!
 C2 Infrastructure
 #	URL	Port	SSL
-0	206.166.251.4	8080	❌
-1	167.99.138.249	8080	❌
-2	46.4.73.118	9000	❌
-3	206.189.109.146	80	❌
-4	194.164.198.113	8080	❌
-5	45.82.65.63	80	❌
-6	5.196.181.135	443	✅
-7	95.216.147.179	80	❌
-8	185.217.98.121	8080	❌
-9	116.202.101.219	8080	❌
-10	185.217.98.121	80	❌
-11	159.203.174.113	8090	❌
-12	107.161.20.142	8080	❌
-13	192.99.196.191	443	✅
-14	44.228.161.50	443	✅
-15	154.9.207.142	443	✅
-16	66.42.56.128	80	❌
-17	8.219.110.16	9999	❌
-18	138.2.92.67	443	✅
-19	8.134.71.132	8082	❌
-20	41.87.207.180	9090	❌
-21	18.228.80.130	80	❌
-22	168.138.211.88	8099	❌
-23	47.110.140.182	8080	❌
-24	129.151.109.160	8080	❌
-25	101.43.160.136	8080	❌
-26	101.132.223.26	8080	❌
-27	101.126.19.171	80	❌
-28	38.60.191.38	80	❌
-29	47.96.78.224	8080	❌
-30	101.126.19.171	443	✅
+0	206.166.251.4	8080	no
+1	167.99.138.249	8080	no
+2	46.4.73.118	9000	no
+3	206.189.109.146	80	no
+4	194.164.198.113	8080	no
+5	45.82.65.63	80	no
+6	5.196.181.135	443	yes
+7	95.216.147.179	80	no
+8	185.217.98.121	8080	no
+9	116.202.101.219	8080	no
+10	185.217.98.121	80	no
+11	159.203.174.113	8090	no
+12	107.161.20.142	8080	no
+13	192.99.196.191	443	yes
+14	44.228.161.50	443	yes
+15	154.9.207.142	443	yes
+16	66.42.56.128	80	no
+17	8.219.110.16	9999	no
+18	138.2.92.67	443	yes
+19	8.134.71.132	8082	no
+20	41.87.207.180	9090	no
+21	18.228.80.130	80	no
+22	168.138.211.88	8099	no
+23	47.110.140.182	8080	no
+24	129.151.109.160	8080	no
+25	101.43.160.136	8080	no
+26	101.132.223.26	8080	no
+27	101.126.19.171	80	no
+28	38.60.191.38	80	no
+29	47.96.78.224	8080	no
+30	101.126.19.171	443	yes
 
 Geographic Clusters (by IP ranges)
 Range	Servers	Likely Provider
@@ -247,7 +247,7 @@ Range	Servers	Likely Provider
 38.60.x.x	1 server	Cogent
 
 
-gT — NETWORK SCANNER + LAN SPREADER
+gT: NETWORK SCANNER + LAN SPREADER
 This is a multi-threaded network scanner that discovers other machines on the local network and scans them for open ports!
 The port list is in q9ykkm::w2 (initialized from static data). These likely include:
 
@@ -264,27 +264,27 @@ The port list is in q9ykkm::w2 (initialized from static data). These likely incl
     fLAz7v	Get local IPv4 addresses
     ot	Calculate all IPs in subnet range
     huf	Scan 70 ports on a host (parallel threads)
-    fy	Full LAN scan — discover all devices + open ports
+    fy	Full LAN scan: discover all devices + open ports
 
-hhZ — Utility / Helper Class
+hhZ: Utility / Helper Class
 Method	Purpose
-cpiW	Error handler setup — logs unhandled exceptions to helloworld.txt
+cpiW	Error handler setup: logs unhandled exceptions to helloworld.txt
 hGnSK	Set ServicePointManager.SecurityProtocol = 3072 (TLS 1.2)
 mh2Zg	Fisher-Yates shuffle (randomize array)
 tHBCHA	Generate random string of N characters
 bh	Convert bytes to GB (divide by 1024², round to 2 decimals)
-a25l	WMI query — get property from Win32_* class
+a25l	WMI query: get property from Win32_* class
 ghDOd	URL-encode string (percent-encoding)
 sXiqCp	Run command line (cmd /c <command>) and capture output
 hg9GIh	Convert DateTime to Unix timestamp (seconds since 1970)
 aTnghe	GZip compress byte array
 tPT	Get process file path (via MainModule or WMI fallback)
-kji7e7	Read file with lock bypass — copies to temp if locked, kills locking processes
+kji7e7	Read file with lock bypass: copies to temp if locked, kills locking processes
 op	Read all bytes from file
 m3eK	Read file as UTF-8 string
 d9Q1b	Read file as UTF-8 string (by path)
 
-hkAR — System Information Gathering Class
+hkAR: System Information Gathering Class
 Method	Purpose	Data Collected
 yri	Username	Environment.UserName (spaces → _)
 kwG	Computer Name	Environment.MachineName (spaces → _)
@@ -315,18 +315,18 @@ Encrypted	Decoded
 "\b\r\v\t\\1+ 25%4#>)..."	"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"
 "\b\r\v\t\\&\r\u0015\u0016\u000e\u0005\u001f..."	"DisplayName"
 
-hm6 — Dynamic DLL Loader / P/Invoke Helper
+hm6: Dynamic DLL Loader / P/Invoke Helper
 Encrypted	Decoded
 "\b\r\v\t\\/\u0001\u0012\u000e\r\0F"	"Failed to get: "
 "\b\r\v\t\\B\b\t\a\u0006D\0\a\v\b\u0003\u0002"	" from library"
 "\b\r\v\t\\.\r\u0004\u0014\u0003\u0016\u001fF\u000e\v\a\u0002B\u0002\a\u000f\u000e\u0001\u0002"	"Library not loaded"
 Feature	Detail
-DLL Cache	sV — stores loaded DLL handles
-Function Cache	dDsk — stores resolved function pointers
-Typed Delegates	sg() — creates typed C# delegates from function pointers
-Auto-Cleanup	Dispose() — calls FreeLibrary
+DLL Cache	sV: stores loaded DLL handles
+Function Cache	dDsk: stores resolved function pointers
+Typed Delegates	sg(): creates typed C# delegates from function pointers
+Auto-Cleanup	Dispose(): calls FreeLibrary
 
-hmi — The Data Report Structure
+hmi: The Data Report Structure
 Struct	Purpose	Contains
 qm	Stolen files/data	name (path), data (file bytes)
 zB3	System information entries	key (field name), value (field data)
@@ -338,15 +338,15 @@ zB3[]	System information (key + value pairs)
 XML root	"report"
 XML arrays	"files" and "information"
 
-hy — The String Decryptor Class
+hy: The String Decryptor Class
 Decryption Algorithm
 text
 
 For each character i in encrypted string:
-    if i % 4 == 0:  key_byte = brute_force_char (tried 32-126)
-    if i % 4 == 1:  key_byte = 'b' (Magic[0])
-    if i % 4 == 2:  key_byte = 'd' (Magic[1])
-    if i % 4 == 3:  key_byte = 'f' (Magic[2])
+    if i % 4 == 0: key_byte = brute_force_char (tried 32-126)
+    if i % 4 == 1: key_byte = 'b' (Magic[0])
+    if i % 4 == 2: key_byte = 'd' (Magic[1])
+    if i % 4 == 3: key_byte = 'f' (Magic[2])
 
     decrypted[i] = encrypted[i] ^ key_byte
 
@@ -356,17 +356,17 @@ Field	Value	Purpose
 Magic	"bdf"	Key base (3 characters)
 KeySalt	"nooo:"	Validation prefix (5 characters)
 
-i4uV — KEYLOGGER MODULE
+i4uV: KEYLOGGER MODULE
 This is the full keylogger implementation using a low-level keyboard hook (SetWindowsHookEx with WH_KEYBOARD_LL = 13).
 Method	Purpose
-vR8	Start keylogger — set hook, start message pump, start flush timer
+vR8	Start keylogger: set hook, start message pump, start flush timer
 x8d	Set WH_KEYBOARD_LL hook via SetWindowsHookEx
-uBEaK3	Hook callback — capture every keystroke, store per-process
+uBEaK3	Hook callback: capture every keystroke, store per-process
 hDn4b	Convert virtual key code to string via ToUnicodeEx
-nxLDM	Flush — write keystrokes to %TEMP%\KeyLogs\<date>\<process>.txt every 20s
-qI5	Stop keylogger — unhook, clear buffers, stop timer
+nxLDM	Flush: write keystrokes to %TEMP%\KeyLogs\<date>\<process>.txt every 20s
+qI5	Stop keylogger: unhook, clear buffers, stop timer
 
-iAZ5a — Beacon/Command Type Enum
+iAZ5a: Beacon/Command Type Enum
 This enum defines 8 command types (0-7) for the beacon/C2 communication. These likely map to:
 Value	Likely Command
 0	System information report
@@ -381,7 +381,7 @@ Summary
 
 This enum serializes as XML values "0" through "7" and represents the type field in the report/beacon data structure.
 
-iR — Windows Restart Manager — File Unlocker
+iR: Windows Restart Manager: File Unlocker
 This uses the Windows Restart Manager API (rstrtmgr.dll) to find which processes are locking a file, then returns those processes so the malware can kill them to unlock the file
 Method	Purpose
 jr2Fq	Find all processes locking a file using Restart Manager API
@@ -390,7 +390,7 @@ RmRegisterResources	Register the locked file
 RmGetList	Get list of locking processes
 RmEndSession	End RM session
 
-j84d3 — C2 COMMAND SERVER (HTTP Listener + Command Dispatcher)
+j84d3: C2 COMMAND SERVER (HTTP Listener + Command Dispatcher)
 This class implements an HTTP server that listens for C2 commands and dispatches them to all the malware modules.
 C2 Command Summary
 Command	Function
@@ -421,7 +421,7 @@ Prefix	http://+:{port}/
 Method	POST
 Command separator	; (semicolon)
 Response	Plain text UTF-8
-j84d3 is the C2 command server — it:
+j84d3 is the C2 command server: it:
 
     Starts an HTTP listener on a random port (2000-9000)
 
@@ -433,7 +433,7 @@ j84d3 is the C2 command server — it:
 
     Any unrecognized command is executed as a shell command!
 
-jg — THE BROWSER/WALLET STEALER ENGINE
+jg: THE BROWSER/WALLET STEALER ENGINE
 Summary
 Method	Purpose
 d_5	Parse steal config from XML/URL/file
@@ -445,19 +445,19 @@ zKdO	Recursive browser profile + wallet search
 gKF4j6	Target browser files (Login Data, Cookies, etc.)
 mLU2r	Browser profile directory patterns
 
-k8OCdS — NGROK TUNNEL MANAGER
+k8OCdS: NGROK TUNNEL MANAGER
 Summary
 Method	Purpose
 fGBU_v	Check if ngrok is installed and running
 ctGle	Check if ngrok.exe process exists
 vZ	Poll http://127.0.0.1:4040/api/tunnels for tunnel info
-nSEQUd	Wait loop — poll every 4s until ngrok tunnel is ready
+nSEQUd	Wait loop: poll every 4s until ngrok tunnel is ready
 vc	Kill ngrok process
 
-k9 — CLIPBOARD HELPER (STA Thread Wrapper)
+k9: CLIPBOARD HELPER (STA Thread Wrapper)
 What It Does
 
-This is a thread-safe clipboard accessor — since Windows clipboard requires STA (Single Thread Apartment) threads, it spawns STA threads to access the clipboard.
+This is a thread-safe clipboard accessor: since Windows clipboard requires STA (Single Thread Apartment) threads, it spawns STA threads to access the clipboard.
 Methods
 Method	Purpose
 r4poWn	Check if clipboard contains text
@@ -467,7 +467,7 @@ Why STA Threads?
 
 Windows clipboard APIs require the calling thread to be STA (Single Thread Apartment). The malware's main threads may be MTA, so it spawns temporary STA threads for each clipboard operation.
 
-kAXa7 — Command Structure
+kAXa7: Command Structure
 Command Type (iAZ5a)
 Value	Purpose
 0	File search by path/pattern
@@ -484,13 +484,13 @@ _5G9CQMlbGi0MV	name	Command type (0-7 from iAZ5a enum)
 _9ecly1dif2BW0	args	Array of arguments (paths, patterns, keys)
 Summary
 
-kAXa7 is the core steal command structure — it defines:
+kAXa7 is the core steal command structure: it defines:
 
     What type of data to steal (file, browser, registry, process, etc.)
 
     Where to look (paths, patterns, registry keys)
 
-ll3n — Self-Awareness / Executable Identity
+ll3n: Self-Awareness / Executable Identity
 Fields
 Field	Value	Purpose
 byXeX6	Full path	C:\...\malware.exe
@@ -505,25 +505,25 @@ These fields are referenced by other classes to:
 
     Pass the executable path to the C2 server
 
-lN — Tor Expert Bundle Manager
-This manages the Tor Expert Bundle (tor.exe) — similar to how k8OCdS manages ngrok.
+lN: Tor Expert Bundle Manager
+This manages the Tor Expert Bundle (tor.exe), similar to how k8OCdS manages ngrok.
 Summary
 Method	Purpose
 phb6HA	Check if Tor Browser is installed
 uK	WMI query: Is tor service running?
 nyTj4X	Kill tor.exe process
-pa	Wait loop — poll every 4s until Tor is running
+pa	Wait loop: poll every 4s until Tor is running
 The Three Tunnel Methods
 Class	Tunnel Type	Check	Wait
 lN	Tor Expert Bundle	phb6HA()	pa()
 k8OCdS	ngrok	fGBU_v()	nSEQUd()
-nBmmX8	Serveo.net	Via SSH	—
-viT	Tor Hidden Service	Via Tor	—
+nBmmX8	Serveo.net	Via SSH	,
+viT	Tor Hidden Service	Via Tor	:
 
-ltNfD — Native API Resolver (P/Invoke Delegate Factory)
+ltNfD: Native API Resolver (P/Invoke Delegate Factory)
 What It Is
 
-This is the dynamic native API binding class — it uses hm6 (the DLL loader) to resolve Win32 API functions at runtime and create typed C# delegates for them.
+This is the dynamic native API binding class: it uses hm6 (the DLL loader) to resolve Win32 API functions at runtime and create typed C# delegates for them.
 Complete API Mapping
 Delegate Type	DLL	Function	Purpose
 __Kernel32_GetModuleHandle__	kernel32.dll	GetModuleHandleA	Get module handle
@@ -555,7 +555,7 @@ Method	Purpose
 rzd	Initialize kernel32, user32, crypt32, iphlpapi delegates
 cuK	Initialize hook-related delegates (SetWindowsHookEx, CallNextHookEx, GetAsyncKeyState, etc.)
 qpC5kn	Initialize SendMessage + FindWindowEx (for screenshot)
-ltNfD is the native API binding layer — it dynamically resolves 17 Windows API functions across 4 DLLs and wraps them in typed C# delegates. This enables:
+ltNfD is the native API binding layer: it dynamically resolves 17 Windows API functions across 4 DLLs and wraps them in typed C# delegates. This enables:
 
     Keylogger (SetWindowsHookEx, CallNextHookEx, GetAsyncKeyState, ToUnicodeEx, MapVirtualKeyA)
 
@@ -563,31 +563,31 @@ ltNfD is the native API binding layer — it dynamically resolves 17 Windows API
 
     Screenshot (FindWindowEx, SendMessage)
 
-    DPAPI decryption (CryptUnprotectData — for browser passwords)
+    DPAPI decryption (CryptUnprotectData: for browser passwords)
 
-    Network scanning (SendARP — MAC address discovery)
+    Network scanning (SendARP: MAC address discovery)
 
 
-mud — DATA EXFILTRATION ENGINE (Telegram + Custom C2)
+mud: DATA EXFILTRATION ENGINE (Telegram + Custom C2)
 Exfiltration Methods
 Method	Function	Channel
 1	e1RcR6	Custom HTTP C2 (POST with JSON metadata)
-2	xkDPZU	Telegram Bot — send message with download URL
-3	k6W	Telegram Bot — send as multipart document
-4	cn50DQ	Telegram Bot — fallback (text mode)
+2	xkDPZU	Telegram Bot: send message with download URL
+3	k6W	Telegram Bot: send as multipart document
+4	cn50DQ	Telegram Bot: fallback (text mode)
 Method	Purpose
-st	Build complete report — XML serialize → GZip → RC4 encrypt → RSA wrap key → return packet
+st	Build complete report: XML serialize → GZip → RC4 encrypt → RSA wrap key → return packet
 oM9oG	Send to C2 with 4 fallback methods
 e1RcR6	Send via custom HTTP C2 (POST JSON)
 xkDPZU	Send via Telegram message with download URL
 k6W	Send via Telegram document upload
-cn50DQ	Fallback — message mode
-umRf	Fallback — text notification
-cbaUZB	Fallback — report notification
+cn50DQ	Fallback: message mode
+umRf	Fallback: text notification
+cbaUZB	Fallback: report notification
 pp	Write "1" to Report.txt to mark as done
-mud is the final exfiltration engine — it collects everything, encrypts it, and sends it to Telegram + HTTP C2 with multiple fallback paths
+mud is the final exfiltration engine: it collects everything, encrypts it, and sends it to Telegram + HTTP C2 with multiple fallback paths
 
-nBmmX8 — Serveo.net Tunnel Manager
+nBmmX8: Serveo.net Tunnel Manager
 How Serveo Works
 text
 1. Download plink.exe (PuTTY SSH client)
@@ -606,7 +606,7 @@ viT	Tor Hidden Service	Built-in or system Tor	Onion URL
 k8OCdS	ngrok	ngrok from CDN	HTTP tunnel
 lN	Tor Expert Bundle	System-installed Tor	SOCKS5 proxy
 
-oqjg — CRYPTO CLIPPER (Address Swapper)
+oqjg: CRYPTO CLIPPER (Address Swapper)
 How It Works
 text
 1. Victim copies their crypto wallet address
@@ -632,7 +632,7 @@ zR::hC(string text) detects which cryptocurrency an address belongs to by checki
 
     etc.
 
-pl — SELF-DESTRUCT + PERSISTENCE + VM DETECTION
+pl: SELF-DESTRUCT + PERSISTENCE + VM DETECTION
 Summary
 Method	Purpose
 gL8	Get current executable path
@@ -650,7 +650,7 @@ Virtual Machine, VirtualEnvironment	Generic VM
 Sandbox	Sandboxie/Windows Sandbox
 VirtualPC	Microsoft Virtual PC
 
-pW — PAYLOAD DOWNLOADER + EXECUTOR (UPDATER)
+pW: PAYLOAD DOWNLOADER + EXECUTOR (UPDATER)
 Summary
 Method	Purpose
 cD	Download + execute payloads (comma-separated URL list)
@@ -669,7 +669,7 @@ The C2 can push new payloads to the victim by:
 
 This enables the attacker to deploy ANY additional malware to the compromised system
 
-py9z — CUSTOM C2 REVERSE SHELL CLIENT
+py9z: CUSTOM C2 REVERSE SHELL CLIENT
 The Complete Custom C2 Flow
 text
 
@@ -681,13 +681,13 @@ text
 6. When C2 says "1", the calling process gets killed
 Summary
 Method	Purpose
-h2Qa	Poll C2 server — check if it responds "1"
+h2Qa	Poll C2 server: check if it responds "1"
 eQZFfE	Check if windll.exe exists
 rja	Kill process after C2 confirms ready
 mcl	Launch custom C2 client (windll.exe) with encoded parameters
 
-q9ykkm — EMBEDDED DATA / STATIC ARRAYS
-This class contains compile-time initialized static data — not code, but raw data used by the malware
+q9ykkm: EMBEDDED DATA / STATIC ARRAYS
+This class contains compile-time initialized static data, not code, but raw data used by the malware
 Fields
 Field	Size	Content	Purpose
 hq	8 bytes	50 4B 01 02 17 0B 14 00	ZIP central directory magic
@@ -697,7 +697,7 @@ bK1	4 bytes	50 4B 06 06	ZIP EOCD magic
 okr	6 bytes	50 4B 03 04 14 00	ZIP local file header magic
 dNO	8 bytes	50 4B 05 06 00 00 00 00	ZIP EOCD magic
 x_6VGj	4 bytes	50 4B 06 07	ZIP multi-disk magic
-The Port List (w2) — 70 Ports!
+The Port List (w2): 70 Ports!
 
 Decoded integer values:
 Port	Service
@@ -778,7 +778,7 @@ dNO	50 4B 05 06 00 00 00 00	End of Central Directory
 x_6VGj	50 4B 06 07	ZIP64 EOCD Locator
 bK1	50 4B 06 06	ZIP64 EOCD
 
-qm — Stolen File Entry Structure
+qm: Stolen File Entry Structure
 Properties
 Property	XML Attr	Type	Purpose
 _pudfaHoFci3Au	fn	string	File path/name
@@ -788,7 +788,7 @@ _hOeQJ9R5Km89V	cd	long	Creation time (Unix timestamp)
 _SxcACbQSx3Rps	md	long	Modification time (Unix timestamp)
 Summary
 
-qm is the stolen file container — it holds:
+qm is the stolen file container: it holds:
 
     The file's original path
 
@@ -796,7 +796,7 @@ qm is the stolen file container — it holds:
 
     Size + timestamps for forensic info
 
-rkZgwP — ZIP FILE CREATOR / EXTRACTOR
+rkZgwP: ZIP FILE CREATOR / EXTRACTOR
 Summary
 Method	Purpose
 jvX0	Extract ZIP to directory, optionally delete source
@@ -807,7 +807,7 @@ Download plink.exe	jvX0	Extract downloaded ZIP to Starlabs folder
 C2 command ZIP_FILE	rM	Compress file for exfiltration
 ngrok/tor download	jvX0	Extract tunnel tools
 
-s4x — BROWSER CREDENTIAL STEALER (DPAPI Decrypt)
+s4x: BROWSER CREDENTIAL STEALER (DPAPI Decrypt)
 What It Steals
 
 This accesses the Windows Credential Manager (also known as Windows Vault) to extract:
@@ -829,11 +829,11 @@ This accesses the Windows Credential Manager (also known as Windows Vault) to ex
     Method	Purpose
     boi	Steal browser saved credentials from Windows Credential Manager, decrypt via DPAPI
 
-sRK5IN — CLIPBOARD MONITOR + CLIPPER LOOP
+sRK5IN: CLIPBOARD MONITOR + CLIPPER LOOP
 Method	Purpose
-iZs	Start clipboard monitor — checks every 600ms for new text, sends to clipper
+iZs	Start clipboard monitor: checks every 600ms for new text, sends to clipper
 
-tPoKW — WILDCARD PATTERN MATCHER
+tPoKW: WILDCARD PATTERN MATCHER
 Supported Wildcards
 Wildcard	Matches
 ?	Any single character
@@ -841,13 +841,13 @@ Wildcard	Matches
 Examples
 csharp
 
-tPoKW::kx("*.txt", "document.txt")       // true
-tPoKW::kx("file?.dat", "file1.dat")      // true
-tPoKW::kx("file?.dat", "file12.dat")     // false
-tPoKW::kx("*.exe", "malware.dll")        // false
-tPoKW::kx("Chrome*", "Chrome_Default")   // true
+tPoKW::kx("*.txt", "document.txt") // true
+tPoKW::kx("file?.dat", "file1.dat") // true
+tPoKW::kx("file?.dat", "file12.dat") // false
+tPoKW::kx("*.exe", "malware.dll") // false
+tPoKW::kx("Chrome*", "Chrome_Default") // true
 
-viT — TOR HIDDEN SERVICE MANAGER
+viT: TOR HIDDEN SERVICE MANAGER
 Summary
 Method	Purpose
 zAQ	Download Tor Expert Bundle from official Tor Project
@@ -862,7 +862,7 @@ nBmmX8	Serveo.net	serveo.net URL	the.earth.li (plink.exe)
 k8OCdS	ngrok	ngrok.io URL	ngrok CDN
 lN	Tor Browser	Tor SOCKS5	System-installed
 
-w8RnS — WINDOWS CREDENTIAL MANAGER STEALER
+w8RnS: WINDOWS CREDENTIAL MANAGER STEALER
 What It Steals
 
 This accesses the Windows Credential Manager (Control Panel → Credential Manager) which stores:
@@ -890,17 +890,17 @@ Summary
 Method	Purpose
 CredEnumerate	Win32 API to list all saved credentials
 vcTrSN	Enumerate all Windows credentials
-mX3c	Format credential — extract TargetName, UserName, Password
+mX3c	Format credential: extract TargetName, UserName, Password
 Relationship with s4x
 Class	Source	What It Steals
 s4x::boi	Registry (Windows Vault)	Browser-saved passwords
 w8RnS::vcTrSN	CredEnumerate API	All Windows credentials (web, network, apps)
 
-wv6 — Commands Configuration Root
+wv6: Commands Configuration Root
 Summary
-wv6 is simply the root container for the array of kAXa7 steal commands. It wraps them for XML serialization/deserialization. 
+wv6 is simply the root container for the array of kAXa7 steal commands. It wraps them for XML serialization/deserialization.
 
-xEdACX — Custom ZIP Archive Engine
+xEdACX: Custom ZIP Archive Engine
 ┌─────────────────────────────────┐
 │   Local File Header #1          │ ← tZxu() writes this
 │   ├── Signature (0x04034b50)    │
@@ -933,7 +933,7 @@ jj2	Finalize - write Central Directory + close archive
 pA5P	Read - parse existing ZIP and build file list
 jUEMG / oIr	Extract - decompress a file to a stream
 atpdt	Extract file and restore timestamps on disk
-qzdi	🔥 MODIFY - delete files from ZIP by rebuilding it
+qzdi	MODIFY - delete files from ZIP by rebuilding it
 CRC32 Implementation: Custom lookup table built in .cctor (static constructor)
 
     Uses polynomial 0xEDB88320 (standard CRC-32)
@@ -946,10 +946,10 @@ UTF-8 Encoding: Supports EncodeUTF8 flag (bit 11 in general purpose flag)
 
 Deflate Compression: Uses System.IO.Compression.DeflateStream
 
-y03WP — UAC Bypass via Registry + MSI Installer
+y03WP: UAC Bypass via Registry + MSI Installer
 This class contains a single static method yL(string yg4) that performs a UAC (User Account Control) bypass by abusing the Windows Registry and launching an MSI installer.
 
-yfei0C — Thunderbird Email & Password Stealer
+yfei0C: Thunderbird Email & Password Stealer
 This class steals email accounts, passwords, and stored credentials from Mozilla Thunderbird email client by reading its saved login data from the Windows Registry.
 Registry Paths Enumerated
 
@@ -966,9 +966,9 @@ Index	Registry Path
 8	Software\Microsoft\Windows Messaging Subsystem\Profiles
 9	Software\Microsoft\Windows Messaging Subsystem\Profiles
 
-yFzr — Application Settings Wrapper (Autogenerated)
+yFzr: Application Settings Wrapper (Autogenerated)
 
-ypzCTr — Process Memory Scanner / Credential Dumper
+ypzCTr: Process Memory Scanner / Credential Dumper
 This class performs process memory scanning to extract sensitive information (credentials, tokens, etc.) from running processes by reading their memory and searching for patterns using regex.
 Win32 API Constants
 Constant	Value	Purpose
@@ -985,18 +985,18 @@ Credit Cards	"\\d{4}-\\d{4}-\\d{4}-\\d{4}"	Credit card numbers
 Email Addresses	"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"	Email addresses
 Discord Tokens	"[a-zA-Z0-9]{24}\\.[a-zA-Z0-9]{6}\\.[a-zA-Z0-9]{27}"	Discord tokens
 
-zB3 — Key-Value Pair for XML Serialization
+zB3: Key-Value Pair for XML Serialization
 This is a serializable key-value pair structure used for XML configuration storage. It represents a single setting or parameter with a key and value.
 Property	XML Attribute	Field	Getter/Setter
 _uctqqQJYEA941	"key"	rMzw	get__uctqqQJYEA941 / set__uctqqQJYEA941
 _P7mcPFxuwVuWU	"value"	tEsT2M	get__P7mcPFxuwVuWU / set__P7mcPFxuwVuWU
 
-zo_lg0 — System Fingerprinting via WMI
+zo_lg0: System Fingerprinting via WMI
 What It Is
 This class collects system identification information using Windows Management Instrumentation (WMI) to generate a unique device fingerprint for the infected machine.
 
 
-zR — Crypto Wallet Address Validator / Network Identifier
+zR: Crypto Wallet Address Validator / Network Identifier
 What It Is
 This class maps cryptocurrency wallet addresses to their respective networks/chains using regex patterns. It identifies which blockchain a wallet address belongs to by matching it against known address formats.
 Dictionary Mapping (.cctor)

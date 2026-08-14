@@ -71,12 +71,12 @@ Initializes a thread pool/work queue for parallel encryption.
 **Structure:**
 
 struct thread_pool {
-    void* queue1;           // Folder parser queue
-    void* queue2;           // Encryption worker queue
+    void* queue1; // Folder parser queue
+    void* queue2; // Encryption worker queue
     CRITICAL_SECTION lock1; // Lock for queue1
     CRITICAL_SECTION lock2; // Lock for queue2
-    int thread_count1;      // Number of folder parsers
-    int thread_count2;      // Number of encryption workers
+    int thread_count1; // Number of folder parsers
+    int thread_count2; // Number of encryption workers
 };
 
 
@@ -94,8 +94,8 @@ Initializes a work queue object for the thread pool.
 
 **Queue Object Structure:**
 struct work_queue {
-    void* data;              // +0x00: Queue data (384 bytes)
-    void* ref_count_obj;     // +0x08: Reference-counted object
+    void* data; // +0x00: Queue data (384 bytes)
+    void* ref_count_obj; // +0x08: Reference-counted object
 };
 
 
@@ -140,8 +140,8 @@ Validates a path and logs its type (local disk, network path, etc.).
 | `1` | Not allowed disk |
 
 **API calls:**
-- `PathIsNetworkPathW` — Check if path is a network path
-- `GetDriveTypeW` — Get drive type (fixed, removable, remote, etc.)
+- `PathIsNetworkPathW`: Check if path is a network path
+- `GetDriveTypeW`: Get drive type (fixed, removable, remote, etc.)
 
 **Why it matters:**
 This validates paths before encryption, ensuring the malware only encrypts valid local drives (or network drives if specified).
@@ -488,11 +488,11 @@ Initializes a critical section using Microsoft's Concurrency Runtime (`stl_criti
 
 **Structure:**
 struct stl_critical_section {
-    int flag;              // +0x00: Init flag
-    void* vftable;         // +0x08: Virtual function table
-    void* handle;          // +0x10: Critical section handle
-    int spin_count;        // +0x48: Spin count (-1 = default)
-    int lock_count;        // +0x4c: Lock count
+    int flag; // +0x00: Init flag
+    void* vftable; // +0x08: Virtual function table
+    void* handle; // +0x10: Critical section handle
+    int spin_count; // +0x48: Spin count (-1 = default)
+    int lock_count; // +0x4c: Lock count
 };
 
 ### Function: `FUN_1400820e8` → Renamed: `init_condition_variable`
@@ -508,8 +508,8 @@ Initializes a condition variable using the Concurrency Runtime (`stl_condition_v
 **Structure:**
 
 struct stl_condition_variable {
-    void* vftable;           // +0x00: Virtual function table
-    CONDITION_VARIABLE cv;   // +0x08: Windows condition variable
+    void* vftable; // +0x00: Virtual function table
+    CONDITION_VARIABLE cv; // +0x08: Windows condition variable
 };
 
 
@@ -545,13 +545,13 @@ Initializes the ASIO scheduler for the thread pool.
 **ASIO Scheduler Structure:**
 
 struct asio_scheduler {
-    void* vftable;           // +0x00: ASIO scheduler vftable
-    CRITICAL_SECTION cs;     // +0x08: Critical section
-    void* data;              // +0x10: Internal data
-    void* param3;            // +0x18: param_3
-    HANDLE shutdown_event;   // +0x20: Manual-reset event
-    HANDLE work_event;       // +0x28: Auto-reset event
-    void* thread_func;       // +0x30: Worker thread function
+    void* vftable; // +0x00: ASIO scheduler vftable
+    CRITICAL_SECTION cs; // +0x08: Critical section
+    void* data; // +0x10: Internal data
+    void* param3; // +0x18: param_3
+    HANDLE shutdown_event; // +0x20: Manual-reset event
+    HANDLE work_event; // +0x28: Auto-reset event
+    void* thread_func; // +0x30: Worker thread function
 };
 
 
@@ -714,9 +714,9 @@ Securely clears the ChaCha20 cipher state from memory to prevent key leakage.
 **Structure:**
 
 struct chacha20_state {
-    uint32_t state[16];    // 16 x 4 bytes = 64 bytes
-    uint32_t counter;      // 4 bytes
-    uint8_t buffer[64];    // 64 bytes
+    uint32_t state[16]; // 16 x 4 bytes = 64 bytes
+    uint32_t counter; // 4 bytes
+    uint8_t buffer[64]; // 64 bytes
     // Total: ~132 bytes
 };
 

@@ -1,6 +1,6 @@
-# WhiteSnakeStealer — Comprehensive Static Analysis Report
+# WhiteSnakeStealer: Comprehensive Static Analysis Report
 
-**TFM 2025-2026 — Universidad Complutense de Madrid**
+**TFM 2025-2026: Universidad Complutense de Madrid**
 
 **Sample Type:** .NET Stealer Malware Suite
 
@@ -39,7 +39,7 @@ WhiteSnakeStealer.exe (Main Payload)
     │   ├── Version: "1.6.3.4"
     │   └── C2 ID: "m01g4892qu"
     │
-    ├── dvn.Main() — Entry Point
+    ├── dvn.Main(), Entry Point
     │   ├── Check VM/Sandbox (pl.rF)
     │   ├── Single instance mutex (pl.pOD)
     │   ├── Decrypt configuration strings (hy)
@@ -102,7 +102,7 @@ WhiteSnakeStealer.exe (Main Payload)
 
 ## 3. Core Components
 
-### 3.1 String Decryption — `hy`
+### 3.1 String Decryption: `hy`
 
 The malware uses a custom XOR-based string obfuscation:
 
@@ -143,7 +143,7 @@ Return string after "nooo:" prefix
 
 ---
 
-### 3.2 Encryption Layer — `a54Cm`
+### 3.2 Encryption Layer: `a54Cm`
 
 | Component | Algorithm | Details |
 |-----------|-----------|---------|
@@ -156,7 +156,7 @@ Return string after "nooo:" prefix
 
 ---
 
-### 3.3 Configuration — `fz` Static Class
+### 3.3 Configuration: `fz` Static Class
 
 | Field | Value | Purpose |
 |-------|-------|---------|
@@ -181,7 +181,7 @@ Return string after "nooo:" prefix
 
 ## 4. Data Theft Capabilities
 
-### 4.1 System Information — `hkAR`
+### 4.1 System Information: `hkAR`
 
 | Method | Data Collected |
 |--------|----------------|
@@ -202,7 +202,7 @@ Return string after "nooo:" prefix
 | `koBz` | Installed AV/Security Software |
 | `pC3` | Screenshot (all screens) |
 
-### 4.2 WiFi Credentials — `brIk4`
+### 4.2 WiFi Credentials: `brIk4`
 
 | Data | Format |
 |------|--------|
@@ -220,7 +220,7 @@ netsh wlan show profile "<name>" key=clear
 netsh wlan show networks mode=bssid
 ```
 
-### 4.3 Browser & Application Stealing — `jg` + `s4x` + `d4w`
+### 4.3 Browser & Application Stealing: `jg` + `s4x` + `d4w`
 
 | Target | Data Stolen | Method |
 |--------|-------------|--------|
@@ -232,7 +232,7 @@ netsh wlan show networks mode=bssid
 | **Windows Credential Manager** | Web credentials, Network credentials | CredEnumerate API |
 | **Browser Extensions** | All `*@*` profile directories | File enumeration |
 
-### 4.4 Keylogger — `i4uV`
+### 4.4 Keylogger: `i4uV`
 
 | Component | Detail |
 |-----------|--------|
@@ -253,7 +253,7 @@ netsh wlan show networks mode=bssid
 | `KEYLOGGER JOURNALS` | List keylog files |
 | `KEYLOGGER DUMP` | Upload all keylogs |
 
-### 4.5 Clipboard Hijacking — `oqjg` + `sRK5IN`
+### 4.5 Clipboard Hijacking: `oqjg` + `sRK5IN`
 
 | Component | Detail |
 |-----------|--------|
@@ -283,7 +283,7 @@ netsh wlan show networks mode=bssid
 | Stellar | XLM | `^G[0-9a-zA-Z]{55}$` |
 | Algorand | ALG | `^[A-Z0-9]{58}$` |
 
-### 4.6 Microphone Recording — `dt`
+### 4.6 Microphone Recording: `dt`
 
 | Component | Detail |
 |-----------|--------|
@@ -292,7 +292,7 @@ netsh wlan show networks mode=bssid
 | **Output** | WAV file in temp directory |
 | **Cleanup** | `close recorder` after capture |
 
-### 4.7 Process Memory Scanning — `ypzCTr`
+### 4.7 Process Memory Scanning: `ypzCTr`
 
 | Component | Detail |
 |-----------|--------|
@@ -302,7 +302,7 @@ netsh wlan show networks mode=bssid
 | **Extraction** | Regex pattern matching on readable strings |
 | **Targets** | Passwords, tokens, API keys, credit cards, Discord tokens |
 
-### 4.8 Screenshot Capture — `gKZ`
+### 4.8 Screenshot Capture: `gKZ`
 
 | Component | Detail |
 |-----------|--------|
@@ -311,7 +311,7 @@ netsh wlan show networks mode=bssid
 | **Output** | JPEG byte array |
 | **Trigger** | On-demand via C2 command |
 
-### 4.9 File Exfiltration — `g_Nx` + `xEdACX`
+### 4.9 File Exfiltration: `g_Nx` + `xEdACX`
 
 | Component | Detail |
 |-----------|--------|
@@ -326,41 +326,41 @@ netsh wlan show networks mode=bssid
 
 ## 5. C2 Infrastructure
 
-### 5.1 Primary HTTP C2 — 31 Nodes
+### 5.1 Primary HTTP C2: 31 Nodes
 
 | # | URL | Port | SSL |
 |---|-----|------|-----|
-| 0 | 206.166.251.4 | 8080 | ❌ |
-| 1 | 167.99.138.249 | 8080 | ❌ |
-| 2 | 46.4.73.118 | 9000 | ❌ |
-| 3 | 206.189.109.146 | 80 | ❌ |
-| 4 | 194.164.198.113 | 8080 | ❌ |
-| 5 | 45.82.65.63 | 80 | ❌ |
-| 6 | 5.196.181.135 | 443 | ✅ |
-| 7 | 95.216.147.179 | 80 | ❌ |
-| 8 | 185.217.98.121 | 8080 | ❌ |
-| 9 | 116.202.101.219 | 8080 | ❌ |
-| 10 | 185.217.98.121 | 80 | ❌ |
-| 11 | 159.203.174.113 | 8090 | ❌ |
-| 12 | 107.161.20.142 | 8080 | ❌ |
-| 13 | 192.99.196.191 | 443 | ✅ |
-| 14 | 44.228.161.50 | 443 | ✅ |
-| 15 | 154.9.207.142 | 443 | ✅ |
-| 16 | 66.42.56.128 | 80 | ❌ |
-| 17 | 8.219.110.16 | 9999 | ❌ |
-| 18 | 138.2.92.67 | 443 | ✅ |
-| 19 | 8.134.71.132 | 8082 | ❌ |
-| 20 | 41.87.207.180 | 9090 | ❌ |
-| 21 | 18.228.80.130 | 80 | ❌ |
-| 22 | 168.138.211.88 | 8099 | ❌ |
-| 23 | 47.110.140.182 | 8080 | ❌ |
-| 24 | 129.151.109.160 | 8080 | ❌ |
-| 25 | 101.43.160.136 | 8080 | ❌ |
-| 26 | 101.132.223.26 | 8080 | ❌ |
-| 27 | 101.126.19.171 | 80 | ❌ |
-| 28 | 38.60.191.38 | 80 | ❌ |
-| 29 | 47.96.78.224 | 8080 | ❌ |
-| 30 | 101.126.19.171 | 443 | ✅ |
+| 0 | 206.166.251.4 | 8080 | no |
+| 1 | 167.99.138.249 | 8080 | no |
+| 2 | 46.4.73.118 | 9000 | no |
+| 3 | 206.189.109.146 | 80 | no |
+| 4 | 194.164.198.113 | 8080 | no |
+| 5 | 45.82.65.63 | 80 | no |
+| 6 | 5.196.181.135 | 443 | yes |
+| 7 | 95.216.147.179 | 80 | no |
+| 8 | 185.217.98.121 | 8080 | no |
+| 9 | 116.202.101.219 | 8080 | no |
+| 10 | 185.217.98.121 | 80 | no |
+| 11 | 159.203.174.113 | 8090 | no |
+| 12 | 107.161.20.142 | 8080 | no |
+| 13 | 192.99.196.191 | 443 | yes |
+| 14 | 44.228.161.50 | 443 | yes |
+| 15 | 154.9.207.142 | 443 | yes |
+| 16 | 66.42.56.128 | 80 | no |
+| 17 | 8.219.110.16 | 9999 | no |
+| 18 | 138.2.92.67 | 443 | yes |
+| 19 | 8.134.71.132 | 8082 | no |
+| 20 | 41.87.207.180 | 9090 | no |
+| 21 | 18.228.80.130 | 80 | no |
+| 22 | 168.138.211.88 | 8099 | no |
+| 23 | 47.110.140.182 | 8080 | no |
+| 24 | 129.151.109.160 | 8080 | no |
+| 25 | 101.43.160.136 | 8080 | no |
+| 26 | 101.132.223.26 | 8080 | no |
+| 27 | 101.126.19.171 | 80 | no |
+| 28 | 38.60.191.38 | 80 | no |
+| 29 | 47.96.78.224 | 8080 | no |
+| 30 | 101.126.19.171 | 443 | yes |
 
 **Geographic Clusters:**
 
@@ -426,7 +426,7 @@ netsh wlan show networks mode=bssid
 4. Notify C2 via Telegram
 ```
 
-### 5.4 C2 Command Server — `j84d3`
+### 5.4 C2 Command Server: `j84d3`
 
 **HTTP Server Details:**
 
@@ -472,7 +472,7 @@ netsh wlan show networks mode=bssid
 
 ## 6. Defense Evasion
 
-### 6.1 VM/Sandbox Detection — `pl.rF`
+### 6.1 VM/Sandbox Detection: `pl.rF`
 
 | Indicator | Target |
 |-----------|--------|
@@ -483,7 +483,7 @@ netsh wlan show networks mode=bssid
 | `Sandbox` | Sandboxie/Windows Sandbox |
 | `VirtualPC` | Microsoft Virtual PC |
 
-### 6.2 UAC Bypass — `y03WP`
+### 6.2 UAC Bypass: `y03WP`
 
 | Component | Detail |
 |-----------|--------|
@@ -493,13 +493,13 @@ netsh wlan show networks mode=bssid
 | **Execution** | `UseShellExecute = true` |
 | **Cleanup** | Delete registry key after execution |
 
-### 6.3 Self-Destruct — `pl.f7`
+### 6.3 Self-Destruct: `pl.f7`
 
 ```batch
 cmd /c ping -n 3 127.0.0.1 & del <malware_path>
 ```
 
-### 6.4 Persistence — `pl.gLjZ`
+### 6.4 Persistence: `pl.gLjZ`
 
 | Method | Detail |
 |--------|--------|
@@ -507,7 +507,7 @@ cmd /c ping -n 3 127.0.0.1 & del <malware_path>
 | **Task Name** | Random |
 | **Trigger** | User logon / System startup |
 
-### 6.5 Single Instance — `pl.pOD`
+### 6.5 Single Instance: `pl.pOD`
 
 | Mutex | Global |
 |-------|--------|
@@ -515,7 +515,7 @@ cmd /c ping -n 3 127.0.0.1 & del <malware_path>
 
 ---
 
-## 7. Network Scanner — `gT`
+## 7. Network Scanner: `gT`
 
 ### 7.1 LAN Discovery
 
@@ -526,7 +526,7 @@ cmd /c ping -n 3 127.0.0.1 & del <malware_path>
 | `fLAz7v` | Get local IPv4 addresses |
 | `ot` | Calculate all IPs in subnet range |
 
-### 7.2 Port Scanner — 70 Ports
+### 7.2 Port Scanner: 70 Ports
 
 | Port | Service | Port | Service |
 |------|---------|------|---------|
@@ -585,7 +585,7 @@ After scanning, the malware notifies C2:
 
 ## 9. Data Structures
 
-### 9.1 Report Structure — `hmi`
+### 9.1 Report Structure: `hmi`
 
 ```xml
 <report>
@@ -606,7 +606,7 @@ After scanning, the malware notifies C2:
 </report>
 ```
 
-### 9.2 File Entry — `qm`
+### 9.2 File Entry: `qm`
 
 | Property | XML Attr | Type | Purpose |
 |----------|----------|------|---------|
@@ -616,7 +616,7 @@ After scanning, the malware notifies C2:
 | `_hOeQJ9R5Km89V` | `cd` | long | Creation time (Unix) |
 | `_SxcACbQSx3Rps` | `md` | long | Modification time (Unix) |
 
-### 9.3 Command Structure — `kAXa7`
+### 9.3 Command Structure: `kAXa7`
 
 | Property | XML | Purpose |
 |----------|-----|---------|
@@ -636,7 +636,7 @@ After scanning, the malware notifies C2:
 | 6 | WiFi + System info |
 | 7 | Process memory regex matching |
 
-### 9.4 Key-Value Pair — `zB3`
+### 9.4 Key-Value Pair: `zB3`
 
 ```xml
 <information key="[key]" value="[value]" />
@@ -646,7 +646,7 @@ After scanning, the malware notifies C2:
 
 ## 10. Payload Download & Execution
 
-### 10.1 SOCKS5 Proxy Deployment — `e2IF2`
+### 10.1 SOCKS5 Proxy Deployment: `e2IF2`
 
 | Component | Detail |
 |-----------|--------|
@@ -656,7 +656,7 @@ After scanning, the malware notifies C2:
 | **Execution** | `socks5_windows_amd64.exe --port {random 6000-19000}` |
 | **C2 Notification** | `"PortOpened {port}"` |
 
-### 10.2 Generic Payload Downloader — `pW`
+### 10.2 Generic Payload Downloader: `pW`
 
 | Method | Purpose |
 |--------|---------|
@@ -667,7 +667,7 @@ After scanning, the malware notifies C2:
 
 **C2 Configuration:** `fz.ybbKm4` = Comma-separated URL list
 
-### 10.3 ZIP Extraction — `rkZgwP`
+### 10.3 ZIP Extraction: `rkZgwP`
 
 | Method | Purpose |
 |--------|---------|
@@ -838,8 +838,8 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | **File and Directory Discovery** | T1083 | `jg` recursive search |
 | **Process Discovery** | T1057 | Process list, active window |
 | **Software Discovery** | T1518 | Installed AV list |
-| **Data from Local System** | T1005 | Collects local files for exfiltration — verified `wallet.dat` capture (base64 in XML report), 15-currency crypto wallet targeting |
-| **Process Injection** | T1055 | Creates a process in suspended state (process-hollowing precursor); confirmed dynamically via CAPE's `creates_suspended_process`, not caught in manual static RE — corroborated by `OpenProcess`/`VirtualQueryEx`/`ReadProcessMemory` used together |
+| **Data from Local System** | T1005 | Collects local files for exfiltration, verified `wallet.dat` capture (base64 in XML report), 15-currency crypto wallet targeting |
+| **Process Injection** | T1055 | Creates a process in suspended state (process-hollowing precursor); confirmed dynamically via CAPE's `creates_suspended_process`, not caught in manual static RE, corroborated by `OpenProcess`/`VirtualQueryEx`/`ReadProcessMemory` used together |
 | **Keylogging** | T1056.001 | WH_KEYBOARD_LL hook |
 | **Credentials from Web Browsers** | T1555.003 | Chrome/Edge/Firefox/Opera |
 | **Credentials from Password Stores** | T1555 | Windows Credential Manager |
@@ -878,7 +878,7 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | **Password Policy Discovery** | T1201 | WiFi password extraction |
 | **Credentials In Files** | T1552.001 | Browser credential files |
 | **Credentials in Registry** | T1552.002 | Thunderbird credentials |
-| **Reflective Code Loading** | T1620 | In-memory PE loading in `xEdACX` (see Appendix D Validation Summary — verified but not previously listed here) |
+| **Reflective Code Loading** | T1620 | In-memory PE loading in `xEdACX` (see Appendix D Validation Summary, verified but not previously listed here) |
 
 ---
 
@@ -889,7 +889,7 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | **Target** | Global (English strings) |
 | **Language** | C# (.NET Framework) |
 | **Compiler** | Microsoft Visual Studio |
-| **Sophistication** | VERY HIGH — Custom ZIP engine, multi-layer encryption, 4 tunnel methods, 31-node C2 |
+| **Sophistication** | VERY HIGH: Custom ZIP engine, multi-layer encryption, 4 tunnel methods, 31-node C2 |
 | **C2 Infrastructure** | Global (US, Europe, Asia, Australia) |
 | **Telegram Bot** | Active C2 channel |
 | **Anti-Analysis** | String obfuscation, VM detection, self-destruct |
@@ -900,21 +900,21 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 
 ## 15. Summary of Key Findings
 
-1. **Complete Stealer Suite** — 30+ functional classes covering every data theft vector
-2. **Multi-Layer Encryption** — XOR → GZip → RC4 → RSA with "WSR$" packet format
-3. **Crypto Clipper** — 15 cryptocurrencies with regex-based address detection
-4. **31-Node C2 Infrastructure** — Global distribution with geographic redundancy
-5. **4 Tunnel Methods** — Tor Hidden Service, Serveo.net, ngrok, Tor Expert Bundle
-6. **Telegram Bot C2** — Live notifications + file exfiltration
-7. **Keylogger** — Per-process logging with 20-second flush
-8. **Network Scanner** — 70-port LAN discovery with C2 notification
-9. **UAC Bypass** — MSI installer hijack via registry
-10. **Custom ZIP Engine** — Full implementation with CRC32, ZIP64, NTFS timestamps
-11. **VM Detection** — 12 indicators (VirtualBox, VMware, QEMU, Sandbox)
-12. **Self-Destruct** — Ping-delay deletion mechanism
-13. **Payload Download** — Dynamic payload deployment via C2
-14. **DPAPI Decryption** — Browser password extraction
-15. **Credential Theft** — 30+ targets (browsers, email, credentials, WiFi)
+1. **Complete Stealer Suite**: 30+ functional classes covering every data theft vector
+2. **Multi-Layer Encryption**: XOR → GZip → RC4 → RSA with "WSR$" packet format
+3. **Crypto Clipper**: 15 cryptocurrencies with regex-based address detection
+4. **31-Node C2 Infrastructure**: Global distribution with geographic redundancy
+5. **4 Tunnel Methods**: Tor Hidden Service, Serveo.net, ngrok, Tor Expert Bundle
+6. **Telegram Bot C2**: Live notifications + file exfiltration
+7. **Keylogger**: Per-process logging with 20-second flush
+8. **Network Scanner**: 70-port LAN discovery with C2 notification
+9. **UAC Bypass**: MSI installer hijack via registry
+10. **Custom ZIP Engine**: Full implementation with CRC32, ZIP64, NTFS timestamps
+11. **VM Detection**: 12 indicators (VirtualBox, VMware, QEMU, Sandbox)
+12. **Self-Destruct**: Ping-delay deletion mechanism
+13. **Payload Download**: Dynamic payload deployment via C2
+14. **DPAPI Decryption**: Browser password extraction
+15. **Credential Theft**: 30+ targets (browsers, email, credentials, WiFi)
 
 ---
 
@@ -945,37 +945,37 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 
 | # | URL | Port | SSL |
 |---|-----|------|-----|
-| 0 | 206.166.251.4 | 8080 | ❌ |
-| 1 | 167.99.138.249 | 8080 | ❌ |
-| 2 | 46.4.73.118 | 9000 | ❌ |
-| 3 | 206.189.109.146 | 80 | ❌ |
-| 4 | 194.164.198.113 | 8080 | ❌ |
-| 5 | 45.82.65.63 | 80 | ❌ |
-| 6 | 5.196.181.135 | 443 | ✅ |
-| 7 | 95.216.147.179 | 80 | ❌ |
-| 8 | 185.217.98.121 | 8080 | ❌ |
-| 9 | 116.202.101.219 | 8080 | ❌ |
-| 10 | 185.217.98.121 | 80 | ❌ |
-| 11 | 159.203.174.113 | 8090 | ❌ |
-| 12 | 107.161.20.142 | 8080 | ❌ |
-| 13 | 192.99.196.191 | 443 | ✅ |
-| 14 | 44.228.161.50 | 443 | ✅ |
-| 15 | 154.9.207.142 | 443 | ✅ |
-| 16 | 66.42.56.128 | 80 | ❌ |
-| 17 | 8.219.110.16 | 9999 | ❌ |
-| 18 | 138.2.92.67 | 443 | ✅ |
-| 19 | 8.134.71.132 | 8082 | ❌ |
-| 20 | 41.87.207.180 | 9090 | ❌ |
-| 21 | 18.228.80.130 | 80 | ❌ |
-| 22 | 168.138.211.88 | 8099 | ❌ |
-| 23 | 47.110.140.182 | 8080 | ❌ |
-| 24 | 129.151.109.160 | 8080 | ❌ |
-| 25 | 101.43.160.136 | 8080 | ❌ |
-| 26 | 101.132.223.26 | 8080 | ❌ |
-| 27 | 101.126.19.171 | 80 | ❌ |
-| 28 | 38.60.191.38 | 80 | ❌ |
-| 29 | 47.96.78.224 | 8080 | ❌ |
-| 30 | 101.126.19.171 | 443 | ✅ |
+| 0 | 206.166.251.4 | 8080 | no |
+| 1 | 167.99.138.249 | 8080 | no |
+| 2 | 46.4.73.118 | 9000 | no |
+| 3 | 206.189.109.146 | 80 | no |
+| 4 | 194.164.198.113 | 8080 | no |
+| 5 | 45.82.65.63 | 80 | no |
+| 6 | 5.196.181.135 | 443 | yes |
+| 7 | 95.216.147.179 | 80 | no |
+| 8 | 185.217.98.121 | 8080 | no |
+| 9 | 116.202.101.219 | 8080 | no |
+| 10 | 185.217.98.121 | 80 | no |
+| 11 | 159.203.174.113 | 8090 | no |
+| 12 | 107.161.20.142 | 8080 | no |
+| 13 | 192.99.196.191 | 443 | yes |
+| 14 | 44.228.161.50 | 443 | yes |
+| 15 | 154.9.207.142 | 443 | yes |
+| 16 | 66.42.56.128 | 80 | no |
+| 17 | 8.219.110.16 | 9999 | no |
+| 18 | 138.2.92.67 | 443 | yes |
+| 19 | 8.134.71.132 | 8082 | no |
+| 20 | 41.87.207.180 | 9090 | no |
+| 21 | 18.228.80.130 | 80 | no |
+| 22 | 168.138.211.88 | 8099 | no |
+| 23 | 47.110.140.182 | 8080 | no |
+| 24 | 129.151.109.160 | 8080 | no |
+| 25 | 101.43.160.136 | 8080 | no |
+| 26 | 101.132.223.26 | 8080 | no |
+| 27 | 101.126.19.171 | 80 | no |
+| 28 | 38.60.191.38 | 80 | no |
+| 29 | 47.96.78.224 | 8080 | no |
+| 30 | 101.126.19.171 | 443 | yes |
 
 ---
 
@@ -983,25 +983,25 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 
 | Finding | Status |
 |---------|--------|
-| String obfuscation (hy) | ✅ Verified — XOR "bdf" + "nooo:" |
-| RC4 encryption (a54Cm) | ✅ Verified |
-| RSA encryption | ✅ Verified — Public key present |
-| Telegram Bot C2 | ✅ Verified — Token + Chat ID |
-| 31-node C2 infrastructure | ✅ Verified — All IPs resolved |
-| Crypto clipper (15 coins) | ✅ Verified — Regex patterns |
-| Keylogger (WH_KEYBOARD_LL) | ✅ Verified — i4uV class |
-| WiFi credential stealer | ✅ Verified — netsh commands |
-| Browser credential stealer | ✅ Verified — DPAPI + SQLite |
-| Thunderbird stealer | ✅ Verified — Registry enumeration |
-| Custom ZIP engine | ✅ Verified — Full implementation |
-| UAC bypass | ✅ Verified — MSI hijack |
-| VM detection | ✅ Verified — 12 indicators |
-| Self-destruct | ✅ Verified — Ping-delay deletion |
-| 4 tunnel methods | ✅ Verified — Tor, Serveo, ngrok, Tor Browser |
-| Network scanner | ✅ Verified — 70 ports |
-| C2 command server | ✅ Verified — 20+ commands |
-| Reflective PE loading | ✅ Verified — In xEdACX |
-| Process memory scanner | ✅ Verified — ReadProcessMemory + regex |
+| String obfuscation (hy) | yes Verified: XOR "bdf" + "nooo:" |
+| RC4 encryption (a54Cm) | yes Verified |
+| RSA encryption | yes Verified: Public key present |
+| Telegram Bot C2 | yes Verified: Token + Chat ID |
+| 31-node C2 infrastructure | yes Verified: All IPs resolved |
+| Crypto clipper (15 coins) | yes Verified: Regex patterns |
+| Keylogger (WH_KEYBOARD_LL) | yes Verified: i4uV class |
+| WiFi credential stealer | yes Verified: netsh commands |
+| Browser credential stealer | yes Verified: DPAPI + SQLite |
+| Thunderbird stealer | yes Verified: Registry enumeration |
+| Custom ZIP engine | yes Verified: Full implementation |
+| UAC bypass | yes Verified: MSI hijack |
+| VM detection | yes Verified: 12 indicators |
+| Self-destruct | yes Verified: Ping-delay deletion |
+| 4 tunnel methods | yes Verified: Tor, Serveo, ngrok, Tor Browser |
+| Network scanner | yes Verified: 70 ports |
+| C2 command server | yes Verified: 20+ commands |
+| Reflective PE loading | yes Verified: In xEdACX |
+| Process memory scanner | yes Verified: ReadProcessMemory + regex |
 
 ---
 
@@ -1021,4 +1021,4 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 
 ---
 
-**This is the most complete WhiteSnakeStealer reverse engineering analysis available!** 🏆🔴🎯
+**This is the most complete WhiteSnakeStealer reverse engineering analysis available!**

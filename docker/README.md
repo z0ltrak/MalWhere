@@ -1,9 +1,9 @@
 
 ---
 
-# malwhere — Docker Environment
+# malwhere: Docker Environment
 
-## 📋 Table of Contents
+## Table of Contents
 1. [Host Requirements](#host-requirements)
 2. [Host Setup: libvirt/KVM](#host-setup-libvirtkvm)
 3. [Building the CAPE Image (Required First Step)](#building-the-cape-image-required-first-step)
@@ -43,7 +43,7 @@ sudo apt-get install -y make
 ## Host Setup: libvirt/KVM
 
 `cape` and `inetsim` run with `network_mode: host` and talk directly to the
-HOST's libvirt/KVM — docker-compose cannot set this part up, because it's
+HOST's libvirt/KVM: docker-compose cannot set this part up, because it's
 outside any container. Run this once, before building or starting anything:
 
 ```bash
@@ -51,8 +51,8 @@ sudo ./docker/scripts/host-prereqs.sh
 ```
 
 It installs qemu-kvm/libvirt if missing, verifies `/dev/kvm` actually works
-(not just exists), makes sure libvirt's default network is up, and — the
-part that matters for reproducibility — **discovers your machine's actual
+(not just exists), makes sure libvirt's default network is up, and, the
+part that matters for reproducibility: **discovers your machine's actual
 bridge interface and gateway IP** (this varies per machine, it's not
 guessable in advance) and writes `LIBVIRT_GATEWAY`/`LIBVIRT_BRIDGE` into
 `docker/.env`. CAPE's own conf files and inetsim's entrypoint both read
@@ -60,14 +60,14 @@ these via `%(ENV:LIBVIRT_GATEWAY)s`-style interpolation, so nothing needs
 hand-editing afterwards. Safe to re-run any time.
 
 If it added you to the `libvirt`/`kvm` groups, **log out and back in**
-before continuing — group membership doesn't apply to your current shell
+before continuing: group membership doesn't apply to your current shell
 session otherwise (`virsh` will fail with "Permission denied" until you do).
 
 ---
 
 ## Building the CAPE Image (Required First Step)
 
-> ⚠️ **IMPORTANT:** The `cape:kvm` image is **not available on Docker Hub** and must be built locally before running the sandbox profile. This is a **one-time step** that takes 15-30 minutes.
+> **IMPORTANT:** The `cape:kvm` image is **not available on Docker Hub** and must be built locally before running the sandbox profile. This is a **one-time step** that takes 15-30 minutes.
 
 ### Why KVM?
 
@@ -95,7 +95,7 @@ docker images | grep cape
 # Expected: cape    kvm    <id>    <size ~5-6GB>
 ```
 
-> 📚 **Attribution:** This CAPE Docker setup is based on the excellent work by [celyrin](https://github.com/celyrin) in the [cape-docker](https://github.com/celyrin/cape-docker) repository. We use the `kvm` branch specifically for KVM compatibility with our architecture.
+> **Attribution:** This CAPE Docker setup is based on the excellent work by [celyrin](https://github.com/celyrin) in the [cape-docker](https://github.com/celyrin/cape-docker) repository. We use the `kvm` branch specifically for KVM compatibility with our architecture.
 
 ### Troubleshooting the Build
 
@@ -152,23 +152,23 @@ curl -s http://localhost:8000/apiv2/tasks/list/ | python3 -m json.tool
 
 ## Creating the Guest VM
 
-> ⚠️ **This step cannot be automated by docker-compose or any script in this
-> repo** — it's an interactive Windows install done once per machine. Skip
+> **This step cannot be automated by docker-compose or any script in this
+> repo**: it's an interactive Windows install done once per machine. Skip
 > it and CAPE starts up only to crash-loop with `CuckooStartupError: ...
-> Domain not found: no domain with matching name 'win10x64'` — `kvm.conf`
+> Domain not found: no domain with matching name 'win10x64'`, `kvm.conf`
 > names the machine `win10x64`, but naming it in config doesn't create it.
 
 **Windows ISO**: Microsoft pulled the Windows 10 Enterprise evaluation from its
-default Evaluation Center flow (Windows 10 hit end of support Oct 2025) — grab
+default Evaluation Center flow (Windows 10 hit end of support Oct 2025), grab
 the plain consumer ISO instead, from **microsoft.com/software-download/windows10iso**.
 No sign-in, no product key needed; it installs and runs fully functional
 unactivated (just a desktop watermark), which is irrelevant for a sandbox VM.
-Never vendor the ISO in this repo — same reasoning as `cape:kvm` not being
+Never vendor the ISO in this repo: same reasoning as `cape:kvm` not being
 published to a registry: it's a multi-GB proprietary binary you're not
 licensed to redistribute, so each machine fetches its own.
 
 1. Create a libvirt storage pool if this host doesn't have one yet (`virsh
-   pool-list --all` — if empty):
+   pool-list --all`: if empty):
    ```bash
    virsh pool-define-as default dir --target /var/lib/libvirt/images
    virsh pool-build default && virsh pool-start default && virsh pool-autostart default
@@ -181,10 +181,10 @@ licensed to redistribute, so each machine fetches its own.
    ```
 3. On the **host** (not inside a container), create a Windows 10 x64 VM under
    libvirt named exactly `win10x64` (matches `docker/cape/work/conf/kvm.conf`'s
-   `[win10x64]` section — rename both together if you change it). Pick a disk
-   size that actually fits in your free space (`df -h /var/lib/libvirt` first)
-   — 50GB is comfortable for Windows 10 + agent + tools. **Use `model=e1000`
-   for the network device, not the virtio default** — Windows 10 has no
+   `[win10x64]` section: rename both together if you change it). Pick a disk
+   size that actually fits in your free space (`df -h /var/lib/libvirt` first),
+   50GB is comfortable for Windows 10 + agent + tools. **Use `model=e1000`
+   for the network device, not the virtio default**, Windows 10 has no
    built-in virtio-net driver, so a virtio NIC shows up as unrecognized and
    "Change adapter settings" is empty; e1000 has an in-box driver and, as a
    side benefit, doesn't announce itself as a VM to samples doing basic
@@ -197,15 +197,15 @@ licensed to redistribute, so each machine fetches its own.
    ```
 4. Connect to the install with `virt-viewer --connect qemu:///system win10x64`
    and click through Setup normally. It reboots partway through (copies
-   files, then continues from disk instead of the ISO) — the domain may show
+   files, then continues from disk instead of the ISO), the domain may show
    `shut off` rather than auto-restarting depending on whether Windows issued
    a reboot or a full poweroff; `virsh start win10x64` brings it back either
    way, and boot order is `hd`-first by default so it resumes instead of
    re-running Setup.
 5. Once at the desktop: set the static IP to match `GUEST_VM_IP` in
-   `docker/.env` (`192.168.122.100` by default, gateway/DNS `192.168.122.1` —
+   `docker/.env` (`192.168.122.100` by default, gateway/DNS `192.168.122.1`,
    that's inetsim, matching `routing.conf`'s `[inetsim] server`).
-6. Enable auto-login — `netplwiz`'s checkbox doesn't render on some Windows 10
+6. Enable auto-login: `netplwiz`'s checkbox doesn't render on some Windows 10
    builds; the reliable fallback is the registry directly (elevated cmd):
    ```cmd
    reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 1 /f
@@ -214,16 +214,16 @@ licensed to redistribute, so each machine fetches its own.
    ```
 7. Disable Windows Update, Defender (real-time/cloud-delivered protection,
    automatic sample submission, tamper protection), and the firewall
-   (`netsh advfirewall set allprofiles state off`) — a live Defender will
+   (`netsh advfirewall set allprofiles state off`), a live Defender will
    flag/quarantine samples before CAPE's agent gets a look at them.
-8. **Fully disable UAC**, not just the "Never notify" slider — that slider
+8. **Fully disable UAC**, not just the "Never notify" slider, that slider
    still leaves processes with a filtered (non-admin) token. Confirmed via
    the agent's own `is_user_admin` field in its status response:
    ```cmd
    reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d 0 /f
    ```
    Needs a reboot to take effect. This matters concretely for this sample
-   set — RoningLoader disables Driver Signature Enforcement and installs a
+   set: RoningLoader disables Driver Signature Enforcement and installs a
    kernel driver, which needs a real admin token, not a filtered one.
 9. Install Python 3 (check "Add to PATH"), save
    [`agent.py`](https://raw.githubusercontent.com/kevoreilly/CAPEv2/master/agent/agent.py)
@@ -234,8 +234,8 @@ licensed to redistribute, so each machine fetches its own.
    curl -s http://192.168.122.100:8000/ | python3 -m json.tool
    # expect: {"message": "CAPE Agent!", ..., "is_user_admin": true}
    ```
-10. With the VM in exactly this state — logged in, agent listening, nothing
-    left to configure — take a **live** snapshot (VM running, not shut down).
+10. With the VM in exactly this state: logged in, agent listening, nothing
+    left to configure: take a **live** snapshot (VM running, not shut down).
     CAPE reverts straight into this ready state instead of cold-booting per
     task:
     ```bash
@@ -253,15 +253,15 @@ snapshot check.
 If `virsh`/CAPE intermittently fail with `Permission denied` or `Connection
 refused` on `/var/run/libvirt/libvirt-sock`, and the socket's group keeps
 flip-flopping between `libvirt` and something unrelated (e.g. `nm-openvpn`)
-independent of anything you're doing — that's what happens when something
+independent of anything you're doing: that's what happens when something
 else on the host recreates `libvirtd.socket` mid-session (its unit uses
 `SocketMode=0660`/`SocketGroup=libvirt`, freshly resolved from `/etc/group`
 each time it's (re)created). The `cape` image's own fixes (masking its
 internal `libvirtd` so it can't compete for the same bind-mounted socket, and
 realigning its `libvirt` group GID to match the host's on every service
-start — see `docker/cape/Dockerfile`) handle the container side automatically.
+start: see `docker/cape/Dockerfile`) handle the container side automatically.
 If it's still happening, `sudo systemctl restart libvirtd.socket libvirtd.service`
-on the host resolves it — a "Job failed" message from restarting both units
+on the host resolves it: a "Job failed" message from restarting both units
 together is usually just an ordering race, not a real failure; check
 `systemctl is-active libvirtd.socket libvirtd.service` afterward before
 assuming it didn't work.
@@ -276,7 +276,7 @@ assuming it didn't work.
 | `sandbox` | cape, redis, misp, mysql | ~9.5 GB | Sample execution, dynamic analysis |
 | `core` + `sandbox` | All | ~14 GB | Full end-to-end analysis |
 
-> ⚠️ Always include the same `--profile` flags when starting and stopping. Omitting them will leave containers running.
+> Always include the same `--profile` flags when starting and stopping. Omitting them will leave containers running.
 
 ---
 
@@ -284,12 +284,12 @@ assuming it didn't work.
 
 ```bash
 # 1. Copy environment variables, then edit docker/.env with your MISP API
-#    key and passwords (leave LIBVIRT_GATEWAY/LIBVIRT_BRIDGE as-is — the
+#    key and passwords (leave LIBVIRT_GATEWAY/LIBVIRT_BRIDGE as-is, the
 #    next step overwrites just those two lines in place with real values,
 #    without touching what you just set here)
 cp docker/.env.example docker/.env
 
-# 2. Host libvirt/KVM setup — see "Host Setup: libvirt/KVM" above (one-time,
+# 2. Host libvirt/KVM setup, see "Host Setup: libvirt/KVM" above (one-time,
 #    needs sudo; safe to re-run). Writes the real LIBVIRT_GATEWAY/
 #    LIBVIRT_BRIDGE into docker/.env, discovered from this machine.
 sudo ./docker/scripts/host-prereqs.sh
@@ -297,7 +297,7 @@ sudo ./docker/scripts/host-prereqs.sh
 # 3. Start core services (daily development)
 docker compose -f docker/docker-compose.yml --profile core up -d
 
-# 4. Start full environment (when dynamic analysis is needed — requires the
+# 4. Start full environment (when dynamic analysis is needed, requires the
 #    cape:kvm image built and the win10x64 guest VM created, see above)
 docker compose -f docker/docker-compose.yml --profile core --profile sandbox up -d
 
@@ -313,20 +313,20 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 |---|---|---|
 | CAPE Web UI | http://localhost:8000 | No auth (local dev mode) |
 | MISP | https://localhost | admin@admin.test / see `.env` |
-| ATT&CK Navigator | http://localhost:4200 | — |
-| Pipeline | internal only | — |
-| Static analysis | internal only | — |
+| ATT&CK Navigator | http://localhost:4200 | N/A |
+| Pipeline | internal only | N/A |
+| Static analysis | internal only | N/A |
 
 > **MISP note:** MISP must be accessed at `https://localhost` (port 443 mapped directly).
 > Accessing via `https://localhost:8443` will fail due to internal redirect behaviour.
 > Accept the self-signed certificate warning in your browser on first access.
 
 > **MISP login gotcha:** the real bootstrap admin account is `admin@admin.test`,
-> not the `MISP_EMAIL` value set in docker-compose.yml (`admin@malwhere.local`)
-> — MISP's own image defaults win over that env var on first init. Worse,
+> not the `MISP_EMAIL` value set in docker-compose.yml (`admin@malwhere.local`),
+> MISP's own image defaults win over that env var on first init. Worse,
 > `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to that account
 > either, so "log in with the password from `.env`" may just fail. If it does,
-> reset both credentials directly against the running container — this is a
+> reset both credentials directly against the running container, this is a
 > live fix against the `mysql_data` volume, not something a `docker-compose.yml`
 > change can set once and forget:
 > ```bash
@@ -334,7 +334,7 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 > docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey admin@admin.test 'YOUR_API_KEY'
 > ```
 > Same category of issue as the MISP MySQL password drift (see Known Issues
-> below) — if `mysql_data` is ever rebuilt from scratch, both resets need
+> below): if `mysql_data` is ever rebuilt from scratch, both resets need
 > to be redone.
 
 > **CAPE note:** PostgreSQL `cape` role must exist before cape-web starts.
@@ -380,18 +380,18 @@ docker exec malwhere-static python3 /scripts/analyze.py \
 
 ## Resubmission Loop
 
-Multi-stage malware drops payloads with real capabilities of their own —
+Multi-stage malware drops payloads with real capabilities of their own,
 this sample set's own RoningLoader drops a rootkit driver (`vally3dka.sys`),
 an AV-killer DLL (`goldendays.dll`), and a Gh0st RAT client. Without this
 loop, dropped files only ever show up as hashes in `normalized_iocs.json`;
 none of their own imports, strings, or ATT&CK techniques get extracted. The
 loop is two independent halves, split across the two `core` containers by
-what each one has installed — `static` has pefile/YARA/FLOSS/Ghidra,
+what each one has installed: `static` has pefile/YARA/FLOSS/Ghidra,
 `pipeline`'s normalize+map stages are pure-stdlib:
 
 ```
 dynamic/scripts/parse_cape.py --resubmit-dir
-        │  (runs on the host — pure stdlib, and CAPE storage +
+        │  (runs on the host: pure stdlib, and CAPE storage +
         │   docker/resubmit_queue are both host-accessible bind mounts)
         ▼
 docker/resubmit_queue/{manifest,artifacts}/
@@ -409,7 +409,7 @@ results/{family}/resubmitted/{sha256}/{iocs,attck}/
 ```
 
 Each resubmitted file gets its **own** `attck_mapping.json` rather than
-being merged into the parent sample's — a dropped payload's own
+being merged into the parent sample's: a dropped payload's own
 capabilities aren't evidence the *parent* binary performs those techniques,
 and blending the two would misattribute confidence in
 `pipeline/mapper/src/reconcile.py`'s cross-source model.
@@ -422,7 +422,7 @@ python3 dynamic/scripts/parse_cape.py --task-id 2 --output dynamic/reports/ronin
 # -> docker/resubmit_queue/manifest/{sha256}.json + artifacts/{sha256}
 #    Executables/scripts are prioritized; RESUBMIT_MAX_ARTIFACTS (default 25,
 #    also settable via --resubmit-max-artifacts) caps how many get queued
-#    per run — safe to re-run later, already-queued files are skipped.
+#    per run: safe to re-run later, already-queued files are skipped.
 
 # 2. Static half: analyze each queued artifact, tag it with lineage
 docker exec malwhere-static python3 /scripts/process_resubmissions.py --verbose
@@ -435,13 +435,13 @@ docker exec malwhere-pipeline python3 /app/process_resubmissions.py --verbose
 ```
 
 Both halves respect `RESUBMIT_TIME_BUDGET_MIN` (default 45 minutes,
-see the `static`/`pipeline` service `environment:` blocks) — they stop
+see the `static`/`pipeline` service `environment:` blocks), they stop
 *starting* new files once the budget is spent rather than cutting one off
 mid-analysis, so a run is safe to just re-invoke later to pick up where
 it left off. `docker/resubmit_queue/` is gitignored (raw dropped-file
 bytes, same reasoning as `docker/cape/work/storage/`).
 
-Only *static* analysis runs on resubmitted files — they aren't themselves
+Only *static* analysis runs on resubmitted files, they aren't themselves
 detonated in CAPE, so `RESUBMIT_MAX_DEPTH` is reserved for a future
 chained dynamic-resubmission loop and isn't consumed by any script yet.
 
@@ -462,7 +462,7 @@ Expected output:
 all imports OK
 floss v3.1.1-0-g3cd3ee6
 openjdk version "17.x.x" ...
-Java runtime not found (TTY required — normal in headless mode)
+Java runtime not found (TTY required: normal in headless mode)
 ```
 
 ---
@@ -476,7 +476,7 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox sto
 # Stop core only
 docker compose -f docker/docker-compose.yml --profile core stop
 
-# ⚠️ DANGER — deletes all volumes and data
+# DANGER: deletes all volumes and data
 docker compose -f docker/docker-compose.yml --profile core --profile sandbox down -v
 ```
 
@@ -508,7 +508,7 @@ docker compose -f docker/docker-compose.yml --profile core up -d pipeline
 MISP must run on port 443 directly. The `MISP_BASEURL` env var is ignored if the internal port differs from the external port. Keep the mapping as `443:443`.
 
 ### MISP's MySQL password drifts from `.env`
-The `misp` MySQL user's actual password is set once, during `mysql_data`'s very first init, to whatever `MYSQL_PASSWORD` was *at that time* — it does not get updated on later container recreates just because `.env` changed. If MISP's logs show `ERROR 1045 (28000): Access denied for user 'misp'@'...'` in a loop (`docker logs malwhere-misp`), that's this — the password baked into the volume no longer matches `.env`. Fix directly against MySQL:
+The `misp` MySQL user's actual password is set once, during `mysql_data`'s very first init, to whatever `MYSQL_PASSWORD` was *at that time*, it does not get updated on later container recreates just because `.env` changed. If MISP's logs show `ERROR 1045 (28000): Access denied for user 'misp'@'...'` in a loop (`docker logs malwhere-misp`), that's this, the password baked into the volume no longer matches `.env`. Fix directly against MySQL:
 ```bash
 docker exec malwhere-mysql mysql -uroot -p"$MYSQL_ROOT_PASSWORD" \
   -e "ALTER USER 'misp'@'%' IDENTIFIED BY '$MYSQL_PASSWORD'; FLUSH PRIVILEGES;"
@@ -516,10 +516,10 @@ docker restart malwhere-misp
 ```
 
 ### MISP web UI login doesn't match `.env`
-Related to the above but separate: the real bootstrap admin account is `admin@admin.test`, not the `MISP_EMAIL` value in docker-compose.yml — and `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to it either. See the MISP login gotcha under Service Access above for the reset commands.
+Related to the above but separate: the real bootstrap admin account is `admin@admin.test`, not the `MISP_EMAIL` value in docker-compose.yml, and `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to it either. See the MISP login gotcha under Service Access above for the reset commands.
 
 ### `redis` needs to be running before `misp` starts
-MISP uses `redis` for session storage — if it's down, MISP's web/API layer fails on *every* request (including pure API calls) with a misleading "Authentication failed" error that has nothing to do with the API key. `docker-compose.yml`'s `misp` service now has `depends_on: redis` with a healthcheck, so a fresh `docker compose up` won't hit this — but if you ever stop `redis` manually while `misp` keeps running, you'll need to restart `misp` too, not just `redis`.
+MISP uses `redis` for session storage: if it's down, MISP's web/API layer fails on *every* request (including pure API calls) with a misleading "Authentication failed" error that has nothing to do with the API key. `docker-compose.yml`'s `misp` service now has `depends_on: redis` with a healthcheck, so a fresh `docker compose up` won't hit this: but if you ever stop `redis` manually while `misp` keeps running, you'll need to restart `misp` too, not just `redis`.
 
 ### CAPE workers crash on first boot
 The `cape-entry` service needs `/work` to exist as a Docker volume. Ensure `cape_work:/work` is defined in both the `volumes:` section and the cape service.

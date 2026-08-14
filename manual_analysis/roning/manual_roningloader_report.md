@@ -1,6 +1,6 @@
-# RoningLoader — Comprehensive Static Analysis Report
+# RoningLoader: Comprehensive Static Analysis Report
 
-**TFM 2025-2026 — Universidad Complutense de Madrid**
+**TFM 2025-2026: Universidad Complutense de Madrid**
 
 **SHA-256 (sample.exe):** `b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6`
 
@@ -51,11 +51,11 @@ sample.exe (NSIS installer)
            │
            ▼
     payload_at_4841.bin (Rust RAT dropper)
-      ├── Drop diamondage.dll      (258 KB) — Userland rootkit DLL
-      ├── Drop diamondage.exe      (293 KB) — C2 client + keylogger
-      ├── Drop goldendays.dll      (54 KB) — AV killer module
-      ├── Drop vmservice.sys       (51 KB) — Kernel rootkit driver
-      ├── Drop minifilter_driver.sys (50 KB) — File-hiding MiniFilter
+      ├── Drop diamondage.dll      (258 KB), Userland rootkit DLL
+      ├── Drop diamondage.exe      (293 KB), C2 client + keylogger
+      ├── Drop goldendays.dll      (54 KB), AV killer module
+      ├── Drop vmservice.sys       (51 KB), Kernel rootkit driver
+      ├── Drop minifilter_driver.sys (50 KB), File-hiding MiniFilter
       ├── Install persistence service
       ├── Disable Driver Signature Enforcement (DSE)
       └── Launch C2 client
@@ -65,11 +65,11 @@ sample.exe (NSIS installer)
 
 ## 3. Stage 1: Loader Analysis
 
-### `66VOAk0O.exe` — Signed DirectX Installer
+### `66VOAk0O.exe`: Signed DirectX Installer
 
 | Function | Purpose |
 |----------|---------|
-| `d3d11_installer_main` | Main orchestrator — loads DLL, calls decryption |
+| `d3d11_installer_main` | Main orchestrator: loads DLL, calls decryption |
 | `parse_command_line_args` | Parse `/quiet`, `/passive`, `/y`, `/wu`, `/langid` |
 | `load_resource_string` | Load UI strings from resource section |
 | `show_dialog_box` | Display fake "DirectX Update" dialog |
@@ -77,7 +77,7 @@ sample.exe (NSIS installer)
 | `format_string_va` | String formatting |
 | `exit_wrapper` | CRT exit handler |
 
-### `D3D11InstallHelper.dll` — Malicious Rust DLL
+### `D3D11InstallHelper.dll`: Malicious Rust DLL
 
 **Language:** Rust
 
@@ -112,7 +112,7 @@ sample.exe (NSIS installer)
 
 ## 4. Stage 2: RAT Dropper Analysis
 
-### `payload_at_4841.bin` — Rust RAT Dropper
+### `payload_at_4841.bin`: Rust RAT Dropper
 
 **Language:** Rust (confirmed by RNG seed pattern `0x2b992ddfa232`)
 
@@ -173,7 +173,7 @@ sample.exe (NSIS installer)
 
 ---
 
-## 5. Stage 3A: Userland Rootkit — `diamondage.dll`
+## 5. Stage 3A: Userland Rootkit: `diamondage.dll`
 
 **Language:** Rust
 
@@ -219,7 +219,7 @@ diamondage.dll (Userland Rootkit + Watchdog)
 
 ---
 
-## 6. Stage 3B: C2 Client + Keylogger — `diamondage.exe`
+## 6. Stage 3B: C2 Client + Keylogger: `diamondage.exe`
 
 **Language:** C/C++ (MSVC 2010)
 
@@ -231,7 +231,7 @@ diamondage.dll (Userland Rootkit + Watchdog)
 main_logic()
 │
 ├── check_mutex("Global\DHGGlobalMutexDriver")
-├── read_registry_config("Enable") — kill switch
+├── read_registry_config("Enable"): kill switch
 ├── XOR decrypt DAT_1400257a0 (0x61) → C2 address
 ├── background_thread() → DirectInput keylogger + clipboard stealer
 ├── start_clipboard_monitor() → Hidden window clipboard listener
@@ -287,22 +287,22 @@ main_logic()
 | Command | Function | Capability |
 |---------|----------|------------|
 | **0x00** | `FUN_140015ed8` | Set counter/flag |
-| **0x01** | — | **DISABLE** (write `Enable=False`) |
-| **0x02** | — | **EXIT** |
-| **0x03** | — | Write `Remark` to registry |
-| **0x04** | — | Write `ZU` to registry |
+| **0x01** | N/A | **DISABLE** (write `Enable=False`) |
+| **0x02** | N/A | **EXIT** |
+| **0x03** | N/A | Write `Remark` to registry |
+| **0x04** | N/A | Write `ZU` to registry |
 | **0x05** | `FUN_140015e58` | Setup/config |
-| **0x06** | — | Update config string (39 bytes) |
+| **0x06** | N/A | Update config string (39 bytes) |
 | **0x07** | `FUN_140015ff8` | **Download & Execute** on desktop |
 | **0x09** | `ShellExecuteA` | Execute file (VISIBLE) |
 | **0x0A** | `ShellExecuteA` | Execute file (HIDDEN) |
-| **0x23** | `dispatch_file_transfer` | **Reflective PE Loader** — load DLL/EXE from memory |
-| **0x25** | `dispatch_file_transfer` | **Reflective PE Loader** — load DLL/EXE from memory |
+| **0x23** | `dispatch_file_transfer` | **Reflective PE Loader**, load DLL/EXE from memory |
+| **0x25** | `dispatch_file_transfer` | **Reflective PE Loader**, load DLL/EXE from memory |
 | **0x70** | `handle_status_query` | **Steal clipboard** → send to C2 |
-| **0x71** | — | **SET clipboard** (crypto wallet hijack!) |
-| **0x7D** | — | **`cmd /c <command>`** (remote shell) |
+| **0x71** | N/A | **SET clipboard** (crypto wallet hijack!) |
+| **0x7D** | N/A | **`cmd /c <command>`** (remote shell) |
 | **0x7E** | `FUN_1400165c8` | Unknown handler |
-| **0x80** | — | **Update CopyC** config (Base64+XOR) |
+| **0x80** | N/A | **Update CopyC** config (Base64+XOR) |
 | **0xEC** | `dispatch_file_transfer` | **Reflective PE Loader** |
 | **0xF1** | `FUN_1400169f8` | Unknown handler |
 | **0xF3** | `FUN_140015b18` | Unknown handler |
@@ -314,7 +314,7 @@ main_logic()
 |----------|---------|
 | `dispatch_file_transfer` | Launch file transfer worker thread |
 | `file_transfer_worker` | Deserialize command, call `run()` method |
-| `load_pe_from_memory` | **Reflective PE loader** — validate MZ/PE, allocate executable memory, fix relocations, resolve imports, call DllMain |
+| `load_pe_from_memory` | **Reflective PE loader**, validate MZ/PE, allocate executable memory, fix relocations, resolve imports, call DllMain |
 | `resolve_imports` | Resolve DLL imports |
 | `fix_relocations` | Fix base relocations |
 | `call_entry_point` | Call DllMain |
@@ -330,7 +330,7 @@ main_logic()
 | `main_keylogger_loop` | Capture keystrokes + clipboard, send to C2 |
 | `c2_keystrokes_sender` | Append to `%APPDATA%\microsoft.dotnet.common.log` |
 
-**Clipboard Hijack (Command 0x71):** C2 can **push arbitrary text** into victim's clipboard — classic crypto wallet address replacement attack.
+**Clipboard Hijack (Command 0x71):** C2 can **push arbitrary text** into victim's clipboard, classic crypto wallet address replacement attack.
 
 **MetaMask Targeting:** Checks for Chrome extension `nkbihfbeogaaeaoehlefnkodbefgpgknn`.
 
@@ -340,7 +340,7 @@ main_logic()
 
 ---
 
-## 7. Stage 4A: Kernel Rootkit — `vmservice.sys`
+## 7. Stage 4A: Kernel Rootkit: `vmservice.sys`
 
 **Language:** C/C++
 
@@ -371,7 +371,7 @@ main_logic()
 
 ---
 
-## 8. Stage 4B: File-Hiding MiniFilter — `minifilter_driver.sys`
+## 8. Stage 4B: File-Hiding MiniFilter: `minifilter_driver.sys`
 
 **Language:** C/C++
 
@@ -404,7 +404,7 @@ main_logic()
 
 ---
 
-## 9. Stage 4C: AV Killer — `goldendays.dll`
+## 9. Stage 4C: AV Killer: `goldendays.dll`
 
 **Language:** C/C++ (MSVC 2019)
 
@@ -416,10 +416,10 @@ main_logic()
 
 | Export | Purpose |
 |--------|---------|
-| `Wow64LogInitialize` | **Decoy** — returns 0 |
-| `Wow64LogMessageArgList` | **Decoy** — returns 0 |
-| `Wow64LogSystemService` | **Decoy** — returns 0 |
-| `Wow64LogTerminate` | **Decoy** — returns 0 |
+| `Wow64LogInitialize` | **Decoy**: returns 0 |
+| `Wow64LogMessageArgList` | **Decoy**: returns 0 |
+| `Wow64LogSystemService` | **Decoy**: returns 0 |
+| `Wow64LogTerminate` | **Decoy**: returns 0 |
 
 ### AV Kill List (13 Processes)
 
@@ -445,13 +445,13 @@ main_logic()
 
 ## 10. Stage 5: Deployment Scripts
 
-### `config_1.bat` — Disable UAC
+### `config_1.bat`: Disable UAC
 
 ```batch
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d 0 /f
 ```
 
-### `config_2.bat` — Block 360 Security via Firewall
+### `config_2.bat`: Block 360 Security via Firewall
 
 - Reads `C:\ProgramData\lnk\123.txt` (contains path to `360tray.exe`)
 - Blocks `360tray.exe` inbound/outbound via `netsh advfirewall`
@@ -580,9 +580,9 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v Enab
 |-----------|------------|
 | **Target** | Chinese-speaking users (Qihoo 360, Tencent, Kingsoft AV targeting) |
 | **Language** | Rust (loader + RAT dropper + rootkit DLL), C/C++ (C2 client + drivers) |
-| **Origin** | Chinese — GB2312/GBK encoded batch scripts |
+| **Origin** | Chinese: GB2312/GBK encoded batch scripts |
 | **Certificate** | Yongji Zaihui E-commerce Co., Ltd., Shanxi, China |
-| **Sophistication** | VERY HIGH — kernel drivers, MiniFilter, DSE bypass, IOCP injection |
+| **Sophistication** | VERY HIGH: kernel drivers, MiniFilter, DSE bypass, IOCP injection |
 | **C2 Infrastructure** | Singapore/Hong Kong hosting |
 
 ---
@@ -601,16 +601,16 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v Enab
 
 ## 16. Summary of Key Findings
 
-1. **Multi-stage architecture** — NSIS installer → DLL side-loading → RC4 decryption → reflective loading → kernel drivers
-2. **Dual-language** — Rust for loader/stealth, C/C++ for C2 client and kernel drivers
-3. **Chinese targeting** — Specifically kills Qihoo 360, Tencent PC Manager, and Kingsoft AV
-4. **Kernel-level persistence** — Repurposed Zemana AntiMalware drivers for rootkit + file hiding
-5. **Crypto wallet theft** — MetaMask extension checking + clipboard hijacking for address replacement
-6. **Reflective PE loading** — C2 can deploy ANY payload without touching disk
-7. **Sophisticated evasion** — DSE bypass, VSS injection, IO Completion Port injection, API hooking
-8. **Kill switch** — 2026-01-25 via Baidu HTTP Date header
-9. **Registry-based C2** — Commands delivered via `HKCU\SOFTWARE\<PC>\CopyC` as Base64+XOR blobs
-10. **Comprehensive surveillance** — Keylogger, clipboard stealer, system recon, idle detection
+1. **Multi-stage architecture**: NSIS installer → DLL side-loading → RC4 decryption → reflective loading → kernel drivers
+2. **Dual-language**: Rust for loader/stealth, C/C++ for C2 client and kernel drivers
+3. **Chinese targeting**: Specifically kills Qihoo 360, Tencent PC Manager, and Kingsoft AV
+4. **Kernel-level persistence**: Repurposed Zemana AntiMalware drivers for rootkit + file hiding
+5. **Crypto wallet theft**: MetaMask extension checking + clipboard hijacking for address replacement
+6. **Reflective PE loading**: C2 can deploy ANY payload without touching disk
+7. **Sophisticated evasion**: DSE bypass, VSS injection, IO Completion Port injection, API hooking
+8. **Kill switch**: 2026-01-25 via Baidu HTTP Date header
+9. **Registry-based C2**: Commands delivered via `HKCU\SOFTWARE\<PC>\CopyC` as Base64+XOR blobs
+10. **Comprehensive surveillance**: Keylogger, clipboard stealer, system recon, idle detection
 
 ---
 
@@ -761,19 +761,19 @@ with open("goldendays_clean.dll", "wb") as f:
 
 | Finding | Status |
 |---------|--------|
-| NSIS installer extraction | ✅ Verified |
-| DLL side-loading | ✅ Verified |
-| RC4 decryption key | ✅ Verified — `dkwk239c0v023kx` |
-| Payload decryption | ✅ Verified — PE32+ with 4841-byte header |
-| C2 address extraction | ✅ Verified — `202.95.11.173:5552` |
-| C2 command protocol | ✅ Verified — 20+ commands mapped |
-| Reflective PE loader | ✅ Verified — MZ/PE validation, reloc fix, import resolve |
-| DirectInput keylogger | ✅ Verified |
-| Clipboard hijacking | ✅ Verified — Command 0x71 |
-| AV process kill list | ✅ Verified — 13 processes (360, Tencent, Kingsoft) |
-| Kernel driver injection | ✅ Verified — explorer/taskmgr/perfmon |
-| MiniFilter IOCTLs | ✅ Verified — 5 commands mapped |
-| Zlib decompression | ✅ Verified — goldendays.dll + config scripts |
-| Batch scripts | ✅ Verified — UAC disable + 360 firewall block |
-| Certificate attribution | ✅ Verified — Yongji Zaihui E-commerce, Shanxi, China |
-| Kill switch date | ✅ Verified — 2026-01-25 |
+| NSIS installer extraction | yes Verified |
+| DLL side-loading | yes Verified |
+| RC4 decryption key | yes Verified: `dkwk239c0v023kx` |
+| Payload decryption | yes Verified: PE32+ with 4841-byte header |
+| C2 address extraction | yes Verified: `202.95.11.173:5552` |
+| C2 command protocol | yes Verified: 20+ commands mapped |
+| Reflective PE loader | yes Verified: MZ/PE validation, reloc fix, import resolve |
+| DirectInput keylogger | yes Verified |
+| Clipboard hijacking | yes Verified: Command 0x71 |
+| AV process kill list | yes Verified: 13 processes (360, Tencent, Kingsoft) |
+| Kernel driver injection | yes Verified: explorer/taskmgr/perfmon |
+| MiniFilter IOCTLs | yes Verified: 5 commands mapped |
+| Zlib decompression | yes Verified: goldendays.dll + config scripts |
+| Batch scripts | yes Verified: UAC disable + 360 firewall block |
+| Certificate attribution | yes Verified: Yongji Zaihui E-commerce, Shanxi, China |
+| Kill switch date | yes Verified: 2026-01-25 |
