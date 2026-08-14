@@ -1,0 +1,94 @@
+\section{Detection Rule Coverage Extension}
+\label{app:rules}
+
+Full technique-by-technique listing for the six coverage batches
+summarized in \S\ref{sec:coverage}. Every row was verified to fire on
+none of the three validated samples after being added, confirming the
+extension does not alter Table~\ref{tab:results}.
+
+\begingroup
+\scriptsize
+\renewcommand{\code}[1]{\texttt{#1}}
+\begin{longtable}{@{}p{2.0cm}p{5.2cm}p{6.2cm}@{}}
+\toprule
+\textbf{Technique} & \textbf{Name} & \textbf{Detection mechanism} \\
+\midrule
+\endhead
+\multicolumn{3}{r}{\textit{continued on next page}} \\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\multicolumn{3}{@{}l}{\textbf{Batch 1: Persistence \& Defense Evasion}} \\
+T1546.010 & AppInit DLLs & \code{AppInit\_DLLs} registry string \\
+T1547.004 & Winlogon Helper DLL & \code{Winlogon\textbackslash Shell}/\code{Userinit} string \\
+T1547.005 & Security Support Provider & \code{Security Packages} string \\
+T1547.002 & Authentication Package & \code{Authentication Packages} string \\
+T1546.012 & Image File Execution Options Injection & \code{Image File Execution Options} string \\
+T1546.003 & WMI Event Subscription & \code{\_\_EventFilter}/\code{\_\_EventConsumer}/\newline\code{\_\_FilterToConsumerBinding} strings \\
+T1197 & BITS Jobs & \code{bitsadmin} string \\
+T1070.001 & Clear Windows Event Logs & \code{wevtutil cl} string \\
+T1218.010 & Regsvr32 (Squiblydoo) & \code{scrobj.dll} string \\
+T1218.005 & Mshta & \code{mshta.exe} + \code{.hta} (both required) \\
+T1055.012 & Process Hollowing & combo (\S\ref{sec:static-rules}, Table~\ref{tab:combos}) \\
+
+\multicolumn{3}{@{}l}{\textbf{Batch 2: Credential Access \& Collection}} \\
+T1003.001 & LSASS Memory & \code{MiniDumpWriteDump} import + \code{lsass.exe} string \\
+T1003.002 & Security Account Manager & \code{hklm\textbackslash sam} string \\
+T1003.004 & LSA Secrets & \code{SECURITY\textbackslash Policy\textbackslash Secrets} string \\
+T1552.002 & Credentials in Registry & registry credential-path patterns \\
+T1552.004 & Private Keys & PEM/OpenSSH markers, \code{.ppk} \\
+T1555.004 & Windows Credential Manager & \code{VaultOpenVault} import, \code{VaultCli.dll} string \\
+T1556.002 & Password Filter DLL & \code{Notification Packages} string \\
+T1040 & Network Sniffing & \code{wpcap.dll}/\code{Packet.dll} strings \\
+T1125 & Video Capture & \code{avicap32.dll} string \\
+T1114.001 & Local Email Collection & \code{.ost}/\code{.pst} strings \\
+T1039 & Data from Network Shared Drive & \code{WNetOpenEnumW/A} + \code{WNetEnumResourceW/A} + \code{WNetCloseEnum} \\
+
+\multicolumn{3}{@{}l}{\textbf{Batch 3: Execution \& Command and Control}} \\
+T1053.005 & Scheduled Task & \code{schtasks} string / command pattern \\
+T1059.001 & PowerShell (encoded/hidden) & \code{-EncodedCommand} + \code{-WindowStyle Hidden} (both required) \\
+T1559.002 & Dynamic Data Exchange & \code{DDEAUTO} string \\
+T1127.001 & MSBuild & \code{msbuild.exe} string \\
+T1569.002 & Service Execution & \code{sc start}/\code{net start} strings \\
+T1102.002 & Web Service (Bidirectional) & \code{api.telegram.org}, \code{pastebin.com/raw}, \newline\code{raw.githubusercontent.com}, \code{discord.com/api/webhooks} \\
+T1572 & Protocol Tunneling & \code{Renci.SshNet}, \code{ngrok}, \code{serveo.net} \\
+T1090.002 & External Proxy & \code{:9050} (Tor SOCKS port) string \\
+
+\multicolumn{3}{@{}l}{\textbf{Batch 4: Discovery}} \\
+T1518.001 & Security Software Discovery & \code{MsMpEng.exe} / \code{avp.exe} / \code{SecurityCenter2} strings \\
+T1049 & System Network Connections Discovery & \code{GetTcpTable} / \code{GetExtendedTcpTable} / \code{GetUdpTable} imports \\
+T1087.001 & Local Account Discovery & \code{NetUserEnum} import \\
+T1018 & Remote System Discovery & \code{NetServerEnum} import \\
+T1120 & Peripheral Device Discovery & \code{SetupDiGetClassDevsW/A} import \\
+T1614.001 & System Language Discovery & \code{GetSystemDefaultLangID}/\newline\code{GetUserDefaultUILanguage} imports \\
+T1010 & Application Window Discovery & combo (\S\ref{sec:static-rules}, Table~\ref{tab:combos}) \\
+T1033 & System Owner/User Discovery & \code{GetUserNameW/A} import (moved from T1082) \\
+
+\multicolumn{3}{@{}l}{\textbf{Batch 5: Impact}} \\
+T1529 & System Shutdown/Reboot & \code{ExitWindowsEx} import \\
+T1531 & Account Access Removal & \code{NetUserChangePassword} import \\
+T1561.001 & Disk Content Wipe & \code{\textbackslash\textbackslash.\textbackslash PhysicalDrive} string \\
+T1496 & Resource Hijacking & \code{stratum+tcp://} string \\
+
+\multicolumn{3}{@{}l}{\textbf{Batch 6: Privilege Escalation \& Exfiltration}} \\
+T1134.001 & Token Impersonation/Theft & \code{ImpersonateLoggedOnUser} + \code{DuplicateToken(Ex)} \\
+T1134.002 & Create Process with Token & \code{CreateProcessWithTokenW} import \\
+T1134.003 & Make and Impersonate Token & \code{ImpersonateLoggedOnUser} + \code{LogonUserW/A} \\
+T1548.002 & Bypass User Account Control & \code{ms-settings} \textbackslash\ \code{Shell} \textbackslash\ \code{Open} \textbackslash\ \code{command} string \\
+T1546.008 & Accessibility Features & \code{sethc.exe} string \\
+T1546.009 & AppCert DLLs & \code{AppCertDlls} string \\
+T1547.014 & Active Setup & \code{Active Setup\textbackslash Installed Components} string \\
+T1098 & Account Manipulation & \code{net localgroup administrators} string \\
+T1567.001 & Exfil.\ to Code Repository & \code{api.github.com} string \\
+T1567.002 & Exfil.\ to Cloud Storage & \code{dropboxapi.com} / \code{storage.googleapis.com} strings \\
+T1567.003 & Exfil.\ to Text Storage Sites & \code{pastebin.com} / \code{api} / \code{api\_post.php} string \\
+T1567.004 & Exfil.\ over Webhook & dual-mapped from T1102.002 Discord webhook evidence \\
+T1048.003 & Exfil.\ over Unencrypted Non-C2 Protocol & \code{FtpPutFileW/A} import \\
+
+\caption{55 technique identifiers added across six coverage batches
+(\S\ref{sec:coverage}), sourced from MITRE's own per-technique
+descriptions.}
+\label{tab:rules-full}
+\end{longtable}
+\endgroup

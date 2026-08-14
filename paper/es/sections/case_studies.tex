@@ -1,0 +1,152 @@
+\section{Casos de estudio}
+\label{sec:case-studies}
+
+Las cifras agregadas (\S\ref{sec:evaluation}) muestran \emph{que} la
+tuber\'ia rinde bien; los cuatro casos siguientes muestran \emph{por
+qu\'e}: instancias concretas de la disciplina de validaci\'on
+encontrando y resolviendo un problema real, cada una ilustrando una
+clase de fallo distinta que una evaluaci\'on puramente num\'erica no
+sacar\'ia a la luz por s\'i sola.
+
+\subsection{La cadena multietapa de RoningLoader}
+\label{sec:case-roning}
+
+La cadena de infecci\'on de RoningLoader, establecida mediante
+ingenier\'ia inversa manual, no es un binario sino cuatro: un cargador
+que descifra y suelta un driver rootkit en modo kernel usado para
+ocultar su propio proceso y ficheros, una DLL independiente cuya
+\'unica funci\'on es enumerar y terminar productos de seguridad, y un
+cliente de acceso remoto que establece el canal C2 real. La capacidad
+de cada componente es real y significativa por s\'i misma; ninguno de
+los tres componentes soltados aparece como importaci\'on o cadena en el
+propio binario cargador, ya que se descifran en memoria o se sueltan a
+disco \'unicamente en tiempo de ejecuci\'on.
+
+La Tabla~\ref{tab:results} ya muestra la consecuencia num\'erica:
+puntuar el cargador de forma aislada alcanza una exhaustividad de 0.68
+frente a una verdad de referencia escrita para la cadena completa,
+porque aproximadamente un tercio de las t\'ecnicas que un analista
+humano atribuye correctamente a la familia ``RoningLoader'' solo son
+observables analizando directamente los componentes soltados. El
+bucle de reenv\'io (\S\ref{sec:resubmission}) existe precisamente
+porque esto es una propiedad estructural del malware multietapa, no
+una peculiaridad de una muestra, y cierra 16 de esos 32 puntos de
+exhaustividad al dar a cada componente su propio an\'alisis
+independiente en lugar de intentar inferir su capacidad a partir de la
+evidencia del padre.
+
+\subsection{El error de agregaci\'on del instalador}
+\label{sec:case-installer}
+
+Al principio de la validaci\'on, el informe est\'atico de una muestra
+empaquetada como instalador mostraba evidencia consistente solo con
+\emph{uno} de sus varios componentes incluidos, pese a que la
+l\'ogica de extracci\'on en varias pasadas (\S\ref{sec:static-rules})
+hab\'ia procesado todos ellos. Al trazar directamente el c\'odigo de
+generaci\'on del informe, sin asumir que el fallo estaba en la propia
+l\'ogica de extracci\'on, se encontr\'o el defecto real una etapa
+despu\'es: \code{\_analyze\_installer}, la funci\'on que agrega los
+resultados por componente en el informe \'unico de nivel superior de
+la muestra, estaba \emph{sustituyendo} silenciosamente el an\'alisis de
+un componente hijo por el de otro bajo una condici\'on espec\'ifica, en
+lugar de fusionar ambos.
+
+El error se confirm\'o, no solo se infiri\'o del s\'intoma, a trav\'es
+del propio campo \code{hash\_match} del informe, un valor registrado
+precisamente para este tipo de comprobaci\'on cruzada, que mostraba que
+el hash reportado pertenec\'ia a un fichero extra\'ido distinto del que
+realmente aparec\'ia en el cuerpo del informe. Corregir la l\'ogica de
+agregaci\'on para fusionar los hallazgos de cada componente extra\'ido,
+en lugar de solo el procesado m\'as recientemente, restaur\'o la
+evidencia faltante y mejor\'o directamente la exhaustividad en la
+muestra afectada tras volver a evaluarla.
+
+La lecci\'on se generaliz\'o m\'as all\'a de esta correcci\'on
+concreta: motiv\'o tratar cada nueva capacidad de la tuber\'ia, el
+bucle de reenv\'io en primer lugar, como necesitada de su propio paso
+expl\'icito de corroboraci\'on (manifiestos de linaje, comprobaciones
+cruzadas de hash) en lugar de confiar en que ``el c\'odigo se
+ejecut\'o sin error'' implique ``el c\'odigo produjo el resultado
+correcto''. Encontrar y corregir esta clase de error antes de que
+pudiera subestimar en silencio la capacidad real de una muestra es en
+s\'i mismo una demostraci\'on concreta de para qu\'e sirve la
+disciplina de validaci\'on de la tuber\'ia.
+
+\subsection{El hueco de verdad de referencia de WhiteSnakeStealer}
+\label{sec:case-wsnake}
+
+La \S\ref{sec:fp-audit} resume el resultado; el proceso merece
+detallarse una vez como ejemplo concreto de lo que significa en la
+pr\'actica ``auditado frente al texto completo del informe''. El
+resultado de la tuber\'ia para WhiteSnakeStealer inclu\'ia
+\technique{T1620} (Reflective Code Loading) con evidencia est\'atica,
+llamadas espec\'ificas a la BCL de .NET consistentes con la carga de
+ensamblados en memoria. La propia tabla de T\'ecnicas ATT\&CK de la
+muestra, sin embargo, no ten\'ia fila de \technique{T1620}, por lo que
+la evaluaci\'on autom\'atica inicialmente puntu\'o esto como un falso
+positivo.
+
+Al leer la secci\'on narrativa del informe, en lugar de confiar solo en
+su tabla resumen, se encontr\'o un p\'arrafo expl\'icito que
+describ\'ia exactamente el mecanismo de carga reflexiva que hab\'ia
+detectado la regla est\'atica: exist\'ia confirmaci\'on independiente
+del analista, simplemente no se hab\'ia trasladado a la tabla que lee
+el extractor autom\'atico de verdad de referencia. Esto es un hueco de
+documentaci\'on en el informe fuente, no un error de la tuber\'ia, y se
+corrigi\'o a\~nadiendo la fila que faltaba al propio informe (y
+regenerando la verdad de referencia a partir de \'el), en lugar de
+ajustar la confianza de la tuber\'ia o suprimir el hallazgo. Se
+presenta aqu\'i espec\'ificamente porque dos casos estructuralmente
+similares en RoningLoader (\S\ref{sec:fp-audit}) se resolvieron en el
+sentido opuesto, dejados abiertos, precisamente porque les faltaba
+este tipo de confirmaci\'on textual independiente. Juntos, los dos
+desenlaces muestran que la evidencia propia de la tuber\'ia se trata
+igual independientemente de si la discrepancia termin\'o
+favoreci\'endola.
+
+\subsection{La cascada de falsos positivos de la clave XOR}
+\label{sec:case-xor}
+
+La fuerza bruta XOR de un solo byte (\code{config\_parser.py}) prueba
+exhaustivamente las 256 claves posibles contra regiones candidatas de
+texto cifrado y compara el resultado con una expresi\'on regular de IP
+en formato punteado, la t\'ecnica que recuper\'o la IP de C2 gen\'uina
+de RoningLoader (\code{202.95.11.173}) sin conocimiento previo de la
+clave (\S\ref{sec:limitations}, punto~7). Ejecutada sin salvaguardas
+contra una segunda muestra, WhiteSnakeStealer, la misma rutina
+produjo 8 coincidencias de cuarteto punteado sint\'acticamente
+v\'alidas pero completamente espurias a partir de una \'unica clave
+incorrecta (\code{0x2e}, ASCII \code{.}): una tabla de enteros
+repetitiva con relleno de ceros en los datos compilados del binario
+result\'o decodificar a ocho direcciones IP falsas bajo esa \'unica
+clave, ya que los bytes nulos se decodifican como caracteres \code{.}
+literales bajo ella y una estructura repetitiva en los datos de origen
+produce una coincidencia falsa repetitiva.
+
+Dos filtros cerraron el hueco, cada uno justificado por una propiedad
+distinta que un valor incrustado gen\'uino tiene y un accidente de
+decodificaci\'on no. Primero, una \textbf{comprobaci\'on de l\'imite
+limpio}: el byte inmediatamente anterior y posterior a una coincidencia
+debe ser \code{0x00} o el propio byte de clave, algo que una cadena
+real incrustada y terminada en nulo cumple y que una secuencia de
+bytes arbitraria decodificada por una clave no relacionada
+generalmente no. Segundo, un \textbf{l\'imite de densidad de
+coincidencias} de dos coincidencias con forma de IP por clave en
+cualquier lugar del fichero, bajo el principio de que un valor de
+configuraci\'on gen\'uino aparece una vez, o raramente un pu\~nado de
+veces, mientras que una cascada producida al decodificar datos
+estructurados no relacionados bajo la clave equivocada no se
+autolimita. Verificado despu\'es en ambas direcciones: la IP de C2
+gen\'uina de RoningLoader sigue produciendo exactamente una coincidencia
+y sobrevive al l\'imite de densidad; las ocho coincidencias espurias de
+WhiteSnakeStealer ahora se descartan correctamente.
+
+La lecci\'on se generaliz\'o m\'as all\'a de esta correcci\'on
+concreta: es lo que motiv\'o la pol\'itica expl\'icita del proyecto
+(\S\ref{sec:limitations}, punto~9) de que cualquier nueva capacidad de
+recuperaci\'on basada en b\'usqueda exhaustiva debe validarse frente a
+una segunda muestra, no solo la que motiv\'o su construcci\'on, antes
+de confiar en ella. De haberse declarado esta capacidad lista para
+producci\'on solo con RoningLoader, la tuber\'ia habr\'ia salido con un
+generador de falsos positivos que simplemente todav\'ia no se hab\'ia
+activado.

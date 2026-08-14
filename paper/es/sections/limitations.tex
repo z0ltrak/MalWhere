@@ -1,0 +1,130 @@
+\section{Limitaciones}
+\label{sec:limitations}
+
+Enunciar las limitaciones con esta precisi\'on es en s\'i mismo parte
+de la contribuci\'on argumentada en \S\ref{sec:related-work}: los
+veredictos uno junto a otro de un agregador de reputaci\'on no llevan
+un relato equivalente de d\'onde podr\'ian estar equivocados, lo que
+los hace r\'apidos de consultar pero dif\'iciles de auditar. Cada
+limitaci\'on siguiente se diagnostica, en cambio, a una causa concreta
+y verificable en lugar de enunciarse de forma gen\'erica, de modo que
+cada una ya est\'a mitigada de forma concreta o se acota como un
+siguiente paso preciso (\S\ref{sec:future-work}) en lugar de quedar
+como una advertencia abierta.
+
+\begin{enumerate}
+
+\item \textbf{Conjunto de validaci\'on peque\~no (N=3).} Tres familias
+  son pocas para una afirmaci\'on con potencia estad\'istica, y es el
+  punto que m\'as merece escrutinio en este trabajo. Tres mitigaciones
+  concretas: la verdad de referencia es ingenier\'ia inversa manual a
+  nivel de funci\'on, verificada con Ghidra, para cada muestra, un
+  listón considerablemente m\'as alto que el que tendr\'ia un conjunto
+  m\'as grande pero superficial; una auditor\'ia completa de
+  \code{static/scripts/} centrada espec\'ificamente en hardcoding
+  espec\'ifico de muestra disfrazado de l\'ogica gen\'erica encontr\'o
+  y elimin\'o cuatro instancias (un nombre de fichero literal del
+  auxiliar del instalador, una extensi\'on de carga cifrada codificada
+  de forma fija, cadenas de producto incrustadas en la l\'ogica de
+  detecci\'on de sistema de ficheros, y un decodificador ``gen\'erico''
+  que en realidad era la clave XOR exacta de una muestra), cada una
+  sustituida por un equivalente a nivel de clase y reverificada para no
+  provocar regresi\'on en ninguna muestra validada; y el bucle de
+  reenv\'io de RoningLoader (\S\ref{sec:resubmission}) punt\'ua de
+  forma independiente 26 componentes adicionales frente a la misma
+  verdad de referencia, superficie de evaluaci\'on real adicional y no
+  un truco estad\'istico. Ampliar a m\'as familias sigue siendo el
+  siguiente paso de mayor valor (\S\ref{sec:future-work}).
+
+\item \textbf{Un error de agregaci\'on, encontrado y corregido durante
+  la validaci\'on.} Detallado como caso de estudio en
+  \S\ref{sec:case-installer}: el informe est\'atico de una muestra
+  instalador describi\'o una DLL auxiliar side-loaded incluida, no la
+  carga maliciosa, durante la mayor parte del proceso de validaci\'on,
+  hasta que se comprob\'o realmente el propio campo de sanidad
+  \code{hash\_match} del informe en lugar de solo calcularlo. La
+  correcci\'on mejor\'o directamente la exhaustividad en la muestra
+  afectada.
+
+\item \textbf{La auditor\'ia de falsos positivos} (\S\ref{sec:fp-audit})
+  comprob\'o 13 discrepancias individualmente; 10 eran errores
+  gen\'uinos de la tuber\'ia, ahora corregidos, 1 era un hueco de
+  extracci\'on de verdad de referencia (\S\ref{sec:case-wsnake}), y 2
+  permanecen abiertas por dise\~no.
+
+\item \textbf{Dos falsos positivos de RoningLoader quedan sin resolver
+  deliberadamente.} \technique{T1027} y \technique{T1497} tienen
+  ambos evidencia real de apoyo pero ninguna confirmaci\'on textual
+  independiente en el resto del informe manual, a diferencia del caso
+  de \technique{T1620} que s\'i se corrigi\'o. Editar la verdad de
+  referencia solo con la evidencia propia de la tuber\'ia ser\'ia un
+  razonamiento circular.
+
+\item \textbf{La extracci\'on de verdad de referencia depende de la
+  completitud de la tabla.} Un extractor basado en tablas markdown solo
+  es tan completo como la propia tabla, incluso cuando la narrativa de
+  un informe dice m\'as. \S\ref{sec:case-wsnake} es una instancia
+  concreta, corregida en el documento fuente en lugar de sortearse en
+  el extractor.
+
+\item \textbf{El sandboxing con contenci\'on prioritaria limita la
+  observaci\'on de red/C2.} CAPE detona cada muestra contra la red
+  simulada de INetSim, sin salida real, por dise\~no. Varias t\'ecnicas
+  no detectadas en las tres muestras se agrupan en torno a
+  comportamiento de exfiltraci\'on y proxy/t\'unel
+  (\technique{T1041}, \technique{T1090}, \technique{T1571/T1572},
+  \technique{T1046}) que una red simulada no puede provocar por
+  completo. Esto es una propiedad estructural de un entorno de
+  investigaci\'on con contenci\'on prioritaria, no un defecto a
+  corregir.
+
+\item \textbf{La recuperaci\'on est\'atica de claves/configuraci\'on
+  tiene un techo preciso.} El XOR de un solo byte es exhaustivamente
+  forzable por fuerza bruta (128 claves), y as\'i se us\'o para
+  recuperar la IP de C2 de RoningLoader sin conocimiento previo de la
+  clave, pero solo tras a\~nadir dos filtros independientes de falsos
+  positivos (\S\ref{sec:case-xor}). En cambio, la clave RC4 de una carga
+  distinta, verificada de forma independiente mediante ingenier\'ia
+  inversa manual con Ghidra, se ensambla en \emph{tiempo de
+  ejecuci\'on} a partir de tres constantes combinadas mediante
+  aritm\'etica de registros y nunca existe como secuencia de bytes
+  contigua en el fichero: ning\'un m\'etodo est\'atico de patr\'on de
+  bytes, por exhaustivo que sea, puede recuperar una clave que nunca se
+  almacena como bytes. El l\'imite est\'a precisamente en si la clave
+  existe como bytes en disco, no en una afirmaci\'on general de que
+  ``el cifrado es dif\'icil''.
+
+\item \textbf{La verdad de referencia es el mejor or\'aculo disponible,
+  no uno perfecto.} Un hallazgo autom\'atico ausente en un informe
+  manual puede ser un falso positivo gen\'uino o un verdadero positivo
+  poco documentado (\S\ref{sec:case-wsnake}); un hallazgo documentado
+  que la tuber\'ia no detecta puede ser un hueco real o un techo del
+  entorno de sandbox (punto 6 anterior).
+
+\item \textbf{Limitaciones a nivel de herramienta.} La decodificaci\'on
+  de cadenas basada en emulaci\'on de FLOSS agot\'o el tiempo en Akira,
+  la muestra m\'as agresiva en anti-an\'alisis, registrado
+  expl\'icitamente en lugar de faltar en silencio. La recuperaci\'on
+  AES/ChaCha20 solo tiene \'exito frente a un nonce/IV cero. Cualquier
+  nueva capacidad de recuperaci\'on por fuerza bruta ahora se valida,
+  por pol\'itica expl\'icita, frente a una segunda muestra antes de
+  confiar en ella, tras detectarse as\'i la cascada de falsos positivos
+  de la clave XOR (\S\ref{sec:case-xor}) en lugar de al primer \'exito.
+
+\item \textbf{Reproducibilidad.} La \S\ref{sec:deployment} describe el
+  despliegue completo con \code{docker-compose}; el \'unico hueco que
+  merece repetirse aqu\'i es que la m\'aquina virtual Windows del
+  perfil \code{sandbox}
+  necesita una configuraci\'on manual \'unica del host (libvirt/KVM),
+  documentada con sus propias notas de soluci\'on de problemas, ya que
+  no puede crearse solo con \code{docker-compose}.
+
+\item \textbf{La cobertura de reglas est\'aticas es deliberadamente
+  estrecha.} Aproximadamente 85 de las 474 t\'ecnicas relevantes para
+  Windows en MITRE tienen una regla est\'atica dedicada
+  (\S\ref{sec:coverage}); Reconnaissance y Resource Development son un
+  l\'imite estructural, no una lista pendiente por abordar, ya que
+  ambas describen actividad del atacante que precede a la existencia
+  de la propia muestra.
+
+\end{enumerate}

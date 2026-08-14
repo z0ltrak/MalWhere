@@ -1,0 +1,61 @@
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+
+Security operations teams rely on structured threat intelligence
+(IOCs, MITRE ATT\&CK mappings, STIX/MISP-ready artifacts) to act on
+malware findings quickly. Broad reputation aggregators such as
+VirusTotal deliver that structure at enormous scale but do not
+reconcile their many signals against each other, so producing a
+defensible, evidence-linked technique mapping for one specific sample
+usually still falls to a human reverse engineer tracing code and
+writing a report by hand. This thesis presents \textbf{MalWhere}, a
+modular pipeline that combines static reverse engineering and dynamic
+sandbox detonation, reconciles their findings into confidence-scored
+MITRE ATT\&CK technique mappings, and exports the result as STIX~2.1
+bundles and live MISP events.
+
+The pipeline is validated against three malware families with
+distinct architectures: a ransomware binary (Akira); a multi-stage
+loader that drops a rootkit driver, an AV-killer, and a remote-access
+C2 client (RoningLoader); and a feature-rich .NET infostealer
+(WhiteSnakeStealer). Each is ground-truthed through function-level,
+Ghidra-verified manual reverse engineering rather than superficial
+scanning. Two methodological contributions extend beyond a
+conventional static+dynamic pipeline: a cross-source \emph{and}
+cross-level confidence reconciliation model that treats a technique
+observed by both static and dynamic evidence, or by a parent and a
+sub-technique from different sources, as stronger signal than either
+alone; and a \emph{resubmission loop} that independently analyzes
+every component a multi-stage sample drops or injects, without
+misattributing a dropped payload's own capabilities to the parent
+binary's confidence score.
+
+The evaluation methodology goes beyond raw precision and recall: every
+false positive found during validation was individually traced to its
+exact evidence (a specific import combination, a sandbox signature's
+raw data field, a string pattern) and checked against the full text of
+the corresponding manual report, not just its summary table. Of 13
+false positives found this way across the three samples, ten were
+genuine pipeline errors with identifiable, fixed root causes, one was
+a gap in how ground truth was extracted rather than a pipeline error,
+and two were deliberately left open pending independent confirmation
+rather than resolved on the pipeline's own evidence alone. Static
+detection coverage was subsequently extended from roughly 30 to
+approximately 85 MITRE ATT\&CK technique IDs, every addition sourced
+from MITRE's own technique descriptions and verified not to introduce
+new findings on the validated samples before being trusted.
+
+The resulting pipeline reaches family-level F1 scores of 1.00 (Akira),
+0.89 (WhiteSnakeStealer), and 0.86 (RoningLoader, counting its
+resubmitted components), with near-perfect precision across all three
+samples. The thesis argues that this audit trail, every rule tied to
+verifiable evidence, every error diagnosed to a specific cause, every
+extension checked for regression, is what makes the pipeline's output
+usable for exactly the decision a reputation aggregator's unreconciled
+signals cannot support on their own, and is the property most likely
+to transfer to malware families the pipeline has not yet seen.
+
+\bigskip
+\noindent\textbf{Keywords:} malware analysis, threat intelligence,
+MITRE ATT\&CK, STIX, MISP, static analysis, dynamic analysis, sandbox
+detonation, reverse engineering, confidence reconciliation.

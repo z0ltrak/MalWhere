@@ -1,0 +1,55 @@
+\section{Future Work}
+\label{sec:future-work}
+
+\begin{itemize}
+
+\item \textbf{Additional validated families.} The single highest-value
+  extension (\S\ref{sec:limitations}, item~1) is either full manual
+  reverse-engineering-backed validation of further families, or, as a
+  lighter interim step, a generality smoke-test confirming the pipeline
+  produces sane, non-crashing output on families it was not tuned
+  against.
+
+\item \textbf{Linux/ELF dynamic analysis for IoT botnet families.}
+  Investigated concretely rather than dismissed by assumption, and
+  deliberately deferred for three specific reasons, each independently
+  verified: the pipeline's current ELF parser extracts basic structural
+  metadata only, with no ATT\&CK detection rules wired to it at all,
+  unlike the PE path's roughly 85 mapped techniques; CAPE's own
+  documentation describes its Linux/ELF sandboxing support as an
+  actively-developed, not production-grade, capability; and no
+  ELF-family ground-truth sample exists yet against which any new
+  Linux-specific detection rule could be verified, without which
+  building rules would repeat exactly the overfitting risk
+  \S\ref{sec:limitations} already flags for the Windows side. Given how
+  disproportionately common ELF-based botnets are on IoT and embedded
+  Linux devices relative to the malware-research literature's own
+  attention to them, this is judged a genuinely valuable extension,
+  just one that needs a validated ELF-family sample and a real dynamic
+  analysis capability to exist first, not a rule set retrofitted onto
+  static parsing alone.
+
+\item \textbf{Extending Initial Access and Lateral Movement coverage
+  where genuinely applicable.} The bulk of both tactics is a structural
+  poor fit for single-binary detonation analysis (\S\ref{sec:coverage}),
+  but a small number of sub-techniques observable from within one
+  sample's own artifacts remain uncovered:
+  \technique{T1091} (Replication Through Removable Media) and
+  \technique{T1570} (Lateral Tool Transfer) are the two concrete
+  candidates identified.
+
+\item \textbf{A statistically powered confidence-calibration study.}
+  \S\ref{sec:evaluation}'s finding that no audited false positive
+  originated from a cross-source or cross-level high-confidence finding
+  is a directional signal from three samples, not a powered claim,
+  and would benefit from a larger, purpose-built validation set.
+
+\item \textbf{Runtime key-recovery via emulation.} The RC4 key that
+  never exists as contiguous bytes in RoningLoader's DLL
+  (\S\ref{sec:limitations}, item~7) is, in principle, recoverable by
+  emulating its assembly routine (e.g.\ with Unicorn) rather than any
+  static byte-pattern search, a materially larger engineering effort
+  than the current static config-recovery module, and scoped out of
+  this thesis accordingly.
+
+\end{itemize}

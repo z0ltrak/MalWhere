@@ -1,0 +1,60 @@
+\section{Conclusi\'on}
+\label{sec:conclusion}
+
+Esta tesis ha presentado MalWhere, una tuber\'ia que combina
+an\'alisis est\'atico y din\'amico de malware para producir
+inteligencia de amenazas con confianza cuantificada y conforme a
+est\'andares: mapeos de t\'ecnicas MITRE ATT\&CK exportados como
+paquetes STIX~2.1 y eventos MISP en vivo. Dos mecanismos la extienden
+m\'as all\'a de un dise\~no est\'atico-m\'as-din\'amico convencional: un
+modelo de reconciliaci\'on de confianza que reconoce concordancia tanto
+entre fuentes como entre niveles de especificidad de t\'ecnica
+(\S\ref{sec:reconciliation}), y un bucle de reenv\'io que atribuye
+correctamente la capacidad distribuida de una muestra multietapa al
+componente que realmente la presenta, en lugar de colapsarla en la
+puntuaci\'on propia del binario padre (\S\ref{sec:resubmission}).
+Frente a las herramientas revisadas en \S\ref{sec:related-work}, la
+tuber\'ia no pretende sustituir a un agregador de reputaci\'on amplio
+como VirusTotal, al que ning\'un pipeline de investigaci\'on de un solo
+equipo puede igualar en escala bruta de corpus de env\'ios; es el paso
+que viene despu\'es, convirtiendo esa primera se\~nal en un mapeo
+reconciliado, por t\'ecnica y ligado a evidencia para la muestra
+concreta que realmente lo necesita.
+
+Validada frente a tres familias de malware con arquitecturas
+sustancialmente distintas (un binario de ransomware de una sola etapa,
+un infostealer .NET rico en funcionalidades, y una cadena de cuatro
+componentes cargador/rootkit/RAT) contra verdad de referencia
+construida a partir de ingenier\'ia inversa manual a nivel de
+funci\'on, la tuber\'ia alcanz\'o puntuaciones F1 a nivel de familia de
+1.00, 0.89 y 0.86 respectivamente, con precisi\'on cercana al 100\,\%
+en todos los casos (\S\ref{sec:evaluation}). Esas cifras solo son tan
+fiables como el proceso que las produjo, raz\'on por la cual esta tesis
+otorga igual peso al rastro de auditor\'ia que las respalda: 13
+discrepancias entre el resultado de la tuber\'ia y la verdad de
+referencia se rastrearon individualmente hasta una causa concreta y
+verificable, no se aceptaron ni descartaron solo por la cifra agregada
+(\S\ref{sec:fp-audit}); se encontr\'o y corrigi\'o un error real de
+agregaci\'on que hab\'ia sustituido silenciosamente el binario analizado
+incorrecto (\S\ref{sec:case-installer}); y la cobertura de detecci\'on
+est\'atica se ampli\'o de unas 30 a aproximadamente 85 identificadores
+de t\'ecnica MITRE, cada adici\'on obtenida de las propias
+descripciones de t\'ecnica de MITRE y confirmada para no introducir
+nuevos hallazgos en el conjunto validado antes de confiar en ella
+(\S\ref{sec:coverage}).
+
+El argumento central de este trabajo es que este rastro de
+auditor\'ia, cada regla ligada a evidencia verificable, cada
+discrepancia diagnosticada a una causa concreta, cada extensi\'on
+comprobada frente a regresiones antes de conservarse, es una
+contribuci\'on m\'as defendible que las cifras F1 destacadas por s\'i
+solas, y es la propiedad con mayor probabilidad de transferirse cuando
+la tuber\'ia se encuentre con una familia de malware para la que no ha
+sido afinada. Precisamente porque esa transferencia todav\'ia no se ha
+medido, ampliar el conjunto de familias validadas
+(\S\ref{sec:future-work}) se identifica como el siguiente paso de
+mayor valor, junto con la extensi\'on concretamente acotada al
+an\'alisis de botnets IoT basadas en Linux/ELF una vez que sus dos
+prerrequisitos faltantes, reglas de detecci\'on realmente conscientes
+de ELF y una muestra Linux con verdad de referencia, est\'en
+disponibles.
