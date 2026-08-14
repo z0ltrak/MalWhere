@@ -1,0 +1,181 @@
+{
+  "filename": "b7c8d25259bfc25b43427d31c25603037c039bbf9e76116d52759ba681499c3a",
+  "size_bytes": 1021,
+  "size_mb": 0.0,
+  "extension": "",
+  "file_type": "unknown",
+  "file_type_info": {
+    "type": "unknown",
+    "confidence": "low"
+  },
+  "md5": "dc2546fbff3aec1245f9a4d611c9f759",
+  "sha1": "b2295d1df787093d589ae7ec2f177e0e2ab41b4c",
+  "sha256": "b7c8d25259bfc25b43427d31c25603037c039bbf9e76116d52759ba681499c3a",
+  "ssdeep": "24:rdFJR4PnmRIwcMUPGndKlXlmzACus3JSLKEHDa/:hCmR9U+ndKKhus34KEHA",
+  "tlsh": "T1FC11A5C08B69BA7AC4481DF6247033BB36E22E15E146D16F02C4C27B256633118A41F2",
+  "is_dotnet": false,
+  "metadata": {},
+  "sections": [],
+  "imports": [],
+  "exports": [],
+  "resources": [],
+  "strings": {
+    "standard": [
+      "5Wr'^g",
+      ";$2n`Y",
+      "<az@H)S'",
+      "$7.H7C"
+    ],
+    "floss": [],
+    "decoded": [],
+    "deobfuscated": [],
+    "dotnet_strings": []
+  },
+  "packer": {
+    "detected": false,
+    "packers": [],
+    "confidence": "none"
+  },
+  "indicators": {
+    "suspicious_imports": [],
+    "suspicious_strings": [],
+    "high_entropy_sections": [],
+    "anti_debug": [],
+    "anti_vm": [],
+    "ransomware_indicators": [],
+    "anti_sandbox": [],
+    "anti_vm_strings": [],
+    "anti_sandbox_strings": [],
+    "sleep_functions": []
+  },
+  "embedded_files": [],
+  "discovered_keys": [
+    {
+      "type": "plaintext_all_strings",
+      "key": "]\ufffd<az@H)S'",
+      "key_hex": "5de43c617a4048295327",
+      "length": 10,
+      "section": "<file>",
+      "offset": 861,
+      "entropy": 3.322,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): ']\ufffd<az@H)S''",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "|\ufffd5Wr'^g",
+      "key_hex": "7caa355772275e67",
+      "length": 8,
+      "section": "<file>",
+      "offset": 590,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '|\ufffd5Wr'^g'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "]\ufffd<az@H)",
+      "key_hex": "5de43c617a404829",
+      "length": 8,
+      "section": "<file>",
+      "offset": 861,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): ']\ufffd<az@H)'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\ufffd<az@H)S",
+      "key_hex": "e43c617a40482953",
+      "length": 8,
+      "section": "<file>",
+      "offset": 862,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\ufffd<az@H)S'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "<az@H)S'",
+      "key_hex": "3c617a4048295327",
+      "length": 8,
+      "section": "<file>",
+      "offset": 863,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '<az@H)S''",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "az@H)S'\ufffd",
+      "key_hex": "617a404829532792",
+      "length": 8,
+      "section": "<file>",
+      "offset": 864,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'az@H)S'\ufffd'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    }
+  ],
+  "yara": {
+    "matches": [],
+    "matched_rules": [],
+    "packer_detected": false,
+    "packers": [],
+    "attck_mapping": []
+  },
+  "entropy_analysis": {
+    "high_entropy_sections": [],
+    "suspicious_entropy": [],
+    "packed_sections": [],
+    "encrypted_data": [
+      {
+        "name": "OVERALL_FILE",
+        "entropy": 7.675094549163756,
+        "threshold": ">7.5",
+        "likely": "File appears encrypted or heavily packed",
+        "confidence": "high",
+        "justification": "Overall file entropy is 7.68, which exceeds the 7.5 threshold. This strongly indicates the entire file or large portions are encrypted or packed."
+      }
+    ],
+    "overall_entropy": 7.675094549163756,
+    "justification": "Overall file entropy is 7.68, which is very high. This indicates the file likely contains encrypted, packed, or heavily obfuscated data. Found 0 sections with entropy >7.5 and 0 sections with entropy 6.0-7.5.",
+    "crypto_indicators": []
+  },
+  "attck_mappings": [],
+  "config": {
+    "ips": [],
+    "domains": [],
+    "urls": [],
+    "emails": [],
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "nsis_detected": false,
+  "analysis_timestamp": "2026-08-12T13:25:38.215643",
+  "errors": [],
+  "resubmission_lineage": {
+    "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
+    "parent_family": "roning",
+    "discovery_mechanism": "dropped",
+    "original_name": "hjk.txt",
+    "cape_task_id": 2,
+    "depth": 1,
+    "discovered_at": "2026-08-12T13:11:08.179213+00:00"
+  }
+}

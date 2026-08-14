@@ -1,0 +1,2155 @@
+{
+  "schema_version": "1.0",
+  "source": "cape",
+  "source_report_path": "docker/cape/work/storage/analyses/2/reports/report.json",
+  "cape_task_id": 2,
+  "parsed_at": "2026-08-12T16:00:50.891767+00:00",
+  "target": {
+    "filename": "binary",
+    "md5": "73a84cba28d14625441e1b0eac2a67f1",
+    "sha1": "813c1de6102e1cc953f86567e972d0e19d9e530a",
+    "sha256": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
+    "size_bytes": 3331426,
+    "file_type": "PE32 executable (GUI) Intel 80386, for MS Windows"
+  },
+  "analysis": {
+    "malscore": 9.0,
+    "malstatus": "Malicious",
+    "duration_seconds": 234,
+    "started": "2026-08-11 13:15:58",
+    "ended": "2026-08-11 13:19:52",
+    "cape_version": "2.5",
+    "family_detections": []
+  },
+  "signatures": [
+    {
+      "name": "antivm_checks_available_memory",
+      "description": "Checks available memory",
+      "severity": 1,
+      "confidence": 100,
+      "categories": [
+        "antivm"
+      ],
+      "ttps": [
+        "T1082"
+      ],
+      "match_count": 6
+    },
+    {
+      "name": "dead_connect",
+      "description": "Attempts to connect to a dead IP:Port (4 unique times)",
+      "severity": 1,
+      "confidence": 100,
+      "categories": [
+        "network"
+      ],
+      "ttps": [],
+      "match_count": 10
+    },
+    {
+      "name": "queries_keyboard_layout",
+      "description": "Queries the keyboard layout",
+      "severity": 1,
+      "confidence": 100,
+      "categories": [
+        "location_discovery"
+      ],
+      "ttps": [],
+      "match_count": 49
+    },
+    {
+      "name": "queries_locale_api",
+      "description": "Queries the computer locale (possible geofencing)",
+      "severity": 1,
+      "confidence": 100,
+      "categories": [
+        "location_discovery",
+        "geofence"
+      ],
+      "ttps": [],
+      "match_count": 9
+    },
+    {
+      "name": "accesses_public_folder",
+      "description": "A file was accessed within the Public folder.",
+      "severity": 1,
+      "confidence": 100,
+      "categories": [
+        "generic"
+      ],
+      "ttps": [
+        "T1548",
+        "T1036"
+      ],
+      "match_count": 7
+    },
+    {
+      "name": "antidebug_setunhandledexceptionfilter",
+      "description": "SetUnhandledExceptionFilter detected (possible anti-debug)",
+      "severity": 1,
+      "confidence": 40,
+      "categories": [
+        "anti-debug"
+      ],
+      "ttps": [],
+      "match_count": 1
+    },
+    {
+      "name": "stealth_timeout",
+      "description": "Possible date expiration check, exits too soon after checking local time",
+      "severity": 1,
+      "confidence": 40,
+      "categories": [
+        "stealth"
+      ],
+      "ttps": [],
+      "match_count": 2
+    },
+    {
+      "name": "language_check_registry",
+      "description": "Checks system language via registry key (possible geofencing)",
+      "severity": 1,
+      "confidence": 100,
+      "categories": [
+        "location_discovery",
+        "geofence"
+      ],
+      "ttps": [],
+      "match_count": 2
+    },
+    {
+      "name": "anomalous_deletefile",
+      "description": "Anomalous file deletion behavior detected (10+)",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "malware"
+      ],
+      "ttps": [
+        "T1485"
+      ],
+      "match_count": 22
+    },
+    {
+      "name": "mouse_movement_detect",
+      "description": "Checks for mouse movement",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "anti-sandbox"
+      ],
+      "ttps": [
+        "T1497"
+      ],
+      "match_count": 60
+    },
+    {
+      "name": "antisandbox_system_parameters_info",
+      "description": "Queries or modifies system parameters associated with user presence detection or sandbox evasion",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "anti-sandbox",
+        "anti-analysis"
+      ],
+      "ttps": [
+        "T1082"
+      ],
+      "match_count": 2
+    },
+    {
+      "name": "privilege_elevation_check",
+      "description": "Queries process token information to check for Administrator privileges or UAC elevation status",
+      "severity": 2,
+      "confidence": 80,
+      "categories": [
+        "discovery",
+        "privilege_escalation"
+      ],
+      "ttps": [
+        "T1033",
+        "T1082"
+      ],
+      "match_count": 31
+    },
+    {
+      "name": "query_fips_reconnaissance",
+      "description": "Queried the FIPS cryptography policy, can be used to adapt C2 network encryption or by legitimate encryption software",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "discovery",
+        "c2"
+      ],
+      "ttps": [
+        "T1082"
+      ],
+      "match_count": 26
+    },
+    {
+      "name": "mountpoints_volume_discovery",
+      "description": "Queries the mount points and then resolves volume paths to enumerate storage devices",
+      "severity": 2,
+      "confidence": 20,
+      "categories": [
+        "discovery",
+        "ransomware",
+        "wiper"
+      ],
+      "ttps": [
+        "T1082"
+      ],
+      "match_count": 55
+    },
+    {
+      "name": "dllload_suspicious_directory",
+      "description": "A DLL was loaded from a suspicious directory",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "side loading"
+      ],
+      "ttps": [
+        "T1574"
+      ],
+      "match_count": 18
+    },
+    {
+      "name": "allocated_memory_protection_noaccess",
+      "description": "Allocated memory and changed its protection to PAGE_NOACCESS, may be used to hide payloads from memory scanners or to trigger an access violation for exception-driven execution",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "evasion",
+        "stealth",
+        "defense_evasion",
+        "obfuscation"
+      ],
+      "ttps": [
+        "T1027",
+        "T1055"
+      ],
+      "match_count": 15
+    },
+    {
+      "name": "per_file_acl_token_check",
+      "description": "Performs high-volume NtQueryInformationToken calls for TokenUser and TokenGroups, indicative of wiper/ransomware checking whether it has write permission to each file",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "wiper",
+        "ransomware"
+      ],
+      "ttps": [
+        "T1485",
+        "T1069"
+      ],
+      "match_count": 2
+    },
+    {
+      "name": "creates_suspended_process",
+      "description": "Creates a process in a suspended state, likely for injection",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "injection",
+        "process hollowing"
+      ],
+      "ttps": [
+        "T1055"
+      ],
+      "match_count": 1
+    },
+    {
+      "name": "resumethread_remote_process",
+      "description": "Resumed a thread in another process",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "injection",
+        "unpacking"
+      ],
+      "ttps": [
+        "T1055"
+      ],
+      "match_count": 2
+    },
+    {
+      "name": "injection_write_process",
+      "description": "Writes to the memory another process",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "injection",
+        "unpacking"
+      ],
+      "ttps": [
+        "T1055"
+      ],
+      "match_count": 4
+    },
+    {
+      "name": "reads_memory_remote_process",
+      "description": "Reads from the memory of another process",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "memory scraping",
+        "injection"
+      ],
+      "ttps": [],
+      "match_count": 16
+    },
+    {
+      "name": "enumerates_running_processes",
+      "description": "Enumerates running processes",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "discovery"
+      ],
+      "ttps": [
+        "T1057"
+      ],
+      "match_count": 250
+    },
+    {
+      "name": "process_interest",
+      "description": "Expresses interest in specific running processes",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "generic"
+      ],
+      "ttps": [
+        "T1057"
+      ],
+      "match_count": 2030
+    },
+    {
+      "name": "process_needed",
+      "description": "Repeatedly searches for a not-found process, may want to run with startbrowser=1 option",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "generic"
+      ],
+      "ttps": [
+        "T1057"
+      ],
+      "match_count": 213
+    },
+    {
+      "name": "reads_self",
+      "description": "Reads data out of its own binary image",
+      "severity": 2,
+      "confidence": 30,
+      "categories": [
+        "generic"
+      ],
+      "ttps": [],
+      "match_count": 10
+    },
+    {
+      "name": "pe_section_vsize_rsize_anomaly",
+      "description": "A PE section has a virtual size significantly larger than its raw size, consistent with packed code expanding into virtual memory at runtime",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "packer",
+        "static"
+      ],
+      "ttps": [
+        "T1027"
+      ],
+      "match_count": 1
+    },
+    {
+      "name": "contains_pe_overlay",
+      "description": "The PE file contains an overlay",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "static"
+      ],
+      "ttps": [
+        "T1071"
+      ],
+      "match_count": 1
+    },
+    {
+      "name": "discover_registry_mount_points",
+      "description": "Queries registry mount points to identify historical or connected removable/network drives",
+      "severity": 2,
+      "confidence": 20,
+      "categories": [
+        "discovery",
+        "ransomware",
+        "wiper"
+      ],
+      "ttps": [
+        "T1082"
+      ],
+      "match_count": 12
+    },
+    {
+      "name": "dropper",
+      "description": "Drops a binary and executes it",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "dropper"
+      ],
+      "ttps": [
+        "T1129"
+      ],
+      "match_count": 1
+    },
+    {
+      "name": "injection_rwx",
+      "description": "Creates RWX memory",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "injection"
+      ],
+      "ttps": [],
+      "match_count": 1
+    },
+    {
+      "name": "antiav_servicestop",
+      "description": "Attempts to stop active services",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "anti-av"
+      ],
+      "ttps": [
+        "T1543.003",
+        "T1562.001",
+        "T1489",
+        "T1543",
+        "T1562"
+      ],
+      "match_count": 15
+    },
+    {
+      "name": "antisandbox_unhook",
+      "description": "Tries to unhook or modify Windows functions monitored by CAPE",
+      "severity": 3,
+      "confidence": 60,
+      "categories": [
+        "anti-sandbox"
+      ],
+      "ttps": [
+        "T1562.001",
+        "T1562"
+      ],
+      "match_count": 20
+    },
+    {
+      "name": "hardware_id_profiling",
+      "description": "Queries the Volume Serial Number or Physical Hardware ID, possibly for anti-sandbox, victim profiling or environmental keying",
+      "severity": 3,
+      "confidence": 80,
+      "categories": [
+        "evasion",
+        "recon",
+        "anti-sandbox"
+      ],
+      "ttps": [
+        "T1082"
+      ],
+      "match_count": 7
+    },
+    {
+      "name": "antisandbox_windows_activation",
+      "description": "Queries Windows licensing, activation, or genuine status, possibly to detect unactivated sandbox or analysis environments.",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "anti_sandbox",
+        "evasion",
+        "discovery"
+      ],
+      "ttps": [
+        "T1082",
+        "T1497"
+      ],
+      "match_count": 5
+    },
+    {
+      "name": "suspicious_iocontrol_codes",
+      "description": "Uses suspicious IO control codes, indicative of disk enumeration or a bootkit/wiper",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "bootkit",
+        "rootkit",
+        "wiper"
+      ],
+      "ttps": [
+        "T1542.003"
+      ],
+      "match_count": 7
+    },
+    {
+      "name": "mountpoint_manager_access",
+      "description": "Repeatedly opens the MountPointManager device to enumerate drive letters and resolve volume paths to discover all attached drives and network shares",
+      "severity": 3,
+      "confidence": 60,
+      "categories": [
+        "ransomware",
+        "wiper",
+        "discovery"
+      ],
+      "ttps": [
+        "T1082"
+      ],
+      "match_count": 2
+    },
+    {
+      "name": "install_kernel_driver_service",
+      "description": "Installs a new kernel driver service, indicative of Bring Your Own Vulnerable Driver (BYOVD) attacks or a rootkit",
+      "severity": 3,
+      "confidence": 80,
+      "categories": [
+        "driver",
+        "rootkit",
+        "bypass",
+        "wiper"
+      ],
+      "ttps": [],
+      "match_count": 2
+    },
+    {
+      "name": "unbacked_exception_filter",
+      "description": "Modified exception handling mechanisms (UEF/VEH) from dynamically allocated (unbacked) memory, indicative of fileless anti-debugging or silent crash suppression",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "defense_evasion",
+        "anti_debugging",
+        "fileless"
+      ],
+      "ttps": [
+        "T1562"
+      ],
+      "match_count": 2
+    },
+    {
+      "name": "thread_unbacked_memory",
+      "description": "Creates a thread executing from dynamically allocated (unbacked) memory rather than a file on disk, likely to execute shellcode",
+      "severity": 3,
+      "confidence": 80,
+      "categories": [
+        "execution",
+        "evasion",
+        "fileless"
+      ],
+      "ttps": [
+        "T1055"
+      ],
+      "match_count": 2
+    },
+    {
+      "name": "unbacked_api_resolution",
+      "description": "Manually resolves API addresses from dynamically allocated (unbacked) memory, indicative of shellcode or an unpacker",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "evasion",
+        "shellcode",
+        "fileless"
+      ],
+      "ttps": [
+        "T1129",
+        "T1055"
+      ],
+      "match_count": 248
+    },
+    {
+      "name": "unbacked_library_load",
+      "description": "Loads a new DLL where the caller address originates from dynamically allocated (unbacked) memory",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "evasion",
+        "execution",
+        "fileless"
+      ],
+      "ttps": [
+        "T1129",
+        "T1059"
+      ],
+      "match_count": 515
+    },
+    {
+      "name": "unbacked_memory_protection_alteration",
+      "description": "Altered memory protections from dynamically allocated (unbacked) memory, indicative of self-modifying shellcode or memory patching",
+      "severity": 3,
+      "confidence": 20,
+      "categories": [
+        "evasion",
+        "stealth",
+        "fileless",
+        "shellcode"
+      ],
+      "ttps": [
+        "T1055"
+      ],
+      "match_count": 31
+    },
+    {
+      "name": "unbacked_delay_execution",
+      "description": "Paused execution (sleep/delay) in a thread executing in dynamically allocated (unbacked) memory, indicative of sandbox evasion or C2 sleeping between callbacks",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "evasion",
+        "c2",
+        "fileless",
+        "shellcode"
+      ],
+      "ttps": [
+        "T1027",
+        "T1497"
+      ],
+      "match_count": 6
+    },
+    {
+      "name": "unbacked_file_dropping",
+      "description": "Writes data to the filesystem from dynamically allocated (unbacked) memory",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "execution",
+        "exfiltration",
+        "fileless",
+        "shellcode"
+      ],
+      "ttps": [
+        "T1105",
+        "T1074"
+      ],
+      "match_count": 14
+    },
+    {
+      "name": "unbacked_process_enumeration",
+      "description": "Attempted to enumerate running processes from dynamically allocated (unbacked) memory",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "discovery",
+        "fileless",
+        "reconnaissance",
+        "shellcode"
+      ],
+      "ttps": [
+        "T1057"
+      ],
+      "match_count": 52
+    },
+    {
+      "name": "unbacked_registry_modification",
+      "description": "Attempted to modify the Windows registry from dynamically allocated (unbacked) memory",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "persistence",
+        "evasion",
+        "fileless"
+      ],
+      "ttps": [
+        "T1112",
+        "T1547"
+      ],
+      "match_count": 4
+    },
+    {
+      "name": "unbacked_service_manipulation",
+      "description": "Attempted to interact with the Service Control Manager from dynamically allocated (unbacked) memory",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "lateral_movement",
+        "persistence",
+        "fileless",
+        "shellcode"
+      ],
+      "ttps": [
+        "T1543"
+      ],
+      "match_count": 33
+    },
+    {
+      "name": "unbacked_token_manipulation",
+      "description": "Attempted to open, duplicate, or impersonate an access token from dynamically allocated (unbacked) memory, indicative of credential theft or lateral movement",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "privilege_escalation",
+        "credential_access",
+        "lateral_movement"
+      ],
+      "ttps": [],
+      "match_count": 4
+    },
+    {
+      "name": "unbacked_bind_shell",
+      "description": "Bound a network socket to listen for inbound connections from dynamically allocated (unbacked) memory, indicating a fileless TCP bind shell or P2P",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "network",
+        "c2",
+        "fileless",
+        "lateral_movement",
+        "shellcode"
+      ],
+      "ttps": [
+        "T1090"
+      ],
+      "match_count": 4
+    },
+    {
+      "name": "unbacked_dns_resolution",
+      "description": "Attempted to resolve a domain name from dynamically allocated (unbacked) memory",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "network",
+        "c2",
+        "fileless",
+        "shellcode"
+      ],
+      "ttps": [
+        "T1071",
+        "T1568"
+      ],
+      "match_count": 2
+    },
+    {
+      "name": "unbacked_memory_network_connection",
+      "description": "Network connection initiated from dynamically allocated (unbacked) memory, indicative of fileless C2 activity",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "network",
+        "c2",
+        "fileless",
+        "shellcode"
+      ],
+      "ttps": [
+        "T1071",
+        "T1055"
+      ],
+      "match_count": 13
+    },
+    {
+      "name": "network_bind",
+      "description": "Starts servers listening on 127.0.0.1:0",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "network"
+      ],
+      "ttps": [],
+      "match_count": 6
+    },
+    {
+      "name": "persistence_autorun",
+      "description": "Installs itself for autorun at Windows startup",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "persistence"
+      ],
+      "ttps": [
+        "T1547.001",
+        "T1112",
+        "T1547"
+      ],
+      "match_count": 101
+    },
+    {
+      "name": "persistence_autorun_tasks",
+      "description": "Installs itself for autorun at Windows startup",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "persistence"
+      ],
+      "ttps": [
+        "T1053",
+        "T1112"
+      ],
+      "match_count": 101
+    },
+    {
+      "name": "infostealer_keylog",
+      "description": "Sniffs keystrokes",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "infostealer"
+      ],
+      "ttps": [],
+      "match_count": 2
+    }
+  ],
+  "attck_mappings": [
+    {
+      "technique": "T1562.001",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "antiav_servicestop",
+      "confidence": "high",
+      "justification": "CAPE signature 'antiav_servicestop' fired (severity=3, confidence=100%, categories=['anti-av'])"
+    },
+    {
+      "technique": "T1562",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "antiav_servicestop",
+      "confidence": "high",
+      "justification": "CAPE signature 'antiav_servicestop' fired (severity=3, confidence=100%, categories=['anti-av'])"
+    },
+    {
+      "technique": "T1497",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "mouse_movement_detect",
+      "confidence": "medium",
+      "justification": "CAPE signature 'mouse_movement_detect' fired (severity=2, confidence=100%, categories=['anti-sandbox'])"
+    },
+    {
+      "technique": "T1082",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "antisandbox_system_parameters_info",
+      "confidence": "medium",
+      "justification": "CAPE signature 'antisandbox_system_parameters_info' fired (severity=2, confidence=50%, categories=['anti-sandbox', 'anti-analysis'])"
+    },
+    {
+      "technique": "T1562.001",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "antisandbox_unhook",
+      "confidence": "medium",
+      "justification": "CAPE signature 'antisandbox_unhook' fired (severity=3, confidence=60%, categories=['anti-sandbox'])"
+    },
+    {
+      "technique": "T1562",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "antisandbox_unhook",
+      "confidence": "medium",
+      "justification": "CAPE signature 'antisandbox_unhook' fired (severity=3, confidence=60%, categories=['anti-sandbox'])"
+    },
+    {
+      "technique": "T1082",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "hardware_id_profiling",
+      "confidence": "high",
+      "justification": "CAPE signature 'hardware_id_profiling' fired (severity=3, confidence=80%, categories=['evasion', 'recon', 'anti-sandbox'])"
+    },
+    {
+      "technique": "T1082",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "antisandbox_windows_activation",
+      "confidence": "high",
+      "justification": "CAPE signature 'antisandbox_windows_activation' fired (severity=3, confidence=100%, categories=['anti_sandbox', 'evasion', 'discovery'])"
+    },
+    {
+      "technique": "T1497",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "antisandbox_windows_activation",
+      "confidence": "high",
+      "justification": "CAPE signature 'antisandbox_windows_activation' fired (severity=3, confidence=100%, categories=['anti_sandbox', 'evasion', 'discovery'])"
+    },
+    {
+      "technique": "T1082",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "antivm_checks_available_memory",
+      "confidence": "low",
+      "justification": "CAPE signature 'antivm_checks_available_memory' fired (severity=1, confidence=100%, categories=['antivm'])"
+    },
+    {
+      "technique": "T1033",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "privilege_elevation_check",
+      "confidence": "medium",
+      "justification": "CAPE signature 'privilege_elevation_check' fired (severity=2, confidence=80%, categories=['discovery', 'privilege_escalation'])"
+    },
+    {
+      "technique": "T1082",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "mountpoint_manager_access",
+      "confidence": "medium",
+      "justification": "CAPE signature 'mountpoint_manager_access' fired (severity=3, confidence=60%, categories=['ransomware', 'wiper', 'discovery'])"
+    },
+    {
+      "technique": "T1082",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "mountpoints_volume_discovery",
+      "confidence": "low",
+      "justification": "CAPE signature 'mountpoints_volume_discovery' fired (severity=2, confidence=20%, categories=['discovery', 'ransomware', 'wiper'])"
+    },
+    {
+      "technique": "T1574",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "dllload_suspicious_directory",
+      "confidence": "medium",
+      "justification": "CAPE signature 'dllload_suspicious_directory' fired (severity=2, confidence=50%, categories=['side loading'])"
+    },
+    {
+      "technique": "T1027",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "allocated_memory_protection_noaccess",
+      "confidence": "medium",
+      "justification": "CAPE signature 'allocated_memory_protection_noaccess' fired (severity=2, confidence=100%, categories=['evasion', 'stealth', 'defense_evasion', 'obfuscation'])"
+    },
+    {
+      "technique": "T1055",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "allocated_memory_protection_noaccess",
+      "confidence": "medium",
+      "justification": "CAPE signature 'allocated_memory_protection_noaccess' fired (severity=2, confidence=100%, categories=['evasion', 'stealth', 'defense_evasion', 'obfuscation'])"
+    },
+    {
+      "technique": "T1055",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "creates_suspended_process",
+      "confidence": "medium",
+      "justification": "CAPE signature 'creates_suspended_process' fired (severity=2, confidence=50%, categories=['injection', 'process hollowing'])"
+    },
+    {
+      "technique": "T1055",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "resumethread_remote_process",
+      "confidence": "medium",
+      "justification": "CAPE signature 'resumethread_remote_process' fired (severity=2, confidence=100%, categories=['injection', 'unpacking'])"
+    },
+    {
+      "technique": "T1055",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "injection_write_process",
+      "confidence": "medium",
+      "justification": "CAPE signature 'injection_write_process' fired (severity=2, confidence=100%, categories=['injection', 'unpacking'])"
+    },
+    {
+      "technique": "T1562",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_exception_filter",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_exception_filter' fired (severity=3, confidence=100%, categories=['defense_evasion', 'anti_debugging', 'fileless'])"
+    },
+    {
+      "technique": "T1055",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "thread_unbacked_memory",
+      "confidence": "high",
+      "justification": "CAPE signature 'thread_unbacked_memory' fired (severity=3, confidence=80%, categories=['execution', 'evasion', 'fileless'])"
+    },
+    {
+      "technique": "T1620",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_api_resolution",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_api_resolution' fired (severity=3, confidence=100%, categories=['evasion', 'shellcode', 'fileless'])"
+    },
+    {
+      "technique": "T1055",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_api_resolution",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_api_resolution' fired (severity=3, confidence=100%, categories=['evasion', 'shellcode', 'fileless'])"
+    },
+    {
+      "technique": "T1620",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_library_load",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_library_load' fired (severity=3, confidence=100%, categories=['evasion', 'execution', 'fileless'])"
+    },
+    {
+      "technique": "T1059",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_library_load",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_library_load' fired (severity=3, confidence=100%, categories=['evasion', 'execution', 'fileless'])"
+    },
+    {
+      "technique": "T1055",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_memory_protection_alteration",
+      "confidence": "low",
+      "justification": "CAPE signature 'unbacked_memory_protection_alteration' fired (severity=3, confidence=20%, categories=['evasion', 'stealth', 'fileless', 'shellcode'])"
+    },
+    {
+      "technique": "T1497",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_delay_execution",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_delay_execution' fired (severity=3, confidence=100%, categories=['evasion', 'c2', 'fileless', 'shellcode'])"
+    },
+    {
+      "technique": "T1105",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_file_dropping",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_file_dropping' fired (severity=3, confidence=100%, categories=['execution', 'exfiltration', 'fileless', 'shellcode'])"
+    },
+    {
+      "technique": "T1057",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_process_enumeration",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_process_enumeration' fired (severity=3, confidence=100%, categories=['discovery', 'fileless', 'reconnaissance', 'shellcode'])"
+    },
+    {
+      "technique": "T1112",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_registry_modification",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_registry_modification' fired (severity=3, confidence=100%, categories=['persistence', 'evasion', 'fileless'])"
+    },
+    {
+      "technique": "T1547",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_registry_modification",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_registry_modification' fired (severity=3, confidence=100%, categories=['persistence', 'evasion', 'fileless'])"
+    },
+    {
+      "technique": "T1543",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_service_manipulation",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_service_manipulation' fired (severity=3, confidence=100%, categories=['lateral_movement', 'persistence', 'fileless', 'shellcode'])"
+    },
+    {
+      "technique": "T1071",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_dns_resolution",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_dns_resolution' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
+    },
+    {
+      "technique": "T1071",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_memory_network_connection",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_memory_network_connection' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
+    },
+    {
+      "technique": "T1055",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "unbacked_memory_network_connection",
+      "confidence": "high",
+      "justification": "CAPE signature 'unbacked_memory_network_connection' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
+    },
+    {
+      "technique": "T1547.001",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "persistence_autorun",
+      "confidence": "high",
+      "justification": "CAPE signature 'persistence_autorun' fired (severity=3, confidence=100%, categories=['persistence'])"
+    },
+    {
+      "technique": "T1112",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "persistence_autorun",
+      "confidence": "high",
+      "justification": "CAPE signature 'persistence_autorun' fired (severity=3, confidence=100%, categories=['persistence'])"
+    },
+    {
+      "technique": "T1547",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "persistence_autorun",
+      "confidence": "high",
+      "justification": "CAPE signature 'persistence_autorun' fired (severity=3, confidence=100%, categories=['persistence'])"
+    },
+    {
+      "technique": "T1112",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "persistence_autorun_tasks",
+      "confidence": "high",
+      "justification": "CAPE signature 'persistence_autorun_tasks' fired (severity=3, confidence=100%, categories=['persistence'])"
+    },
+    {
+      "technique": "T1057",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "enumerates_running_processes",
+      "confidence": "medium",
+      "justification": "CAPE signature 'enumerates_running_processes' fired (severity=2, confidence=100%, categories=['discovery'])"
+    },
+    {
+      "technique": "T1057",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "process_interest",
+      "confidence": "medium",
+      "justification": "CAPE signature 'process_interest' fired (severity=2, confidence=100%, categories=['generic'])"
+    },
+    {
+      "technique": "T1057",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "process_needed",
+      "confidence": "medium",
+      "justification": "CAPE signature 'process_needed' fired (severity=2, confidence=100%, categories=['generic'])"
+    },
+    {
+      "technique": "T1027",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "pe_section_vsize_rsize_anomaly",
+      "confidence": "medium",
+      "justification": "CAPE signature 'pe_section_vsize_rsize_anomaly' fired (severity=2, confidence=50%, categories=['packer', 'static'])"
+    },
+    {
+      "technique": "T1071",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "contains_pe_overlay",
+      "confidence": "medium",
+      "justification": "CAPE signature 'contains_pe_overlay' fired (severity=2, confidence=100%, categories=['static'])"
+    },
+    {
+      "technique": "T1082",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "discover_registry_mount_points",
+      "confidence": "low",
+      "justification": "CAPE signature 'discover_registry_mount_points' fired (severity=2, confidence=20%, categories=['discovery', 'ransomware', 'wiper'])"
+    },
+    {
+      "technique": "T1620",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "dropper",
+      "confidence": "medium",
+      "justification": "CAPE signature 'dropper' fired (severity=2, confidence=50%, categories=['dropper'])"
+    }
+  ],
+  "network": {
+    "domains": [
+      {
+        "domain": "www.baidu.com",
+        "ip": "103.235.46.115"
+      },
+      {
+        "domain": "www.msftconnecttest.com",
+        "ip": "2.20.253.87"
+      }
+    ],
+    "hosts": [
+      {
+        "ip": "172.64.154.167",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "52.113.196.254",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "108.140.32.194",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "185.43.182.25",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "www.msftconnecttest.com",
+        "inaddrarpa": "",
+        "ports": [
+          80
+        ]
+      },
+      {
+        "ip": "185.43.182.40",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "www.msftconnecttest.com",
+        "inaddrarpa": "",
+        "ports": [
+          80
+        ]
+      },
+      {
+        "ip": "4.242.235.91",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "96.16.86.160",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "202.95.11.173",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          5551
+        ]
+      },
+      {
+        "ip": "103.235.46.102",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "www.baidu.com",
+        "inaddrarpa": "",
+        "ports": [
+          80
+        ]
+      },
+      {
+        "ip": "40.126.53.9",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "103.235.46.115",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "www.baidu.com",
+        "inaddrarpa": "",
+        "ports": [
+          80
+        ]
+      },
+      {
+        "ip": "20.231.128.66",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "40.126.53.18",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "20.190.181.3",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "20.190.181.2",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "40.126.53.16",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      }
+    ],
+    "dns_requests": [
+      {
+        "request": "www.baidu.com",
+        "type": "A",
+        "answers": [
+          {
+            "type": "A",
+            "data": "103.235.46.102"
+          },
+          {
+            "type": "A",
+            "data": "103.235.46.115"
+          },
+          {
+            "type": "CNAME",
+            "data": "www.wshifen.com"
+          },
+          {
+            "type": "CNAME",
+            "data": "www.a.shifen.com"
+          }
+        ],
+        "first_seen": 1786454190.79115
+      },
+      {
+        "request": "www.msftconnecttest.com",
+        "type": "A",
+        "answers": [
+          {
+            "type": "CNAME",
+            "data": "www.msftconnecttest.com.edgesuite.net"
+          },
+          {
+            "type": "A",
+            "data": "185.43.182.40"
+          },
+          {
+            "type": "CNAME",
+            "data": "a39.d.akamai.net"
+          },
+          {
+            "type": "A",
+            "data": "185.43.182.25"
+          }
+        ],
+        "first_seen": 1786454232.551368
+      }
+    ],
+    "http_requests": [],
+    "tcp_count": 0,
+    "udp_count": 44
+  },
+  "dropped_files": [
+    {
+      "name": "{31351756-3F24-4963-8380-4E7602335AAE}.cip",
+      "sha256": "9ebed197a87457b2def45f81be4f946cdd5138bcb4cee68ca2d09e0803b8a428",
+      "md5": "a32c614938d06eaf0a799850026495f1",
+      "sha1": "22f5af107a2877d3a3a4c6cbc3b999d13698333c",
+      "size": 3052,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "MiniFilterDrv",
+      "sha256": "1cbb3d517793c2239d0c8e7e05ba2bce1e920bb50355d10889bd41b6b7a69a61",
+      "md5": "1909e031316287156c2dac3018ba337b",
+      "sha1": "73e7b295f5ce10ec6fa9ed02cbef5bfe9d655090",
+      "size": 50752,
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "9ZUPMq.3w",
+      "sha256": "c497b58ff068c3ac21d3b30fef5af2c7d6182277348ad96928f7b28e410e862d",
+      "md5": "fa7298ceff285e62268fd337b532894b",
+      "sha1": "02ec8e672ee8900b4f155ac5503cf1655d808ac5",
+      "size": 2858217,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "hjk.txt",
+      "sha256": "b7c8d25259bfc25b43427d31c25603037c039bbf9e76116d52759ba681499c3a",
+      "md5": "dc2546fbff3aec1245f9a4d611c9f759",
+      "sha1": "b2295d1df787093d589ae7ec2f177e0e2ab41b4c",
+      "size": 1021,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "vally3dka.sys",
+      "sha256": "03f41826ee5624e938ff9de7b621fc954decdf4b6f8cc266c43706881053c1ba",
+      "md5": "e1f74e71e8695423ceec9747894a0776",
+      "sha1": "26c7aee1773662e0a46ecd8786aa6b7e93ffc9f0",
+      "size": 230432,
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "trustinstaller.bin",
+      "sha256": "fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc",
+      "md5": "00893b7c3e8c39d4663257ddec678aa9",
+      "sha1": "97e2a79af66c94fadb0f039fea405c1e612d6729",
+      "size": 145641,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "fhq.bat",
+      "sha256": "1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2",
+      "md5": "3a7cb580bd340505f6dc5b4c829a3eca",
+      "sha1": "21cc730517d74fa1d13316d7e0d817f3bd710906",
+      "size": 1885,
+      "type": "DOS batch file, ISO-8859 text, with CRLF line terminators",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "1.bat",
+      "sha256": "395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d",
+      "md5": "fa42ebb1071abc0e618c296ea2cf71a6",
+      "sha1": "9e0c0737b0e37b3e821d011eecd9b0c7c9f2a15a",
+      "size": 229,
+      "type": "DOS batch file, ASCII text, with CRLF line terminators",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "1.dll",
+      "sha256": "4d5beb8efd4ade583c8ff730609f142550e8ed14c251bae1097c35a756ed39e6",
+      "md5": "f8c3fc89d7a33c90110e401acc799d05",
+      "sha1": "c52d46c66d6469877b156e166ca2dbfb72fe90eb",
+      "size": 105984,
+      "type": "PE32+ executable (DLL) (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "FlashLink Global.lnk",
+      "sha256": "6700041d70548617fdee64444fc0c4ae2e817b63e92710d38846460ea5a0133b",
+      "md5": "10a6c57bee50e59a70d7d64a479e45cd",
+      "sha1": "6f7d8c30397136d304147a3c8b721ce2f25cf4b4",
+      "size": 950,
+      "type": "MS Windows shortcut, Item id list present, Has Relative path, Has Working directory, ctime=Mon Jan  1 00:00:00 1601, mtime=Mon Jan  1 00:00:00 1601, atime=Mon Jan  1 00:00:00 1601, length=0, window=hide",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "MoUsoCoreWorker.1b30e5ea-10b4-4df4-9b57-da118bc14b3c.1.etl",
+      "sha256": "417c513be26467c76e973399070df9d73d9ede8048d01c97efb8649b54885b85",
+      "md5": "5b3a2c5687d7c5866f83544018f0c705",
+      "sha1": "cd4f49d3483d33c3887be47399b560c977109b99",
+      "size": 12288,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "D3D11InstallHelper.dll",
+      "sha256": "78b0a1c7847506452ee518b03f8502ecc4f5d746a87d1130157383dd9a6e0e57",
+      "md5": "4c153ab7598fc93fccbbd3239375ffa0",
+      "sha1": "050ec34368bd23a49f5f72a273daf551fa1fdfb2",
+      "size": 247808,
+      "type": "PE32+ executable (DLL) (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "uninstall.exe",
+      "sha256": "a39b6a090f474e15df3ab76cd8272580be07d5c203b0798a653a7574b8b5572e",
+      "md5": "b267d99f3b5f3cbf1e55758755165acb",
+      "sha1": "16664656c966fa9f435803b8ebccf188f0b59d18",
+      "size": 201504,
+      "type": "PE32 executable (GUI) Intel 80386, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "goldendays.dll",
+      "sha256": "33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c",
+      "md5": "d920c1a909744e206405ec13539ee01c",
+      "sha1": "bf778f27c8abc9bd44ca484bf18d45cd17f7bbc8",
+      "size": 264192,
+      "type": "PE32+ executable (DLL) (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000d.db",
+      "sha256": "62ad0bf1e4354fdb5e84384469f4d13fb854e573649b27e3367cf730cb401c3e",
+      "md5": "95fb33741c0927c448823a1accd09777",
+      "sha1": "9bfcc36c5c9fe4521e4e1665ae60f708bee8ad92",
+      "size": 70552,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "store.db",
+      "sha256": "7970924667a0549ec2e379b3e05c158ad09e0cb3457061decb3d1c8000442def",
+      "md5": "1f19b959ac41c496d0be64cfd5c0e3b4",
+      "sha1": "c1625af1e4237288a7d6f5819d27a8ad580f1b64",
+      "size": 61440,
+      "type": "SQLite 3.x database, user version 3, last written using SQLite version 3029000, file counter 7, database pages 15, cookie 0x6, schema 4, UTF-16 little endian, version-valid-for 7",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "UserInfo.dll",
+      "sha256": "4913d4cccf84cd0534069107cff3e8e2f427160cad841547db9019310ac86cc7",
+      "md5": "d458b8251443536e4a334147e0170e95",
+      "sha1": "ba8d4d580f1bc0bb2eaa8b9b02ee9e91b8b50fc3",
+      "size": 4096,
+      "type": "PE32 executable (DLL) (GUI) Intel 80386, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "Enpug.bin",
+      "sha256": "a696f2543cdfd0578f96d458816051e65ed25e757502ed190182e5f85ef522cb",
+      "md5": "786680a4c3714af139623b7ad67f71e9",
+      "sha1": "e41b1aea6db5918d48ad2db1b24fdb83a28859f0",
+      "size": 174313,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "66VOAk0O.exe",
+      "sha256": "1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9",
+      "md5": "082cb645d7b4fabd2ae92ec334049a3e",
+      "sha1": "ec25e8244d642fe64bb8d35a0531cbb3a7a9d904",
+      "size": 212824,
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "System.dll",
+      "sha256": "9111099efe9d5c9b391dc132b2faf0a3851a760d4106d5368e30ac744eb42706",
+      "md5": "4add245d4ba34b04f213409bfe504c07",
+      "sha1": "ef756d6581d70e87d58cc4982e3f4d18e0ea5b09",
+      "size": 12288,
+      "type": "PE32 executable (DLL) (GUI) Intel 80386, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "filecoauth-2026-08-11.1218.868.1.odl",
+      "sha256": "1c174ec623a51362bc15e2f8fb3feedae12a8840a8d67e6dee81d6f4efbdc55e",
+      "md5": "f24b640f8d3fa1ac442de0568810edfe",
+      "sha1": "d8ae9cc94d7fe82da5fb37e320cc4a450722c99c",
+      "size": 19268,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "vmservice.sys",
+      "sha256": "627169b1bad0744f636c72a86f6f8e0ff1f4fbb475e8629576a2462a0341ca4f",
+      "md5": "5b3bea02989eaa3c91cc0529b28c0fdb",
+      "sha1": "8b938dda75e9c72be2e34be0a3fd855b09d780c2",
+      "size": 51264,
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000c.db",
+      "sha256": "0b057cadffa2a1fa6c6262b71cda748a40a0a540bc20b7143e4859b1a7bea38a",
+      "md5": "f94a29e3ffba4dbec5c971774498703d",
+      "sha1": "af390420a84ec678c73fa661507a5b75fd3a7a56",
+      "size": 74304,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "cversions.3.db",
+      "sha256": "2fecfb0e3111c22a38200af49555ac0b2f9449be43adce334909ddd42e40ac05",
+      "md5": "2e8750f609ad015b9e5a82a4ded13892",
+      "sha1": "c41d98039c76211803d12cfa03af1c77aaaef021",
+      "size": 16384,
+      "type": "firmware d00 v0 (revision 0) `  V2, 16777216 bytes or less, UNKNOWN3 0x1000000, at 0x1000000 0 bytes , at 0 0 bytes ",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "kill.txt",
+      "sha256": "56a43b1f30c67304e0202d7d59fb96e8b44d73d7b9f14110b8a6d0bac1c0af66",
+      "md5": "aec9a4bc3ee629a305020e6f107f150f",
+      "sha1": "c45d08868ad52b38930067b9962e9c8d0ac9d4e9",
+      "size": 54262,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "WuProvider.91094383-7a4b-40cd-bca4-e8a41269a0d1.1.etl",
+      "sha256": "8b7be2edaa15781ffa4f0d971361108c7ed724b2b31ab9b369e4ed7646480db8",
+      "md5": "a5ec0d9b54ef42b16a26c5ba521a6e82",
+      "sha1": "dd56e9753f8e292f99198ac8db1a87748a3cf83a",
+      "size": 4096,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "agg.txt",
+      "sha256": "4226e32b283af8022a30eb1434bca9d13bba7ecfa9e4721cc24708ff3b5e4d30",
+      "md5": "92dbeaa031c57fca593b530e598ae134",
+      "sha1": "475b348478f404428d29e300e0f313229e02933c",
+      "size": 293818,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "nsis_tauri_utils.dll",
+      "sha256": "f3e9b0d43b66fa6b05d2fa4de4547517a3ec0bc0b14de3c349d817465bbf7ab4",
+      "md5": "6ebdde247cad8468575f1f2a4d7ae2a2",
+      "sha1": "d0c502f45df55c0465c9406088ff016c2e7e6817",
+      "size": 33280,
+      "type": "PE32 executable (DLL) (GUI) Intel 80386, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+      "sha256": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+      "md5": "dba136b8380bbe468f702dc58f05b203",
+      "sha1": "1475c8eeca35598b3eb8df585c01c33eb53c8753",
+      "size": 13824,
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "cape_payload"
+      ]
+    },
+    {
+      "name": "c534840b2c1617f3b26821480b9d4cf551d43a4d273eb71072d48de19dce740f",
+      "sha256": "c534840b2c1617f3b26821480b9d4cf551d43a4d273eb71072d48de19dce740f",
+      "md5": "c2324686005c994673fd086d75879afa",
+      "sha1": "d3f2230d5b42bf3552a5a7fe4d021799504260d6",
+      "size": 163328,
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "cape_payload"
+      ]
+    },
+    {
+      "name": "8bfadac3678dabc42a7bfa2efd024a1fb102db1ab38995920c5ce7558517e194",
+      "sha256": "8bfadac3678dabc42a7bfa2efd024a1fb102db1ab38995920c5ce7558517e194",
+      "md5": "7223e1b91ea4b67d92999620510c9fee",
+      "sha1": "dbab68d87f8f71727127f1520aba3e9c8ee76f4a",
+      "size": 503296,
+      "type": "PE32+ executable (console) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "cape_payload"
+      ]
+    },
+    {
+      "name": "11a6cb1d63a14e4a34aeedc43fa640d782c41533cc02ffdace19c3b5eacc03de",
+      "sha256": "11a6cb1d63a14e4a34aeedc43fa640d782c41533cc02ffdace19c3b5eacc03de",
+      "md5": "08e304e049c8be35e3c08fd1125d1c74",
+      "sha1": "73be3ce547d5a853f33aa2455f23fc1bb50537c2",
+      "size": 2860544,
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "Unpacked PE Image: 64-bit executable",
+      "roles": [
+        "cape_payload"
+      ]
+    },
+    {
+      "name": "05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5",
+      "sha256": "05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5",
+      "md5": "c9fae85ee2b0d25f1a302b6192512c33",
+      "sha1": "ab68f82092ce5456df405063d986ebbf9f669feb",
+      "size": 190464,
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "cape_payload"
+      ]
+    },
+    {
+      "name": "65367ad3a97da1b56896ba69abbbac238990f74921aba0e726db0b6d7e2c67e8",
+      "sha256": "65367ad3a97da1b56896ba69abbbac238990f74921aba0e726db0b6d7e2c67e8",
+      "md5": "edad037c7896f30d1696a4368a306504",
+      "sha1": "72451a842cf40ec0f0d06b6462609a30a8c38764",
+      "size": 259072,
+      "type": "PE32+ executable (DLL) (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "cape_payload"
+      ]
+    },
+    {
+      "name": "1668cc758726d95ccc1fdae3a766da8ca3862082bf0e5c265e94ef442f2cf3cb",
+      "sha256": "1668cc758726d95ccc1fdae3a766da8ca3862082bf0e5c265e94ef442f2cf3cb",
+      "md5": "f6edf599aaafcb225a60de36eca66be7",
+      "sha1": "c7083ba98ff29446e38f470b68ee51c2bbc72aa8",
+      "size": 2853376,
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "Unpacked PE Image: 64-bit executable",
+      "roles": [
+        "cape_payload"
+      ]
+    },
+    {
+      "name": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
+      "sha256": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
+      "md5": "7a5ba5b73a9a516ac275d2ce8b0dcda4",
+      "sha1": "a285fcb132d54ca1c554f3939f207bce9b21d131",
+      "size": 14336,
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "cape_payload"
+      ]
+    },
+    {
+      "name": "94cb49cb1bd30ca46c117ff341506aecaec4c53c53727072a123a3f58d604118",
+      "sha256": "94cb49cb1bd30ca46c117ff341506aecaec4c53c53727072a123a3f58d604118",
+      "md5": "e679298a4e804f555727f45c6a253136",
+      "sha1": "f5607cc266943aafd3440c1f28388d0e7c56c297",
+      "size": 2858057,
+      "type": "data",
+      "cape_type": "unknown",
+      "roles": [
+        "cape_payload"
+      ]
+    }
+  ],
+  "host_activity": {
+    "mutexes": [
+      "Local\\SM0:6528:304:WilStaging_02",
+      "cversions.3.m",
+      "Local\\__DDrawCheckExclMode__",
+      "Local\\MSCTF.Asm.MutexDefault1",
+      "CicLoadWinStaWinSta0",
+      "Local\\MSCTF.CtfMonitorInstMutexDefault1",
+      "Local\\SM0:5516:304:WilStaging_02",
+      "Global\\MoUsoCoreworkerRunning",
+      "Local\\SM0:9120:120:WilError_03",
+      "Local\\SM0:9120:304:WilStaging_02",
+      "Local\\SM0:868:168:WilStaging_02"
+    ],
+    "created_services": [
+      "vally3dka",
+      "MicrosoftSoftware2ShadowCop4yProvider",
+      "vmservice",
+      "MiniFilterDrv"
+    ],
+    "started_services": [
+      "vally3dka",
+      "MicrosoftSoftware2ShadowCop4yProvider",
+      "vmservice",
+      "MiniFilterDrv"
+    ],
+    "commands_executed": [
+      "\"C:\\Program Files\\\\Snegreijsmaity\\RDKl4OR6\\Kyl2lh\\66VOAk0O\"",
+      "C:\\Windows\\system32\\DllHost.exe /Processid:{338B40F9-9D68-4B53-A793-6B9AA0C5F63B}",
+      "C:\\Windows\\system32\\DllHost.exe /Processid:{AB8902B4-09CA-4BB6-B78D-A8F59079A8D5}",
+      "\"C:\\Users\\Windows\\AppData\\Local\\Microsoft\\OneDrive\\21.220.1024.0005\\FileCoAuth.exe\" -Embedding",
+      "C:\\Windows\\System32\\mousocoreworker.exe -Embedding",
+      "C:\\Windows\\System32\\CompPkgSrv.exe -Embedding",
+      "C:\\Windows\\system32\\DllHost.exe /Processid:{7966B4D8-4FDC-4126-A10B-39A3209AD251}",
+      "\"C:\\Windows\\system32\\BackgroundTaskHost.exe\" -ServerName:BackgroundTaskHost.WebAccountProvider"
+    ],
+    "registry_keys_written": {
+      "items": [
+        "HKEY_LOCAL_MACHINE\\Software\\FlashLink Global\\FlashLink Global",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\(Default)",
+        "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlashLink Global",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlashLink Global\\MainBinaryName",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlashLink Global\\(Default)",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlashLink Global\\DisplayName",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlashLink Global\\DisplayIcon",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlashLink Global\\DisplayVersion",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlashLink Global\\Publisher",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlashLink Global\\UninstallString",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlashLink Global\\QuietUninstallString",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlashLink Global\\NoModify",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlashLink Global\\NoRepair",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FlashLink Global\\EstimatedSize",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\InstallDate",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\InstallSource",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\InstallationType",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\ProductCode",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\VersionMajor",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\VersionMinor",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\NoModify",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\NoRepair",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\SystemComponent",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\Comments",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\Contact",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\Readme",
+        "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\MiniFilterDrv\\Instances",
+        "HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Services\\MiniFilterDrv\\Instances\\DefaultInstance",
+        "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\MiniFilterDrv\\Instances\\MiniFilterDrv Instance",
+        "HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Services\\MiniFilterDrv\\Instances\\MiniFilterDrv Instance\\Altitude",
+        "HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Services\\MiniFilterDrv\\Instances\\MiniFilterDrv Instance\\Flags",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Security and Maintenance\\Checks\\{852FB1F8-5CC6-4567-9C0E-7C330F8807C2}.check.100\\CheckSetting",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Search\\InstalledWin32AppsRevision",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CloudStore\\Store\\Cache\\DefaultAccount\\$de${f02e4223-9380-472e-b51a-5055a5b7b6c5}$$windows.data.unifiedtile.localstartvolatiletilepropertiesmap\\Current\\Data",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Security and Maintenance\\Checks\\{C8E6F269-B90A-4053-A3BE-499AFCEC98C4}.check.0\\CheckSetting",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\jvaqbjf.vzzrefvirpbagebycnary_pj5a1u2gklrjl!zvpebfbsg.jvaqbjf.vzzrefvirpbagebycnary",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\HRZR_PGYFRFFVBA",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ActivityDataModel\\ReaderRevisionInfo\\1CD40912-DB90-BFB2-A30B-84B429687ADE",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Search\\TraySearchBoxVisible",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Orchestrator\\UpdateManagerCtorFailures",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsSelfHost\\FIDs\\AllFlights",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\ETag",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\LastUpdated",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\LastRefreshAttempted",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\RefreshInterval",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\LastHTTPCode",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\QueryStringHash",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsSelfHost\\ClientState\\CurrentCallsPerDayCount"
+      ],
+      "total_count": 48,
+      "truncated": false
+    }
+  },
+  "process_tree": [
+    {
+      "name": "svchost.exe",
+      "pid": 772,
+      "parent_id": 640,
+      "module_path": "C:\\Windows\\System32\\svchost.exe",
+      "children": [
+        {
+          "name": "dllhost.exe",
+          "pid": 6528,
+          "parent_id": 772,
+          "module_path": "C:\\Windows\\System32\\dllhost.exe",
+          "children": []
+        },
+        {
+          "name": "dllhost.exe",
+          "pid": 5516,
+          "parent_id": 772,
+          "module_path": "C:\\Windows\\System32\\dllhost.exe",
+          "children": []
+        },
+        {
+          "name": "mousocoreworker.exe",
+          "pid": 9120,
+          "parent_id": 772,
+          "module_path": "C:\\Windows\\System32\\mousocoreworker.exe",
+          "children": []
+        },
+        {
+          "name": "FileCoAuth.exe",
+          "pid": 868,
+          "parent_id": 772,
+          "module_path": "C:\\Users\\Windows\\AppData\\Local\\Microsoft\\OneDrive\\21.220.1024.0005\\FileCoAuth.exe",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "explorer.exe",
+      "pid": 4484,
+      "parent_id": 4412,
+      "module_path": "C:\\Windows\\explorer.exe",
+      "children": [
+        {
+          "name": "sample.exe",
+          "pid": 2804,
+          "parent_id": 4484,
+          "module_path": "C:\\Users\\Windows\\AppData\\Local\\Temp\\sample.exe",
+          "children": [
+            {
+              "name": "66VOAk0O.exe",
+              "pid": 2236,
+              "parent_id": 2804,
+              "module_path": "C:\\Program Files\\Snegreijsmaity\\RDKl4OR6\\Kyl2lh\\66VOAk0O.exe",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "process_injection_signatures": [
+    {
+      "name": "creates_suspended_process",
+      "description": "Creates a process in a suspended state, likely for injection",
+      "severity": 2,
+      "categories": [
+        "injection",
+        "process hollowing"
+      ]
+    },
+    {
+      "name": "resumethread_remote_process",
+      "description": "Resumed a thread in another process",
+      "severity": 2,
+      "categories": [
+        "injection",
+        "unpacking"
+      ]
+    },
+    {
+      "name": "injection_write_process",
+      "description": "Writes to the memory another process",
+      "severity": 2,
+      "categories": [
+        "injection",
+        "unpacking"
+      ]
+    },
+    {
+      "name": "reads_memory_remote_process",
+      "description": "Reads from the memory of another process",
+      "severity": 2,
+      "categories": [
+        "memory scraping",
+        "injection"
+      ]
+    },
+    {
+      "name": "injection_rwx",
+      "description": "Creates RWX memory",
+      "severity": 2,
+      "categories": [
+        "injection"
+      ]
+    },
+    {
+      "name": "unbacked_api_resolution",
+      "description": "Manually resolves API addresses from dynamically allocated (unbacked) memory, indicative of shellcode or an unpacker",
+      "severity": 3,
+      "categories": [
+        "evasion",
+        "shellcode",
+        "fileless"
+      ]
+    },
+    {
+      "name": "unbacked_memory_protection_alteration",
+      "description": "Altered memory protections from dynamically allocated (unbacked) memory, indicative of self-modifying shellcode or memory patching",
+      "severity": 3,
+      "categories": [
+        "evasion",
+        "stealth",
+        "fileless",
+        "shellcode"
+      ]
+    },
+    {
+      "name": "unbacked_delay_execution",
+      "description": "Paused execution (sleep/delay) in a thread executing in dynamically allocated (unbacked) memory, indicative of sandbox evasion or C2 sleeping between callbacks",
+      "severity": 3,
+      "categories": [
+        "evasion",
+        "c2",
+        "fileless",
+        "shellcode"
+      ]
+    },
+    {
+      "name": "unbacked_file_dropping",
+      "description": "Writes data to the filesystem from dynamically allocated (unbacked) memory",
+      "severity": 3,
+      "categories": [
+        "execution",
+        "exfiltration",
+        "fileless",
+        "shellcode"
+      ]
+    },
+    {
+      "name": "unbacked_process_enumeration",
+      "description": "Attempted to enumerate running processes from dynamically allocated (unbacked) memory",
+      "severity": 3,
+      "categories": [
+        "discovery",
+        "fileless",
+        "reconnaissance",
+        "shellcode"
+      ]
+    },
+    {
+      "name": "unbacked_service_manipulation",
+      "description": "Attempted to interact with the Service Control Manager from dynamically allocated (unbacked) memory",
+      "severity": 3,
+      "categories": [
+        "lateral_movement",
+        "persistence",
+        "fileless",
+        "shellcode"
+      ]
+    },
+    {
+      "name": "unbacked_bind_shell",
+      "description": "Bound a network socket to listen for inbound connections from dynamically allocated (unbacked) memory, indicating a fileless TCP bind shell or P2P",
+      "severity": 3,
+      "categories": [
+        "network",
+        "c2",
+        "fileless",
+        "lateral_movement",
+        "shellcode"
+      ]
+    },
+    {
+      "name": "unbacked_dns_resolution",
+      "description": "Attempted to resolve a domain name from dynamically allocated (unbacked) memory",
+      "severity": 3,
+      "categories": [
+        "network",
+        "c2",
+        "fileless",
+        "shellcode"
+      ]
+    },
+    {
+      "name": "unbacked_memory_network_connection",
+      "description": "Network connection initiated from dynamically allocated (unbacked) memory, indicative of fileless C2 activity",
+      "severity": 3,
+      "categories": [
+        "network",
+        "c2",
+        "fileless",
+        "shellcode"
+      ]
+    }
+  ]
+}

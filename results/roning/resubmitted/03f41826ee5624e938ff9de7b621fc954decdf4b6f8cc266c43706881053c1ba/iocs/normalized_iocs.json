@@ -1,0 +1,356 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:29.767504+00:00",
+  "sources": {
+    "static_report": "static/reports/roning/03f41826ee5624e938ff9de7b621fc954decdf4b6f8cc266c43706881053c1ba_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "roning",
+    "static_sha256": "03f41826ee5624e938ff9de7b621fc954decdf4b6f8cc266c43706881053c1ba",
+    "static_md5": "e1f74e71e8695423ceec9747894a0776",
+    "static_sha1": "26c7aee1773662e0a46ecd8786aa6b7e93ffc9f0",
+    "static_imphash": "c6a0f65ba653ee78255cc9e314abc442",
+    "static_ssdeep": "3072:B8wCsj96Zv9hgRUwbtfc55HPdF7NXFZH5+emjHAYrPtlThlH5IpfRlkf3J:BZCC8jgRleHPdFl5+/LTOQ/J",
+    "static_tlsh": "T10F346CA5AE6034F4C91FD538C6B318A6EDF1F272136462CF4A34E2652F153E0E5362E9",
+    "static_filename": "03f41826ee5624e938ff9de7b621fc954decdf4b6f8cc266c43706881053c1ba",
+    "static_file_type": "pe_native"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "03f41826ee5624e938ff9de7b621fc954decdf4b6f8cc266c43706881053c1ba",
+      "md5": "e1f74e71e8695423ceec9747894a0776",
+      "sha1": "26c7aee1773662e0a46ecd8786aa6b7e93ffc9f0",
+      "filename": "03f41826ee5624e938ff9de7b621fc954decdf4b6f8cc266c43706881053c1ba",
+      "type": "pe_native"
+    }
+  ],
+  "network_iocs": {
+    "domains": [
+      {
+        "value": "ocsp.comodoca",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "zam64.pdb",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "secure.comodo.net",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "crl.comodoca.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "crl.microsoft.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "ocsp.digicert",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "crl.usertrust.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "subca.ocsp",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "ccsca2021.ocsp",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "subca.repository.certum",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "crt.comodoca.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "ccsca2021.crl.certum",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "repository.certum.pl",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "cacerts.digicert.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "ocsp.usertrust",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "srb.scsistatus",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "h.data",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "crl3.digicert.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "b.reloc",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "ips": [],
+    "urls": [
+      {
+        "value": "http://subca.ocsp-certum.com01",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://repository.certum.pl/ctnca.cer09",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "https://www.certum.pl/CPS0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crt.comodoca.com/COMODORSACodeSigningCA.crt0$",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://ccsca2021.crl.certum.pl/ccsca2021.crl0s",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://subca.repository.certum.pl/ctsca2021.cer0(",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl3.digicert.com/DigiCertTrustedRootG4.crl0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl.microsoft.com/pki/crl/products/MicrosoftCodeVerifRoot.crl0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://repository.certum.pl/ctnca2.cer09",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://subca.ocsp-certum.com02",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://subca.ocsp-certum.com0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://ocsp.digicert.com0C",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl.certum.pl/ctnca2.crl0l",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://ocsp.digicert.com0]",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://ocsp.usertrust.com0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://www.certum.pl/CPS0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl.comodoca.com/COMODORSACodeSigningCA.crl0t",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [
+      {
+        "value": "Z:\\Zemana\\Projects\\AntiMalware\\bin\\zam64.pdb",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [
+    {
+      "technique": "T1055",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "OpenProcess",
+          "confidence": "medium",
+          "name": "Process Injection",
+          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1070",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateFile",
+          "confidence": "high",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'CreateFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "DeleteFile",
+          "confidence": "high",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'DeleteFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1486",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "WriteFile",
+          "confidence": "low",
+          "name": "Data Encrypted for Impact",
+          "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1497",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "Sleep",
+          "confidence": "low",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'Sleep' was found in the binary. This string is characteristic of Virtualization/Sandbox Evasion behavior. The presence of this specific string alone (no other Virtualization/Sandbox Evasion-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    }
+  ],
+  "discarded_entries": [
+    {
+      "reason": "looks_like_filename_not_domain",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "fltmgr.sys"
+    }
+  ]
+}

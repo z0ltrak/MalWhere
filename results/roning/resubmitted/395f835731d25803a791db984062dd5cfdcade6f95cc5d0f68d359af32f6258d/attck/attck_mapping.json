@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:30.897844+00:00",
+  "sample": {
+    "family": "roning",
+    "static_sha256": "395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d",
+    "static_md5": "fa42ebb1071abc0e618c296ea2cf71a6",
+    "static_sha1": "9e0c0737b0e37b3e821d011eecd9b0c7c9f2a15a",
+    "static_imphash": null,
+    "static_ssdeep": "6:h6PzYLxiH1jhRiRe66nW9BWGDAIFos7/RKrAoU:/LMVjhRWe/oBWGcxyZKW",
+    "static_tlsh": "T169D0A7205515411756D29110BB8A5DD1773EA18A2402AB1061DE9471513B9CAC83F9DF",
+    "static_filename": "395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d",
+    "static_file_type": "script_batch"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d",
+        "md5": "fa42ebb1071abc0e618c296ea2cf71a6",
+        "sha1": "9e0c0737b0e37b3e821d011eecd9b0c7c9f2a15a",
+        "filename": "395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d",
+        "type": "script_batch"
+      }
+    ],
+    "network_iocs": {
+      "domains": [],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [
+        {
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\" /v EnableLUA /t REG_DWORD /d 0 /f",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "file_paths": [],
+      "mutexes": [],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [
+    {
+      "technique_id": "T1112",
+      "technique_name": "Modify Registry",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "1 registry paths found",
+          "confidence": "medium",
+          "name": "Modify Registry",
+          "justification": "Found 1 registry paths in the configuration. Registry modifications are used for persistence, configuration storage, and defense evasion (T1112)."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_techniques": 1,
+    "high": 0,
+    "medium": 1,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 1,
+    "dynamic_only": 0
+  }
+}

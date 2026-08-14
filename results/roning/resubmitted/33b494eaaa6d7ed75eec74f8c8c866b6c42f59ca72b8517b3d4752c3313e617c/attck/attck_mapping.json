@@ -1,0 +1,273 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:30.769411+00:00",
+  "sample": {
+    "family": "roning",
+    "static_sha256": "33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c",
+    "static_md5": "d920c1a909744e206405ec13539ee01c",
+    "static_sha1": "bf778f27c8abc9bd44ca484bf18d45cd17f7bbc8",
+    "static_imphash": "cfda6c3cbedfbd294738553cbb4a4ff6",
+    "static_ssdeep": "6144:aKzJW4g+lZ1WJrfO6F89mJJSbznohoHF6nGj:PHgi1WJfOixvSfnoIbj",
+    "static_tlsh": "T15F446B1972A50CB5E977823DC8535A06E7B2B84603A0DAFF03A0875A9F377D0A53FB51",
+    "static_filename": "33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c",
+    "static_file_type": "pe_dotnet"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c",
+        "md5": "d920c1a909744e206405ec13539ee01c",
+        "sha1": "bf778f27c8abc9bd44ca484bf18d45cd17f7bbc8",
+        "filename": "33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c",
+        "type": "pe_dotnet"
+      }
+    ],
+    "network_iocs": {
+      "domains": [
+        {
+          "value": "trustinstaller.bin",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [
+        {
+          "value": "C:\\ProgramData\\Roning\\trustinstaller.bin",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "mutexes": [],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [
+    {
+      "technique_id": "T1055",
+      "technique_name": "Process Injection",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "OpenProcess",
+          "confidence": "medium",
+          "name": "Process Injection",
+          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "VirtualAllocEx, CreateRemoteThread, OpenProcess, WriteProcessMemory",
+          "confidence": "high",
+          "name": "Process Injection",
+          "justification": "The API functions VirtualAllocEx, CreateRemoteThread, OpenProcess, WriteProcessMemory are all imported by the binary. This combination is characteristic of Process Injection \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique_id": "T1070",
+      "technique_name": "Indicator Removal",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateFile",
+          "confidence": "low",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateFileA, CreateFileW",
+          "confidence": "high",
+          "name": "Indicator Removal on Host",
+          "justification": "The API functions CreateFileA, CreateFileW are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique_id": "T1083",
+      "technique_name": "File and Directory Discovery",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "FindFirstFile",
+          "confidence": "high",
+          "name": "File and Directory Discovery",
+          "justification": "The malware string 'FindFirstFile' was found in the binary, alongside 1 other string(s) also characteristic of File and Directory Discovery. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "FindNextFile",
+          "confidence": "high",
+          "name": "File and Directory Discovery",
+          "justification": "The malware string 'FindNextFile' was found in the binary, alongside 1 other string(s) also characteristic of File and Directory Discovery. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "FindClose, FindNextFileW",
+          "confidence": "high",
+          "name": "File and Directory Discovery",
+          "justification": "The API functions FindClose, FindNextFileW are all imported by the binary. This combination is characteristic of File and Directory Discovery \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique_id": "T1497",
+      "technique_name": "Virtualization/Sandbox Evasion",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "QueryPerformanceCounter",
+          "confidence": "medium",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'QueryPerformanceCounter' was found in the binary. This string is characteristic of Virtualization/Sandbox Evasion behavior. The presence of this specific string alone (no other Virtualization/Sandbox Evasion-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "Sleep, QueryPerformanceCounter",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The API functions Sleep, QueryPerformanceCounter are all imported by the binary. This combination is characteristic of Virtualization/Sandbox Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique_id": "T1622",
+      "technique_name": "Debugger Evasion",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "IsDebuggerPresent",
+          "confidence": "low",
+          "name": "Debugger Evasion",
+          "justification": "The malware string 'IsDebuggerPresent' was found in the binary. This string is characteristic of Debugger Evasion behavior. The presence of this specific string alone (no other Debugger Evasion-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "UnhandledExceptionFilter, SetUnhandledExceptionFilter, IsDebuggerPresent",
+          "confidence": "high",
+          "name": "Debugger Evasion",
+          "justification": "The API functions UnhandledExceptionFilter, SetUnhandledExceptionFilter, IsDebuggerPresent are all imported by the binary. This combination is characteristic of Debugger Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "yara",
+          "evidence": "AntiDebug_IsDebuggerPresent",
+          "confidence": "high",
+          "name": "Debugger Evasion",
+          "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
+        }
+      ]
+    },
+    {
+      "technique_id": "T1059",
+      "technique_name": "Command and Scripting Interpreter",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateProcessA",
+          "confidence": "medium",
+          "name": "Command and Scripting Interpreter",
+          "justification": "The API function 'CreateProcessA' is imported by the binary. This API is commonly used to perform Command and Scripting Interpreter. Importing this function alone (no other Command and Scripting Interpreter-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique_id": "T1486",
+      "technique_name": "Data Encrypted for Impact",
+      "final_confidence": "low",
+      "confidence_score": 30,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "low",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "WriteFile",
+          "confidence": "low",
+          "name": "Data Encrypted for Impact",
+          "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_techniques": 7,
+    "high": 5,
+    "medium": 1,
+    "low": 1,
+    "both_sources": 0,
+    "static_only": 7,
+    "dynamic_only": 0
+  }
+}

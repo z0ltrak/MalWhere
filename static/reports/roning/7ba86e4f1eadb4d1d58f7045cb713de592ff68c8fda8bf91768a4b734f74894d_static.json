@@ -1,0 +1,2060 @@
+{
+  "filename": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+  "size_bytes": 13824,
+  "size_mb": 0.01,
+  "extension": "",
+  "file_type": "pe_native",
+  "file_type_info": {
+    "type": "pe_native",
+    "confidence": "high",
+    "is_dotnet": false,
+    "pe_offset": 208
+  },
+  "md5": "dba136b8380bbe468f702dc58f05b203",
+  "sha1": "1475c8eeca35598b3eb8df585c01c33eb53c8753",
+  "sha256": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+  "ssdeep": "192:DB3ARzz+jGyIyS/9WCYQ5SqbM4Ppay0YcHf0EJ8a8d:KRzz+a/9pYQ5zbvpay058B",
+  "tlsh": "T152522B8AA79558EDE62DC0BDD0370A26D7B0F00543129BDF4BB085291E73FC1E539B4A",
+  "imphash": "0423ca4f9c719d8f562eb37caa508faa",
+  "is_dotnet": false,
+  "metadata": {
+    "machine": {
+      "value": "0x8664",
+      "description": "AMD64"
+    },
+    "number_of_sections": 6,
+    "time_date_stamp": {
+      "raw": 1765602458,
+      "formatted": "2025-12-13T05:07:38"
+    },
+    "characteristics": "0x22",
+    "image_base": "0x140000000",
+    "entry_point": "0x9000",
+    "size_of_code": 8704,
+    "size_of_initialized_data": 16384,
+    "size_of_uninitialized_data": 0,
+    "subsystem": {
+      "value": 1,
+      "description": "Native"
+    },
+    "dll_characteristics": "0x41e0",
+    "image_size": 45056,
+    "headers_size": 1024,
+    "checksum": 89044,
+    "is_dll": false,
+    "is_driver": true
+  },
+  "sections": [
+    {
+      "name": ".text",
+      "virtual_address": "0x1000",
+      "virtual_size": 7076,
+      "raw_size": 7168,
+      "entropy": 6.17,
+      "characteristics": "0x68000020",
+      "is_executable": true,
+      "is_writable": false,
+      "is_readable": true,
+      "md5": "4ee95008f7474be77cb9297fa8ab6c6c",
+      "sha1": "1409ee24c3b4813acdc6ee2344f97e40a138a138",
+      "ssdeep": null
+    },
+    {
+      "name": ".rdata",
+      "virtual_address": "0x3000",
+      "virtual_size": 2560,
+      "raw_size": 2560,
+      "entropy": 3.04,
+      "characteristics": "0x48000040",
+      "is_executable": false,
+      "is_writable": false,
+      "is_readable": true,
+      "md5": "85048d4f8dd4f50db5900b4c029efcba",
+      "sha1": "d9ee2e17a01e624246040851f6a9dfc012465496",
+      "ssdeep": null
+    },
+    {
+      "name": ".data",
+      "virtual_address": "0x4000",
+      "virtual_size": 12296,
+      "raw_size": 512,
+      "entropy": 0.52,
+      "characteristics": "0xc8000040",
+      "is_executable": false,
+      "is_writable": true,
+      "is_readable": true,
+      "md5": "f076cc367d7b4ca6337b234df9cdda37",
+      "sha1": "edf248d7b673e330b5f9fe9f0b4a1beaf23e97e0",
+      "ssdeep": null
+    },
+    {
+      "name": ".pdata",
+      "virtual_address": "0x8000",
+      "virtual_size": 396,
+      "raw_size": 512,
+      "entropy": 3.16,
+      "characteristics": "0x48000040",
+      "is_executable": false,
+      "is_writable": false,
+      "is_readable": true,
+      "md5": "cf0403da165379b852949bef240ed6cd",
+      "sha1": "65185a3d2ba0d03d5929556578876d52bd4139af",
+      "ssdeep": null
+    },
+    {
+      "name": "INIT",
+      "virtual_address": "0x9000",
+      "virtual_size": 1248,
+      "raw_size": 1536,
+      "entropy": 4.43,
+      "characteristics": "0x62000020",
+      "is_executable": true,
+      "is_writable": false,
+      "is_readable": true,
+      "md5": "28e2ac82ec2b069347e7202bb1209d94",
+      "sha1": "312412982f282ad04cbd7603906efa9954e6d016",
+      "ssdeep": null
+    },
+    {
+      "name": ".reloc",
+      "virtual_address": "0xa000",
+      "virtual_size": 60,
+      "raw_size": 512,
+      "entropy": 0.8,
+      "characteristics": "0x42000040",
+      "is_executable": false,
+      "is_writable": false,
+      "is_readable": true,
+      "md5": "e346d3d2dfd3995cfa3af51df4a4e422",
+      "sha1": "632a18096fe58e0aa65fa2088c26b133723edaf3",
+      "ssdeep": null
+    }
+  ],
+  "imports": [
+    {
+      "dll": "FLTMGR.SYS",
+      "function": "FltUnregisterFilter",
+      "address": "0x140003000",
+      "hint": 265
+    },
+    {
+      "dll": "FLTMGR.SYS",
+      "function": "FltStartFiltering",
+      "address": "0x140003008",
+      "hint": 255
+    },
+    {
+      "dll": "FLTMGR.SYS",
+      "function": "FltGetFileNameInformation",
+      "address": "0x140003010",
+      "hint": 111
+    },
+    {
+      "dll": "FLTMGR.SYS",
+      "function": "FltReleaseFileNameInformation",
+      "address": "0x140003018",
+      "hint": 217
+    },
+    {
+      "dll": "FLTMGR.SYS",
+      "function": "FltParseFileNameInformation",
+      "address": "0x140003020",
+      "hint": 186
+    },
+    {
+      "dll": "FLTMGR.SYS",
+      "function": "FltRegisterFilter",
+      "address": "0x140003028",
+      "hint": 211
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "wcsrchr",
+      "address": "0x140003038",
+      "hint": 3339
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "_wcsicmp",
+      "address": "0x140003040",
+      "hint": 3250
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "_wcsnicmp",
+      "address": "0x140003048",
+      "hint": 3253
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "RtlInitUnicodeString",
+      "address": "0x140003050",
+      "hint": 2362
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "KeDelayExecutionThread",
+      "address": "0x140003058",
+      "hint": 1216
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "ExFreePoolWithTag",
+      "address": "0x140003060",
+      "hint": 252
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "ExInitializeResourceLite",
+      "address": "0x140003068",
+      "hint": 276
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "ExEnterCriticalRegionAndAcquireResourceShared",
+      "address": "0x140003070",
+      "hint": 237
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "ExEnterCriticalRegionAndAcquireResourceExclusive",
+      "address": "0x140003078",
+      "hint": 236
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "ExReleaseResourceAndLeaveCriticalRegion",
+      "address": "0x140003080",
+      "hint": 341
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "ExDeleteResourceLite",
+      "address": "0x140003088",
+      "hint": 229
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "PsCreateSystemThread",
+      "address": "0x140003090",
+      "hint": 1910
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "IofCompleteRequest",
+      "address": "0x140003098",
+      "hint": 1142
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "IoCreateDevice",
+      "address": "0x1400030a0",
+      "hint": 835
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "IoCreateSymbolicLink",
+      "address": "0x1400030a8",
+      "hint": 848
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "IoDeleteDevice",
+      "address": "0x1400030b0",
+      "hint": 861
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "IoDeleteSymbolicLink",
+      "address": "0x1400030b8",
+      "hint": 863
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "IoGetCurrentProcess",
+      "address": "0x1400030c0",
+      "hint": 904
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "ZwClose",
+      "address": "0x1400030c8",
+      "hint": 2922
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "ZwCreateKey",
+      "address": "0x1400030d0",
+      "hint": 2938
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "ZwOpenKey",
+      "address": "0x1400030d8",
+      "hint": 3007
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "ZwDeleteValueKey",
+      "address": "0x1400030e0",
+      "hint": 2958
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "ZwQueryValueKey",
+      "address": "0x1400030e8",
+      "hint": 3071
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "ZwSetValueKey",
+      "address": "0x1400030f0",
+      "hint": 3130
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "PsGetCurrentProcessId",
+      "address": "0x1400030f8",
+      "hint": 1924
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "SeLocateProcessImageName",
+      "address": "0x140003100",
+      "hint": 2708
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "_vsnwprintf",
+      "address": "0x140003108",
+      "hint": 3247
+    },
+    {
+      "dll": "ntoskrnl.exe",
+      "function": "__C_specific_handler",
+      "address": "0x140003110",
+      "hint": 3153
+    }
+  ],
+  "exports": [],
+  "resources": [],
+  "strings": {
+    "standard": [
+      "!This program cannot be run in DOS mode.",
+      "h.rdata",
+      "H.data",
+      ".pdata",
+      "b.reloc",
+      "` AUAVAWH",
+      "fE9<$t",
+      " A_A^A]",
+      "tdf9)t_",
+      "SVWATAUAVAWH",
+      " A_A^A]A\\_^[",
+      "` AUAVAWH",
+      "A_A^A]",
+      "L$ SVWAVH",
+      "(A^_^[",
+      "-fffffff",
+      "fffffff",
+      "fffffff",
+      "fffffff",
+      ".fffffff",
+      "fffffff",
+      "fffffff",
+      "AQAPRQPH",
+      "0XYZAXAY",
+      ".text$mn",
+      ".text$mn$00",
+      ".text$mn$21",
+      ".text$s",
+      ".idata$5",
+      ".00cfg",
+      ".gfids",
+      ".rdata",
+      ".rdata$zzzdbg",
+      ".xdata",
+      ".pdata",
+      ".idata$2",
+      ".idata$3",
+      ".idata$4",
+      ".idata$6",
+      "FltRegisterFilter",
+      "FltUnregisterFilter",
+      "FltStartFiltering",
+      "FltGetFileNameInformation",
+      "FltReleaseFileNameInformation",
+      "FltParseFileNameInformation",
+      "FLTMGR.SYS",
+      "wcsrchr",
+      "_wcsicmp",
+      "_wcsnicmp",
+      ":\tRtlInitUnicodeString",
+      "KeDelayExecutionThread",
+      "ExFreePoolWithTag",
+      "ExInitializeResourceLite",
+      "ExEnterCriticalRegionAndAcquireResourceShared",
+      "ExEnterCriticalRegionAndAcquireResourceExclusive",
+      "ExReleaseResourceAndLeaveCriticalRegion",
+      "ExDeleteResourceLite",
+      "PsCreateSystemThread",
+      "IofCompleteRequest",
+      "IoCreateDevice",
+      "IoCreateSymbolicLink",
+      "IoDeleteDevice",
+      "IoDeleteSymbolicLink",
+      "IoGetCurrentProcess",
+      "ZwClose",
+      "ZwCreateKey",
+      "ZwOpenKey",
+      "ZwDeleteValueKey",
+      "ZwQueryValueKey",
+      "ZwSetValueKey",
+      "PsGetCurrentProcessId",
+      "SeLocateProcessImageName",
+      "_vsnwprintf",
+      "__C_specific_handler",
+      "ntoskrnl.exe"
+    ],
+    "floss": [],
+    "decoded": [],
+    "deobfuscated": [
+      "h8153vC=b|d",
+      "h8153vC=b~e"
+    ],
+    "dotnet_strings": []
+  },
+  "packer": {
+    "detected": true,
+    "packers": [
+      {
+        "name": "Compiler: Microsoft Visual C/C++(19.36.35213)[C",
+        "version": "N/A",
+        "type": "compiler",
+        "confidence": "medium"
+      }
+    ],
+    "confidence": "medium"
+  },
+  "indicators": {
+    "suspicious_imports": [],
+    "suspicious_strings": [
+      {
+        "string": "h.rdata",
+        "description": "Domain"
+      },
+      {
+        "string": "H.data",
+        "description": "Domain"
+      },
+      {
+        "string": "b.reloc",
+        "description": "Domain"
+      },
+      {
+        "string": "FltRegisterFilter",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "FltUnregisterFilter",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "FltStartFiltering",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "FltGetFileNameInformation",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "FltReleaseFileNameInformation",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "FltParseFileNameInformation",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "FLTMGR.SYS",
+        "description": "Domain"
+      },
+      {
+        "string": ":\tRtlInitUnicodeString",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "KeDelayExecutionThread",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "ExFreePoolWithTag",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "ExInitializeResourceLite",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "ExEnterCriticalRegionAndAcquireResourceShared",
+        "description": "VM/DBG Detection"
+      },
+      {
+        "string": "ExEnterCriticalRegionAndAcquireResourceExclusive",
+        "description": "VM/DBG Detection"
+      },
+      {
+        "string": "ExReleaseResourceAndLeaveCriticalRegion",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "ExDeleteResourceLite",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "PsCreateSystemThread",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "IofCompleteRequest",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "IoCreateSymbolicLink",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "IoDeleteSymbolicLink",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "IoGetCurrentProcess",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "ZwCreateKey",
+        "description": "Ransomware Indicator"
+      },
+      {
+        "string": "ZwOpenKey",
+        "description": "Ransomware Indicator"
+      },
+      {
+        "string": "ZwDeleteValueKey",
+        "description": "Ransomware Indicator"
+      },
+      {
+        "string": "ZwQueryValueKey",
+        "description": "Ransomware Indicator"
+      },
+      {
+        "string": "ZwSetValueKey",
+        "description": "Ransomware Indicator"
+      },
+      {
+        "string": "PsGetCurrentProcessId",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "SeLocateProcessImageName",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "ntoskrnl.exe",
+        "description": "Domain"
+      }
+    ],
+    "high_entropy_sections": [],
+    "anti_debug": [],
+    "anti_vm": [],
+    "ransomware_indicators": [],
+    "anti_sandbox": [],
+    "anti_vm_strings": [
+      {
+        "string": "ExEnterCriticalRegionAndAcquireResourceShared",
+        "indicator": "xen",
+        "description": "Anti-VM detection: xen (T1497)",
+        "confidence": "high"
+      },
+      {
+        "string": "ExEnterCriticalRegionAndAcquireResourceExclusive",
+        "indicator": "xen",
+        "description": "Anti-VM detection: xen (T1497)",
+        "confidence": "high"
+      }
+    ],
+    "anti_sandbox_strings": [],
+    "sleep_functions": []
+  },
+  "embedded_files": [],
+  "discovered_keys": [
+    {
+      "type": "printable_ascii",
+      "key": "arseFileNameInformation\u0000FLTMGR.S",
+      "key_hex": "6172736546696c654e616d65496e666f726d6174696f6e00464c544d47522e53",
+      "length": 32,
+      "section": "INIT",
+      "offset": 12344,
+      "entropy": 4.328,
+      "confidence": "high",
+      "description": "Plaintext key candidate (32 bytes): 'arseFileNameInformation\u0000FLTMGR.S'",
+      "attck_id": "T1027",
+      "algorithm": "aes"
+    },
+    {
+      "type": "printable_ascii",
+      "key": "NameInformation\u0000FLTMGR.S",
+      "key_hex": "4e616d65496e666f726d6174696f6e00464c544d47522e53",
+      "length": 24,
+      "section": "INIT",
+      "offset": 12352,
+      "entropy": 4.252,
+      "confidence": "high",
+      "description": "Plaintext key candidate (24 bytes): 'NameInformation\u0000FLTMGR.S'",
+      "attck_id": "T1027",
+      "algorithm": "aes"
+    },
+    {
+      "type": "printable_ascii",
+      "key": "Information\u0000FLTMGR.S",
+      "key_hex": "496e666f726d6174696f6e00464c544d47522e53",
+      "length": 20,
+      "section": "INIT",
+      "offset": 12356,
+      "entropy": 4.122,
+      "confidence": "high",
+      "description": "Plaintext key candidate (20 bytes): 'Information\u0000FLTMGR.S'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "printable_ascii",
+      "key": "FltParseFileNameInformation\u0000FLTM",
+      "key_hex": "466c74506172736546696c654e616d65496e666f726d6174696f6e00464c544d",
+      "length": 32,
+      "section": "INIT",
+      "offset": 12340,
+      "entropy": 4.117,
+      "confidence": "high",
+      "description": "Plaintext key candidate (32 bytes): 'FltParseFileNameInformation\u0000FLTM'",
+      "attck_id": "T1027",
+      "algorithm": "aes"
+    },
+    {
+      "type": "printable_ascii",
+      "key": "U\u0001ExReleaseResourceAndLeaveCriti",
+      "key_hex": "5501457852656c656173655265736f75726365416e644c656176654372697469",
+      "length": 32,
+      "section": "INIT",
+      "offset": 12612,
+      "entropy": 4.073,
+      "confidence": "high",
+      "description": "Plaintext key candidate (32 bytes): 'U\u0001ExReleaseResourceAndLeaveCriti'",
+      "attck_id": "T1027",
+      "algorithm": "aes"
+    },
+    {
+      "type": "printable_ascii",
+      "key": "FileNameInformation\u0000FLTM",
+      "key_hex": "46696c654e616d65496e666f726d6174696f6e00464c544d",
+      "length": 24,
+      "section": "INIT",
+      "offset": 12348,
+      "entropy": 4.002,
+      "confidence": "high",
+      "description": "Plaintext key candidate (24 bytes): 'FileNameInformation\u0000FLTM'",
+      "attck_id": "T1027",
+      "algorithm": "aes"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000.text$mn$21\u00000*",
+      "key_hex": "002e74657874246d6e24323100302a",
+      "length": 15,
+      "section": ".rdata",
+      "offset": 9779,
+      "entropy": 3.507,
+      "confidence": "high",
+      "description": "Printable string (15 bytes): '\u0000.text$mn$21\u00000*'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".text$mn$21\u00000*\u0000",
+      "key_hex": "2e74657874246d6e24323100302a00",
+      "length": 15,
+      "section": ".rdata",
+      "offset": 9780,
+      "entropy": 3.507,
+      "confidence": "high",
+      "description": "Printable string (15 bytes): '.text$mn$21\u00000*\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "ext$mn$21\u00000*",
+      "key_hex": "657874246d6e24323100302a",
+      "length": 12,
+      "section": ".rdata",
+      "offset": 9782,
+      "entropy": 3.418,
+      "confidence": "high",
+      "description": "Printable string (12 bytes): 'ext$mn$21\u00000*'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000.text$mn$21",
+      "key_hex": "002e74657874246d6e243231",
+      "length": 12,
+      "section": ".rdata",
+      "offset": 9779,
+      "entropy": 3.252,
+      "confidence": "high",
+      "description": "Printable string (12 bytes): '\u0000.text$mn$21'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".text$mn$21\u0000",
+      "key_hex": "2e74657874246d6e24323100",
+      "length": 12,
+      "section": ".rdata",
+      "offset": 9780,
+      "entropy": 3.252,
+      "confidence": "high",
+      "description": "Printable string (12 bytes): '.text$mn$21\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "text$mn$21\u00000",
+      "key_hex": "74657874246d6e2432310030",
+      "length": 12,
+      "section": ".rdata",
+      "offset": 9781,
+      "entropy": 3.252,
+      "confidence": "high",
+      "description": "Printable string (12 bytes): 'text$mn$21\u00000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000\u0000.rdata$zzzdbg",
+      "key_hex": "00002e7264617461247a7a7a646267",
+      "length": 15,
+      "section": ".rdata",
+      "offset": 9882,
+      "entropy": 3.19,
+      "confidence": "high",
+      "description": "Printable string (15 bytes): '\u0000\u0000.rdata$zzzdbg'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000.rdata$zzzdbg\u0000",
+      "key_hex": "002e7264617461247a7a7a64626700",
+      "length": 15,
+      "section": ".rdata",
+      "offset": 9883,
+      "entropy": 3.19,
+      "confidence": "high",
+      "description": "Printable string (15 bytes): '\u0000.rdata$zzzdbg\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".rdata$zzzdbg\u0000\u0000",
+      "key_hex": "2e7264617461247a7a7a6462670000",
+      "length": 15,
+      "section": ".rdata",
+      "offset": 9884,
+      "entropy": 3.19,
+      "confidence": "high",
+      "description": "Printable string (15 bytes): '.rdata$zzzdbg\u0000\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "ext$mn$21\u0000",
+      "key_hex": "657874246d6e24323100",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9782,
+      "entropy": 3.122,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): 'ext$mn$21\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "xt$mn$21\u00000",
+      "key_hex": "7874246d6e2432310030",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9783,
+      "entropy": 3.122,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): 'xt$mn$21\u00000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "t$mn$21\u00000*",
+      "key_hex": "74246d6e24323100302a",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9784,
+      "entropy": 3.122,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): 't$mn$21\u00000*'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000.text$mn$00",
+      "key_hex": "002e74657874246d6e243030",
+      "length": 12,
+      "section": ".rdata",
+      "offset": 9759,
+      "entropy": 3.085,
+      "confidence": "high",
+      "description": "Printable string (12 bytes): '\u0000.text$mn$00'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".text$mn$00\u0000",
+      "key_hex": "2e74657874246d6e24303000",
+      "length": 12,
+      "section": ".rdata",
+      "offset": 9760,
+      "entropy": 3.085,
+      "confidence": "high",
+      "description": "Printable string (12 bytes): '.text$mn$00\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "mn$21\u00000*",
+      "key_hex": "6d6e24323100302a",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9786,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'mn$21\u00000*'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000FltRegi",
+      "key_hex": "00466c7452656769",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12217,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0000FltRegi'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0001FltUnre",
+      "key_hex": "01466c74556e7265",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12237,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0001FltUnre'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "ltering\u0000",
+      "key_hex": "6c746572696e6700",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12270,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'ltering\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "tering\u0000o",
+      "key_hex": "746572696e67006f",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12271,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'tering\u0000o'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "rmation\u0000",
+      "key_hex": "726d6174696f6e00",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12298,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'rmation\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000FltPars",
+      "key_hex": "00466c7450617273",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12339,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0000FltPars'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "mation\u0000F",
+      "key_hex": "6d6174696f6e0046",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12361,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'mation\u0000F'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "ation\u0000FL",
+      "key_hex": "6174696f6e00464c",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12362,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'ation\u0000FL'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "tion\u0000FLT",
+      "key_hex": "74696f6e00464c54",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12363,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'tion\u0000FLT'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "ion\u0000FLTM",
+      "key_hex": "696f6e00464c544d",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12364,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'ion\u0000FLTM'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "on\u0000FLTMG",
+      "key_hex": "6f6e00464c544d47",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12365,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'on\u0000FLTMG'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "n\u0000FLTMGR",
+      "key_hex": "6e00464c544d4752",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12366,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'n\u0000FLTMGR'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000FLTMGR.",
+      "key_hex": "00464c544d47522e",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12367,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0000FLTMGR.'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "FLTMGR.S",
+      "key_hex": "464c544d47522e53",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12368,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'FLTMGR.S'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "LTMGR.SY",
+      "key_hex": "4c544d47522e5359",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12369,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'LTMGR.SY'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "snicmp\u0000:",
+      "key_hex": "736e69636d70003a",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12407,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'snicmp\u0000:'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ":\tRtlIni",
+      "key_hex": "3a0952746c496e69",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12414,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): ':\tRtlIni'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "eString\u0000",
+      "key_hex": "65537472696e6700",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12429,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'eString\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "nThread\u0000",
+      "key_hex": "6e54687265616400",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12455,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'nThread\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "WithTag\u0000",
+      "key_hex": "5769746854616700",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12476,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'WithTag\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "clusive\u0000",
+      "key_hex": "636c757369766500",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12603,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'clusive\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "lRegion\u0000",
+      "key_hex": "6c526567696f6e00",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12646,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'lRegion\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000.text$mn$",
+      "key_hex": "002e74657874246d6e24",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9759,
+      "entropy": 2.922,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): '\u0000.text$mn$'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".text$mn$0",
+      "key_hex": "2e74657874246d6e2430",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9760,
+      "entropy": 2.922,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): '.text$mn$0'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "ext$mn$00\u0000",
+      "key_hex": "657874246d6e24303000",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9762,
+      "entropy": 2.922,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): 'ext$mn$00\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".text$mn$2",
+      "key_hex": "2e74657874246d6e2432",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9780,
+      "entropy": 2.922,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): '.text$mn$2'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "text$mn$21",
+      "key_hex": "74657874246d6e243231",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9781,
+      "entropy": 2.922,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): 'text$mn$21'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000.rdata$zz",
+      "key_hex": "002e7264617461247a7a",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9883,
+      "entropy": 2.922,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): '\u0000.rdata$zz'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000.rdata$zzzd",
+      "key_hex": "002e7264617461247a7a7a64",
+      "length": 12,
+      "section": ".rdata",
+      "offset": 9883,
+      "entropy": 2.855,
+      "confidence": "high",
+      "description": "Printable string (12 bytes): '\u0000.rdata$zzzd'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".rdata$zzzdb",
+      "key_hex": "2e7264617461247a7a7a6462",
+      "length": 12,
+      "section": ".rdata",
+      "offset": 9884,
+      "entropy": 2.855,
+      "confidence": "high",
+      "description": "Printable string (12 bytes): '.rdata$zzzdb'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "rdata$zzzdbg",
+      "key_hex": "7264617461247a7a7a646267",
+      "length": 12,
+      "section": ".rdata",
+      "offset": 9885,
+      "entropy": 2.855,
+      "confidence": "high",
+      "description": "Printable string (12 bytes): 'rdata$zzzdbg'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "data$zzzdbg\u0000",
+      "key_hex": "64617461247a7a7a64626700",
+      "length": 12,
+      "section": ".rdata",
+      "offset": 9886,
+      "entropy": 2.855,
+      "confidence": "high",
+      "description": "Printable string (12 bytes): 'data$zzzdbg\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "ta$zzzdbg\u0000",
+      "key_hex": "7461247a7a7a64626700",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9888,
+      "entropy": 2.846,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): 'ta$zzzdbg\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000.text$m",
+      "key_hex": "002e74657874246d",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9739,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0000.text$m'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".text$mn",
+      "key_hex": "2e74657874246d6e",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9740,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '.text$mn'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "text$mn\u0000",
+      "key_hex": "74657874246d6e00",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9741,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'text$mn\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "ext$mn$0",
+      "key_hex": "657874246d6e2430",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9762,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'ext$mn$0'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "ext$mn$2",
+      "key_hex": "657874246d6e2432",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9782,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'ext$mn$2'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "xt$mn$21",
+      "key_hex": "7874246d6e243231",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9783,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'xt$mn$21'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "t$mn$21\u0000",
+      "key_hex": "74246d6e24323100",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9784,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 't$mn$21\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "$mn$21\u00000",
+      "key_hex": "246d6e2432310030",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9785,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '$mn$21\u00000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000.text$s",
+      "key_hex": "002e746578742473",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9799,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0000.text$s'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".text$s\u0000",
+      "key_hex": "2e74657874247300",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9800,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '.text$s\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000.idata$",
+      "key_hex": "002e696461746124",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9815,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0000.idata$'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".idata$5",
+      "key_hex": "2e69646174612435",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9816,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '.idata$5'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "idata$5\u0000",
+      "key_hex": "6964617461243500",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9817,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'idata$5\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000.rdata$",
+      "key_hex": "002e726461746124",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9883,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0000.rdata$'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".rdata$z",
+      "key_hex": "2e7264617461247a",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9884,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '.rdata$z'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".idata$2",
+      "key_hex": "2e69646174612432",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9988,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '.idata$2'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "idata$2\u0000",
+      "key_hex": "6964617461243200",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9989,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'idata$2\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".idata$3",
+      "key_hex": "2e69646174612433",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 10008,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '.idata$3'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "idata$3\u0000",
+      "key_hex": "6964617461243300",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 10009,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'idata$3\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".idata$4",
+      "key_hex": "2e69646174612434",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 10028,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '.idata$4'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "idata$4\u0000",
+      "key_hex": "6964617461243400",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 10029,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'idata$4\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".idata$6",
+      "key_hex": "2e69646174612436",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 10048,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '.idata$6'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "idata$6\u0000",
+      "key_hex": "6964617461243600",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 10049,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'idata$6\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "rFilter\u0000",
+      "key_hex": "7246696c74657200",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12228,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'rFilter\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000FltStar",
+      "key_hex": "00466c7453746172",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12259,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0000FltStar'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "o\u0000FltGet",
+      "key_hex": "6f00466c74476574",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12278,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'o\u0000FltGet'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "TMGR.SYS",
+      "key_hex": "544d47522e535953",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12370,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'TMGR.SYS'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "MGR.SYS\u0000",
+      "key_hex": "4d47522e53595300",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12371,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'MGR.SYS\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\f_wcsicm",
+      "key_hex": "0c5f77637369636d",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12391,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\f_wcsicm'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "_wcsicmp",
+      "key_hex": "5f77637369636d70",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12392,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '_wcsicmp'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "wcsicmp\u0000",
+      "key_hex": "77637369636d7000",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12393,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'wcsicmp\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\f_wcsnic",
+      "key_hex": "0c5f7763736e6963",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12403,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\f_wcsnic'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "_wcsnicm",
+      "key_hex": "5f7763736e69636d",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12404,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '_wcsnicm'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "csnicmp\u0000",
+      "key_hex": "63736e69636d7000",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12406,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'csnicmp\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0004KeDelay",
+      "key_hex": "044b6544656c6179",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12439,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0004KeDelay'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000ExFreeP",
+      "key_hex": "0045784672656550",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12465,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0000ExFreeP'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0001ExIniti",
+      "key_hex": "014578496e697469",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12485,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0001ExIniti'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "rceLite\u0000",
+      "key_hex": "7263654c69746500",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12503,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'rceLite\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000ExEnter",
+      "key_hex": "004578456e746572",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12513,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0000ExEnter'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "eShared\u0000",
+      "key_hex": "6553686172656400",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12552,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'eShared\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "U\u0001ExRele",
+      "key_hex": "5501457852656c65",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12612,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'U\u0001ExRele'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0001ExRelea",
+      "key_hex": "01457852656c6561",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12613,
+      "entropy": 2.75,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0001ExRelea'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "text$mn$00",
+      "key_hex": "74657874246d6e243030",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9761,
+      "entropy": 2.722,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): 'text$mn$00'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": ".rdata$zzz",
+      "key_hex": "2e7264617461247a7a7a",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9884,
+      "entropy": 2.646,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): '.rdata$zzz'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "ata$zzzdbg",
+      "key_hex": "617461247a7a7a646267",
+      "length": 10,
+      "section": ".rdata",
+      "offset": 9887,
+      "entropy": 2.646,
+      "confidence": "high",
+      "description": "Printable string (10 bytes): 'ata$zzzdbg'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "text$mn$",
+      "key_hex": "74657874246d6e24",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9761,
+      "entropy": 2.5,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'text$mn$'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "xt$mn$00",
+      "key_hex": "7874246d6e243030",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9763,
+      "entropy": 2.5,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'xt$mn$00'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "t$mn$00\u0000",
+      "key_hex": "74246d6e24303000",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9764,
+      "entropy": 2.5,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 't$mn$00\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "rdata$zz",
+      "key_hex": "7264617461247a7a",
+      "length": 8,
+      "section": ".rdata",
+      "offset": 9885,
+      "entropy": 2.5,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'rdata$zz'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000FltGetF",
+      "key_hex": "00466c7447657446",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12279,
+      "entropy": 2.5,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0000FltGetF'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "\u0000FltRele",
+      "key_hex": "00466c7452656c65",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12307,
+      "entropy": 2.5,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '\u0000FltRele'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "wcsrchr\u0000",
+      "key_hex": "7763737263687200",
+      "length": 8,
+      "section": "INIT",
+      "offset": 12382,
+      "entropy": 2.5,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'wcsrchr\u0000'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    }
+  ],
+  "yara": {
+    "matches": [],
+    "matched_rules": [],
+    "packer_detected": false,
+    "packers": [],
+    "attck_mapping": []
+  },
+  "entropy_analysis": {
+    "high_entropy_sections": [],
+    "suspicious_entropy": [
+      {
+        "name": ".text",
+        "entropy": 6.17,
+        "threshold": "6.0-7.5",
+        "likely": "Possibly packed or obfuscated",
+        "confidence": "medium",
+        "justification": "Section '.text' has entropy 6.17 (6.0-7.5). This is moderately high and may indicate obfuscated or compressed data. While this could be legitimate (e.g., resource data), in the context of malware it often suggests packing or string obfuscation."
+      }
+    ],
+    "packed_sections": [],
+    "encrypted_data": [],
+    "overall_entropy": 5.1412654549996235,
+    "justification": "Overall file entropy is 5.14, which is within the normal range for executables (typically 5.5-6.5). No significant entropy anomalies detected.",
+    "crypto_indicators": [
+      {
+        "string": "ExEnterCriticalRegionAndAcquireResourceShared",
+        "indicator": "SHA",
+        "confidence": "medium"
+      },
+      {
+        "string": "ExEnterCriticalRegionAndAcquireResourceExclusive",
+        "indicator": "iv",
+        "confidence": "medium"
+      },
+      {
+        "string": "ZwCreateKey",
+        "indicator": "key",
+        "confidence": "medium"
+      },
+      {
+        "string": "ZwOpenKey",
+        "indicator": "key",
+        "confidence": "medium"
+      },
+      {
+        "string": "ZwDeleteValueKey",
+        "indicator": "key",
+        "confidence": "medium"
+      },
+      {
+        "string": "ZwQueryValueKey",
+        "indicator": "key",
+        "confidence": "medium"
+      },
+      {
+        "string": "ZwSetValueKey",
+        "indicator": "key",
+        "confidence": "medium"
+      }
+    ]
+  },
+  "attck_mappings": [],
+  "config": {
+    "ips": [],
+    "domains": [
+      "h.data",
+      "b.reloc",
+      "h.rdata",
+      "fltmgr.sys"
+    ],
+    "urls": [],
+    "emails": [],
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "nsis_detected": false,
+  "analysis_timestamp": "2026-08-12T13:23:08.155867",
+  "errors": [],
+  "resubmission_lineage": {
+    "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
+    "parent_family": "roning",
+    "discovery_mechanism": "cape_payload",
+    "original_name": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+    "cape_task_id": 2,
+    "depth": 1,
+    "discovered_at": "2026-08-12T13:11:08.172483+00:00"
+  }
+}

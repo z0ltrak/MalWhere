@@ -1,0 +1,589 @@
+{
+  "schema_version": "1.0",
+  "source": "cape",
+  "source_report_path": "docker/cape/work/storage/analyses/3/reports/report.json",
+  "cape_task_id": 3,
+  "parsed_at": "2026-08-12T15:40:37.772836+00:00",
+  "target": {
+    "filename": "sample.exe",
+    "md5": "aa88621587a40bf353cc07a965e00ee2",
+    "sha1": "dfa5e52cd8a709cd2b479c71c9c06a89990a0e9f",
+    "sha256": "06c2a137c31aae5d02b4d7df61ffd31f1af9a9e59978f15b3f7265cc751bff1f",
+    "size_bytes": 1081856,
+    "file_type": "PE32+ executable (GUI) x86-64, for MS Windows"
+  },
+  "analysis": {
+    "malscore": 10.0,
+    "malstatus": "Malicious",
+    "duration_seconds": 233,
+    "started": "2026-08-11 13:53:54",
+    "ended": "2026-08-11 13:57:47",
+    "cape_version": "2.5",
+    "family_detections": [
+      {
+        "family": "Akira",
+        "detail_sources": [
+          "Yara"
+        ]
+      },
+      {
+        "family": "Avaddon",
+        "detail_sources": [
+          "Behavior"
+        ]
+      }
+    ]
+  },
+  "signatures": [
+    {
+      "name": "queries_keyboard_layout",
+      "description": "Queries the keyboard layout",
+      "severity": 1,
+      "confidence": 100,
+      "categories": [
+        "location_discovery"
+      ],
+      "ttps": [],
+      "match_count": 3
+    },
+    {
+      "name": "queries_locale_api",
+      "description": "Queries the computer locale (possible geofencing)",
+      "severity": 1,
+      "confidence": 100,
+      "categories": [
+        "location_discovery",
+        "geofence"
+      ],
+      "ttps": [],
+      "match_count": 1
+    },
+    {
+      "name": "accesses_public_folder",
+      "description": "A file was accessed within the Public folder.",
+      "severity": 1,
+      "confidence": 100,
+      "categories": [
+        "generic"
+      ],
+      "ttps": [
+        "T1548",
+        "T1036"
+      ],
+      "match_count": 9
+    },
+    {
+      "name": "antidebug_setunhandledexceptionfilter",
+      "description": "SetUnhandledExceptionFilter detected (possible anti-debug)",
+      "severity": 1,
+      "confidence": 40,
+      "categories": [
+        "anti-debug"
+      ],
+      "ttps": [],
+      "match_count": 1
+    },
+    {
+      "name": "stealth_timeout",
+      "description": "Possible date expiration check, exits too soon after checking local time",
+      "severity": 1,
+      "confidence": 40,
+      "categories": [
+        "stealth"
+      ],
+      "ttps": [],
+      "match_count": 2
+    },
+    {
+      "name": "anomalous_deletefile",
+      "description": "Anomalous file deletion behavior detected (10+)",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "malware"
+      ],
+      "ttps": [
+        "T1485"
+      ],
+      "match_count": 122
+    },
+    {
+      "name": "privilege_elevation_check",
+      "description": "Queries process token information to check for Administrator privileges or UAC elevation status",
+      "severity": 2,
+      "confidence": 80,
+      "categories": [
+        "discovery",
+        "privilege_escalation"
+      ],
+      "ttps": [
+        "T1033",
+        "T1082"
+      ],
+      "match_count": 8
+    },
+    {
+      "name": "query_fips_reconnaissance",
+      "description": "Queried the FIPS cryptography policy, can be used to adapt C2 network encryption or by legitimate encryption software",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "discovery",
+        "c2"
+      ],
+      "ttps": [
+        "T1082"
+      ],
+      "match_count": 16
+    },
+    {
+      "name": "pe_deep_entrypoint",
+      "description": "The PE entry point is located unusually far into its section, indicative of an appended packer stub",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "packer",
+        "static"
+      ],
+      "ttps": [
+        "T1027"
+      ],
+      "match_count": 1
+    },
+    {
+      "name": "pe_tls_callbacks",
+      "description": "The PE file contains TLS callbacks which execute before the entry point and before debugger attachment, commonly used by packers for anti-analysis or pre-EP decryption",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "packer",
+        "anti-debug",
+        "static"
+      ],
+      "ttps": [
+        "T1027",
+        "T1055"
+      ],
+      "match_count": 1
+    },
+    {
+      "name": "packer_unknown_pe_section_name",
+      "description": "The binary contains an unknown PE section name indicative of packing",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "packer"
+      ],
+      "ttps": [
+        "T1027.002",
+        "T1027"
+      ],
+      "match_count": 1
+    },
+    {
+      "name": "mass_ransom_note_drop",
+      "description": "Writes or copies the same ransom note filename across multiple directories",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "ransomware"
+      ],
+      "ttps": [
+        "T1486"
+      ],
+      "match_count": 6
+    },
+    {
+      "name": "ransomware_message",
+      "description": "Writes a potential ransom message to disk",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "ransomware"
+      ],
+      "ttps": [
+        "T1486"
+      ],
+      "match_count": 2
+    },
+    {
+      "name": "folder_enumeration",
+      "description": "Systematically searches multiple user directories using wildcards, common in ransomware/wipers/infostealers",
+      "severity": 3,
+      "confidence": 70,
+      "categories": [
+        "ransomware",
+        "wiper",
+        "infostealer",
+        "discovery"
+      ],
+      "ttps": [
+        "T1083"
+      ],
+      "match_count": 74
+    },
+    {
+      "name": "ransomware_files",
+      "description": "Creates a known Avaddon ransomware decryption instruction / key file.",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "ransomware"
+      ],
+      "ttps": [
+        "T1486"
+      ],
+      "match_count": 0
+    },
+    {
+      "name": "ransomware_iocp_asynchronous_encryption",
+      "description": "Binds a large number of files to I/O Completion Ports (IOCP), possible ransomware asynchronous encryption",
+      "severity": 4,
+      "confidence": 80,
+      "categories": [
+        "ransomware"
+      ],
+      "ttps": [
+        "T1486"
+      ],
+      "match_count": 16
+    }
+  ],
+  "attck_mappings": [
+    {
+      "technique": "T1033",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "privilege_elevation_check",
+      "confidence": "medium",
+      "justification": "CAPE signature 'privilege_elevation_check' fired (severity=2, confidence=80%, categories=['discovery', 'privilege_escalation'])"
+    },
+    {
+      "technique": "T1486",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "ransomware_iocp_asynchronous_encryption",
+      "confidence": "high",
+      "justification": "CAPE signature 'ransomware_iocp_asynchronous_encryption' fired (severity=4, confidence=80%, categories=['ransomware'])"
+    },
+    {
+      "technique": "T1486",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "mass_ransom_note_drop",
+      "confidence": "high",
+      "justification": "CAPE signature 'mass_ransom_note_drop' fired (severity=3, confidence=100%, categories=['ransomware'])"
+    },
+    {
+      "technique": "T1486",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "ransomware_message",
+      "confidence": "high",
+      "justification": "CAPE signature 'ransomware_message' fired (severity=3, confidence=100%, categories=['ransomware'])"
+    },
+    {
+      "technique": "T1027",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "pe_deep_entrypoint",
+      "confidence": "medium",
+      "justification": "CAPE signature 'pe_deep_entrypoint' fired (severity=2, confidence=50%, categories=['packer', 'static'])"
+    },
+    {
+      "technique": "T1027",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "pe_tls_callbacks",
+      "confidence": "medium",
+      "justification": "CAPE signature 'pe_tls_callbacks' fired (severity=2, confidence=50%, categories=['packer', 'anti-debug', 'static'])"
+    },
+    {
+      "technique": "T1027.002",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "packer_unknown_pe_section_name",
+      "confidence": "medium",
+      "justification": "CAPE signature 'packer_unknown_pe_section_name' fired (severity=2, confidence=100%, categories=['packer'])"
+    },
+    {
+      "technique": "T1027",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "packer_unknown_pe_section_name",
+      "confidence": "medium",
+      "justification": "CAPE signature 'packer_unknown_pe_section_name' fired (severity=2, confidence=100%, categories=['packer'])"
+    },
+    {
+      "technique": "T1083",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "folder_enumeration",
+      "confidence": "medium",
+      "justification": "CAPE signature 'folder_enumeration' fired (severity=3, confidence=70%, categories=['ransomware', 'wiper', 'infostealer', 'discovery'])"
+    },
+    {
+      "technique": "T1486",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "ransomware_files",
+      "confidence": "high",
+      "justification": "CAPE signature 'ransomware_files' fired (severity=3, confidence=100%, categories=['ransomware'])"
+    }
+  ],
+  "network": {
+    "domains": [
+      {
+        "domain": "github.com",
+        "ip": "140.82.121.3"
+      },
+      {
+        "domain": "www.msftconnecttest.com",
+        "ip": "185.43.182.40"
+      }
+    ],
+    "hosts": [
+      {
+        "ip": "185.43.182.25",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "www.msftconnecttest.com",
+        "inaddrarpa": "",
+        "ports": [
+          80
+        ]
+      },
+      {
+        "ip": "2.20.253.87",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "www.msftconnecttest.com",
+        "inaddrarpa": "",
+        "ports": [
+          80
+        ]
+      },
+      {
+        "ip": "2.20.253.75",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "www.msftconnecttest.com",
+        "inaddrarpa": "",
+        "ports": [
+          80
+        ]
+      },
+      {
+        "ip": "96.16.86.160",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "40.126.53.9",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "20.231.128.66",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "20.190.181.23",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "20.190.181.3",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "40.126.53.6",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      },
+      {
+        "ip": "40.126.53.16",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          443
+        ]
+      }
+    ],
+    "dns_requests": [
+      {
+        "request": "github.com",
+        "type": "A",
+        "answers": [
+          {
+            "type": "A",
+            "data": "140.82.121.3"
+          }
+        ],
+        "first_seen": 1786456478.034211
+      },
+      {
+        "request": "www.msftconnecttest.com",
+        "type": "A",
+        "answers": [
+          {
+            "type": "A",
+            "data": "2.20.253.75"
+          },
+          {
+            "type": "CNAME",
+            "data": "www.msftconnecttest.com.edgesuite.net"
+          },
+          {
+            "type": "CNAME",
+            "data": "a39.d.akamai.net"
+          },
+          {
+            "type": "A",
+            "data": "2.20.253.87"
+          },
+          {
+            "type": "A",
+            "data": "185.43.182.25"
+          }
+        ],
+        "first_seen": 1786456506.781627
+      }
+    ],
+    "http_requests": [],
+    "tcp_count": 0,
+    "udp_count": 40
+  },
+  "dropped_files": [
+    {
+      "name": "akira_readme.txt",
+      "sha256": "c0ff2697a726ade5a55968b4ddb73693ec8b014adce0ef110177cc65b5841ea3",
+      "md5": "7c1953c7772becdf24901464ac412001",
+      "sha1": "a24b4b2d15c95a77ae2679c107b0c6e5105430c0",
+      "size": 2715,
+      "type": "ASCII text, with very long lines (435), with CRLF, CR line terminators",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "Log-11-08-2026-13-54-16.txt",
+      "sha256": "fc2f55e0ef349732fe36f934cfc9bfa4761a1ebd6c5ff2e0aae8c277ca5c3603",
+      "md5": "03cdf2f216f994052bb61905adaec04c",
+      "sha1": "8241146bb0dc4f264583c335fb8f8e5aa4fe862c",
+      "size": 1881566,
+      "type": "ASCII text, with CRLF line terminators",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    }
+  ],
+  "host_activity": {
+    "mutexes": [
+      "Local\\SM0:1000:304:WilStaging_02",
+      "Local\\SM0:7164:304:WilStaging_02"
+    ],
+    "created_services": [],
+    "started_services": [
+      "VSS",
+      "swprv"
+    ],
+    "commands_executed": [
+      "C:\\Windows\\system32\\DllHost.exe /Processid:{338B40F9-9D68-4B53-A793-6B9AA0C5F63B}",
+      "C:\\Windows\\system32\\DllHost.exe /Processid:{AB8902B4-09CA-4BB6-B78D-A8F59079A8D5}"
+    ],
+    "registry_keys_written": {
+      "items": [
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0000\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0000\\RegFilesHash"
+      ],
+      "total_count": 2,
+      "truncated": false
+    }
+  },
+  "process_tree": [
+    {
+      "name": "sample.exe",
+      "pid": 2044,
+      "parent_id": 4484,
+      "module_path": "C:\\Users\\Windows\\AppData\\Local\\Temp\\sample.exe",
+      "children": []
+    },
+    {
+      "name": "svchost.exe",
+      "pid": 772,
+      "parent_id": 640,
+      "module_path": "C:\\Windows\\System32\\svchost.exe",
+      "children": [
+        {
+          "name": "dllhost.exe",
+          "pid": 1000,
+          "parent_id": 772,
+          "module_path": "C:\\Windows\\System32\\dllhost.exe",
+          "children": []
+        },
+        {
+          "name": "dllhost.exe",
+          "pid": 7164,
+          "parent_id": 772,
+          "module_path": "C:\\Windows\\System32\\dllhost.exe",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "svchost.exe",
+      "pid": 3728,
+      "parent_id": 640,
+      "module_path": "C:\\Windows\\System32\\svchost.exe",
+      "children": []
+    }
+  ],
+  "process_injection_signatures": []
+}

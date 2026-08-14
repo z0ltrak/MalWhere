@@ -1,22 +1,20 @@
-# Malware samples - NEVER commit binaries
-samples/*.exe
-samples/*/*.exe
-samples/*.dll
-samples/*/*.dll
-samples/*.bin
-samples/*/*.bin
-samples/*.dat
-samples/*/*.dat
-samples/*.vbs
-samples/*/*.vbs
-samples/*.ps1
-samples/*/*.ps1
-samples/*.bat
-samples/*/*.bat
-samples/*.zip
-samples/*/*.zip
-samples/*.7z
-samples/*/*.7z
+# Malware samples - NEVER commit binaries. ** matches at any depth, not
+# just one level down, so this also covers nested extraction output like
+# samples/roning/extracted/*.bin and samples/roning/$PLUGINSDIR/*.dll --
+# a one-level-deep samples/*/*.ext pattern silently missed those.
+samples/**/*.exe
+samples/**/*.dll
+samples/**/*.bin
+samples/**/*.dat
+samples/**/*.vbs
+samples/**/*.ps1
+samples/**/*.bat
+samples/**/*.zip
+samples/**/*.7z
+# RoningLoader's installer extraction and any dropped/decrypted payloads
+# live entirely under here -- safer to ignore the whole subtree than to
+# keep enumerating extensions as new artifact types get extracted.
+samples/roning/
 
 # manual_analysis/*/ holds a working copy of each sample (and, for
 # RoningLoader, its NSIS-extracted files) alongside the RE report --
@@ -65,6 +63,17 @@ docker/resubmit_queue/
 
 # Analysis artifacts with PII or sensitive IOCs
 results/**/raw/
+
+# Scratch/debug static-analysis reruns from iterative coverage-extension
+# work (re-running after each rule batch to confirm no new false
+# positives) -- real at the time, but clutter now that static/reports/
+# {akira,roning,wsnake}/ hold the current canonical report each was
+# re-verified against. Not part of the project's deliverable.
+static/reports/*_test/
+static/reports/*_test[0-9]/
+static/reports/*_retest/
+static/reports/*_retest[0-9]/
+static/reports/diamondage_exe_retest/
 
 # OS
 .DS_Store

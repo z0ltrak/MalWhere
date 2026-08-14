@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:32.804348+00:00",
+  "sources": {
+    "static_report": "static/reports/roning/f3e9b0d43b66fa6b05d2fa4de4547517a3ec0bc0b14de3c349d817465bbf7ab4_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "roning",
+    "static_sha256": "f3e9b0d43b66fa6b05d2fa4de4547517a3ec0bc0b14de3c349d817465bbf7ab4",
+    "static_md5": "6ebdde247cad8468575f1f2a4d7ae2a2",
+    "static_sha1": "d0c502f45df55c0465c9406088ff016c2e7e6817",
+    "static_imphash": "e6c3208e90c430388b2da3b455c174ba",
+    "static_ssdeep": "768:6vVnRZHrPT4n4d/CryKDuIcrFKpnp0jdhK7R+qV:6vV3Hrc4EJBcZtXIV",
+    "static_tlsh": "T1C9E2394CFDC52EBAE2DF05390409557F466FC8081B14DAABD3712E92D5E23326EE522E",
+    "static_filename": "f3e9b0d43b66fa6b05d2fa4de4547517a3ec0bc0b14de3c349d817465bbf7ab4",
+    "static_file_type": "pe_native"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "f3e9b0d43b66fa6b05d2fa4de4547517a3ec0bc0b14de3c349d817465bbf7ab4",
+      "md5": "6ebdde247cad8468575f1f2a4d7ae2a2",
+      "sha1": "d0c502f45df55c0465c9406088ff016c2e7e6817",
+      "filename": "f3e9b0d43b66fa6b05d2fa4de4547517a3ec0bc0b14de3c349d817465bbf7ab4",
+      "type": "pe_native"
+    }
+  ],
+  "network_iocs": {
+    "domains": [],
+    "ips": [],
+    "urls": [],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [
+    {
+      "technique": "T1055",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "OpenProcess",
+          "confidence": "medium",
+          "name": "Process Injection",
+          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1057",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateToolhelp32Snapshot",
+          "confidence": "medium",
+          "name": "Process Discovery",
+          "justification": "The API function 'CreateToolhelp32Snapshot' is imported by the binary. This API is commonly used to perform Process Discovery. Importing this function alone (no other Process Discovery-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1059",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateProcessW",
+          "confidence": "high",
+          "name": "Command and Scripting Interpreter",
+          "justification": "The malware string 'CreateProcessW' was found in the binary, alongside 1 other string(s) also characteristic of Command and Scripting Interpreter. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "ShellExecuteW",
+          "confidence": "high",
+          "name": "Command and Scripting Interpreter",
+          "justification": "The malware string 'ShellExecuteW' was found in the binary, alongside 1 other string(s) also characteristic of Command and Scripting Interpreter. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateProcessW, ShellExecuteW",
+          "confidence": "high",
+          "name": "Command and Scripting Interpreter",
+          "justification": "The API functions CreateProcessW, ShellExecuteW are all imported by the binary. This combination is characteristic of Command and Scripting Interpreter \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1134",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "OpenProcessToken",
+          "confidence": "medium",
+          "name": "Privilege Escalation",
+          "justification": "The API function 'OpenProcessToken' is imported by the binary. This API is commonly used to perform Privilege Escalation. Importing this function alone (no other Privilege Escalation-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    }
+  ],
+  "discarded_entries": []
+}

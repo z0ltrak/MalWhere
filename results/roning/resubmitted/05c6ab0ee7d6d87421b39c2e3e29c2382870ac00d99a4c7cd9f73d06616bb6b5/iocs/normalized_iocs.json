@@ -1,0 +1,163 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:29.884940+00:00",
+  "sources": {
+    "static_report": "static/reports/roning/05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "roning",
+    "static_sha256": "05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5",
+    "static_md5": "c9fae85ee2b0d25f1a302b6192512c33",
+    "static_sha1": "ab68f82092ce5456df405063d986ebbf9f669feb",
+    "static_imphash": "c6a0f65ba653ee78255cc9e314abc442",
+    "static_ssdeep": "3072:/8wCsj96Zv9hgRUwbtfc55HPdF7NXFZH5+emjHAYrPtlT:/ZCC8jgRleHPdFl5+/LT",
+    "static_tlsh": "T19F144AA4BE6035F8C95FC138C67328A6E9E1F235137422CF4A74E2252F297D0D5366E9",
+    "static_filename": "05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5",
+    "static_file_type": "pe_native"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5",
+      "md5": "c9fae85ee2b0d25f1a302b6192512c33",
+      "sha1": "ab68f82092ce5456df405063d986ebbf9f669feb",
+      "filename": "05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5",
+      "type": "pe_native"
+    }
+  ],
+  "network_iocs": {
+    "domains": [
+      {
+        "value": "srb.scsistatus",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "zam64.pdb",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "srb.srbstatus",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "h.data",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "b.reloc",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "h.hook",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "registeredprocesses.count",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "ips": [],
+    "urls": [],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [
+      {
+        "value": "Z:\\Zemana\\Projects\\AntiMalware\\bin\\zam64.pdb",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [
+    {
+      "technique": "T1055",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "OpenProcess",
+          "confidence": "medium",
+          "name": "Process Injection",
+          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1070",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateFile",
+          "confidence": "high",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'CreateFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "DeleteFile",
+          "confidence": "high",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'DeleteFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1486",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "WriteFile",
+          "confidence": "low",
+          "name": "Data Encrypted for Impact",
+          "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1497",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "Sleep",
+          "confidence": "low",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'Sleep' was found in the binary. This string is characteristic of Virtualization/Sandbox Evasion behavior. The presence of this specific string alone (no other Virtualization/Sandbox Evasion-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    }
+  ],
+  "discarded_entries": [
+    {
+      "reason": "looks_like_filename_not_domain",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "fltmgr.sys"
+    }
+  ]
+}

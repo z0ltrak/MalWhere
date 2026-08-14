@@ -1,0 +1,297 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:31.276989+00:00",
+  "sample": {
+    "family": "roning",
+    "static_sha256": "627169b1bad0744f636c72a86f6f8e0ff1f4fbb475e8629576a2462a0341ca4f",
+    "static_md5": "5b3bea02989eaa3c91cc0529b28c0fdb",
+    "static_sha1": "8b938dda75e9c72be2e34be0a3fd855b09d780c2",
+    "static_imphash": "4b1b928d13b7318aee88760c0bafa735",
+    "static_ssdeep": "768:dnqcG6aNG2dYzLlhrO5YB3f0wXNEuLSoQu7aYzLlhrO57qW:dgdYl5pewXpL7uYl5JW",
+    "static_tlsh": "T106337EA28A146CD2FE579E30E1D88627EEB1B2822F5189CB2114C5D91F837D53F7C25D",
+    "static_filename": "627169b1bad0744f636c72a86f6f8e0ff1f4fbb475e8629576a2462a0341ca4f",
+    "static_file_type": "pe_native"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "627169b1bad0744f636c72a86f6f8e0ff1f4fbb475e8629576a2462a0341ca4f",
+        "md5": "5b3bea02989eaa3c91cc0529b28c0fdb",
+        "sha1": "8b938dda75e9c72be2e34be0a3fd855b09d780c2",
+        "filename": "627169b1bad0744f636c72a86f6f8e0ff1f4fbb475e8629576a2462a0341ca4f",
+        "type": "pe_native"
+      }
+    ],
+    "network_iocs": {
+      "domains": [
+        {
+          "value": "crl.microsoft.com",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "ocsp.digicert",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "subca.ocsp",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "ccsca2021.ocsp",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "h.rdata",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "ocsp.verisign",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "logo.verisign.com",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "crl.verisign.com",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "subca.repository.certum",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "ccsca2021.crl.certum",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "repository.certum.pl",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "cacerts.digicert.com",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "apcinject.pdb",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "h.data",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "crl3.digicert.com",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "b.reloc",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "crl.certum.pl",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "csc3-2010-aia.verisign.com",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "subca.crl.certum",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "csc3-2010-crl.verisign.com",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "ips": [],
+      "urls": [
+        {
+          "value": "http://subca.ocsp-certum.com01",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://repository.certum.pl/ctnca.cer09",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "https://www.certum.pl/CPS0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://ccsca2021.crl.certum.pl/ccsca2021.crl0s",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://subca.repository.certum.pl/ctsca2021.cer0(",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://crl3.digicert.com/DigiCertTrustedRootG4.crl0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://crl.microsoft.com/pki/crl/products/MicrosoftCodeVerifRoot.crl0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://ocsp.verisign.com0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://repository.certum.pl/ctnca2.cer09",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://ocsp.verisign.com0;",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://logo.verisign.com/vslogo.gif04",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://subca.ocsp-certum.com02",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "https://www.verisign.com/cps0*",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://subca.ocsp-certum.com0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "https://www.verisign.com/rpa0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://ocsp.digicert.com0C",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://crl.certum.pl/ctnca2.crl0l",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [],
+      "mutexes": [],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [],
+  "summary": {
+    "total_techniques": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 0,
+    "dynamic_only": 0
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:32.729232+00:00",
+  "sample": {
+    "family": "roning",
+    "static_sha256": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
+    "static_md5": "7a5ba5b73a9a516ac275d2ce8b0dcda4",
+    "static_sha1": "a285fcb132d54ca1c554f3939f207bce9b21d131",
+    "static_imphash": "4b1b928d13b7318aee88760c0bafa735",
+    "static_ssdeep": "192:ii1nQgDECry7rRUTM5NaWoYcHoDl1OoSTRs5dp:/1nqCry7r6aNaWo5MY2d",
+    "static_tlsh": "T1D952F821E35662E9E67FD07AA6571B21EEB1F01623328BCF42E1C8291F53BC5643CB51",
+    "static_filename": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
+    "static_file_type": "pe_native"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
+        "md5": "7a5ba5b73a9a516ac275d2ce8b0dcda4",
+        "sha1": "a285fcb132d54ca1c554f3939f207bce9b21d131",
+        "filename": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
+        "type": "pe_native"
+      }
+    ],
+    "network_iocs": {
+      "domains": [
+        {
+          "value": "apcinject.pdb",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "h.data",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "b.reloc",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "h.rdata",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [],
+      "mutexes": [],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [],
+  "summary": {
+    "total_techniques": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 0,
+    "dynamic_only": 0
+  }
+}

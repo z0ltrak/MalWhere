@@ -1,0 +1,315 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:32.534954+00:00",
+  "sources": {
+    "static_report": "static/reports/roning/c534840b2c1617f3b26821480b9d4cf551d43a4d273eb71072d48de19dce740f_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "roning",
+    "static_sha256": "c534840b2c1617f3b26821480b9d4cf551d43a4d273eb71072d48de19dce740f",
+    "static_md5": "c2324686005c994673fd086d75879afa",
+    "static_sha1": "d3f2230d5b42bf3552a5a7fe4d021799504260d6",
+    "static_imphash": "7deb8e4881871a383f8c3d116507d2af",
+    "static_ssdeep": "3072:GXLumOCLTZkIXP8VZRdQaw30K6D9Tht5Fsuzi1ElG9:GXhNTZkIXPuZRdHt9FhtrsAl",
+    "static_tlsh": "T164F36C4B339431F9E496E278C6974A56FBB27472073543CF0AA086AD1F233E1AD3A751",
+    "static_filename": "c534840b2c1617f3b26821480b9d4cf551d43a4d273eb71072d48de19dce740f",
+    "static_file_type": "pe_native"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "c534840b2c1617f3b26821480b9d4cf551d43a4d273eb71072d48de19dce740f",
+      "md5": "c2324686005c994673fd086d75879afa",
+      "sha1": "d3f2230d5b42bf3552a5a7fe4d021799504260d6",
+      "filename": "c534840b2c1617f3b26821480b9d4cf551d43a4d273eb71072d48de19dce740f",
+      "type": "pe_native"
+    }
+  ],
+  "network_iocs": {
+    "domains": [
+      {
+        "value": "ayagent.aye",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "ips": [],
+    "urls": [],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [
+      {
+        "value": "C:\\Users\\%s\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\nkbihfbeogaeaoehlefnkodbefgpgknn",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [
+    {
+      "technique": "T1055",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "OpenProcess",
+          "confidence": "medium",
+          "name": "Process Injection",
+          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1056.001",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "GetAsyncKeyState",
+          "confidence": "medium",
+          "name": "Keylogging",
+          "justification": "The API function 'GetAsyncKeyState' is imported by the binary. This API is commonly used to perform Keylogging. Importing this function alone (no other Keylogging-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1057",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateToolhelp32Snapshot, Process32First, Process32Next",
+          "confidence": "high",
+          "name": "Process Discovery",
+          "justification": "The API functions CreateToolhelp32Snapshot, Process32First, Process32Next are all imported by the binary. This combination is characteristic of Process Discovery \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1059",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateProcessA, ShellExecuteA",
+          "confidence": "high",
+          "name": "Command and Scripting Interpreter",
+          "justification": "The API functions CreateProcessA, ShellExecuteA are all imported by the binary. This combination is characteristic of Command and Scripting Interpreter \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1070",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "DeleteFile",
+          "confidence": "high",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'DeleteFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateFile",
+          "confidence": "high",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'CreateFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "DeleteFileA, CreateFileA, CreateFileW",
+          "confidence": "high",
+          "name": "Indicator Removal on Host",
+          "justification": "The API functions DeleteFileA, CreateFileA, CreateFileW are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1082",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "GetComputerNameA",
+          "confidence": "medium",
+          "name": "System Information Discovery",
+          "justification": "The API function 'GetComputerNameA' is imported by the binary. This API is commonly used to perform System Information Discovery. Importing this function alone (no other System Information Discovery-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1115",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "OpenClipboard",
+          "confidence": "high",
+          "name": "Clipboard Data",
+          "justification": "The malware string 'OpenClipboard' was found in the binary, alongside 2 other string(s) also characteristic of Clipboard Data. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "GetClipboardData",
+          "confidence": "high",
+          "name": "Clipboard Data",
+          "justification": "The malware string 'GetClipboardData' was found in the binary, alongside 2 other string(s) also characteristic of Clipboard Data. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "SetClipboardData",
+          "confidence": "high",
+          "name": "Clipboard Data",
+          "justification": "The malware string 'SetClipboardData' was found in the binary, alongside 2 other string(s) also characteristic of Clipboard Data. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "OpenClipboard, CloseClipboard, GetClipboardData, EmptyClipboard, SetClipboardData",
+          "confidence": "high",
+          "name": "Clipboard Data",
+          "justification": "The API functions OpenClipboard, CloseClipboard, GetClipboardData, EmptyClipboard, SetClipboardData are all imported by the binary. This combination is characteristic of Clipboard Data \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1134",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "AdjustTokenPrivileges",
+          "confidence": "high",
+          "name": "Privilege Escalation",
+          "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "LookupPrivilegeValue",
+          "confidence": "high",
+          "name": "Privilege Escalation",
+          "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1486",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "WriteFile",
+          "confidence": "low",
+          "name": "Data Encrypted for Impact",
+          "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1497",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "GetTickCount",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'GetTickCount' was found in the binary, alongside 1 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "QueryPerformanceCounter",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'QueryPerformanceCounter' was found in the binary, alongside 1 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "GetTickCount, QueryPerformanceCounter, Sleep",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The API functions GetTickCount, QueryPerformanceCounter, Sleep are all imported by the binary. This combination is characteristic of Virtualization/Sandbox Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1547.001",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "RegOpenKeyExA",
+          "confidence": "medium",
+          "name": "Registry Run Keys / Startup Folder",
+          "justification": "The API function 'RegOpenKeyExA' is imported by the binary. This API is commonly used to perform Registry Run Keys / Startup Folder. Importing this function alone (no other Registry Run Keys / Startup Folder-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1622",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "IsDebuggerPresent",
+          "confidence": "low",
+          "name": "Debugger Evasion",
+          "justification": "The malware string 'IsDebuggerPresent' was found in the binary. This string is characteristic of Debugger Evasion behavior. The presence of this specific string alone (no other Debugger Evasion-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "OutputDebugStringA, IsDebuggerPresent, SetUnhandledExceptionFilter, UnhandledExceptionFilter",
+          "confidence": "high",
+          "name": "Debugger Evasion",
+          "justification": "The API functions OutputDebugStringA, IsDebuggerPresent, SetUnhandledExceptionFilter, UnhandledExceptionFilter are all imported by the binary. This combination is characteristic of Debugger Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "yara",
+          "evidence": "AntiDebug_IsDebuggerPresent",
+          "confidence": "high",
+          "name": "Debugger Evasion",
+          "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
+        }
+      ]
+    }
+  ],
+  "discarded_entries": [
+    {
+      "reason": "looks_like_filename_not_domain",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "quhlpsvc.exe"
+    },
+    {
+      "reason": "invalid_technique_id_format",
+      "origin": "static",
+      "raw_entry": {
+        "technique": "S0105",
+        "name": "Network Communication",
+        "source": "import",
+        "evidence": "send, recv, WSAStartup, WSACleanup, socket, connect",
+        "confidence": "high",
+        "justification": "The API functions send, recv, WSAStartup, WSACleanup, socket, connect are all imported by the binary. This combination is characteristic of Network Communication \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+      }
+    }
+  ]
+}

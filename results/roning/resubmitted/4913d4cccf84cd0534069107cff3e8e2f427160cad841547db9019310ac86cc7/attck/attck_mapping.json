@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:31.025936+00:00",
+  "sample": {
+    "family": "roning",
+    "static_sha256": "4913d4cccf84cd0534069107cff3e8e2f427160cad841547db9019310ac86cc7",
+    "static_md5": "d458b8251443536e4a334147e0170e95",
+    "static_sha1": "ba8d4d580f1bc0bb2eaa8b9b02ee9e91b8b50fc3",
+    "static_imphash": "68e847ed6763e00454edac87b3abd95a",
+    "static_ssdeep": "48:qKYHC+J4apHT1wH8l9QcXygHg0ZShMmj3jkRTbGr7X:5piRzuHOXTA0H6jkRnGr7X",
+    "static_tlsh": "T18D8173BB93E00CF3D0A44BB740A71CE362B5DD201B62001F4A478EA92590B67EE7E715",
+    "static_filename": "4913d4cccf84cd0534069107cff3e8e2f427160cad841547db9019310ac86cc7",
+    "static_file_type": "pe_native"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "4913d4cccf84cd0534069107cff3e8e2f427160cad841547db9019310ac86cc7",
+        "md5": "d458b8251443536e4a334147e0170e95",
+        "sha1": "ba8d4d580f1bc0bb2eaa8b9b02ee9e91b8b50fc3",
+        "filename": "4913d4cccf84cd0534069107cff3e8e2f427160cad841547db9019310ac86cc7",
+        "type": "pe_native"
+      }
+    ],
+    "network_iocs": {
+      "domains": [],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [],
+      "mutexes": [],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [
+    {
+      "technique_id": "T1055",
+      "technique_name": "Process Injection",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "OpenProcess",
+          "confidence": "medium",
+          "name": "Process Injection",
+          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique_id": "T1082",
+      "technique_name": "System Information Discovery",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "GetUserNameW",
+          "confidence": "medium",
+          "name": "System Information Discovery",
+          "justification": "The API function 'GetUserNameW' is imported by the binary. This API is commonly used to perform System Information Discovery. Importing this function alone (no other System Information Discovery-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique_id": "T1134",
+      "technique_name": "Unknown ATT&CK technique (T1134)",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "OpenProcessToken",
+          "confidence": "medium",
+          "name": "Privilege Escalation",
+          "justification": "The API function 'OpenProcessToken' is imported by the binary. This API is commonly used to perform Privilege Escalation. Importing this function alone (no other Privilege Escalation-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_techniques": 3,
+    "high": 0,
+    "medium": 3,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 3,
+    "dynamic_only": 0
+  }
+}

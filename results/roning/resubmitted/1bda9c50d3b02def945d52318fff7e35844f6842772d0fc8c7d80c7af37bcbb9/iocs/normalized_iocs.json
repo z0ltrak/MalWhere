@@ -1,0 +1,221 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:30.307268+00:00",
+  "sources": {
+    "static_report": "static/reports/roning/1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "roning",
+    "static_sha256": "1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9",
+    "static_md5": "082cb645d7b4fabd2ae92ec334049a3e",
+    "static_sha1": "ec25e8244d642fe64bb8d35a0531cbb3a7a9d904",
+    "static_imphash": "e2fc146873a98250be0c3d6fa7d163c7",
+    "static_ssdeep": "3072:YITdqmTlh5BxjqWREzZLqTQDGM2P1ABv/rzrxXGNt8gixrxBhzAcMvh95n:HhBTPDxjqkEzG4qPQwR",
+    "static_tlsh": "T15724501127FC4225F0B36B39A9B543A65A32BD52AF35C6CF6620354E1930ED0DE35B2B",
+    "static_filename": "1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9",
+    "static_file_type": "pe_native"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9",
+      "md5": "082cb645d7b4fabd2ae92ec334049a3e",
+      "sha1": "ec25e8244d642fe64bb8d35a0531cbb3a7a9d904",
+      "filename": "1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9",
+      "type": "pe_native"
+    }
+  ],
+  "network_iocs": {
+    "domains": [
+      {
+        "value": "sdk.sample",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "crl.microsoft.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "d3d11install.pdb",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "ips": [
+      {
+        "value": "6.0.0.0",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "urls": [
+      {
+        "value": "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://www.microsoft.com/pki/certs/tspca.crt0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://www.microsoft.com/DirectX0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://www.microsoft.com/pki/certs/CSPCA.crt0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl.microsoft.com/pki/crl/products/tspca.crl0H",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [
+    {
+      "technique": "T1059",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "ShellExecuteW",
+          "confidence": "medium",
+          "name": "Command and Scripting Interpreter",
+          "justification": "The malware string 'ShellExecuteW' was found in the binary. This string is characteristic of Command and Scripting Interpreter behavior. The presence of this specific string alone (no other Command and Scripting Interpreter-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1070",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateFile",
+          "confidence": "low",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateFileW",
+          "confidence": "medium",
+          "name": "Indicator Removal on Host",
+          "justification": "The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1071",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "1 C2 IPs found",
+          "confidence": "medium",
+          "name": "Application Layer Protocol",
+          "justification": "Found 1 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
+        }
+      ]
+    },
+    {
+      "technique": "T1486",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "WriteFile",
+          "confidence": "low",
+          "name": "Data Encrypted for Impact",
+          "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1497",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "QueryPerformanceCounter",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'QueryPerformanceCounter' was found in the binary, alongside 1 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "GetTickCount",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'GetTickCount' was found in the binary, alongside 1 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "Sleep, QueryPerformanceCounter, GetTickCount",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The API functions Sleep, QueryPerformanceCounter, GetTickCount are all imported by the binary. This combination is characteristic of Virtualization/Sandbox Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1622",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "IsDebuggerPresent",
+          "confidence": "low",
+          "name": "Debugger Evasion",
+          "justification": "The malware string 'IsDebuggerPresent' was found in the binary. This string is characteristic of Debugger Evasion behavior. The presence of this specific string alone (no other Debugger Evasion-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "SetUnhandledExceptionFilter, UnhandledExceptionFilter, IsDebuggerPresent",
+          "confidence": "high",
+          "name": "Debugger Evasion",
+          "justification": "The API functions SetUnhandledExceptionFilter, UnhandledExceptionFilter, IsDebuggerPresent are all imported by the binary. This combination is characteristic of Debugger Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "yara",
+          "evidence": "AntiDebug_IsDebuggerPresent",
+          "confidence": "high",
+          "name": "Debugger Evasion",
+          "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
+        }
+      ]
+    }
+  ],
+  "discarded_entries": []
+}

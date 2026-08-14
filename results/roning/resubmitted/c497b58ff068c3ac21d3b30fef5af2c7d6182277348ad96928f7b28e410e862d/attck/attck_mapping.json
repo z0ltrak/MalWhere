@@ -1,0 +1,176 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:32.470158+00:00",
+  "sample": {
+    "family": "roning",
+    "static_sha256": "c497b58ff068c3ac21d3b30fef5af2c7d6182277348ad96928f7b28e410e862d",
+    "static_md5": "fa7298ceff285e62268fd337b532894b",
+    "static_sha1": "02ec8e672ee8900b4f155ac5503cf1655d808ac5",
+    "static_imphash": null,
+    "static_ssdeep": "49152:Rj+ip4ZYYiHOK9YMcQxFfbiaiJrAfKXY9YpWE2aQNmdjLQw90xiAB+Ni:lNp4OYiuKmMcQPODfxpWEPQwdjLQlB+w",
+    "static_tlsh": "T183D533204CEBFF15B64B3EB46665CD8C06C9350317EBE0BC59DDA78AC19A3461892E63",
+    "static_filename": "c497b58ff068c3ac21d3b30fef5af2c7d6182277348ad96928f7b28e410e862d",
+    "static_file_type": "unknown"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "c497b58ff068c3ac21d3b30fef5af2c7d6182277348ad96928f7b28e410e862d",
+        "md5": "fa7298ceff285e62268fd337b532894b",
+        "sha1": "02ec8e672ee8900b4f155ac5503cf1655d808ac5",
+        "filename": "c497b58ff068c3ac21d3b30fef5af2c7d6182277348ad96928f7b28e410e862d",
+        "type": "unknown"
+      }
+    ],
+    "network_iocs": {
+      "domains": [
+        {
+          "value": "8.wc",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "w1d.gg",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "2.yr",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "8.fs",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "3y.cm",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "9.sv",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "04c.fe",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "s-.mz",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "9w.uyt",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "1g.fb",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "c6.cg",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "1.mv",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "9.in",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "v5.mwb",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "n0.lr",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "z7g.hq",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "f8.nb",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "2.zm",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "po5.ssz",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "6.csk",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [],
+      "mutexes": [],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [],
+  "summary": {
+    "total_techniques": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 0,
+    "dynamic_only": 0
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "family": "wsnake",
+  "source_report": "manual_analysis/wsnake/manual_wsnakestealer_report.md",
+  "techniques": [
+    {
+      "technique_id": "T1005",
+      "name": "Data from Local System",
+      "evidence": "Collects local files for exfiltration \u2014 verified `wallet.dat` capture (base64 in XML report), 15-currency crypto wallet targeting"
+    },
+    {
+      "technique_id": "T1016",
+      "name": "System Network Configuration Discovery",
+      "evidence": "LAN scanning"
+    },
+    {
+      "technique_id": "T1022",
+      "name": "Data Encrypted",
+      "evidence": "RC4 + RSA encryption"
+    },
+    {
+      "technique_id": "T1027",
+      "name": "Obfuscated Files or Information",
+      "evidence": "Custom XOR strings"
+    },
+    {
+      "technique_id": "T1033",
+      "name": "System Owner/User Discovery",
+      "evidence": "Checks own process token for Administrator/UAC elevation status"
+    },
+    {
+      "technique_id": "T1041",
+      "name": "Exfiltration Over C2 Channel",
+      "evidence": "HTTP POST to 31 nodes"
+    },
+    {
+      "technique_id": "T1046",
+      "name": "Network Service Discovery",
+      "evidence": "70-port scanner"
+    },
+    {
+      "technique_id": "T1047",
+      "name": "Windows Management Instrumentation",
+      "evidence": "WMI queries"
+    },
+    {
+      "technique_id": "T1048",
+      "name": "Exfiltration Over Alternative Protocol",
+      "evidence": "Telegram Bot API"
+    },
+    {
+      "technique_id": "T1053.005",
+      "name": "Scheduled Task",
+      "evidence": "Persistence via schtasks"
+    },
+    {
+      "technique_id": "T1055",
+      "name": "Process Injection",
+      "evidence": "Creates a process in suspended state (process-hollowing precursor); confirmed dynamically via CAPE's `creates_suspended_process`, not caught in manual static RE \u2014 corroborated by `OpenProcess`/`VirtualQueryEx`/`ReadProcessMemory` used together"
+    },
+    {
+      "technique_id": "T1056.001",
+      "name": "Keylogging",
+      "evidence": "WH_KEYBOARD_LL hook"
+    },
+    {
+      "technique_id": "T1057",
+      "name": "Process Discovery",
+      "evidence": "Process list, active window"
+    },
+    {
+      "technique_id": "T1059",
+      "name": "Command and Scripting Interpreter",
+      "evidence": "cmd /c"
+    },
+    {
+      "technique_id": "T1059.001",
+      "name": "PowerShell",
+      "evidence": "Script execution"
+    },
+    {
+      "technique_id": "T1070",
+      "name": "Indicator Removal",
+      "evidence": "Self-destruct, event log"
+    },
+    {
+      "technique_id": "T1071",
+      "name": "Application Layer Protocol",
+      "evidence": "HTTP POST traffic to C2 nodes (protocol layer underlying the T1041 exfil channel)"
+    },
+    {
+      "technique_id": "T1074",
+      "name": "Data Staged",
+      "evidence": "XML reports + ZIP archives"
+    },
+    {
+      "technique_id": "T1082",
+      "name": "System Information Discovery",
+      "evidence": "20+ system data fields"
+    },
+    {
+      "technique_id": "T1083",
+      "name": "File and Directory Discovery",
+      "evidence": "`jg` recursive search"
+    },
+    {
+      "technique_id": "T1090",
+      "name": "Proxy",
+      "evidence": "Tor, Serveo, ngrok"
+    },
+    {
+      "technique_id": "T1105",
+      "name": "Ingress Tool Transfer",
+      "evidence": "Payload download"
+    },
+    {
+      "technique_id": "T1112",
+      "name": "Modify Registry",
+      "evidence": "C2 config + UAC bypass"
+    },
+    {
+      "technique_id": "T1113",
+      "name": "Screen Capture",
+      "evidence": "JPEG screenshots"
+    },
+    {
+      "technique_id": "T1114",
+      "name": "Email Collection",
+      "evidence": "Thunderbird emails"
+    },
+    {
+      "technique_id": "T1115",
+      "name": "Clipboard Data",
+      "evidence": "Monitor and modify clipboard"
+    },
+    {
+      "technique_id": "T1119",
+      "name": "Automated Collection",
+      "evidence": "Keylogger + clipboard"
+    },
+    {
+      "technique_id": "T1123",
+      "name": "Audio Capture",
+      "evidence": "Microphone recording"
+    },
+    {
+      "technique_id": "T1132",
+      "name": "Data Encoding",
+      "evidence": "Base64 + XOR for C2"
+    },
+    {
+      "technique_id": "T1140",
+      "name": "Deobfuscate/Decode Files or Information",
+      "evidence": "XOR, RC4, RSA, Base64"
+    },
+    {
+      "technique_id": "T1201",
+      "name": "Password Policy Discovery",
+      "evidence": "WiFi password extraction"
+    },
+    {
+      "technique_id": "T1219",
+      "name": "Remote Access Tools",
+      "evidence": "Custom C2 client"
+    },
+    {
+      "technique_id": "T1497",
+      "name": "Virtualization/Sandbox Evasion",
+      "evidence": "12 VM indicators"
+    },
+    {
+      "technique_id": "T1497.001",
+      "name": "System Checks",
+      "evidence": "VM detection"
+    },
+    {
+      "technique_id": "T1518",
+      "name": "Software Discovery",
+      "evidence": "Installed AV list"
+    },
+    {
+      "technique_id": "T1543.003",
+      "name": "Windows Service",
+      "evidence": "Service creation"
+    },
+    {
+      "technique_id": "T1547",
+      "name": "Boot or Logon Autostart Execution",
+      "evidence": "Startup folder drop"
+    },
+    {
+      "technique_id": "T1548.002",
+      "name": "Bypass User Account Control",
+      "evidence": "MSI installer hijack"
+    },
+    {
+      "technique_id": "T1552.001",
+      "name": "Credentials In Files",
+      "evidence": "Browser credential files"
+    },
+    {
+      "technique_id": "T1552.002",
+      "name": "Credentials in Registry",
+      "evidence": "Thunderbird credentials"
+    },
+    {
+      "technique_id": "T1555",
+      "name": "Credentials from Password Stores",
+      "evidence": "Windows Credential Manager"
+    },
+    {
+      "technique_id": "T1555.003",
+      "name": "Credentials from Web Browsers",
+      "evidence": "Chrome/Edge/Firefox/Opera"
+    },
+    {
+      "technique_id": "T1560.001",
+      "name": "Archive via Utility",
+      "evidence": "GZip + ZIP compression"
+    },
+    {
+      "technique_id": "T1572",
+      "name": "Protocol Tunneling",
+      "evidence": "SSH, HTTP tunnels"
+    },
+    {
+      "technique_id": "T1620",
+      "name": "Reflective Code Loading",
+      "evidence": "In-memory PE loading in `xEdACX` (see Appendix D Validation Summary \u2014 verified but not previously listed here)"
+    }
+  ],
+  "duplicate_rows_collapsed": 2
+}

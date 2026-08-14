@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:30.438361+00:00",
+  "sources": {
+    "static_report": "static/reports/roning/1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "roning",
+    "static_sha256": "1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2",
+    "static_md5": "3a7cb580bd340505f6dc5b4c829a3eca",
+    "static_sha1": "21cc730517d74fa1d13316d7e0d817f3bd710906",
+    "static_imphash": null,
+    "static_ssdeep": "24:wqWAgtujp0hNwsnSHZL6SHgQzA4La+q4La9wlp0UNwsukS7uK6SOQz1Eo4u99LV6:fNNgSqQzA4LaH4La+H5YIQz1T9rZc9",
+    "static_tlsh": "T1A141E108C05B40C42A52B732AA47AF94E208F7CC7706B4D43AE5B59FB903AB113DE94E",
+    "static_filename": "1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2",
+    "static_file_type": "script_batch"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2",
+      "md5": "3a7cb580bd340505f6dc5b4c829a3eca",
+      "sha1": "21cc730517d74fa1d13316d7e0d817f3bd710906",
+      "filename": "1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2",
+      "type": "script_batch"
+    }
+  ],
+  "network_iocs": {
+    "domains": [
+      {
+        "value": "123.txt",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "ips": [],
+    "urls": [],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [
+      {
+        "value": "C:\\ProgramData\\lnk\\123.txt",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [],
+  "discarded_entries": []
+}

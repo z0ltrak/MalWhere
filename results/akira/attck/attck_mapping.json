@@ -1,0 +1,720 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T18:53:29.396588+00:00",
+  "sample": {
+    "family": "akira",
+    "static_sha256": "06c2a137c31aae5d02b4d7df61ffd31f1af9a9e59978f15b3f7265cc751bff1f",
+    "static_md5": "aa88621587a40bf353cc07a965e00ee2",
+    "static_sha1": "dfa5e52cd8a709cd2b479c71c9c06a89990a0e9f",
+    "static_imphash": "f89d971f855e5743dd4d1e73a5da5699",
+    "static_ssdeep": "24576:zQagXrs6xiS7Ay/i4NBqThb23KAwcCcoVuqs:zQa36bg4NBqT1VAwfcoVQ",
+    "static_tlsh": "T1B1352941A5164AF6F652CABD4A32C42FEEF736050B10DAE75581B23A2F030E92F7C759",
+    "static_filename": "sample.exe",
+    "static_file_type": "pe_dotnet",
+    "dynamic_sha256": "06c2a137c31aae5d02b4d7df61ffd31f1af9a9e59978f15b3f7265cc751bff1f",
+    "dynamic_md5": "aa88621587a40bf353cc07a965e00ee2",
+    "dynamic_filename": "sample.exe",
+    "dynamic_file_type": "PE32+ executable (GUI) x86-64, for MS Windows",
+    "hash_match": true,
+    "malscore": 10.0,
+    "malstatus": "Malicious",
+    "family_detections": [
+      {
+        "family": "Akira",
+        "detail_sources": [
+          "Yara"
+        ]
+      },
+      {
+        "family": "Avaddon",
+        "detail_sources": [
+          "Behavior"
+        ]
+      }
+    ]
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "06c2a137c31aae5d02b4d7df61ffd31f1af9a9e59978f15b3f7265cc751bff1f",
+        "md5": "aa88621587a40bf353cc07a965e00ee2",
+        "sha1": "dfa5e52cd8a709cd2b479c71c9c06a89990a0e9f",
+        "filename": "sample.exe",
+        "type": "pe_dotnet"
+      },
+      {
+        "role": "primary_sample",
+        "source": "dynamic",
+        "sha256": "06c2a137c31aae5d02b4d7df61ffd31f1af9a9e59978f15b3f7265cc751bff1f",
+        "md5": "aa88621587a40bf353cc07a965e00ee2",
+        "sha1": "dfa5e52cd8a709cd2b479c71c9c06a89990a0e9f",
+        "filename": "sample.exe",
+        "type": "PE32+ executable (GUI) x86-64, for MS Windows"
+      },
+      {
+        "role": "dropped_file",
+        "source": "dynamic",
+        "sha256": "c0ff2697a726ade5a55968b4ddb73693ec8b014adce0ef110177cc65b5841ea3",
+        "md5": "7c1953c7772becdf24901464ac412001",
+        "sha1": "a24b4b2d15c95a77ae2679c107b0c6e5105430c0",
+        "filename": "akira_readme.txt",
+        "type": "ASCII text, with very long lines (435), with CRLF, CR line terminators"
+      },
+      {
+        "role": "dropped_file",
+        "source": "dynamic",
+        "sha256": "fc2f55e0ef349732fe36f934cfc9bfa4761a1ebd6c5ff2e0aae8c277ca5c3603",
+        "md5": "03cdf2f216f994052bb61905adaec04c",
+        "sha1": "8241146bb0dc4f264583c335fb8f8e5aa4fe862c",
+        "filename": "Log-11-08-2026-13-54-16.txt",
+        "type": "ASCII text, with CRLF line terminators"
+      }
+    ],
+    "network_iocs": {
+      "domains": [
+        {
+          "value": "akiral2iz6a7qgd3ayp3l6yub7xx2uep76idk3u2kollpj5z3z636bad.onion",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "asio.misc",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "akiralkzxzq2dsrzsrvbr2xgbbu2wgsmxryd4csgfameg52n7efvr2id.onion",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "asio.system",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "github.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "www.msftconnecttest.com",
+          "sources": [
+            "dynamic"
+          ]
+        }
+      ],
+      "ips": [
+        {
+          "value": "140.82.121.3",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "185.43.182.40",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "185.43.182.25",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "2.20.253.87",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "2.20.253.75",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "96.16.86.160",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "40.126.53.9",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "20.231.128.66",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "20.190.181.23",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "20.190.181.3",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "40.126.53.6",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "40.126.53.16",
+          "sources": [
+            "dynamic"
+          ]
+        }
+      ],
+      "urls": [
+        {
+          "value": "https://akiral2iz6a7qgd3ayp3l6yub7xx2uep76idk3u2kollpj5z3z636bad.onion.",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "https://akiralkzxzq2dsrzsrvbr2xgbbu2wgsmxryd4csgfameg52n7efvr2id.onion/d/6937967676-AWUMG",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "https://www.torproject.org/download/.",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0000\\RegFiles0000",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0000\\RegFilesHash",
+          "sources": [
+            "dynamic"
+          ]
+        }
+      ],
+      "file_paths": [],
+      "mutexes": [
+        {
+          "value": "Local\\SM0:1000:304:WilStaging_02",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Local\\SM0:7164:304:WilStaging_02",
+          "sources": [
+            "dynamic"
+          ]
+        }
+      ],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [
+    {
+      "technique_id": "T1057",
+      "technique_name": "Process Discovery",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "WTSFreeMemory",
+          "confidence": "high",
+          "name": "Process Discovery",
+          "justification": "The malware string 'WTSFreeMemory' was found in the binary, alongside 1 other string(s) also characteristic of Process Discovery. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "WTSEnumerateProcessesW",
+          "confidence": "high",
+          "name": "Process Discovery",
+          "justification": "The malware string 'WTSEnumerateProcessesW' was found in the binary, alongside 1 other string(s) also characteristic of Process Discovery. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1070",
+      "technique_name": "Indicator Removal",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "DeleteFile",
+          "confidence": "high",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'DeleteFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateFile",
+          "confidence": "high",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'CreateFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "DeleteFileW, CreateFileW",
+          "confidence": "high",
+          "name": "Indicator Removal on Host",
+          "justification": "The API functions DeleteFileW, CreateFileW are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1071",
+      "technique_name": "Application Layer Protocol",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "2 .onion URLs found",
+          "confidence": "high",
+          "name": "Application Layer Protocol",
+          "justification": "Found 2 .onion URLs in the binary. Onion URLs are characteristic of Tor-based command and control (T1071), indicating the malware can communicate via the Tor network."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1083",
+      "technique_name": "File and Directory Discovery",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "dynamic",
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": "medium",
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "FindFirstFile",
+          "confidence": "high",
+          "name": "File and Directory Discovery",
+          "justification": "The malware string 'FindFirstFile' was found in the binary, alongside 1 other string(s) also characteristic of File and Directory Discovery. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "FindNextFile",
+          "confidence": "high",
+          "name": "File and Directory Discovery",
+          "justification": "The malware string 'FindNextFile' was found in the binary, alongside 1 other string(s) also characteristic of File and Directory Discovery. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "FindClose, FindFirstFileW, FindNextFileW",
+          "confidence": "high",
+          "name": "File and Directory Discovery",
+          "justification": "The API functions FindClose, FindFirstFileW, FindNextFileW are all imported by the binary. This combination is characteristic of File and Directory Discovery \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "folder_enumeration",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'folder_enumeration' fired (severity=3, confidence=70%, categories=['ransomware', 'wiper', 'infostealer', 'discovery'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1486",
+      "technique_name": "Data Encrypted for Impact",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "dynamic",
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": "high",
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "expand 32-byte k",
+          "confidence": "high",
+          "name": "Data Encrypted for Impact",
+          "justification": "The malware string 'expand 32-byte k' was found in the binary, alongside 3 other string(s) also characteristic of Data Encrypted for Impact. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "WriteFile",
+          "confidence": "high",
+          "name": "Data Encrypted for Impact",
+          "justification": "The malware string 'WriteFile' was found in the binary, alongside 3 other string(s) also characteristic of Data Encrypted for Impact. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "akira",
+          "confidence": "high",
+          "name": "Data Encrypted for Impact",
+          "justification": "The malware string 'akira' was found in the binary, alongside 3 other string(s) also characteristic of Data Encrypted for Impact. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "arika",
+          "confidence": "high",
+          "name": "Data Encrypted for Impact",
+          "justification": "The malware string 'arika' was found in the binary, alongside 3 other string(s) also characteristic of Data Encrypted for Impact. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "ransomware_iocp_asynchronous_encryption",
+          "confidence": "high",
+          "name": "",
+          "justification": "CAPE signature 'ransomware_iocp_asynchronous_encryption' fired (severity=4, confidence=80%, categories=['ransomware'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "mass_ransom_note_drop",
+          "confidence": "high",
+          "name": "",
+          "justification": "CAPE signature 'mass_ransom_note_drop' fired (severity=3, confidence=100%, categories=['ransomware'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "ransomware_message",
+          "confidence": "high",
+          "name": "",
+          "justification": "CAPE signature 'ransomware_message' fired (severity=3, confidence=100%, categories=['ransomware'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "ransomware_files",
+          "confidence": "high",
+          "name": "",
+          "justification": "CAPE signature 'ransomware_files' fired (severity=3, confidence=100%, categories=['ransomware'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1490",
+      "technique_name": "Inhibit System Recovery",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "shadowcopy",
+          "confidence": "high",
+          "name": "Inhibit System Recovery",
+          "justification": "The malware string 'shadowcopy' was found in the binary. This string is characteristic of Inhibit System Recovery behavior. The presence of this specific string alone (no other Inhibit System Recovery-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1497",
+      "technique_name": "Virtualization/Sandbox Evasion",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "Sleep",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'Sleep' was found in the binary, alongside 2 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "GetSystemInfo",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'GetSystemInfo' was found in the binary, alongside 2 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "QueryPerformanceCounter",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'QueryPerformanceCounter' was found in the binary, alongside 2 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "Sleep, GetSystemInfo, QueryPerformanceCounter, QueryPerformanceFrequency",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The API functions Sleep, GetSystemInfo, QueryPerformanceCounter, QueryPerformanceFrequency are all imported by the binary. This combination is characteristic of Virtualization/Sandbox Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1622",
+      "technique_name": "Debugger Evasion",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "IsDebuggerPresent",
+          "confidence": "low",
+          "name": "Debugger Evasion",
+          "justification": "The malware string 'IsDebuggerPresent' was found in the binary. This string is characteristic of Debugger Evasion behavior. The presence of this specific string alone (no other Debugger Evasion-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "UnhandledExceptionFilter, SetUnhandledExceptionFilter, IsDebuggerPresent",
+          "confidence": "high",
+          "name": "Debugger Evasion",
+          "justification": "The API functions UnhandledExceptionFilter, SetUnhandledExceptionFilter, IsDebuggerPresent are all imported by the binary. This combination is characteristic of Debugger Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "yara",
+          "evidence": "AntiDebug_IsDebuggerPresent",
+          "confidence": "high",
+          "name": "Debugger Evasion",
+          "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1027",
+      "technique_name": "Obfuscated Files or Information",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "dynamic"
+      ],
+      "static_best_confidence": null,
+      "dynamic_best_confidence": "medium",
+      "evidence": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "pe_deep_entrypoint",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'pe_deep_entrypoint' fired (severity=2, confidence=50%, categories=['packer', 'static'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "pe_tls_callbacks",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'pe_tls_callbacks' fired (severity=2, confidence=50%, categories=['packer', 'anti-debug', 'static'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "packer_unknown_pe_section_name",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'packer_unknown_pe_section_name' fired (severity=2, confidence=100%, categories=['packer'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1027.002",
+      "technique_name": "Obfuscated Files or Information: Software Packing",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "dynamic"
+      ],
+      "static_best_confidence": null,
+      "dynamic_best_confidence": "medium",
+      "evidence": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "packer_unknown_pe_section_name",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'packer_unknown_pe_section_name' fired (severity=2, confidence=100%, categories=['packer'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1033",
+      "technique_name": "System Owner/User Discovery",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "dynamic"
+      ],
+      "static_best_confidence": null,
+      "dynamic_best_confidence": "medium",
+      "evidence": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "privilege_elevation_check",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'privilege_elevation_check' fired (severity=2, confidence=80%, categories=['discovery', 'privilege_escalation'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1059",
+      "technique_name": "Command and Scripting Interpreter",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "ShellExecuteW",
+          "confidence": "medium",
+          "name": "Command and Scripting Interpreter",
+          "justification": "The malware string 'ShellExecuteW' was found in the binary. This string is characteristic of Command and Scripting Interpreter behavior. The presence of this specific string alone (no other Command and Scripting Interpreter-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1562.001",
+      "technique_name": "Impair Defenses: Disable or Modify Tools",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "OpenProcess, TerminateProcess, WTSEnumerateProcessesW",
+          "confidence": "medium",
+          "name": "Impair Defenses: Disable or Modify Tools",
+          "justification": "The API functions OpenProcess, TerminateProcess, WTSEnumerateProcessesW are all imported by the binary. This is a coherent enumerate-then-kill primitive: deliberately searching the process list (WTSEnumerateProcessesW) rather than acting on a handle already held, then opening and terminating a match. Consistent with Impair Defenses: Disable or Modify Tools (T1562.001) even without a decrypted target name to confirm which process is targeted -- medium rather than high confidence for that reason."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    }
+  ],
+  "summary": {
+    "total_techniques": 13,
+    "high": 8,
+    "medium": 5,
+    "low": 0,
+    "both_sources": 2,
+    "static_only": 8,
+    "dynamic_only": 3
+  }
+}

@@ -1,0 +1,288 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:30.574255+00:00",
+  "sources": {
+    "static_report": "static/reports/roning/1cbb3d517793c2239d0c8e7e05ba2bce1e920bb50355d10889bd41b6b7a69a61_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "roning",
+    "static_sha256": "1cbb3d517793c2239d0c8e7e05ba2bce1e920bb50355d10889bd41b6b7a69a61",
+    "static_md5": "1909e031316287156c2dac3018ba337b",
+    "static_sha1": "73e7b295f5ce10ec6fa9ed02cbef5bfe9d655090",
+    "static_imphash": "0423ca4f9c719d8f562eb37caa508faa",
+    "static_ssdeep": "768:Kx553vpFizLlhrO5yV0wXNEuLSoQulDozLlhrO5bHH:cDil5IwXpL7dol5O",
+    "static_tlsh": "T1BF337C978E146CD2FE0ADE70A1D88527EE7172821F8189CB2128C5DA1F937E53F7825D",
+    "static_filename": "1cbb3d517793c2239d0c8e7e05ba2bce1e920bb50355d10889bd41b6b7a69a61",
+    "static_file_type": "pe_native"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "1cbb3d517793c2239d0c8e7e05ba2bce1e920bb50355d10889bd41b6b7a69a61",
+      "md5": "1909e031316287156c2dac3018ba337b",
+      "sha1": "73e7b295f5ce10ec6fa9ed02cbef5bfe9d655090",
+      "filename": "1cbb3d517793c2239d0c8e7e05ba2bce1e920bb50355d10889bd41b6b7a69a61",
+      "type": "pe_native"
+    }
+  ],
+  "network_iocs": {
+    "domains": [
+      {
+        "value": "crl.microsoft.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "ocsp.digicert",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "subca.ocsp",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "ccsca2021.ocsp",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "h.rdata",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "ocsp.verisign",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "logo.verisign.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "crl.verisign.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "subca.repository.certum",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "ccsca2021.crl.certum",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "repository.certum.pl",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "cacerts.digicert.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "h.data",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "crl3.digicert.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "b.reloc",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "crl.certum.pl",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "csc3-2010-aia.verisign.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "subca.crl.certum",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "csc3-2010-crl.verisign.com",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "ips": [],
+    "urls": [
+      {
+        "value": "http://subca.ocsp-certum.com01",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://repository.certum.pl/ctnca.cer09",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "https://www.certum.pl/CPS0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://ccsca2021.crl.certum.pl/ccsca2021.crl0s",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://subca.repository.certum.pl/ctsca2021.cer0(",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl3.digicert.com/DigiCertTrustedRootG4.crl0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl.microsoft.com/pki/crl/products/MicrosoftCodeVerifRoot.crl0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://ocsp.verisign.com0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://repository.certum.pl/ctnca2.cer09",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://ocsp.verisign.com0;",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://logo.verisign.com/vslogo.gif04",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://subca.ocsp-certum.com02",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "https://www.verisign.com/cps0*",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://subca.ocsp-certum.com0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "https://www.verisign.com/rpa0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://ocsp.digicert.com0C",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl.certum.pl/ctnca2.crl0l",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [],
+  "discarded_entries": [
+    {
+      "reason": "looks_like_filename_not_domain",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "fltmgr.sys"
+    }
+  ]
+}

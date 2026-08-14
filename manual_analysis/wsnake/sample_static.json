@@ -1,0 +1,1650 @@
+{
+  "filename": "sample.exe",
+  "size_bytes": 138752,
+  "size_mb": 0.13,
+  "extension": ".exe",
+  "md5": "ea08b197bbe8bc874a5c65500db03bf2",
+  "sha1": "3cbe0f9a6bb6c1600e196d3c2b54132c72ccce0d",
+  "sha256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312",
+  "ssdeep": "1536:k3WaMTxYajhMDWWWxD4krrQz46vdszbLpQqVD9bMEqb01XTmUOr87dOPAUVHWHth:6ajYWCkrr3wdAbbD9bMEqo1AWz7bPCe",
+  "tlsh": "T1C2D3B496B2959FA1D99A8C7E81B25730037059068EC1FF0599DEF1902DC32C8EB176EF",
+  "imphash": "f34d5f2d4577ed6d9ceec516c1f5a744",
+  "is_dotnet": false,
+  "metadata": {
+    "machine": {
+      "value": "0x14c",
+      "description": "Intel 386"
+    },
+    "number_of_sections": 3,
+    "time_date_stamp": {
+      "raw": 3889595801,
+      "formatted": "2093-04-03T11:16:41"
+    },
+    "characteristics": "0x22",
+    "image_base": "0x400000",
+    "entry_point": "0x2307e",
+    "size_of_code": 135680,
+    "size_of_initialized_data": 2560,
+    "size_of_uninitialized_data": 0,
+    "subsystem": {
+      "value": 2,
+      "description": "Windows GUI"
+    },
+    "dll_characteristics": "0x8560",
+    "image_size": 163840,
+    "headers_size": 512,
+    "checksum": 0,
+    "is_dll": false,
+    "is_driver": false
+  },
+  "sections": [
+    {
+      "name": ".text",
+      "virtual_address": "0x2000",
+      "virtual_size": 135300,
+      "raw_size": 135680,
+      "entropy": 5.3,
+      "characteristics": "0x60000020",
+      "is_executable": true,
+      "is_writable": false,
+      "is_readable": true,
+      "md5": "8db6c509c98c5c3f9118b5242e181375",
+      "sha1": "e3035b1ecbd9307c727245df444fe353fce344fa",
+      "ssdeep": null
+    },
+    {
+      "name": ".rsrc",
+      "virtual_address": "0x24000",
+      "virtual_size": 1804,
+      "raw_size": 2048,
+      "entropy": 4.6,
+      "characteristics": "0x40000040",
+      "is_executable": false,
+      "is_writable": false,
+      "is_readable": true,
+      "md5": "3d1ccf36fbab49043c20d3ebe99828b4",
+      "sha1": "d4b0f6e3b41d28624cd9421595dac6358f474ee7",
+      "ssdeep": null
+    },
+    {
+      "name": ".reloc",
+      "virtual_address": "0x26000",
+      "virtual_size": 12,
+      "raw_size": 512,
+      "entropy": 0.1,
+      "characteristics": "0x42000040",
+      "is_executable": false,
+      "is_writable": false,
+      "is_readable": true,
+      "md5": "64a231074c74dcb4f33682cfbea21c3c",
+      "sha1": "a82164c6e8490f84cdf6a39c680762c3899a0682",
+      "ssdeep": null
+    }
+  ],
+  "imports": [
+    {
+      "dll": "mscoree.dll",
+      "function": "_CorExeMain",
+      "address": "0x402000",
+      "hint": 0
+    }
+  ],
+  "exports": [],
+  "resources": [
+    {
+      "type": "RT_VERSION",
+      "id": 16,
+      "name": null
+    },
+    {
+      "type": "RT_MANIFEST",
+      "id": 24,
+      "name": null
+    }
+  ],
+  "strings": {
+    "standard": [
+      "!This program cannot be run in DOS mode.",
+      "`.rsrc",
+      "@.reloc",
+      "v4.0.30319",
+      "#Strings",
+      "__StaticArrayInitTypeSize=280",
+      "yvSuU0",
+      "get__9ecly1dif2BW0",
+      "set__9ecly1dif2BW0",
+      "<>9__0_0",
+      "<Start>b__0_0",
+      "<>c__DisplayClass0_0",
+      "<>9__1_0",
+      "<ErrorHandlerSetup>b__1_0",
+      "<>c__DisplayClass1_0",
+      "<>9__12_0",
+      "<Start>b__12_0",
+      "<>c__DisplayClass2_0",
+      "<>9__3_0",
+      "<SelfDestructInit>b__3_0",
+      "<>9__4_0",
+      "<Main>b__4_0",
+      "<>c__DisplayClass4_0",
+      "<>c__DisplayClass6_0",
+      "<>c__DisplayClass7_0",
+      "<>9__8_0",
+      "<ProcessCommand>b__8_0",
+      "<>c__DisplayClass8_0",
+      "<PerformFullScan>b__0",
+      "<ProcessCommands>b__0",
+      "<ScanPorts>b__0",
+      "<Start>b__0",
+      "<IsText>b__0",
+      "<GetText>b__0",
+      "<SetText>b__0",
+      "zo_lg0",
+      "<RunCommandLine>g__HandleData|0",
+      "get__uctqqQJYEA941",
+      "set__uctqqQJYEA941",
+      "<>9__3_1",
+      "<SelfDestructInit>b__3_1",
+      "<>9__4_1",
+      "<Main>b__4_1",
+      "<>c__DisplayClass4_1",
+      "<>c__DisplayClass6_1",
+      "<>c__DisplayClass7_1",
+      "<ProcessCommand>b__1",
+      "Nullable`1",
+      "IEnumerable`1",
+      "IEnumerator`1",
+      "List`1",
+      "CS$<>8__locals1",
+      "jEyNu1",
+      "__StaticArrayInitTypeSize=12",
+      "advapi32",
+      "Microsoft.Win32",
+      "ReadUInt32",
+      "ToUInt32",
+      "ReadInt32",
+      "ToInt32",
+      "_8R4PAjFs7mSI2",
+      "<ProcessCommand>b__2",
+      "KeyValuePair`2",
+      "Dictionary`2",
+      "_BMNS98VppPsf2",
+      "_gMRMcDSYsyTp2",
+      "y19QH3",
+      "uBEaK3",
+      "<ProcessCommand>b__3",
+      "get__8UWfGRxykVGq3",
+      "set__8UWfGRxykVGq3",
+      "set_ContentLength64",
+      "ReadInt64",
+      "ToInt64",
+      "q6C6N4",
+      "ybbKm4",
+      "_41BQBvVpblOv4",
+      "dQR1V5",
+      "n_UPr5",
+      "ReadUInt16",
+      "ToUInt16",
+      "__StaticArrayInitTypeSize=6",
+      "e1RcR6",
+      "byXeX6",
+      "gKF4j6",
+      "x7FzS7",
+      "kji7e7",
+      "get_UTF8",
+      "EncodeUTF8",
+      "get__EyO2Q8FYTjTI8",
+      "set__EyO2Q8FYTjTI8",
+      "nBmmX8",
+      "phb6HA",
+      "tHBCHA",
+      "mciSendStringA",
+      "gie21B",
+      "cbaUZB",
+      "od1H_B",
+      "uj1_hB",
+      "yfei0C",
+      "hdNz8C",
+      "lIL8IC",
+      "v3aoKC",
+      "j3tt4D",
+      "hXhCmD",
+      "utqY4E",
+      "_qnfVIjvAOHGFE",
+      "FILETIME",
+      "RM_APP_TYPE",
+      "eQZFfE",
+      "iEuO1F",
+      "get__TWwiKiIvuFtwF",
+      "set__TWwiKiIvuFtwF",
+      "kKQpyF",
+      "_P5mhNlmTDjXGG",
+      "zdY9UG",
+      "pmjL2H",
+      "mjGSNH",
+      "bgERSH",
+      "get__svoffZ5gzp2UH",
+      "set__svoffZ5gzp2UH",
+      "aumwEI",
+      "get_ASCII",
+      "_CgSemBagyQPrI",
+      "ksmDNK",
+      "jqVKWL",
+      "tEsT2M",
+      "_TgkUkXPo77sCN",
+      "sRK5IN",
+      "MEMORY_BASIC_INFORMATION",
+      "vcTrSN",
+      "obSWvN",
+      "RM_PROCESS_INFO",
+      "System.IO",
+      "_BL2lpubeRjofO",
+      "rphDvO",
+      "DestIP",
+      "rkZgwP",
+      "cn50DQ",
+      "vfYnFQ",
+      "vmj1lQ",
+      "ftlY7R",
+      "sVgjKR",
+      "lNmoWR",
+      "ujGujR",
+      "eDBXAS",
+      "RM_UNIQUE_PROCESS",
+      "k8OCdS",
+      "_YRTQxzWea605T",
+      "_DRHmFFqLgGDDT",
+      "mhg4eT",
+      "zRofoT",
+      "f38ZHU",
+      "get__P7mcPFxuwVuWU",
+      "set__P7mcPFxuwVuWU",
+      "xkDPZU",
+      "aWQUlU",
+      "tbqc8V",
+      "get__hOeQJ9R5Km89V",
+      "set__hOeQJ9R5Km89V",
+      "get__5G9CQMlbGi0MV",
+      "set__5G9CQMlbGi0MV",
+      "g043UV",
+      "_LJQQyPWL3SLZV",
+      "_K7hTk4qCJwisV",
+      "mQDSvV",
+      "vS2ixV",
+      "hWwd6W",
+      "xNQZmW",
+      "qb4P3X",
+      "nyTj4X",
+      "xEdACX",
+      "wcUPlX",
+      "v1gS8Y",
+      "mSNDrY",
+      "eM71tY",
+      "ceKDMZ",
+      "fTE6gZ",
+      "__User32_SendMessage__",
+      "__Kernel32_GetModuleHandle__",
+      "value__",
+      "jLcM5a",
+      "w3Tk5a",
+      "get_Data",
+      "cbData",
+      "pbData",
+      "DownloadData",
+      "UploadData",
+      "GetData",
+      "PropertyData",
+      "e_UBNb",
+      "mscorlib",
+      "pkERlb",
+      "DataBlob",
+      "CredentialBlob",
+      "_hTkY0AjMu3Kxb",
+      "j1kZ1c",
+      "xDpADc",
+      "System.Collections.Generic",
+      "mB3uic",
+      "kHhgkc",
+      "iWxcCd",
+      "get_Id",
+      "dwThreadId",
+      "TSSessionId",
+      "dwProcessId",
+      "processId",
+      "GetProcessById",
+      "nSEQUd",
+      "lpNumberOfBytesRead",
+      "idThread",
+      "add_DomainUnload",
+      "pnProcInfoNeeded",
+      "set_Enabled",
+      "add_Elapsed",
+      "add_ErrorDataReceived",
+      "add_OutputDataReceived",
+      "pReserved",
+      "System.Collections.Specialized",
+      "Synchronized",
+      "NewGuid",
+      "TrimEnd",
+      "ReadToEnd",
+      "lpstrCommand",
+      "command",
+      "Append",
+      "get_Second",
+      "get_HttpMethod",
+      "method",
+      "Clipboard",
+      "NetworkInterface",
+      "Replace",
+      "IsWhiteSpace",
+      "RmService",
+      "get_beaconService",
+      "set_beaconService",
+      "wScanCode",
+      "keyCode",
+      "FileMode",
+      "CompressionMode",
+      "get_Unicode",
+      "DeleteSubKeyTree",
+      "cRmYfe",
+      "FromImage",
+      "get_Message",
+      "AddRange",
+      "aTnghe",
+      "EndInvoke",
+      "BeginInvoke",
+      "IDisposable",
+      "bRestartable",
+      "ToDouble",
+      "RuntimeFieldHandle",
+      "RuntimeTypeHandle",
+      "CloseHandle",
+      "GetTypeFromHandle",
+      "pSessionHandle",
+      "dwSessionHandle",
+      "bInheritHandle",
+      "Rectangle",
+      "DownloadFile",
+      "IsInRole",
+      "WindowsBuiltInRole",
+      "RmConsole",
+      "hModule",
+      "get_MainModule",
+      "ProcessModule",
+      "dwStyle",
+      "set_WindowStyle",
+      "ProcessWindowStyle",
+      "get_Name",
+      "sProcName",
+      "get_FileName",
+      "set_FileName",
+      "GetTempFileName",
+      "sFileName",
+      "GetFileName",
+      "get_ModuleName",
+      "lpModuleName",
+      "get_MachineName",
+      "get_FullName",
+      "strAppName",
+      "get_UserName",
+      "browserName",
+      "get_ProcessName",
+      "TargetName",
+      "strServiceShortName",
+      "get_HostName",
+      "lpszWindowName",
+      "GetProcessesByName",
+      "GetDirectoryName",
+      "FromFileTime",
+      "ToFileTime",
+      "DateTime",
+      "get_LastWriteTime",
+      "GetLastWriteTime",
+      "SetLastWriteTime",
+      "get_CreationTime",
+      "SetCreationTime",
+      "SetLastAccessTime",
+      "ProcessStartTime",
+      "ModifyTime",
+      "BeginErrorReadLine",
+      "BeginOutputReadLine",
+      "AppendLine",
+      "WriteLine",
+      "get_NewLine",
+      "Combine",
+      "LocalMachine",
+      "get_NetworkInterfaceType",
+      "ValueType",
+      "SecurityProtocolType",
+      "ApplicationType",
+      "uMapType",
+      "PtrToStructure",
+      "AllocationBase",
+      "ReadOnlyCollectionBase",
+      "ApplicationSettingsBase",
+      "get_Response",
+      "HttpListenerResponse",
+      "response",
+      "Dispose",
+      "TryParse",
+      "Create",
+      "MulticastDelegate",
+      "Deflate",
+      "CredEnumerate",
+      "DebuggerBrowsableState",
+      "SetApartmentState",
+      "lpKeyState",
+      "Delete",
+      "get_CanWrite",
+      "STAThreadAttribute",
+      "CompilerGeneratedAttribute",
+      "GuidAttribute",
+      "GeneratedCodeAttribute",
+      "DebuggableAttribute",
+      "DebuggerBrowsableAttribute",
+      "ComVisibleAttribute",
+      "AssemblyTitleAttribute",
+      "XmlTypeAttribute",
+      "XmlAttributeAttribute",
+      "AssemblyTrademarkAttribute",
+      "TargetFrameworkAttribute",
+      "XmlEnumAttribute",
+      "AssemblyFileVersionAttribute",
+      "AssemblyConfigurationAttribute",
+      "AssemblyDescriptionAttribute",
+      "UnmanagedFunctionPointerAttribute",
+      "CompilationRelaxationsAttribute",
+      "AssemblyProductAttribute",
+      "AssemblyCopyrightAttribute",
+      "XmlRootAttribute",
+      "XmlArrayAttribute",
+      "AssemblyCompanyAttribute",
+      "RuntimeCompatibilityAttribute",
+      "set_UseShellExecute",
+      "get_Minute",
+      "get_Value",
+      "get_HasValue",
+      "GetValue",
+      "SetValue",
+      "Remove",
+      "kIQoxe",
+      "w_dcze",
+      "get_Size",
+      "cbSize",
+      "CredentialBlobSize",
+      "CompressedSize",
+      "FileSize",
+      "RegionSize",
+      "HeaderSize",
+      "dwSize",
+      "Serialize",
+      "Deserialize",
+      "SuppressFinalize",
+      "_F5vFEwWPINREf",
+      "SizeOf",
+      "LastIndexOf",
+      "cchBuff",
+      "pwszBuff",
+      "_22dpwxSVsvFlf",
+      "pWDW4g",
+      "suGL7g",
+      "get_Jpeg",
+      "get_Png",
+      "System.Threading",
+      "GetEncoding",
+      "System.Drawing.Imaging",
+      "get_IsListening",
+      "System.Runtime.Versioning",
+      "FromBase64String",
+      "ToBase64String",
+      "DownloadString",
+      "UploadString",
+      "mciSendString",
+      "FromXmlString",
+      "lpstrReturnString",
+      "ToString",
+      "GetString",
+      "Substring",
+      "System.Drawing",
+      "uj4Gwg",
+      "hg9GIh",
+      "mcFFVh",
+      "qOTYch",
+      "IsMatch",
+      "j617fh",
+      "ComputeHash",
+      "get_LocalPath",
+      "GetTempPath",
+      "GetFolderPath",
+      "get_Width",
+      "nWidth",
+      "get_Length",
+      "set_Length",
+      "uReturnLength",
+      "SetLength",
+      "dwLength",
+      "EndsWith",
+      "StartsWith",
+      "get_Month",
+      "PtrToStringUni",
+      "x_6VGj",
+      "kkp4sj",
+      "get__pwdesfiXUzkbk",
+      "set__pwdesfiXUzkbk",
+      "AsyncCallback",
+      "hwndCallback",
+      "callback",
+      "get_CanSeek",
+      "idHook",
+      "get_IPv4Mask",
+      "eqk6Fl",
+      "AllocHGlobal",
+      "FreeHGlobal",
+      "RmCritical",
+      "Marshal",
+      "NativeCredential",
+      "System.Security.Principal",
+      "WindowsPrincipal",
+      "set_Interval",
+      "kernel32.dll",
+      "winmm.dll",
+      "rstrtmgr.dll",
+      "System.Xml",
+      "set_SecurityProtocol",
+      "FileStream",
+      "DeflateStream",
+      "get_EndOfStream",
+      "GZipStream",
+      "get_InputStream",
+      "get_OutputStream",
+      "MemoryStream",
+      "lParam",
+      "wParam",
+      "get_Item",
+      "set_Item",
+      "OperatingSystem",
+      "AsymmetricAlgorithm",
+      "HashAlgorithm",
+      "q9ykkm",
+      "Random",
+      "r4poWn",
+      "TimeSpan",
+      "PhyAddrLen",
+      "CopyFromScreen",
+      "LastWritten",
+      "AppDomain",
+      "get_CurrentDomain",
+      "SeekOrigin",
+      "qpC5kn",
+      "MessageBoxIcon",
+      "get_Extension",
+      "GetFileNameWithoutExtension",
+      "get_OSVersion",
+      "get_Version",
+      "RmEndSession",
+      "RmStartSession",
+      "System.IO.Compression",
+      "Application",
+      "get_Location",
+      "System.Net.NetworkInformation",
+      "UnicastIPAddressInformation",
+      "System.Configuration",
+      "IsPunctuation",
+      "System.Xml.Serialization",
+      "System.Reflection",
+      "PropertyDataCollection",
+      "ProcessModuleCollection",
+      "NameValueCollection",
+      "UnicastIPAddressInformationCollection",
+      "WebHeaderCollection",
+      "ManagementObjectCollection",
+      "HttpListenerPrefixCollection",
+      "KeyCollection",
+      "get_Position",
+      "set_Position",
+      "CallingConvention",
+      "SearchOption",
+      "IOException",
+      "InvalidDataException",
+      "WebException",
+      "add_UnhandledException",
+      "InvalidOperationException",
+      "UnauthorizedAccessException",
+      "SocketException",
+      "ArgumentException",
+      "pszDescription",
+      "StringComparison",
+      "get__zI3KXNNS4bT7o",
+      "set__zI3KXNNS4bT7o",
+      "CopyTo",
+      "pnProcInfo",
+      "FileInfo",
+      "FileSystemInfo",
+      "set_StartInfo",
+      "ProcessStartInfo",
+      "DirectoryInfo",
+      "rNA4wo",
+      "sXiqCp",
+      "Bitmap",
+      "FilenameInZip",
+      "hwndApp",
+      "RmUnknownApp",
+      "j_AK2r",
+      "cQh1Gr",
+      "ypzCTr",
+      "get_Year",
+      "ToChar",
+      "DirectorySeparatorChar",
+      "cFSoar",
+      "pMacAddr",
+      "StringReader",
+      "StreamReader",
+      "TextReader",
+      "BinaryReader",
+      "RSACryptoServiceProvider",
+      "RNGCryptoServiceProvider",
+      "StringBuilder",
+      "SpecialFolder",
+      "sender",
+      "lpBuffer",
+      "ServicePointManager",
+      "ManagementObjectSearcher",
+      "ElapsedEventHandler",
+      "DataReceivedEventHandler",
+      "UnhandledExceptionEventHandler",
+      "System.CodeDom.Compiler",
+      "HttpListener",
+      "ToUpper",
+      "RmExplorer",
+      "CurrentUser",
+      "filter",
+      "GetDelegateForFunctionPointer",
+      "BitConverter",
+      "ToLower",
+      "XmlSerializer",
+      "set_RedirectStandardError",
+      "IEnumerator",
+      "ManagementObjectEnumerator",
+      "GetEnumerator",
+      "RandomNumberGenerator",
+      ".cctor",
+      "ReadIntPtr",
+      "get_Hour",
+      "get__PhjCNOZYvwkJs",
+      "set__PhjCNOZYvwkJs",
+      "TargetAlias",
+      "Graphics",
+      "System.Diagnostics",
+      "get_TotalSeconds",
+      "get_Bounds",
+      "GetAllNetworkInterfaces",
+      "nServices",
+      "System.Runtime.InteropServices",
+      "System.Runtime.CompilerServices",
+      "GetInstances",
+      "RmRegisterResources",
+      "DebuggingModes",
+      "GetDirectories",
+      "GetIPProperties",
+      "get_Properties",
+      "IPInterfaceProperties",
+      "ExpandEnvironmentVariables",
+      "nFiles",
+      "GetFiles",
+      "get_Modules",
+      "rgsServiceNames",
+      "GetSubKeyNames",
+      "rgsFilenames",
+      "System.Runtime.InteropServices.ComTypes",
+      "GetProcesses",
+      "get_UnicastAddresses",
+      "Attributes",
+      "ReadAllBytes",
+      "WriteAllBytes",
+      "GetAddressBytes",
+      "GetBytes",
+      "get_Prefixes",
+      "dwSessionFlags",
+      "dwPromptFlags",
+      "dwFlags",
+      "ElapsedEventArgs",
+      "DataReceivedEventArgs",
+      "UnhandledExceptionEventArgs",
+      "get_Ticks",
+      "pCredentials",
+      "System.Windows.Forms",
+      "get_AllScreens",
+      "Contains",
+      "System.Text.RegularExpressions",
+      "rgApplications",
+      "nApplications",
+      "System.Collections",
+      "StringSplitOptions",
+      "lpdwRebootReasons",
+      "MessageBoxButtons",
+      "get__SxcACbQSx3Rps",
+      "set__SxcACbQSx3Rps",
+      "rgAffectedApps",
+      "get_Chars",
+      "GetChars",
+      "get_Headers",
+      "System.Timers",
+      "RuntimeHelpers",
+      "ManagementClass",
+      "FileAccess",
+      "processAccess",
+      "hProcess",
+      "OpenProcess",
+      "GetCurrentProcess",
+      "IPAddress",
+      "get_Address",
+      "GetProcAddress",
+      "lpBaseAddress",
+      "lpAddress",
+      "DataFormats",
+      "System.Net.Sockets",
+      "set_Arguments",
+      "get_Exists",
+      "AppStatus",
+      "get_Keys",
+      "anAU4t",
+      "f9GdVt",
+      "Concat",
+      "AppendFormat",
+      "ImageFormat",
+      "Subtract",
+      "IDataObject",
+      "GetDataObject",
+      "SetDataObject",
+      "ManagementBaseObject",
+      "hObject",
+      "get_ExceptionObject",
+      "ManagementObject",
+      "object",
+      "Collect",
+      "Connect",
+      "AllocationProtect",
+      "CryptprotectPromptstruct",
+      "System.Net",
+      "FileOffset",
+      "HeaderOffset",
+      "get_Height",
+      "nHeight",
+      "op_Explicit",
+      "IsLetterOrDigit",
+      "WaitForExit",
+      "add_ProcessExit",
+      "KeySalt",
+      "get_Default",
+      "GetValueOrDefault",
+      "IAsyncResult",
+      "DialogResult",
+      "result",
+      "WebClient",
+      "TcpClient",
+      "System.Management",
+      "Comment",
+      "Environment",
+      "hwndParent",
+      "get_Current",
+      "GetCurrent",
+      "get_Count",
+      "AttributeCount",
+      "GetPathRoot",
+      "pPrompt",
+      "szPrompt",
+      "Encrypt",
+      "ThreadStart",
+      "Convert",
+      "get_Request",
+      "HttpListenerRequest",
+      "RmGetList",
+      "Persist",
+      "get_StandardOutput",
+      "set_RedirectStandardOutput",
+      "n2sPwt",
+      "MoveNext",
+      "System.Text",
+      "ReadAllText",
+      "AppendAllText",
+      "WriteAllText",
+      "pPlainText",
+      "pCipherText",
+      "ContainsText",
+      "GetText",
+      "HttpListenerContext",
+      "GetContext",
+      "xn9l1u",
+      "get__pudfaHoFci3Au",
+      "set__pudfaHoFci3Au",
+      "nwBLVu",
+      "fLAz7v",
+      "fGBU_v",
+      "Iczxwkjtnruhemwyuciurv",
+      "tbKiuv",
+      "get_Now",
+      "get_UtcNow",
+      "RmMainWindow",
+      "set_CreateNoWindow",
+      "RmOtherWindow",
+      "VirtualQueryEx",
+      "MessageBox",
+      "nHRt0y",
+      "ykOcHy",
+      "n_znLy",
+      "rpNBQy",
+      "get_Day",
+      "InitializeArray",
+      "ToArray",
+      "ToCharArray",
+      "gAlEby",
+      "get_Key",
+      "CreateSubKey",
+      "OpenSubKey",
+      "strSessionKey",
+      "ContainsKey",
+      "wVirtKey",
+      "RegistryKey",
+      "vUq8gy",
+      "System.Security.Cryptography",
+      "GetExecutingAssembly",
+      "GetEntryAssembly",
+      "get_AddressFamily",
+      "set_IsReadOnly",
+      "BlockCopy",
+      "pEntropy",
+      "LoadLibrary",
+      "FreeLibrary",
+      "ReadProcessMemory",
+      "CreateDirectory",
+      "get_SystemDirectory",
+      "GetCurrentDirectory",
+      "SetCurrentDirectory",
+      "ZipFileEntry",
+      "IPHostEntry",
+      "GetHostEntry",
+      "Registry",
+      "get_Capacity",
+      "op_Equality",
+      "op_Inequality",
+      "WindowsIdentity",
+      "IsNullOrEmpty",
+      "WrapNonExceptionThrows",
+      "$90dc04f2-5e76-480b-9d2a-9e43ec2eff8d",
+      "1.1.2.2",
+      ".NETFramework,Version=v4.7.2",
+      "FrameworkDisplayName",
+      ".NET Framework 4.7.2",
+      "KMicrosoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator",
+      "17.9.0.0",
+      "command",
+      "Commands",
+      "commands",
+      "information",
+      "report",
+      "_CorExeMain",
+      "mscoree.dll",
+      "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>",
+      "<assembly xmlns=\"urn:schemas-microsoft-com:asm.v1\" manifestVersion=\"1.0\">",
+      "  <assemblyIdentity version=\"1.0.0.0\" name=\"MyApplication.app\"/>",
+      "  <trustInfo xmlns=\"urn:schemas-microsoft-com:asm.v2\">",
+      "    <security>",
+      "      <requestedPrivileges xmlns=\"urn:schemas-microsoft-com:asm.v3\">",
+      "        <requestedExecutionLevel level=\"asInvoker\" uiAccess=\"false\"/>",
+      "      </requestedPrivileges>",
+      "    </security>",
+      "  </trustInfo>",
+      "</assembly>PAPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADDINGXXPADDINGPADD"
+    ],
+    "floss": [],
+    "decoded": []
+  },
+  "packer": {
+    "detected": true,
+    "packers": [
+      {
+        "name": "Possible Packer",
+        "reason": "Heuristic detection based on PE characteristics",
+        "confidence": "low"
+      }
+    ],
+    "confidence": "low"
+  },
+  "indicators": {
+    "suspicious_imports": [],
+    "suspicious_strings": [
+      {
+        "string": "__StaticArrayInitTypeSize=280",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "<ErrorHandlerSetup>b__1_0",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "<SelfDestructInit>b__3_0",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "<SelfDestructInit>b__3_1",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "__StaticArrayInitTypeSize=12",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "Microsoft.Win32",
+        "description": "Domain"
+      },
+      {
+        "string": "KeyValuePair`2",
+        "description": "Ransomware Indicator"
+      },
+      {
+        "string": "__StaticArrayInitTypeSize=6",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "System.IO",
+        "description": "Domain"
+      },
+      {
+        "string": "DownloadData",
+        "description": "Loader Indicator"
+      },
+      {
+        "string": "UploadData",
+        "description": "Loader Indicator"
+      },
+      {
+        "string": "CredentialBlob",
+        "description": "Stealer Indicator"
+      },
+      {
+        "string": "System.Collections.Generic",
+        "description": "Domain"
+      },
+      {
+        "string": "lpNumberOfBytesRead",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "add_DomainUnload",
+        "description": "Loader Indicator"
+      },
+      {
+        "string": "pnProcInfoNeeded",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "add_ErrorDataReceived",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "add_OutputDataReceived",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "System.Collections.Specialized",
+        "description": "Domain"
+      },
+      {
+        "string": "NetworkInterface",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "keyCode",
+        "description": "Ransomware Indicator"
+      },
+      {
+        "string": "DeleteSubKeyTree",
+        "description": "Ransomware Indicator"
+      },
+      {
+        "string": "RuntimeFieldHandle",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "RuntimeTypeHandle",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "GetTypeFromHandle",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "DownloadFile",
+        "description": "Loader Indicator"
+      },
+      {
+        "string": "WindowsBuiltInRole",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "ProcessWindowStyle",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "strServiceShortName",
+        "description": "Process Spoofing"
+      },
+      {
+        "string": "GetProcessesByName",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "GetDirectoryName",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "GetLastWriteTime",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "SetLastWriteTime",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "SetLastAccessTime",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "ProcessStartTime",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "BeginErrorReadLine",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "BeginOutputReadLine",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "get_NetworkInterfaceType",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "SecurityProtocolType",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "ReadOnlyCollectionBase",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "ApplicationSettingsBase",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "HttpListenerResponse",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "MulticastDelegate",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "DebuggerBrowsableState",
+        "description": "VM/DBG Detection"
+      },
+      {
+        "string": "SetApartmentState",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "lpKeyState",
+        "description": "Ransomware Indicator"
+      },
+      {
+        "string": "STAThreadAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "CompilerGeneratedAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "GeneratedCodeAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "DebuggableAttribute",
+        "description": "VM/DBG Detection"
+      },
+      {
+        "string": "DebuggerBrowsableAttribute",
+        "description": "VM/DBG Detection"
+      },
+      {
+        "string": "ComVisibleAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "AssemblyTitleAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "XmlTypeAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "XmlAttributeAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "AssemblyTrademarkAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "TargetFrameworkAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "XmlEnumAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "AssemblyFileVersionAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "AssemblyConfigurationAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "AssemblyDescriptionAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "UnmanagedFunctionPointerAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "CompilationRelaxationsAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "AssemblyProductAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "AssemblyCopyrightAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "XmlRootAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "XmlArrayAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "AssemblyCompanyAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "RuntimeCompatibilityAttribute",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "CredentialBlobSize",
+        "description": "Stealer Indicator"
+      },
+      {
+        "string": "SuppressFinalize",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "System.Threading",
+        "description": "Domain"
+      },
+      {
+        "string": "System.Drawing.Imaging",
+        "description": "Domain"
+      },
+      {
+        "string": "System.Runtime.Versioning",
+        "description": "Domain"
+      },
+      {
+        "string": "FromBase64String",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "DownloadString",
+        "description": "Loader Indicator"
+      },
+      {
+        "string": "UploadString",
+        "description": "Loader Indicator"
+      },
+      {
+        "string": "lpstrReturnString",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "System.Drawing",
+        "description": "Domain"
+      },
+      {
+        "string": "NativeCredential",
+        "description": "Stealer Indicator"
+      },
+      {
+        "string": "System.Security.Principal",
+        "description": "Domain"
+      },
+      {
+        "string": "WindowsPrincipal",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "kernel32.dll",
+        "description": "Domain"
+      },
+      {
+        "string": "winmm.dll",
+        "description": "Domain"
+      },
+      {
+        "string": "rstrtmgr.dll",
+        "description": "Domain"
+      },
+      {
+        "string": "System.Xml",
+        "description": "Domain"
+      },
+      {
+        "string": "set_SecurityProtocol",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "AsymmetricAlgorithm",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "GetFileNameWithoutExtension",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "System.IO.Compression",
+        "description": "Domain"
+      },
+      {
+        "string": "System.Net.NetworkInformation",
+        "description": "Domain"
+      },
+      {
+        "string": "UnicastIPAddressInformation",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "System.Configuration",
+        "description": "Domain"
+      },
+      {
+        "string": "System.Xml.Serialization",
+        "description": "Domain"
+      },
+      {
+        "string": "System.Reflection",
+        "description": "Domain"
+      },
+      {
+        "string": "PropertyDataCollection",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "ProcessModuleCollection",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "NameValueCollection",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "UnicastIPAddressInformationCollection",
+        "description": "Base64 Pattern"
+      },
+      {
+        "string": "WebHeaderCollection",
+        "description": "Base64 Pattern"
+      }
+    ],
+    "high_entropy_sections": [],
+    "anti_debug": [],
+    "anti_vm": [],
+    "ransomware_indicators": [],
+    "anti_sandbox": [],
+    "anti_vm_strings": [],
+    "anti_sandbox_strings": [
+      {
+        "string": "!This program cannot be run in DOS mode.",
+        "indicator": "run",
+        "description": "Anti-sandbox detection: run (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "<ProcessCommand>b__8_0",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "<ProcessCommands>b__0",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "<RunCommandLine>g__HandleData|0",
+        "indicator": "run",
+        "description": "Anti-sandbox detection: run (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "<ProcessCommand>b__1",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "<ProcessCommand>b__2",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "<ProcessCommand>b__3",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "tEsT2M",
+        "indicator": "test",
+        "description": "Anti-sandbox detection: test (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "RM_PROCESS_INFO",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "RM_UNIQUE_PROCESS",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "dwProcessId",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "processId",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "GetProcessById",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "RuntimeFieldHandle",
+        "indicator": "run",
+        "description": "Anti-sandbox detection: run (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "RuntimeTypeHandle",
+        "indicator": "run",
+        "description": "Anti-sandbox detection: run (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "ProcessModule",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "ProcessWindowStyle",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "get_ProcessName",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "GetProcessesByName",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "ProcessStartTime",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "DebuggerBrowsableState",
+        "indicator": "debug",
+        "description": "Anti-sandbox detection: debug (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "DebuggableAttribute",
+        "indicator": "debug",
+        "description": "Anti-sandbox detection: debug (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "DebuggerBrowsableAttribute",
+        "indicator": "debug",
+        "description": "Anti-sandbox detection: debug (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "RuntimeCompatibilityAttribute",
+        "indicator": "run",
+        "description": "Anti-sandbox detection: run (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "set_UseShellExecute",
+        "indicator": "exec",
+        "description": "Anti-sandbox detection: exec (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "System.Runtime.Versioning",
+        "indicator": "run",
+        "description": "Anti-sandbox detection: run (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "DeflateStream",
+        "indicator": "test",
+        "description": "Anti-sandbox detection: test (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "ProcessModuleCollection",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "ProcessStartInfo",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "System.Runtime.InteropServices",
+        "indicator": "run",
+        "description": "Anti-sandbox detection: run (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "System.Runtime.CompilerServices",
+        "indicator": "run",
+        "description": "Anti-sandbox detection: run (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "DebuggingModes",
+        "indicator": "debug",
+        "description": "Anti-sandbox detection: debug (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "System.Runtime.InteropServices.ComTypes",
+        "indicator": "run",
+        "description": "Anti-sandbox detection: run (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "GetProcesses",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "RuntimeHelpers",
+        "indicator": "run",
+        "description": "Anti-sandbox detection: run (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "processAccess",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "hProcess",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "OpenProcess",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "GetCurrentProcess",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "add_ProcessExit",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "GetExecutingAssembly",
+        "indicator": "exec",
+        "description": "Anti-sandbox detection: exec (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "ReadProcessMemory",
+        "indicator": "process",
+        "description": "Anti-sandbox detection: process (T1497)",
+        "confidence": "medium"
+      },
+      {
+        "string": "        <requestedExecutionLevel level=\"asInvoker\"...",
+        "indicator": "exec",
+        "description": "Anti-sandbox detection: exec (T1497)",
+        "confidence": "medium"
+      }
+    ],
+    "sleep_functions": []
+  },
+  "yara": {
+    "matches": [
+      {
+        "rule": "C2_Detection",
+        "meta": {
+          "description": "Detects potential C2 communication patterns"
+        },
+        "strings": [
+          "$ip"
+        ]
+      }
+    ],
+    "matched_rules": [
+      "C2_Detection"
+    ],
+    "packer_detected": false,
+    "packers": [],
+    "attck_mapping": []
+  },
+  "config": {
+    "ips": [
+      "1.1.2.2",
+      "1.0.0.0",
+      "17.9.0.0"
+    ],
+    "domains": [
+      "system.collections.generic",
+      "system.runtime.compilerservices",
+      "system.net.networkinformation",
+      "system.io.compression",
+      "system.management",
+      "system.io",
+      "system.xml",
+      "system.configuration",
+      "system.text.regularexpressions",
+      "system.threading",
+      "system.drawing.imaging",
+      "system.reflection",
+      "system.drawing",
+      "system.xml.serialization",
+      "system.runtime.interopservices",
+      "system.security.cryptography",
+      "settingsdesigner.settingssinglefilegenerator",
+      "kmicrosoft.visualstudio.editors",
+      "system.windows.forms",
+      "system.collections.specialized"
+    ],
+    "urls": [],
+    "emails": [],
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [
+      "90dc04f2-5e76-480b-9d2a-9e43ec2eff8d"
+    ],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "analysis_timestamp": "2026-07-18T16:04:39.844962",
+  "errors": [
+    "Trying FLOSS with: floss --no-static --json /samples/wsnake/sample.exe (timeout: 60s)",
+    "Trying FLOSS with: floss --json /samples/wsnake/sample.exe (timeout: 120s)",
+    "Trying FLOSS with: floss --no-static /samples/wsnake/sample.exe (timeout: 90s)",
+    "Trying FLOSS with: floss /samples/wsnake/sample.exe (timeout: 60s)",
+    "FLOSS all approaches failed - using standard strings only"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:31.623208+00:00",
+  "sources": {
+    "static_report": "static/reports/roning/7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "roning",
+    "static_sha256": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+    "static_md5": "dba136b8380bbe468f702dc58f05b203",
+    "static_sha1": "1475c8eeca35598b3eb8df585c01c33eb53c8753",
+    "static_imphash": "0423ca4f9c719d8f562eb37caa508faa",
+    "static_ssdeep": "192:DB3ARzz+jGyIyS/9WCYQ5SqbM4Ppay0YcHf0EJ8a8d:KRzz+a/9pYQ5zbvpay058B",
+    "static_tlsh": "T152522B8AA79558EDE62DC0BDD0370A26D7B0F00543129BDF4BB085291E73FC1E539B4A",
+    "static_filename": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+    "static_file_type": "pe_native"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+      "md5": "dba136b8380bbe468f702dc58f05b203",
+      "sha1": "1475c8eeca35598b3eb8df585c01c33eb53c8753",
+      "filename": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+      "type": "pe_native"
+    }
+  ],
+  "network_iocs": {
+    "domains": [
+      {
+        "value": "h.data",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "b.reloc",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "h.rdata",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "ips": [],
+    "urls": [],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [],
+  "discarded_entries": [
+    {
+      "reason": "looks_like_filename_not_domain",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "fltmgr.sys"
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "filename": "9ebed197a87457b2def45f81be4f946cdd5138bcb4cee68ca2d09e0803b8a428",
+  "size_bytes": 3052,
+  "size_mb": 0.0,
+  "extension": "",
+  "file_type": "unknown",
+  "file_type_info": {
+    "type": "unknown",
+    "confidence": "low"
+  },
+  "md5": "a32c614938d06eaf0a799850026495f1",
+  "sha1": "22f5af107a2877d3a3a4c6cbc3b999d13698333c",
+  "sha256": "9ebed197a87457b2def45f81be4f946cdd5138bcb4cee68ca2d09e0803b8a428",
+  "ssdeep": "48:2ulCYdgCY4poYP5RYPkdhi9BlBWLv+RdB:zrA4zBqgiQz+V",
+  "tlsh": "T18651B851B3F88B49F0B64B30CCBAD2526735BC14ED368B1F3085731E0836A9498A97B2",
+  "is_dotnet": false,
+  "metadata": {},
+  "sections": [],
+  "imports": [],
+  "exports": [],
+  "resources": [],
+  "strings": {
+    "standard": [
+      "51$?cI",
+      "51$?cI",
+      "51$?cI"
+    ],
+    "floss": [],
+    "decoded": [],
+    "deobfuscated": [],
+    "dotnet_strings": []
+  },
+  "packer": {
+    "detected": false,
+    "packers": [],
+    "confidence": "none"
+  },
+  "indicators": {
+    "suspicious_imports": [],
+    "suspicious_strings": [],
+    "high_entropy_sections": [],
+    "anti_debug": [],
+    "anti_vm": [],
+    "ransomware_indicators": [],
+    "anti_sandbox": [],
+    "anti_vm_strings": [],
+    "anti_sandbox_strings": [],
+    "sleep_functions": []
+  },
+  "embedded_files": [],
+  "discovered_keys": [
+    {
+      "type": "plaintext_all_strings",
+      "key": "V\u001751$?cI",
+      "key_hex": "56173531243f6349",
+      "length": 8,
+      "section": "<file>",
+      "offset": 4,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): 'V\u001751$?cI'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "#t\\vY\ufffdKl",
+      "key_hex": "23745c7659fd4b6c",
+      "length": 8,
+      "section": "<file>",
+      "offset": 537,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '#t\\vY\ufffdKl'",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    },
+    {
+      "type": "plaintext_all_strings",
+      "key": "[hQkS\ufffdX ",
+      "key_hex": "5b68516b53eb5820",
+      "length": 8,
+      "section": "<file>",
+      "offset": 2363,
+      "entropy": 3.0,
+      "confidence": "high",
+      "description": "Printable string (8 bytes): '[hQkS\ufffdX '",
+      "attck_id": "T1027",
+      "algorithm": "rc4"
+    }
+  ],
+  "yara": {
+    "matches": [],
+    "matched_rules": [],
+    "packer_detected": false,
+    "packers": [],
+    "attck_mapping": []
+  },
+  "entropy_analysis": {
+    "high_entropy_sections": [],
+    "suspicious_entropy": [],
+    "packed_sections": [],
+    "encrypted_data": [],
+    "overall_entropy": 3.317985274925753,
+    "justification": "Overall file entropy is 3.32, which is within the normal range for executables (typically 5.5-6.5). No significant entropy anomalies detected.",
+    "crypto_indicators": []
+  },
+  "attck_mappings": [],
+  "config": {
+    "ips": [],
+    "domains": [],
+    "urls": [],
+    "emails": [],
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "nsis_detected": false,
+  "analysis_timestamp": "2026-08-12T13:24:07.805023",
+  "errors": [],
+  "resubmission_lineage": {
+    "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
+    "parent_family": "roning",
+    "discovery_mechanism": "dropped",
+    "original_name": "{31351756-3F24-4963-8380-4E7602335AAE}.cip",
+    "cape_task_id": 2,
+    "depth": 1,
+    "discovered_at": "2026-08-12T13:11:08.177800+00:00"
+  }
+}

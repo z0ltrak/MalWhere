@@ -1,0 +1,279 @@
+{
+  "counts": {
+    "automated": 21,
+    "ground_truth": 25
+  },
+  "strict": {
+    "tp": 13,
+    "fp": 8,
+    "fn": 12,
+    "gt_matched_count": 13,
+    "precision": 0.619,
+    "recall": 0.52,
+    "f1": 0.5652,
+    "matched_techniques": [
+      "T1055",
+      "T1057",
+      "T1059",
+      "T1070",
+      "T1082",
+      "T1083",
+      "T1105",
+      "T1112",
+      "T1562",
+      "T1620",
+      "T1622",
+      "T1033",
+      "T1486"
+    ],
+    "false_positive_techniques": [
+      "T1071",
+      "T1497",
+      "T1543",
+      "T1547",
+      "T1547.001",
+      "T1562.001",
+      "T1027",
+      "T1574"
+    ],
+    "missed_techniques": [
+      "T1056",
+      "T1071.001",
+      "T1115",
+      "T1132",
+      "T1140",
+      "T1490",
+      "T1543.003",
+      "T1547.006",
+      "T1553.006",
+      "T1555",
+      "T1571",
+      "T1574.002"
+    ]
+  },
+  "family_level": {
+    "tp": 19,
+    "fp": 2,
+    "fn": 8,
+    "gt_matched_count": 17,
+    "precision": 0.9048,
+    "recall": 0.68,
+    "f1": 0.7765,
+    "matched_techniques": [
+      "T1055",
+      "T1057",
+      "T1059",
+      "T1070",
+      "T1071",
+      "T1082",
+      "T1083",
+      "T1105",
+      "T1112",
+      "T1543",
+      "T1547",
+      "T1547.001",
+      "T1562",
+      "T1562.001",
+      "T1620",
+      "T1622",
+      "T1033",
+      "T1574",
+      "T1486"
+    ],
+    "false_positive_techniques": [
+      "T1497",
+      "T1027"
+    ],
+    "missed_techniques": [
+      "T1056",
+      "T1115",
+      "T1132",
+      "T1140",
+      "T1490",
+      "T1553.006",
+      "T1555",
+      "T1571"
+    ]
+  },
+  "precision_by_confidence": {
+    "high": {
+      "count": 17,
+      "tp": 16,
+      "fp": 1,
+      "precision": 0.9412
+    },
+    "medium": {
+      "count": 3,
+      "tp": 2,
+      "fp": 1,
+      "precision": 0.6667
+    },
+    "low": {
+      "count": 1,
+      "tp": 1,
+      "fp": 0,
+      "precision": 1.0
+    }
+  },
+  "precision_by_source": {
+    "dynamic": {
+      "count": 13,
+      "tp": 12,
+      "fp": 1,
+      "precision": 0.9231
+    },
+    "dynamic+static": {
+      "count": 4,
+      "tp": 3,
+      "fp": 1,
+      "precision": 0.75
+    },
+    "static": {
+      "count": 4,
+      "tp": 4,
+      "fp": 0,
+      "precision": 1.0
+    }
+  },
+  "family_total": {
+    "counts": {
+      "automated": 26,
+      "ground_truth": 25
+    },
+    "strict": {
+      "tp": 16,
+      "fp": 10,
+      "fn": 9,
+      "gt_matched_count": 16,
+      "precision": 0.6154,
+      "recall": 0.64,
+      "f1": 0.6275,
+      "matched_techniques": [
+        "T1055",
+        "T1057",
+        "T1059",
+        "T1070",
+        "T1082",
+        "T1083",
+        "T1105",
+        "T1112",
+        "T1562",
+        "T1620",
+        "T1622",
+        "T1033",
+        "T1486",
+        "T1115",
+        "T1140",
+        "T1555"
+      ],
+      "false_positive_techniques": [
+        "T1071",
+        "T1497",
+        "T1543",
+        "T1547",
+        "T1547.001",
+        "T1562.001",
+        "T1027",
+        "T1574",
+        "T1134",
+        "T1056.001"
+      ],
+      "missed_techniques": [
+        "T1056",
+        "T1071.001",
+        "T1132",
+        "T1490",
+        "T1543.003",
+        "T1547.006",
+        "T1553.006",
+        "T1571",
+        "T1574.002"
+      ]
+    },
+    "family_level": {
+      "tp": 23,
+      "fp": 3,
+      "fn": 4,
+      "gt_matched_count": 21,
+      "precision": 0.8846,
+      "recall": 0.84,
+      "f1": 0.8617,
+      "matched_techniques": [
+        "T1055",
+        "T1057",
+        "T1059",
+        "T1070",
+        "T1071",
+        "T1082",
+        "T1083",
+        "T1105",
+        "T1112",
+        "T1543",
+        "T1547",
+        "T1547.001",
+        "T1562",
+        "T1562.001",
+        "T1620",
+        "T1622",
+        "T1033",
+        "T1574",
+        "T1486",
+        "T1115",
+        "T1140",
+        "T1555",
+        "T1056.001"
+      ],
+      "false_positive_techniques": [
+        "T1497",
+        "T1027",
+        "T1134"
+      ],
+      "missed_techniques": [
+        "T1132",
+        "T1490",
+        "T1553.006",
+        "T1571"
+      ]
+    },
+    "precision_by_confidence": {
+      "high": {
+        "count": 21,
+        "tp": 19,
+        "fp": 2,
+        "precision": 0.9048
+      },
+      "medium": {
+        "count": 4,
+        "tp": 3,
+        "fp": 1,
+        "precision": 0.75
+      },
+      "low": {
+        "count": 1,
+        "tp": 1,
+        "fp": 0,
+        "precision": 1.0
+      }
+    },
+    "precision_by_source": {
+      "dynamic": {
+        "count": 13,
+        "tp": 12,
+        "fp": 1,
+        "precision": 0.9231
+      },
+      "dynamic+static": {
+        "count": 4,
+        "tp": 3,
+        "fp": 1,
+        "precision": 0.75
+      },
+      "static": {
+        "count": 9,
+        "tp": 8,
+        "fp": 1,
+        "precision": 0.8889
+      }
+    }
+  }
+}

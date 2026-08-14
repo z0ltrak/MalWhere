@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-12T13:28:31.684459+00:00",
+  "sample": {
+    "family": "roning",
+    "static_sha256": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+    "static_md5": "dba136b8380bbe468f702dc58f05b203",
+    "static_sha1": "1475c8eeca35598b3eb8df585c01c33eb53c8753",
+    "static_imphash": "0423ca4f9c719d8f562eb37caa508faa",
+    "static_ssdeep": "192:DB3ARzz+jGyIyS/9WCYQ5SqbM4Ppay0YcHf0EJ8a8d:KRzz+a/9pYQ5zbvpay058B",
+    "static_tlsh": "T152522B8AA79558EDE62DC0BDD0370A26D7B0F00543129BDF4BB085291E73FC1E539B4A",
+    "static_filename": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+    "static_file_type": "pe_native"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+        "md5": "dba136b8380bbe468f702dc58f05b203",
+        "sha1": "1475c8eeca35598b3eb8df585c01c33eb53c8753",
+        "filename": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
+        "type": "pe_native"
+      }
+    ],
+    "network_iocs": {
+      "domains": [
+        {
+          "value": "h.data",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "b.reloc",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "h.rdata",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [],
+      "mutexes": [],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [],
+  "summary": {
+    "total_techniques": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 0,
+    "dynamic_only": 0
+  }
+}
