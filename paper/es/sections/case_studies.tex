@@ -218,22 +218,41 @@ ellas aparece como inalcanzable en la traza del sandbox: el sandboxing
 con contenci\'on prioritaria (\S\ref{sec:limitations}, punto~6)
 significa que los propios intentos de conexi\'on de la muestra a su C2
 real fallan por dise\~no, no porque las direcciones recuperadas sean
-ficticias. Sin embargo, la contaminaci\'on no es del todo cero: al
+ficticias. La contaminaci\'on no era del todo cero, sin embargo: al
 reauditar esta misma afirmaci\'on durante la migraci\'on a ATT\&CK v19
 (2026-08) se encontraron 5 IP adicionales que los dos filtros
-anteriores no capturan, ninguna afecta a las puntuaciones a nivel de
+anteriores no capturaban, ninguna afecta a las puntuaciones a nivel de
 t\'ecnica anteriores, ya que el filtrado de IOC y la puntuaci\'on de
 t\'ecnicas son independientes. Dos, que resuelven a nombres de host
 \code{*.msedge.net} autoexplicativos en el propio ASN de Microsoft,
 se confirmaron y se a\~nadieron a la lista de permitidos del mismo modo
-que las entradas existentes; las tres restantes, una que resuelve a
-\code{ip-api.com} (un servicio p\'ublico de geolocalizaci\'on por IP,
-plausiblemente una t\'ecnica gen\'uina de autorreconocimiento
-anti-sandbox y no contaminaci\'on en absoluto) y dos direcciones sin
-resolver en rangos de Cloudflare, se dejan abiertas a la espera de la
-misma disciplina de verificaci\'on individual aplicada a cada otra
-entrada de esta lista de permitidos, en lugar de a\~nadirse solo por su
-ASN (\S\ref{sec:limitations}).
+que las entradas existentes. Las dos restantes, direcciones en rangos
+de Cloudflare sin nombre de host, necesitaban una comprobaci\'on m\'as
+fuerte que el ASN y la repetici\'on entre muestras por s\'i solos antes
+de sumarse a una lista que este proyecto mantiene deliberadamente
+limitada a entradas sin ambig\"uedad: cruzar la traza de llamadas a
+la API en bruto, por proceso, de CAPE, no solo la captura resumida,
+confirm\'o que ninguna de las dos IP aparece entre las 38 llamadas a
+\code{connect()} del propio proceso de la muestra (las 29 direcciones
+C2 gen\'uinas, cero coincidencias) ni entre las llamadas de ning\'un
+otro proceso monitorizado, solo en la captura de paquetes de toda la
+VM -- ning\'un proceso enganchado es responsable de ninguna de las dos
+conexiones, la misma firma de tr\'afico de sandbox frente a la que se
+confirmaron las entradas de Microsoft. Ninguna es una cadena presente
+en ninguno de los binarios ni en ninguno de los informes manuales, lo
+que descarta un destino incrustado a\'un no decodificado. Ambas se
+a\~nadieron entonces. La quinta, que resuelve a \code{ip-api.com}, no
+es contaminaci\'on en absoluto: la misma traza a nivel de proceso
+muestra al propio \code{sample.exe} llamando a
+\code{WinHttpGetProxyForUrl} contra
+\code{ip-api.com/line?fields=query,country}, una consulta p\'ublica de
+geolocalizaci\'on por IP -- una t\'ecnica gen\'uina de
+autorreconocimiento anti-sandbox, muy probablemente un complemento no
+documentado al hallazgo ya presente en la verdad de referencia de
+WhiteSnakeStealer de ``12 indicadores de VM'', se\~nalada para que el
+analista la confirme y la a\~nada en lugar de incorporarla en silencio
+a la lista de permitidos o a la puntuaci\'on de confianza de la
+tuber\'ia.
 
 La lecci\'on se generaliza igual que en los dem\'as casos: cada
 exclusi\'on es una entrada espec\'ifica, justificada individualmente y

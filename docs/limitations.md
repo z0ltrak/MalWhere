@@ -404,7 +404,7 @@ sub-techniques (e.g. T1091 Removable Media, T1570 Lateral Tool Transfer)
 is the only realistic further increment; Reconnaissance/Resource
 Development are a hard boundary, not a backlog item.
 
-## 12. Network IOC contamination allowlist: 2 fixed, 3 open
+## 12. Network IOC contamination allowlist: 4 fixed, 1 flagged as a real finding
 
 Re-auditing the "zero remaining contamination" claim in the Network IOC
 Contamination case study (`§sec:case-ioc-noise` in the paper) during the
@@ -412,24 +412,37 @@ ATT&CK v19 migration (2026-08) found WhiteSnakeStealer's live pipeline
 output carried 34 IPs, not the 29 the case study claims -- the claim was
 stale, not a live bug in the technique-scoring path (`evaluation`'s F1
 numbers are untouched by IOC filtering, confirmed by re-running the full
-evaluation harness before and after). Each of the 5 extras was resolved
-via live ASN/reverse-DNS lookup, not guessed:
+evaluation harness before and after each fix below). Each of the 5
+extras was resolved via live ASN/reverse-DNS lookup plus, for the two
+Cloudflare-range addresses, direct cross-referencing of CAPE's raw
+per-process API call trace (`behavior.processes[].calls`, not just the
+summarized `network.hosts` capture) -- not guessed:
 
 - **Fixed, added to `_BENIGN_INFRASTRUCTURE_IPS`**: `104.212.67.104`
   (`chi26r9c.msedge.net`) and `104.212.67.66` (`bna30r9a.msedge.net`),
-  both Microsoft AS8075. Unlike the Azure Front Door case the code
-  deliberately excludes (unexplained hostname, domain-fronting
-  ambiguity), these resolve to self-identifying `*.msedge.net` names --
-  no ambiguity to be cautious about.
-- **Open, needs the same individual-verification discipline before
-  either allowlisting or accepting as a finding**: `172.64.154.167`
-  (Cloudflare AS13335, no hostname, repeats identically in both
-  RoningLoader and WhiteSnakeStealer -- matches the cross-family-repeat
-  test the existing allowlist entries were built on, but no hostname to
-  confirm it's not fronted content); `104.18.33.89` (Cloudflare,
-  WhiteSnakeStealer-only, no repeat, weakest case for either allowlisting
-  or trusting); `208.95.112.1` (resolves to `ip-api.com`, a public
-  IP-geolocation lookup service -- plausibly *not* contamination at all
-  but a genuine anti-sandbox self-recon technique, worth checking against
-  the manual report's own VM-detection findings before deciding whether
-  this belongs in ground truth rather than the allowlist).
+  both Microsoft AS8075, self-identifying hostnames, no ambiguity.
+- **Fixed, added after stronger verification than ASN+repetition alone**:
+  `172.64.154.167` (Cloudflare AS13335, repeats identically in
+  RoningLoader and WhiteSnakeStealer) and `104.18.33.89` (Cloudflare,
+  WhiteSnakeStealer-only). Both lack a hostname, so the domain-fronting
+  caution the code already applies to the excluded Azure Front Door case
+  applied here too, until checked directly: neither IP appears among
+  `sample.exe`'s own 38 `connect()` calls (all 29 genuine C2 addresses,
+  zero matches) or in any other monitored process's calls at all -- only
+  in the whole-VM packet capture, meaning no hooked process on the guest
+  is responsible for either connection. Neither is a string in either
+  binary or either manual report. That combination (not the sample's own
+  process, not embedded in the sample, not documented by independent RE)
+  is what crossed the zero-ambiguity bar this allowlist is held to.
+- **Not contamination -- flagged for the analyst, not silently added
+  anywhere**: `208.95.112.1` resolves to `ip-api.com`. The same
+  per-process trace shows `sample.exe` itself calling
+  `WinHttpGetProxyForUrl` against
+  `ip-api.com/line?fields=query,country` -- a real, sample-initiated
+  IP-geolocation lookup, most likely an undocumented complement to
+  WhiteSnakeStealer's own ground-truthed "T1497.001, 12 VM indicators"
+  finding. Left out of both the allowlist and the manual report: adding
+  it to ground truth off the pipeline's own trace alone, with no
+  independent analyst confirmation, would be exactly the circularity
+  §1's methodology exists to avoid. Worth a deliberate look, not an
+  automatic edit.

@@ -185,19 +185,34 @@ the pipeline's dynamic-capture output recovers that list exactly: 29 of
 why every one of these reads as unreachable in the sandbox trace:
 containment-first sandboxing (\S\ref{sec:limitations}, item~6) means the
 sample's own connection attempts to its real C2 fail by design, not
-because the recovered addresses are fabricated. Contamination is not
+because the recovered addresses are fabricated. Contamination was not
 fully zero, though: re-auditing this exact claim during the ATT\&CK
-migration (2026-08) found 5 further IPs the two filters above do not
+migration (2026-08) found 5 further IPs the two filters above did not
 catch, none affecting the technique-level scores above since IOC
 filtering and technique scoring are independent. Two, resolving to
 self-identifying \code{*.msedge.net} hostnames on Microsoft's own ASN,
 were confirmed and added to the allowlist the same way the existing
-entries were; the remaining three, one resolving to \code{ip-api.com}
-(a public IP-geolocation lookup, plausibly a genuine anti-sandbox
-self-recon technique rather than contamination at all) and two
-unresolved Cloudflare-range addresses, are left open pending the same
-individual verification discipline applied to every other entry in this
-allowlist, rather than added on ASN alone (\S\ref{sec:limitations}).
+entries were. The remaining two, Cloudflare-range addresses with no
+hostname, needed a stronger check than ASN and cross-sample repetition
+alone before joining a list this project deliberately keeps to
+zero-ambiguity entries: cross-referencing CAPE's raw per-process API
+call trace, not just the summarized capture, confirmed neither IP
+appears in the sample process's own 38 \code{connect()} calls (all 29
+genuine C2 addresses, zero matches) nor in any other monitored
+process's calls at all, only in the whole-VM packet capture -- no
+hooked process is responsible for either connection, the same
+sandbox-traffic signature the Microsoft entries were confirmed against.
+Neither is a string in either binary or either manual report, ruling
+out an as-yet-undecoded embedded destination. Both were then added. The
+fifth, resolving to \code{ip-api.com}, is not contamination at all: the
+same process-level trace shows \code{sample.exe} itself calling
+\code{WinHttpGetProxyForUrl} against
+\code{ip-api.com/line?fields=query,country}, a public IP-geolocation
+lookup -- a genuine anti-sandbox self-recon technique, most likely an
+undocumented complement to WhiteSnakeStealer's own ground-truthed
+``12 VM indicators'' finding, flagged for the analyst to confirm and
+add rather than silently folded into either the allowlist or the
+pipeline's own confidence score.
 
 The lesson generalizes the same way the other cases do: every exclusion
 is a specific, individually-justified, auditable entry, logged with its

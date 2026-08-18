@@ -93,6 +93,23 @@ _BENIGN_INFRASTRUCTURE_IPS = frozenset({
     # that exclusion was about.
     "104.212.67.104",  # chi26r9c.msedge.net
     "104.212.67.66",   # bna30r9a.msedge.net
+    # Cloudflare, Inc. (AS13335), no hostname -- the two remaining cases
+    # from the same 2026-08 audit, resolved with stronger evidence than
+    # ASN+repetition alone: cross-referenced CAPE's raw per-process API
+    # call trace (behavior.processes[].calls), not just the summarized
+    # network.hosts capture. Neither IP appears in the sample process's own
+    # connect() calls (38 checked, all 29 genuine C2 addresses, zero
+    # matches), nor in any other monitored process's calls at all -- only
+    # in the whole-VM packet capture, meaning no hooked process is
+    # responsible for either connection, the same "sandbox VM's own
+    # traffic" signature as the Microsoft/Akamai entries above. Neither IP
+    # appears as a string in either binary (wsnake, roning) or either
+    # manual RE report, ruling out an embedded/hardcoded destination the
+    # config-recovery module simply hasn't decoded yet. 172.64.154.167
+    # additionally repeats identically across RoningLoader and
+    # WhiteSnakeStealer, the same cross-family test used above.
+    "172.64.154.167",
+    "104.18.33.89",
 })
 
 

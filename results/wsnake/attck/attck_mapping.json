@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T20:32:51.559678+00:00",
+  "generated_at": "2026-08-18T21:20:57.011781+00:00",
   "sample": {
     "family": "wsnake",
     "static_sha256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312",
@@ -135,19 +135,7 @@
           ]
         },
         {
-          "value": "104.18.33.89",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
           "value": "168.138.211.88",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "172.64.154.167",
           "sources": [
             "dynamic"
           ]
