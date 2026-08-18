@@ -874,6 +874,7 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | **Data Encoding** | T1132 | Base64 + XOR for C2 |
 | **Remote Access Tools** | T1219 | Custom C2 client |
 | **System Network Configuration Discovery** | T1016 | LAN scanning |
+| **System Network Configuration Discovery** | T1016 | External public-IP/country lookup (`WinHttpGetProxyForUrl` to `ip-api.com/line?fields=query,country`); confirmed dynamically via CAPE's own API call trace, not caught in manual static RE -- the URL is not a literal string in the binary, built at runtime |
 | **Network Service Discovery** | T1046 | 70-port scanner |
 | **Password Policy Discovery** | T1201 | WiFi password extraction |
 | **Credentials In Files** | T1552.001 | Browser credential files |

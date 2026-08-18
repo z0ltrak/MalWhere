@@ -208,11 +208,19 @@ fifth, resolving to \code{ip-api.com}, is not contamination at all: the
 same process-level trace shows \code{sample.exe} itself calling
 \code{WinHttpGetProxyForUrl} against
 \code{ip-api.com/line?fields=query,country}, a public IP-geolocation
-lookup -- a genuine anti-sandbox self-recon technique, most likely an
-undocumented complement to WhiteSnakeStealer's own ground-truthed
-``12 VM indicators'' finding, flagged for the analyst to confirm and
-add rather than silently folded into either the allowlist or the
-pipeline's own confidence score.
+lookup with no corresponding literal string anywhere in the binary, the
+URL evidently built at runtime. This is a genuine, sample-initiated
+finding, not a pipeline claim to trust at face value: added to
+WhiteSnakeStealer's manual ground truth as
+\technique{T1016} (System Network Configuration Discovery, whose own
+MITRE page covers exactly this pattern, an online lookup for a
+compromised system's own public-facing IP), the same evidentiary bar as
+every other entry in that report, and the same way the \technique{T1055}
+row earlier in the same report was already confirmed dynamically rather
+than through static RE. Mapped to the conservative, literally-supported
+technique rather than folded into the existing ``12 VM indicators''
+anti-sandbox finding, since no conditional branch on the returned
+country was independently observed to justify that stronger claim.
 
 The lesson generalizes the same way the other cases do: every exclusion
 is a specific, individually-justified, auditable entry, logged with its

@@ -404,7 +404,7 @@ sub-techniques (e.g. T1091 Removable Media, T1570 Lateral Tool Transfer)
 is the only realistic further increment; Reconnaissance/Resource
 Development are a hard boundary, not a backlog item.
 
-## 12. Network IOC contamination allowlist: 4 fixed, 1 flagged as a real finding
+## 12. Network IOC contamination allowlist: 4 fixed, 1 real finding added to ground truth
 
 Re-auditing the "zero remaining contamination" claim in the Network IOC
 Contamination case study (`§sec:case-ioc-noise` in the paper) during the
@@ -434,15 +434,22 @@ summarized `network.hosts` capture) -- not guessed:
   binary or either manual report. That combination (not the sample's own
   process, not embedded in the sample, not documented by independent RE)
   is what crossed the zero-ambiguity bar this allowlist is held to.
-- **Not contamination -- flagged for the analyst, not silently added
-  anywhere**: `208.95.112.1` resolves to `ip-api.com`. The same
+- **Not contamination -- confirmed and added to ground truth, not the
+  allowlist**: `208.95.112.1` resolves to `ip-api.com`. The same
   per-process trace shows `sample.exe` itself calling
   `WinHttpGetProxyForUrl` against
-  `ip-api.com/line?fields=query,country` -- a real, sample-initiated
-  IP-geolocation lookup, most likely an undocumented complement to
-  WhiteSnakeStealer's own ground-truthed "T1497.001, 12 VM indicators"
-  finding. Left out of both the allowlist and the manual report: adding
-  it to ground truth off the pipeline's own trace alone, with no
-  independent analyst confirmation, would be exactly the circularity
-  §1's methodology exists to avoid. Worth a deliberate look, not an
-  automatic edit.
+  `ip-api.com/line?fields=query,country`, no corresponding literal
+  string anywhere in the binary (URL built at runtime) -- a real,
+  sample-initiated finding, reviewed and added to WhiteSnakeStealer's
+  manual report as `T1016` (System Network Configuration Discovery,
+  whose own MITRE page covers exactly this pattern: an online lookup for
+  a compromised system's own public IP), the same class of dynamic-only
+  confirmation the report's existing `T1055` row already used. Mapped to
+  the conservative, literally-supported technique rather than folded
+  into the existing "T1497.001, 12 VM indicators" finding, since no
+  conditional branch on the returned country was independently observed
+  to justify the stronger anti-sandbox claim. `T1016` was already a
+  ground-truth entry for this sample (LAN scanning), so this adds
+  corroborating evidence under the same ID rather than a new evaluated
+  technique -- confirmed via a full re-run of the evaluation harness
+  that every reported P/R/F1 number is unchanged.

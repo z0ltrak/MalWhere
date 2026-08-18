@@ -246,13 +246,23 @@ es contaminaci\'on en absoluto: la misma traza a nivel de proceso
 muestra al propio \code{sample.exe} llamando a
 \code{WinHttpGetProxyForUrl} contra
 \code{ip-api.com/line?fields=query,country}, una consulta p\'ublica de
-geolocalizaci\'on por IP -- una t\'ecnica gen\'uina de
-autorreconocimiento anti-sandbox, muy probablemente un complemento no
-documentado al hallazgo ya presente en la verdad de referencia de
-WhiteSnakeStealer de ``12 indicadores de VM'', se\~nalada para que el
-analista la confirme y la a\~nada en lugar de incorporarla en silencio
-a la lista de permitidos o a la puntuaci\'on de confianza de la
-tuber\'ia.
+geolocalizaci\'on por IP sin ninguna cadena literal correspondiente en
+el binario, la URL evidentemente construida en tiempo de ejecuci\'on.
+Se trata de un hallazgo gen\'uino, iniciado por la propia muestra, no
+una afirmaci\'on de la tuber\'ia que se acepta sin m\'as: a\~nadido a
+la verdad de referencia manual de WhiteSnakeStealer como
+\technique{T1016} (System Network Configuration Discovery, cuya propia
+p\'agina de MITRE cubre exactamente este patr\'on, una consulta en
+l\'inea para averiguar la IP p\'ublica de un sistema comprometido), con
+el mismo est\'andar de evidencia que cualquier otra entrada de ese
+informe, y del mismo modo en que la fila de \technique{T1055} anterior
+en el mismo informe ya se hab\'ia confirmado din\'amicamente en lugar
+de mediante ingenier\'ia inversa est\'atica. Mapeado a la t\'ecnica
+conservadora y literalmente respaldada por la evidencia, en lugar de
+incorporarlo al hallazgo ya existente de ``12 indicadores de VM''
+anti-sandbox, ya que no se observ\'o de forma independiente ninguna
+bifurcaci\'on condicional sobre el pa\'is devuelto que justificara esa
+afirmaci\'on m\'as fuerte.
 
 La lecci\'on se generaliza igual que en los dem\'as casos: cada
 exclusi\'on es una entrada espec\'ifica, justificada individualmente y
