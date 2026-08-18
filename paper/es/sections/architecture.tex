@@ -62,7 +62,13 @@ ATT\&CK mediante tres mecanismos complementarios:
     leg\'itimo, una regla exige una \emph{combinaci\'on coherente}
     espec\'ifica de indicadores antes de reportar confianza elevada. La
     Tabla~\ref{tab:combos} enumera todas las comprobaciones de
-    combinaci\'on implementadas.
+    combinaci\'on implementadas mediante coincidencia expl\'icita de
+    m\'ultiples importaciones; el mismo mecanismo de recuento de
+    corroboraci\'on tambi\'en rige varias reglas de patrones de cadena
+    a\~nadidas durante la ampliaci\'on de cobertura (p.\ ej.\ el
+    \code{mshta.exe} + \code{.hta} de Mshta, o los tres nombres de clase
+    corroborantes de WMI Event Subscription), tabuladas en su lugar en
+    el Ap\'endice~\ref{app:rules}.
   \item \textbf{Llamadas a la BCL de .NET.} La tabla de importaciones
     nativas de un binario .NET suele ser \'unicamente el stub de
     arranque del CLR, as\'i que los cuerpos de m\'etodos gestionados se

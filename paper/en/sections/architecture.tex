@@ -56,7 +56,12 @@ three complementary mechanisms:
     strongest indicator is also common in benign software, a rule
     requires a specific \emph{coherent combination} of indicators
     before reporting elevated confidence. Table~\ref{tab:combos} lists
-    every combination check implemented.
+    every combination check implemented via explicit multi-import
+    matching; the same corroboration-count mechanism also gates several
+    string-pattern rules added during coverage extension (e.g.\ Mshta's
+    \code{mshta.exe} + \code{.hta}, WMI Event Subscription's three
+    corroborating class names), tabulated in Appendix~\ref{app:rules}
+    instead.
   \item \textbf{.NET BCL calls.} A .NET binary's native import table is
     typically only the CLR bootstrap stub, so managed method bodies are
     scanned directly for calls to specific Base Class Library APIs

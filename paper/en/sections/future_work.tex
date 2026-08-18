@@ -4,11 +4,16 @@
 \begin{itemize}
 
 \item \textbf{Additional validated families.} The single highest-value
-  extension (\S\ref{sec:limitations}, item~1) is either full manual
-  reverse-engineering-backed validation of further families, or, as a
-  lighter interim step, a generality smoke-test confirming the pipeline
-  produces sane, non-crashing output on families it was not tuned
-  against.
+  extension (\S\ref{sec:limitations}, item~1) is full manual
+  reverse-engineering-backed validation of further families. A lighter,
+  informal check was already run against a 4th, untuned family
+  (AsyncRAT): a real CAPE detonation plus automatic resubmission of its
+  dropped payloads confirmed the pipeline produces sane, non-crashing
+  output end to end. This has no manual ground truth and is not treated
+  as validation evidence, only an internal sanity check that the
+  pipeline generalizes at all (documented in \code{README.md}); it does
+  not substitute for the full, ground-truthed extension this item
+  describes.
 
 \item \textbf{Linux/ELF dynamic analysis for IoT botnet families.}
   Investigated concretely rather than dismissed by assumption, and
