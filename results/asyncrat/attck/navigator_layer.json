@@ -39,42 +39,6 @@
       ]
     },
     {
-      "techniqueID": "T1027",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: dotnet_code_compile, dotnet_csc_build, pe_deep_entrypoint, pe_tls_callbacks, unbacked_crypto_operations",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1027.004",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: dotnet_code_compile, dotnet_csc_build",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
       "techniqueID": "T1047",
       "score": 100,
       "color": "#e60d0d",
@@ -96,25 +60,7 @@
       "techniqueID": "T1055",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: creates_suspended_process, exception_driven_execution, injection_write_exe_process, injection_write_process, network_connection_via_suspicious_process, registers_vectored_exception_handler, resumethread_remote_process, unbacked_api_resolution, unbacked_memory_network_connection, unbacked_memory_protection_alteration",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1057",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: unbacked_process_enumeration",
+      "comment": "dynamic corroborated; evidence: creates_suspended_process, injection_write_exe_process, injection_write_process, network_connection_via_suspicious_process, registers_vectored_exception_handler, resumethread_remote_process, unbacked_api_resolution, unbacked_memory_network_connection, unbacked_memory_protection_alteration",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -147,28 +93,10 @@
       ]
     },
     {
-      "techniqueID": "T1070",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: deletes_executed_files",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
       "techniqueID": "T1071",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: network_cnc_http, network_http, network_ip_exe, network_questionable_http_path, procmem_yara, static_pe_anomaly, suspicious_tld, unbacked_memory_network_connection",
+      "comment": "dynamic corroborated; evidence: network_cnc_http, network_http, network_questionable_http_path, procmem_yara, static_pe_anomaly, unbacked_memory_network_connection",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -204,7 +132,7 @@
       "techniqueID": "T1112",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: creates_largekey, persistence_autorun",
+      "comment": "dynamic corroborated; evidence: persistence_autorun",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -294,7 +222,7 @@
       "techniqueID": "T1620",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: dropper, unbacked_api_resolution, unbacked_library_load",
+      "comment": "dynamic corroborated; evidence: unbacked_api_resolution, unbacked_library_load",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -323,6 +251,24 @@
         {
           "name": "sources",
           "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1027",
+      "score": 60,
+      "color": "#ffe766",
+      "comment": "dynamic corroborated; evidence: pe_deep_entrypoint, pe_tls_callbacks, unbacked_crypto_operations",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "medium"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
         }
       ]
     },
@@ -377,42 +323,6 @@
         {
           "name": "sources",
           "value": "static"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1518",
-      "score": 30,
-      "color": "#8ec843",
-      "comment": "dynamic corroborated; evidence: amsi_enumeration",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "low"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1562",
-      "score": 30,
-      "color": "#8ec843",
-      "comment": "dynamic corroborated; evidence: amsi_enumeration",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "low"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
         }
       ]
     }

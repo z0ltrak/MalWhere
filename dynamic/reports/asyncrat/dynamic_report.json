@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
   "source": "cape",
-  "source_report_path": "docker/cape/work/storage/analyses/4/reports/report.json",
-  "cape_task_id": 4,
-  "parsed_at": "2026-08-18T10:33:21.241101+00:00",
+  "source_report_path": "docker/cape/work/storage/analyses/6/reports/report.json",
+  "cape_task_id": 6,
+  "parsed_at": "2026-08-18T12:02:07.378255+00:00",
   "target": {
     "filename": "866ac5e19171919e0861.exe",
     "md5": "9b4ec44ceae97db109fdb0ad5b23590c",
@@ -15,9 +15,9 @@
   "analysis": {
     "malscore": 10.0,
     "malstatus": "Malicious",
-    "duration_seconds": 230,
-    "started": "2026-08-18 09:31:49",
-    "ended": "2026-08-18 09:35:39",
+    "duration_seconds": 304,
+    "started": "2026-08-18 11:56:36",
+    "ended": "2026-08-18 12:01:40",
     "cape_version": "2.5",
     "family_detections": [
       {
@@ -40,7 +40,7 @@
       "ttps": [
         "T1082"
       ],
-      "match_count": 74
+      "match_count": 31
     },
     {
       "name": "queries_computer_name",
@@ -51,7 +51,7 @@
         "system_discovery"
       ],
       "ttps": [],
-      "match_count": 5
+      "match_count": 2
     },
     {
       "name": "queries_user_name",
@@ -62,7 +62,7 @@
         "system_discovery"
       ],
       "ttps": [],
-      "match_count": 5
+      "match_count": 2
     },
     {
       "name": "queries_keyboard_layout",
@@ -73,7 +73,7 @@
         "location_discovery"
       ],
       "ttps": [],
-      "match_count": 25
+      "match_count": 4
     },
     {
       "name": "antidebug_setunhandledexceptionfilter",
@@ -122,7 +122,7 @@
         "T1033",
         "T1082"
       ],
-      "match_count": 2
+      "match_count": 14
     },
     {
       "name": "query_fips_reconnaissance",
@@ -136,7 +136,7 @@
       "ttps": [
         "T1082"
       ],
-      "match_count": 26
+      "match_count": 36
     },
     {
       "name": "encrypted_ioc",
@@ -147,7 +147,7 @@
         "encryption"
       ],
       "ttps": [],
-      "match_count": 614
+      "match_count": 63
     },
     {
       "name": "registers_vectored_exception_handler",
@@ -163,7 +163,22 @@
         "T1055",
         "T1574"
       ],
-      "match_count": 3
+      "match_count": 2
+    },
+    {
+      "name": "per_file_acl_token_check",
+      "description": "Performs high-volume NtQueryInformationToken calls for TokenUser and TokenGroups, indicative of wiper/ransomware checking whether it has write permission to each file",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "wiper",
+        "ransomware"
+      ],
+      "ttps": [
+        "T1485",
+        "T1069"
+      ],
+      "match_count": 2
     },
     {
       "name": "creates_suspended_process",
@@ -177,7 +192,7 @@
       "ttps": [
         "T1055"
       ],
-      "match_count": 4
+      "match_count": 16
     },
     {
       "name": "resumethread_remote_process",
@@ -191,7 +206,7 @@
       "ttps": [
         "T1055"
       ],
-      "match_count": 5002
+      "match_count": 13
     },
     {
       "name": "injection_write_process",
@@ -232,7 +247,7 @@
         "T1036",
         "T1055"
       ],
-      "match_count": 203
+      "match_count": 84
     },
     {
       "name": "terminates_remote_process",
@@ -244,7 +259,7 @@
         "stealth"
       ],
       "ttps": [],
-      "match_count": 2
+      "match_count": 10
     },
     {
       "name": "network_cnc_http",
@@ -258,7 +273,7 @@
       "ttps": [
         "T1071"
       ],
-      "match_count": 24
+      "match_count": 3
     },
     {
       "name": "network_http",
@@ -271,7 +286,7 @@
       "ttps": [
         "T1071"
       ],
-      "match_count": 23
+      "match_count": 2
     },
     {
       "name": "pe_tls_callbacks",
@@ -290,19 +305,6 @@
       "match_count": 1
     },
     {
-      "name": "dropper",
-      "description": "Drops a binary and executes it",
-      "severity": 2,
-      "confidence": 50,
-      "categories": [
-        "dropper"
-      ],
-      "ttps": [
-        "T1129"
-      ],
-      "match_count": 1
-    },
-    {
       "name": "injection_rwx",
       "description": "Creates RWX memory",
       "severity": 2,
@@ -311,19 +313,6 @@
         "injection"
       ],
       "ttps": [],
-      "match_count": 1
-    },
-    {
-      "name": "suspicious_tld",
-      "description": "Resolves a suspicious Top Level Domain (TLD)",
-      "severity": 2,
-      "confidence": 100,
-      "categories": [
-        "network"
-      ],
-      "ttps": [
-        "T1071"
-      ],
       "match_count": 1
     },
     {
@@ -338,7 +327,7 @@
       "ttps": [
         "T1202"
       ],
-      "match_count": 4
+      "match_count": 1
     },
     {
       "name": "antivm_wmi",
@@ -354,69 +343,6 @@
         "T1047"
       ],
       "match_count": 1
-    },
-    {
-      "name": "amsi_enumeration",
-      "description": "Enumerated Anti-Malware Scan Interface (AMSI) providers, a potential precursor to AMSI bypass or EDR unhooking",
-      "severity": 3,
-      "confidence": 40,
-      "categories": [
-        "discovery",
-        "defense_evasion"
-      ],
-      "ttps": [
-        "T1518",
-        "T1562"
-      ],
-      "match_count": 2
-    },
-    {
-      "name": "dotnet_code_compile",
-      "description": "Compiles .NET code into an executable and executes it",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "evasion",
-        "execution",
-        "dropper",
-        "dotnet",
-        "exploit",
-        "office"
-      ],
-      "ttps": [
-        "T1027.004",
-        "T1027"
-      ],
-      "match_count": 11
-    },
-    {
-      "name": "creates_largekey",
-      "description": "Creates or sets a registry key to a long series of bytes, possibly to store a binary or malware config",
-      "severity": 3,
-      "confidence": 80,
-      "categories": [
-        "stealth"
-      ],
-      "ttps": [
-        "T1112"
-      ],
-      "match_count": 6
-    },
-    {
-      "name": "exception_driven_execution",
-      "description": "Registered a Vectored Exception Handler (VEH) and intentionally triggered exceptions or manipulated thread contexts. May be used to hijack the OS error dispatcher to execute a payload or shellcode",
-      "severity": 3,
-      "confidence": 50,
-      "categories": [
-        "evasion",
-        "anti_debugging",
-        "stealth",
-        "obfuscation"
-      ],
-      "ttps": [
-        "T1055"
-      ],
-      "match_count": 2
     },
     {
       "name": "injection_write_exe_process",
@@ -461,7 +387,7 @@
         "T1129",
         "T1055"
       ],
-      "match_count": 152
+      "match_count": 126
     },
     {
       "name": "unbacked_library_load",
@@ -477,7 +403,7 @@
         "T1129",
         "T1059"
       ],
-      "match_count": 47
+      "match_count": 39
     },
     {
       "name": "unbacked_memory_protection_alteration",
@@ -493,7 +419,7 @@
       "ttps": [
         "T1055"
       ],
-      "match_count": 40
+      "match_count": 38
     },
     {
       "name": "unbacked_crypto_operations",
@@ -511,7 +437,7 @@
         "T1027",
         "T1573"
       ],
-      "match_count": 11
+      "match_count": 8
     },
     {
       "name": "unbacked_delay_execution",
@@ -528,23 +454,7 @@
         "T1027",
         "T1497"
       ],
-      "match_count": 6
-    },
-    {
-      "name": "unbacked_process_enumeration",
-      "description": "Attempted to enumerate running processes from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "discovery",
-        "fileless",
-        "reconnaissance",
-        "shellcode"
-      ],
-      "ttps": [
-        "T1057"
-      ],
-      "match_count": 2
+      "match_count": 5
     },
     {
       "name": "unbacked_token_manipulation",
@@ -557,7 +467,7 @@
         "lateral_movement"
       ],
       "ttps": [],
-      "match_count": 21
+      "match_count": 20
     },
     {
       "name": "unbacked_memory_network_connection",
@@ -589,7 +499,7 @@
         "T1112",
         "T1547"
       ],
-      "match_count": 4
+      "match_count": 1
     },
     {
       "name": "network_questionable_http_path",
@@ -602,7 +512,7 @@
       "ttps": [
         "T1071"
       ],
-      "match_count": 56
+      "match_count": 4
     },
     {
       "name": "pe_deep_entrypoint",
@@ -660,20 +570,6 @@
       "match_count": 1
     },
     {
-      "name": "deletes_executed_files",
-      "description": "Deletes executed files from disk",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "persistence",
-        "stealth"
-      ],
-      "ttps": [
-        "T1070"
-      ],
-      "match_count": 4
-    },
-    {
       "name": "injection_runpe",
       "description": "Executed a process and injected code into it, probably while unpacking",
       "severity": 3,
@@ -682,20 +578,6 @@
         "injection"
       ],
       "ttps": [],
-      "match_count": 2
-    },
-    {
-      "name": "dotnet_csc_build",
-      "description": "Uses csc.exe C# compiler to build and execute code",
-      "severity": 3,
-      "confidence": 20,
-      "categories": [
-        "command"
-      ],
-      "ttps": [
-        "T1027.004",
-        "T1027"
-      ],
       "match_count": 2
     },
     {
@@ -710,21 +592,7 @@
       "ttps": [
         "T1202"
       ],
-      "match_count": 4
-    },
-    {
-      "name": "network_ip_exe",
-      "description": "Executable is attempted to be downloaded from an IP",
-      "severity": 5,
-      "confidence": 100,
-      "categories": [
-        "network",
-        "downloader"
-      ],
-      "ttps": [
-        "T1071"
-      ],
-      "match_count": 9
+      "match_count": 1
     }
   ],
   "attck_mappings": [
@@ -761,22 +629,6 @@
       "justification": "CAPE signature 'antivm_wmi' fired (severity=3, confidence=80%, categories=['anti-vm'])"
     },
     {
-      "technique": "T1518",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "amsi_enumeration",
-      "confidence": "low",
-      "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
-    },
-    {
-      "technique": "T1562",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "amsi_enumeration",
-      "confidence": "low",
-      "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
-    },
-    {
       "technique": "T1033",
       "name": "",
       "source": "dynamic_signature",
@@ -785,44 +637,12 @@
       "justification": "CAPE signature 'privilege_elevation_check' fired (severity=2, confidence=80%, categories=['discovery', 'privilege_escalation'])"
     },
     {
-      "technique": "T1027.004",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "dotnet_code_compile",
-      "confidence": "high",
-      "justification": "CAPE signature 'dotnet_code_compile' fired (severity=3, confidence=100%, categories=['evasion', 'execution', 'dropper', 'dotnet', 'exploit', 'office'])"
-    },
-    {
-      "technique": "T1027",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "dotnet_code_compile",
-      "confidence": "high",
-      "justification": "CAPE signature 'dotnet_code_compile' fired (severity=3, confidence=100%, categories=['evasion', 'execution', 'dropper', 'dotnet', 'exploit', 'office'])"
-    },
-    {
-      "technique": "T1112",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "creates_largekey",
-      "confidence": "high",
-      "justification": "CAPE signature 'creates_largekey' fired (severity=3, confidence=80%, categories=['stealth'])"
-    },
-    {
       "technique": "T1055",
       "name": "",
       "source": "dynamic_signature",
       "evidence": "registers_vectored_exception_handler",
       "confidence": "medium",
       "justification": "CAPE signature 'registers_vectored_exception_handler' fired (severity=2, confidence=80%, categories=['evasion', 'execution', 'injection'])"
-    },
-    {
-      "technique": "T1055",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "exception_driven_execution",
-      "confidence": "medium",
-      "justification": "CAPE signature 'exception_driven_execution' fired (severity=3, confidence=50%, categories=['evasion', 'anti_debugging', 'stealth', 'obfuscation'])"
     },
     {
       "technique": "T1055",
@@ -913,14 +733,6 @@
       "justification": "CAPE signature 'unbacked_delay_execution' fired (severity=3, confidence=100%, categories=['evasion', 'c2', 'fileless', 'shellcode'])"
     },
     {
-      "technique": "T1057",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "unbacked_process_enumeration",
-      "confidence": "high",
-      "justification": "CAPE signature 'unbacked_process_enumeration' fired (severity=3, confidence=100%, categories=['discovery', 'fileless', 'reconnaissance', 'shellcode'])"
-    },
-    {
       "technique": "T1071",
       "name": "",
       "source": "dynamic_signature",
@@ -988,14 +800,6 @@
       "technique": "T1071",
       "name": "",
       "source": "dynamic_signature",
-      "evidence": "network_ip_exe",
-      "confidence": "high",
-      "justification": "CAPE signature 'network_ip_exe' fired (severity=5, confidence=100%, categories=['network', 'downloader'])"
-    },
-    {
-      "technique": "T1071",
-      "name": "",
-      "source": "dynamic_signature",
       "evidence": "network_http",
       "confidence": "low",
       "justification": "CAPE signature 'network_http' fired (severity=2, confidence=30%, categories=['network'])"
@@ -1047,46 +851,6 @@
       "evidence": "registry_credential_store_access",
       "confidence": "high",
       "justification": "CAPE signature 'registry_credential_store_access' fired (severity=3, confidence=100%, categories=['persistence', 'lateral', 'credential_dumping'])"
-    },
-    {
-      "technique": "T1070",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "deletes_executed_files",
-      "confidence": "high",
-      "justification": "CAPE signature 'deletes_executed_files' fired (severity=3, confidence=100%, categories=['persistence', 'stealth'])"
-    },
-    {
-      "technique": "T1620",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "dropper",
-      "confidence": "medium",
-      "justification": "CAPE signature 'dropper' fired (severity=2, confidence=50%, categories=['dropper'])"
-    },
-    {
-      "technique": "T1071",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "suspicious_tld",
-      "confidence": "medium",
-      "justification": "CAPE signature 'suspicious_tld' fired (severity=2, confidence=100%, categories=['network'])"
-    },
-    {
-      "technique": "T1027.004",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "dotnet_csc_build",
-      "confidence": "low",
-      "justification": "CAPE signature 'dotnet_csc_build' fired (severity=3, confidence=20%, categories=['command'])"
-    },
-    {
-      "technique": "T1027",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "dotnet_csc_build",
-      "confidence": "low",
-      "justification": "CAPE signature 'dotnet_csc_build' fired (severity=3, confidence=20%, categories=['command'])"
     }
   ],
   "network": {
@@ -1094,13 +858,20 @@
       {
         "domain": "cdn.onenote.net",
         "ip": "23.14.137.157"
-      },
-      {
-        "domain": "keyauth.win",
-        "ip": "104.26.0.5"
       }
     ],
     "hosts": [
+      {
+        "ip": "85.208.10.204",
+        "country_name": "unknown",
+        "asn": "",
+        "asn_name": "",
+        "hostname": "",
+        "inaddrarpa": "",
+        "ports": [
+          80
+        ]
+      },
       {
         "ip": "96.16.86.160",
         "country_name": "unknown",
@@ -1121,17 +892,6 @@
         "inaddrarpa": "",
         "ports": [
           2828
-        ]
-      },
-      {
-        "ip": "85.208.10.204",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          80
         ]
       },
       {
@@ -1208,26 +968,7 @@
             "data": "23.14.137.157"
           }
         ],
-        "first_seen": 1787045523.096346
-      },
-      {
-        "request": "keyauth.win",
-        "type": "A",
-        "answers": [
-          {
-            "type": "A",
-            "data": "104.26.0.5"
-          },
-          {
-            "type": "A",
-            "data": "172.67.72.57"
-          },
-          {
-            "type": "A",
-            "data": "104.26.1.5"
-          }
-        ],
-        "first_seen": 1787045555.558523
+        "first_seen": 1787054210.843766
       }
     ],
     "http_requests": [
@@ -1235,839 +976,67 @@
         "count": 1,
         "host": "85.208.10.204",
         "port": 80,
-        "data": "GET /filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: HDE9qir7n0qlFC+J.0.7.1.0.0.8.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045539.558464
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: HDE9qir7n0qlFC+J.0.7.1.0.0.8.2.6.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045539.623515
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=11534336-11937152\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: HDE9qir7n0qlFC+J.0.7.1.0.0.8.2.6.1.1.2\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045539.650522
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=11534336-11937152\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: HDE9qir7n0qlFC+J.0.7.1.0.0.8.2.6.1.1.3\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045540.031832
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=11534336-11937152\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: HDE9qir7n0qlFC+J.0.7.1.0.0.8.2.6.1.1.4\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045540.258066
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=11534336-11937152\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: HDE9qir7n0qlFC+J.0.7.1.0.0.8.2.6.1.1.5\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045540.632436
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/defu/2024/01/mpsigstub_6103d9f6bf95c772c8b7ee89aee370cdca4642f8.exe?cacheHostOrigin=2.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.3.2.3.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/defu/2024/01/mpsigstub_6103d9f6bf95c772c8b7ee89aee370cdca4642f8.exe?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/defu/2024/01/mpsigstub_6103d9f6bf95c772c8b7ee89aee370cdca4642f8.exe?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045544.734767
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /phf/d/dod/ph/prod5/msdownload/update/software/defu/2026/07/1024/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe.json?cacheHostOrigin=download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/phf/d/dod/ph/prod5/msdownload/update/software/defu/2026/07/1024/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe.json?cacheHostOrigin=download.windowsupdate.com",
-        "body": "",
-        "path": "/phf/d/dod/ph/prod5/msdownload/update/software/defu/2026/07/1024/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe.json?cacheHostOrigin=download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045544.872114
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.6.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045544.948259
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /phf/d/dod/ph/prod8/msdownload/update/software/defu/2026/08/1024/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe.json?cacheHostOrigin=download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.11.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/phf/d/dod/ph/prod8/msdownload/update/software/defu/2026/08/1024/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe.json?cacheHostOrigin=download.windowsupdate.com",
-        "body": "",
-        "path": "/phf/d/dod/ph/prod8/msdownload/update/software/defu/2026/08/1024/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe.json?cacheHostOrigin=download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045545.087957
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.11.2.7.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045545.222375
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /phf/c/doc/ph/prod5/msdownload/update/software/defu/2026/08/1024/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe.json?cacheHostOrigin=download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.15.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/phf/c/doc/ph/prod5/msdownload/update/software/defu/2026/08/1024/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe.json?cacheHostOrigin=download.windowsupdate.com",
-        "body": "",
-        "path": "/phf/c/doc/ph/prod5/msdownload/update/software/defu/2026/08/1024/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe.json?cacheHostOrigin=download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045545.449387
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.15.2.6.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045545.517326
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/defu/2024/01/mpsigstub_6103d9f6bf95c772c8b7ee89aee370cdca4642f8.exe?cacheHostOrigin=2.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-918943\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.3.2.3.1.1.2\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/defu/2024/01/mpsigstub_6103d9f6bf95c772c8b7ee89aee370cdca4642f8.exe?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/defu/2024/01/mpsigstub_6103d9f6bf95c772c8b7ee89aee370cdca4642f8.exe?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045547.463697
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=5242880-6291455\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.6.1.1.2\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045549.467647
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=71303168-72351743\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.11.2.7.1.1.2\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045549.468042
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=2097152-3145727\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.15.2.6.1.1.2\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045549.468401
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=3145728-3905991\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.15.2.6.1.1.3\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045549.506956
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=3145728-4194303\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.6.1.1.3\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045549.507247
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=12582912-13631487\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.11.2.7.1.1.3\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045549.50748
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /phf/c/doc/ph/prod5/msdownload/update/software/ftpk/2023/09/1024/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab.json?cacheHostOrigin=download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/phf/c/doc/ph/prod5/msdownload/update/software/ftpk/2023/09/1024/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab.json?cacheHostOrigin=download.windowsupdate.com",
-        "body": "",
-        "path": "/phf/c/doc/ph/prod5/msdownload/update/software/ftpk/2023/09/1024/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab.json?cacheHostOrigin=download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045550.040251
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.7.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045550.219703
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1048575\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.15.2.6.1.1.4\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045550.224804
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=44040192-45088767\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.11.2.7.1.1.4\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045550.720418
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=14680064-15728639\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.7.1.1.2\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045551.152656
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=1048576-2097151\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.6.1.1.4\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045551.444757
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=1048576-2097151\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.15.2.6.1.1.5\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045552.378594
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1048575\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.6.1.1.5\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045552.392975
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=140509184-141557759\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.11.2.7.1.1.5\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045552.606178
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=39845888-40894463\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.7.1.1.3\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045552.662667
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=74448896-74514431\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.11.2.7.1.1.6\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045571.212464
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1048575\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.7.1.1.4\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045586.721865
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=4194304-4259839\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.6.1.1.6\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045591.43831
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56/pieceshash?cacheHostOrigin=msedge.f.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: zzkMX/Q+UU6g4D7xdYC8MA.0.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
+        "data": "GET /filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56/pieceshash?cacheHostOrigin=msedge.f.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: 9d91dK+6Fk24JuVCd2zpxQ.0.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
         "uri": "http://85.208.10.204/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56/pieceshash?cacheHostOrigin=msedge.f.dl.delivery.mp.microsoft.com",
         "body": "",
         "path": "/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56/pieceshash?cacheHostOrigin=msedge.f.dl.delivery.mp.microsoft.com",
         "user-agent": "Microsoft-Delivery-Optimization/10.0",
         "version": "1.1",
         "method": "GET",
-        "first_seen": 1787045594.165547
+        "first_seen": 1787054297.942765
       },
       {
         "count": 1,
         "host": "85.208.10.204",
         "port": 80,
-        "data": "GET /phf/d/dod/ph/prod5/msdownload/update/software/updt/2023/12/1024/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab.json?cacheHostOrigin=download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.8.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/phf/d/dod/ph/prod5/msdownload/update/software/updt/2023/12/1024/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab.json?cacheHostOrigin=download.windowsupdate.com",
+        "data": "GET /filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787659091&P2=404&P3=2&P4=nYEiEweN6Abume7wUUT155lbMsE5XN7OwFHQ4jZGqpim5iT7bmRSexTus99gEhfVo6fIlRIqkNq9VaNBdKeVkQ%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: 9d91dK+6Fk24JuVCd2zpxQ.0.2.6.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
+        "uri": "http://85.208.10.204/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787659091&P2=404&P3=2&P4=nYEiEweN6Abume7wUUT155lbMsE5XN7OwFHQ4jZGqpim5iT7bmRSexTus99gEhfVo6fIlRIqkNq9VaNBdKeVkQ%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
         "body": "",
-        "path": "/phf/d/dod/ph/prod5/msdownload/update/software/updt/2023/12/1024/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab.json?cacheHostOrigin=download.windowsupdate.com",
+        "path": "/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787659091&P2=404&P3=2&P4=nYEiEweN6Abume7wUUT155lbMsE5XN7OwFHQ4jZGqpim5iT7bmRSexTus99gEhfVo6fIlRIqkNq9VaNBdKeVkQ%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
         "user-agent": "Microsoft-Delivery-Optimization/10.0",
         "version": "1.1",
         "method": "GET",
-        "first_seen": 1787045606.123193
+        "first_seen": 1787054298.912737
       },
       {
         "count": 1,
         "host": "85.208.10.204",
         "port": 80,
-        "data": "GET /phf/c/doc/ph/prod5/msdownload/update/software/secu/2025/09/1024/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab.json?cacheHostOrigin=download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/phf/c/doc/ph/prod5/msdownload/update/software/secu/2025/09/1024/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab.json?cacheHostOrigin=download.windowsupdate.com",
+        "data": "GET /filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787659091&P2=404&P3=2&P4=nYEiEweN6Abume7wUUT155lbMsE5XN7OwFHQ4jZGqpim5iT7bmRSexTus99gEhfVo6fIlRIqkNq9VaNBdKeVkQ%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=1048576-1779031\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: 9d91dK+6Fk24JuVCd2zpxQ.0.2.6.1.1.2\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
+        "uri": "http://85.208.10.204/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787659091&P2=404&P3=2&P4=nYEiEweN6Abume7wUUT155lbMsE5XN7OwFHQ4jZGqpim5iT7bmRSexTus99gEhfVo6fIlRIqkNq9VaNBdKeVkQ%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
         "body": "",
-        "path": "/phf/c/doc/ph/prod5/msdownload/update/software/secu/2025/09/1024/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab.json?cacheHostOrigin=download.windowsupdate.com",
+        "path": "/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787659091&P2=404&P3=2&P4=nYEiEweN6Abume7wUUT155lbMsE5XN7OwFHQ4jZGqpim5iT7bmRSexTus99gEhfVo6fIlRIqkNq9VaNBdKeVkQ%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
         "user-agent": "Microsoft-Delivery-Optimization/10.0",
         "version": "1.1",
         "method": "GET",
-        "first_seen": 1787045621.348893
+        "first_seen": 1787054310.262502
       },
       {
         "count": 1,
         "host": "85.208.10.204",
         "port": 80,
-        "data": "GET /phf/d/dod/ph/prod5/msdownload/update/software/uprl/2026/08/1024/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe.json?cacheHostOrigin=download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.3.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/phf/d/dod/ph/prod5/msdownload/update/software/uprl/2026/08/1024/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe.json?cacheHostOrigin=download.windowsupdate.com",
+        "data": "GET /filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787659091&P2=404&P3=2&P4=nYEiEweN6Abume7wUUT155lbMsE5XN7OwFHQ4jZGqpim5iT7bmRSexTus99gEhfVo6fIlRIqkNq9VaNBdKeVkQ%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1048575\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: 9d91dK+6Fk24JuVCd2zpxQ.0.2.6.1.1.3\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
+        "uri": "http://85.208.10.204/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787659091&P2=404&P3=2&P4=nYEiEweN6Abume7wUUT155lbMsE5XN7OwFHQ4jZGqpim5iT7bmRSexTus99gEhfVo6fIlRIqkNq9VaNBdKeVkQ%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
         "body": "",
-        "path": "/phf/d/dod/ph/prod5/msdownload/update/software/uprl/2026/08/1024/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe.json?cacheHostOrigin=download.windowsupdate.com",
+        "path": "/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787659091&P2=404&P3=2&P4=nYEiEweN6Abume7wUUT155lbMsE5XN7OwFHQ4jZGqpim5iT7bmRSexTus99gEhfVo6fIlRIqkNq9VaNBdKeVkQ%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
         "user-agent": "Microsoft-Delivery-Optimization/10.0",
         "version": "1.1",
         "method": "GET",
-        "first_seen": 1787045626.659575
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=4259840-4325375\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.6.1.1.7\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045652.026807
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787650373&P2=404&P3=2&P4=Rddb366RCHI05hJw0Y6sOl8OzJ6Zp53q6qb2hxute6cF7P3ZykvKAIM%2bbVYQhr3mFXRbcT3MR9jQ3MRD1w6KMg%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: zzkMX/Q+UU6g4D7xdYC8MA.0.2.6.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787650373&P2=404&P3=2&P4=Rddb366RCHI05hJw0Y6sOl8OzJ6Zp53q6qb2hxute6cF7P3ZykvKAIM%2bbVYQhr3mFXRbcT3MR9jQ3MRD1w6KMg%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787650373&P2=404&P3=2&P4=Rddb366RCHI05hJw0Y6sOl8OzJ6Zp53q6qb2hxute6cF7P3ZykvKAIM%2bbVYQhr3mFXRbcT3MR9jQ3MRD1w6KMg%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045652.219416
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: HDE9qir7n0qlFC+J.0.7.1.0.0.50.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045664.496818
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=12582912-12648447\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.7.1.1.5\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045674.562892
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/updt/2023/12/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.8.2.6.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/updt/2023/12/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/updt/2023/12/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045679.652118
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/updt/2024/05/windows10.0-kb5001716-x64_a2bb12707df4d0d7ecfc8693d3ce965aa0ff2c9d.cab?cacheHostOrigin=4.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.3.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/updt/2024/05/windows10.0-kb5001716-x64_a2bb12707df4d0d7ecfc8693d3ce965aa0ff2c9d.cab?cacheHostOrigin=4.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/updt/2024/05/windows10.0-kb5001716-x64_a2bb12707df4d0d7ecfc8693d3ce965aa0ff2c9d.cab?cacheHostOrigin=4.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045679.835314
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/secu/2025/09/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab?cacheHostOrigin=4.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.7.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/secu/2025/09/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab?cacheHostOrigin=4.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/secu/2025/09/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab?cacheHostOrigin=4.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045679.835489
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/uprl/2026/08/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.3.2.7.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/uprl/2026/08/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/uprl/2026/08/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045691.20409
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=4325376-4390911\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.6.1.1.8\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045710.217826
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787650373&P2=404&P3=2&P4=Rddb366RCHI05hJw0Y6sOl8OzJ6Zp53q6qb2hxute6cF7P3ZykvKAIM%2bbVYQhr3mFXRbcT3MR9jQ3MRD1w6KMg%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1048575\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: zzkMX/Q+UU6g4D7xdYC8MA.0.2.6.1.1.2\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787650373&P2=404&P3=2&P4=Rddb366RCHI05hJw0Y6sOl8OzJ6Zp53q6qb2hxute6cF7P3ZykvKAIM%2bbVYQhr3mFXRbcT3MR9jQ3MRD1w6KMg%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787650373&P2=404&P3=2&P4=Rddb366RCHI05hJw0Y6sOl8OzJ6Zp53q6qb2hxute6cF7P3ZykvKAIM%2bbVYQhr3mFXRbcT3MR9jQ3MRD1w6KMg%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045714.953505
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice//files/af08325a-a4d7-4d06-9037-dff7a4325c40/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.12.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice//files/af08325a-a4d7-4d06-9037-dff7a4325c40/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice//files/af08325a-a4d7-4d06-9037-dff7a4325c40/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045716.675224
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice//files/4bb97abf-ed3a-4447-bac6-93373bb889e0/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.12.4.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice//files/4bb97abf-ed3a-4447-bac6-93373bb889e0/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice//files/4bb97abf-ed3a-4447-bac6-93373bb889e0/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045717.165218
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-1\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: HDE9qir7n0qlFC+J.0.7.1.0.0.50.2.6.1.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045722.334963
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /filestreamingservice//files/31568bc2-a514-408d-beb6-1439e703c889/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.16.2.3.1.1\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/filestreamingservice//files/31568bc2-a514-408d-beb6-1439e703c889/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-        "body": "",
-        "path": "/filestreamingservice//files/31568bc2-a514-408d-beb6-1439e703c889/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045729.567398
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=12648448-12713983\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.7.1.1.6\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045732.761081
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/updt/2024/05/windows10.0-kb5001716-x64_a2bb12707df4d0d7ecfc8693d3ce965aa0ff2c9d.cab?cacheHostOrigin=4.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=0-828540\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.3.1.1.2\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/updt/2024/05/windows10.0-kb5001716-x64_a2bb12707df4d0d7ecfc8693d3ce965aa0ff2c9d.cab?cacheHostOrigin=4.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/updt/2024/05/windows10.0-kb5001716-x64_a2bb12707df4d0d7ecfc8693d3ce965aa0ff2c9d.cab?cacheHostOrigin=4.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045738.954618
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/updt/2023/12/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=4194304-4632726\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.8.2.6.1.1.2\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/updt/2023/12/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/updt/2023/12/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045739.20777
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /d/msdownload/update/software/uprl/2026/08/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe?cacheHostOrigin=3.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=19922944-20971519\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.3.2.7.1.1.2\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/d/msdownload/update/software/uprl/2026/08/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/d/msdownload/update/software/uprl/2026/08/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045739.264545
-      },
-      {
-        "count": 1,
-        "host": "85.208.10.204",
-        "port": 80,
-        "data": "GET /c/msdownload/update/software/secu/2025/09/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab?cacheHostOrigin=4.au.download.windowsupdate.com HTTP/1.1\r\nConnection: Keep-Alive\r\nAccept: */*\r\nRange: bytes=35651584-36700159\r\nUser-Agent: Microsoft-Delivery-Optimization/10.0\r\nMS-CV: VCsR2uOLHkKLCoJk.1.1.7.2.7.1.1.2\r\nContent-Length: 0\r\nHost: 85.208.10.204\r\n\r\n",
-        "uri": "http://85.208.10.204/c/msdownload/update/software/secu/2025/09/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab?cacheHostOrigin=4.au.download.windowsupdate.com",
-        "body": "",
-        "path": "/c/msdownload/update/software/secu/2025/09/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab?cacheHostOrigin=4.au.download.windowsupdate.com",
-        "user-agent": "Microsoft-Delivery-Optimization/10.0",
-        "version": "1.1",
-        "method": "GET",
-        "first_seen": 1787045739.264733
+        "first_seen": 1787054315.077834
       }
     ],
-    "tcp_count": 149,
-    "udp_count": 92
+    "tcp_count": 83,
+    "udp_count": 64
   },
   "dropped_files": [
     {
-      "name": "jsc.exe",
-      "sha256": "774cec1fc33b44ce37c1cc3be2f6b2cdb6afca892ac99762747a0234a2f9384a",
-      "md5": "59c3026d500244d86ea0cc37b146fb04",
-      "sha1": "aa0a27b91b3f5c2c5b0d0d9cd9a22853baed6859",
-      "size": 5632,
-      "type": "PE32 executable (console) Intel 80386 Mono/.Net assembly, for MS Windows",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
-      "name": "CSCA746000E8F234F96B22361DC431260E4.TMP",
-      "sha256": "97d5b2464371cc9a0712dd5dcb1b83940b3c9e3bbe505e5a068f4126def9b567",
-      "md5": "989d1f618c8d6fa47385bb96fd7852f6",
-      "sha1": "9fdc9f62ad54d80d3c31523e9d126c0646d93a2e",
-      "size": 1152,
-      "type": "MSVC .res",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
-      "name": "RES2D40.tmp",
-      "sha256": "ef197777b013332f561df748f5b07cf35797c51d779df16c9401d2c37e1e8096",
-      "md5": "b1981db5489d7a07ab183c2db154e2cd",
-      "sha1": "9f1c19bfaa838802e4a9fa281e45b8764feb950d",
-      "size": 1912,
-      "type": "Intel 80386 COFF object file, not stripped, 3 sections, symbol offset=0x6c0, 10 symbols, created Tue Aug 18 08:32:52 2026, 1st section name \".debug$S\"",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
-      "name": "RESDCED.tmp",
-      "sha256": "84a10332fb41e3a4b7a21be7886f762ba1ca41aa17743e5d0ca8fc90b3494e5d",
-      "md5": "515e4b44e0e72466e5f385a9599c9146",
-      "sha1": "f8300d28a2603c72b1a9b8729c130ad26a7c9429",
-      "size": 1912,
-      "type": "Intel 80386 COFF object file, not stripped, 3 sections, symbol offset=0x6c0, 10 symbols, created Tue Aug 18 08:32:31 2026, 1st section name \".debug$S\"",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
-      "name": "guardian_src_b90abfcbd75f49a5a793335891ec9b3d.cs",
-      "sha256": "3ee1bf1ab210527e7543dc78ca3511904bf7770d571eb0d11746edd9f5bf814a",
-      "md5": "b7d40eb7e1328728d647678e1ea0a4dc",
-      "sha1": "43850a88c7f012df9e7349886497271c83e2bdaa",
-      "size": 4615,
-      "type": "ASCII text, with CRLF line terminators",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
-      "name": "4cf0347f4f13aaeab78ed05b137b8d076602c4e0a59dd8a5460d8088ab5af38e",
-      "sha256": "4cf0347f4f13aaeab78ed05b137b8d076602c4e0a59dd8a5460d8088ab5af38e",
-      "md5": "8b1aa64ab2226fbfcd40ea62ed09d995",
-      "sha1": "3583334a0337c97c94cfca437e41f24b7697227a",
-      "size": 115200,
-      "type": "PE32 executable (DLL) (GUI) Intel 80386 Mono/.Net assembly, for MS Windows",
-      "cape_type": "Unpacked PE Image: 32-bit DLL",
-      "roles": [
-        "cape_payload"
-      ]
-    },
-    {
-      "name": "2d3a58ad60becdcf1563549ffb540c7ef6f2b395dc821f7f29118540c7487311",
-      "sha256": "2d3a58ad60becdcf1563549ffb540c7ef6f2b395dc821f7f29118540c7487311",
-      "md5": "0b90aac8396e3baf040b89050cc877cc",
-      "sha1": "292334c80c53c2f1fe2401901d4b7b9678202cb7",
-      "size": 1603861,
-      "type": "data",
-      "cape_type": "unknown",
-      "roles": [
-        "cape_payload"
-      ]
-    },
-    {
-      "name": "e0557aa545c5d7d6afff18fb52ee6bdc856d46b0abd67fe586db0eb5f22b86a7",
-      "sha256": "e0557aa545c5d7d6afff18fb52ee6bdc856d46b0abd67fe586db0eb5f22b86a7",
-      "md5": "ee26393cb6fcd60f07223e5aa207fbdb",
-      "sha1": "944ba8add48562ee8c24acfcb90da3cf8fdae9ba",
-      "size": 300,
-      "type": "data",
-      "cape_type": "Unpacked Shellcode",
-      "roles": [
-        "cape_payload"
-      ]
-    },
-    {
-      "name": "6811bc599ce86f2c75458cfe8c444638587548d52057207a5116a25a51b21e9a",
-      "sha256": "6811bc599ce86f2c75458cfe8c444638587548d52057207a5116a25a51b21e9a",
-      "md5": "d7528acb0fd8b381f51ccd0092426f75",
-      "sha1": "1f551aeae145094e0b913238847742e28113d425",
-      "size": 485376,
-      "type": "PE32 executable (DLL) (GUI) Intel 80386 Mono/.Net assembly, for MS Windows",
-      "cape_type": "Unpacked PE Image: 32-bit DLL",
+      "name": "da83c9c8566fe5a2dd2b2ea004175422dd47122b536e570ced82765259b9e507",
+      "sha256": "da83c9c8566fe5a2dd2b2ea004175422dd47122b536e570ced82765259b9e507",
+      "md5": "3c99e22e782cdaa1ea6bf4061d953c98",
+      "sha1": "d193bdd984aa64c2d51ef493d75b44ef06d57c16",
+      "size": 33792,
+      "type": "PE32 executable (GUI) Intel 80386, for MS Windows",
+      "cape_type": "XWorm payload: 32-bit executable",
       "roles": [
         "cape_payload"
       ]
@@ -2085,23 +1054,11 @@
       ]
     },
     {
-      "name": "0fd45e05875e63923d15cb5511fb8abd31a5a4c19263424d74f7ed58f8f36353",
-      "sha256": "0fd45e05875e63923d15cb5511fb8abd31a5a4c19263424d74f7ed58f8f36353",
-      "md5": "b2e8f55e0a4848f06390460bcbf508b3",
-      "sha1": "ee66ffb41e9b67bc23fdc9ef4b053c9190eb3b80",
-      "size": 187904,
-      "type": "PE32 executable (DLL) (GUI) Intel 80386 Mono/.Net assembly, for MS Windows",
-      "cape_type": "Unpacked PE Image: 32-bit DLL",
-      "roles": [
-        "cape_payload"
-      ]
-    },
-    {
-      "name": "3f3eae7ae2c0f09eef42f72a478c0bd00124f8c7112f3bd2dc56bea05c38244e",
-      "sha256": "3f3eae7ae2c0f09eef42f72a478c0bd00124f8c7112f3bd2dc56bea05c38244e",
-      "md5": "4feacca01c1b5953e10024a174a6b2e8",
-      "sha1": "96bad302e6f3d897d391c384c9413a18a9925e19",
-      "size": 60,
+      "name": "f618bb8e9006dcb961383413aa6d64bd8fa062f5ff8a3e8bebec15ba7d39d5dc",
+      "sha256": "f618bb8e9006dcb961383413aa6d64bd8fa062f5ff8a3e8bebec15ba7d39d5dc",
+      "md5": "6a61a1883634503d83da5dc7f84c7fcd",
+      "sha1": "fdbc36571eb2663fe394b839987dbed0ea414aaf",
+      "size": 272,
       "type": "data",
       "cape_type": "Unpacked Shellcode",
       "roles": [
@@ -2109,25 +1066,13 @@
       ]
     },
     {
-      "name": "291a867e24eb55bdeec297bb409fedb82229cb7349c9687490033d06e2ad3a0b",
-      "sha256": "291a867e24eb55bdeec297bb409fedb82229cb7349c9687490033d06e2ad3a0b",
-      "md5": "36003a79929bd44932a8f71c57eae3bb",
-      "sha1": "492bb86f72e3963445b48c74f04a91f869e9750d",
-      "size": 102,
+      "name": "74e3b1d95a5e6f7d53342f65e0411950e87808277e33c2a084231f8b9956674e",
+      "sha256": "74e3b1d95a5e6f7d53342f65e0411950e87808277e33c2a084231f8b9956674e",
+      "md5": "002f6275925ffb2a0f2df252ff10edae",
+      "sha1": "4204ebcd524d64ef4e969b64a8140ee42f519a18",
+      "size": 300,
       "type": "data",
       "cape_type": "Unpacked Shellcode",
-      "roles": [
-        "cape_payload"
-      ]
-    },
-    {
-      "name": "4e5b174d324c09cef64f5ba2e6dee8fcafc5c2a2da629149e72c7df2258f560a",
-      "sha256": "4e5b174d324c09cef64f5ba2e6dee8fcafc5c2a2da629149e72c7df2258f560a",
-      "md5": "da7518dc56a2d9799c4e240b26ff4ceb",
-      "sha1": "7b734558ecbe883abbdf7057228a48673355700f",
-      "size": 33792,
-      "type": "PE32 executable (GUI) Intel 80386, for MS Windows",
-      "cape_type": "XWorm payload: 32-bit executable",
       "roles": [
         "cape_payload"
       ]
@@ -2145,59 +1090,11 @@
       ]
     },
     {
-      "name": "7baaad8e934d0e932c3d52cf715cfdb7338cbd13ca0dc2a117ff65a2f196b261",
-      "sha256": "7baaad8e934d0e932c3d52cf715cfdb7338cbd13ca0dc2a117ff65a2f196b261",
-      "md5": "e699cf292aa6314577723fc3563062b1",
-      "sha1": "e09ee0f984fe91c28c07404874b0b9536dc2fd30",
-      "size": 29301,
-      "type": "data",
-      "cape_type": "Unpacked Shellcode",
-      "roles": [
-        "cape_payload"
-      ]
-    },
-    {
-      "name": "593d421242088474499669c22b4c0bd731b6d5cd4892e0cbb0684d986be1ce00",
-      "sha256": "593d421242088474499669c22b4c0bd731b6d5cd4892e0cbb0684d986be1ce00",
-      "md5": "eb63687bf17bec95f93d85cc05d3ab58",
-      "sha1": "bf98779e36971c4abd6e1c4954680f469617a96f",
-      "size": 272,
-      "type": "data",
-      "cape_type": "Unpacked Shellcode",
-      "roles": [
-        "cape_payload"
-      ]
-    },
-    {
-      "name": "164b0977eaa28e23b77afcd6c73a7775b8b46553e37b671a384fbff86ebefaf7",
-      "sha256": "164b0977eaa28e23b77afcd6c73a7775b8b46553e37b671a384fbff86ebefaf7",
-      "md5": "248e3d9c4057aca64794925e87ef45de",
-      "sha1": "27773e707a5dcb211d2e272e156145128cef52f7",
-      "size": 7453,
-      "type": "data",
-      "cape_type": "Unpacked Shellcode",
-      "roles": [
-        "cape_payload"
-      ]
-    },
-    {
-      "name": "b8f036555957089bf8bf0c8b0adc9bf443600a6651651def225350a943e7ea86",
-      "sha256": "b8f036555957089bf8bf0c8b0adc9bf443600a6651651def225350a943e7ea86",
-      "md5": "7313c9a3865aaf0d1fbe43ecf702782d",
-      "sha1": "397c06a8bdc142a6da8d7eb0d14147391fb97224",
-      "size": 5632,
-      "type": "PE32 executable (DLL) (GUI) Intel 80386 Mono/.Net assembly, for MS Windows",
-      "cape_type": "",
-      "roles": [
-        "cape_payload"
-      ]
-    },
-    {
-      "name": "2273ffd70e7cf3bad8a79795d1a9b499171a1cac8a0d994571267dbe435cf7a0",
-      "sha256": "2273ffd70e7cf3bad8a79795d1a9b499171a1cac8a0d994571267dbe435cf7a0",
-      "md5": "16d116d54d6215cee20deaee07e05a4f",
-      "sha1": "fd17b8272165141c0b6213e21f58a8d57796e10a",
-      "size": 300,
+      "name": "f82eece7867d2a435d9d8c3f931b7160f45d0785df4f83879f5d433abcd0d1ca",
+      "sha256": "f82eece7867d2a435d9d8c3f931b7160f45d0785df4f83879f5d433abcd0d1ca",
+      "md5": "638d7aca393095161f5a835b29852978",
+      "sha1": "9f6d0bdc7e60457020ba5e951a7ae6407bf67d80",
+      "size": 60,
       "type": "data",
       "cape_type": "Unpacked Shellcode",
       "roles": [
@@ -2207,85 +1104,49 @@
   ],
   "host_activity": {
     "mutexes": [
-      "taFdiWQVNTqreQ9V"
+      "taFdiWQVNTqreQ9V",
+      "Local\\SM0:9220:304:WilStaging_02",
+      "Local\\SM0:2264:304:WilStaging_02",
+      "Local\\SM0:3560:304:WilStaging_02",
+      "Local\\SM0:8420:304:WilStaging_02"
     ],
     "created_services": [],
     "started_services": [
+      "lfsvc",
       "edgeupdate"
     ],
     "commands_executed": [
       "\"C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\jsc.exe\"",
-      "\"C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe\" /target:exe /out:\"C:\\Users\\Windows\\AppData\\Local\\Temp\\jsc.exe\" \"C:\\Users\\Windows\\AppData\\Local\\Temp\\guardian_src_3f2ce2395b98451eb36bf3287d83fd94.cs\"",
-      "\"C:\\Users\\Windows\\AppData\\Local\\Temp\\jsc.exe\" 5548",
-      "\"C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe\" /target:exe /out:\"C:\\Users\\Windows\\AppData\\Local\\Temp\\jsc.exe\" \"C:\\Users\\Windows\\AppData\\Local\\Temp\\guardian_src_b90abfcbd75f49a5a793335891ec9b3d.cs\"",
+      "C:\\Windows\\system32\\DllHost.exe /Processid:{AB8902B4-09CA-4BB6-B78D-A8F59079A8D5}",
+      "\"C:\\Users\\Windows\\AppData\\Local\\Microsoft\\OneDrive\\26.139.0720.0007\\FileCoAuth.exe\" -Embedding",
       "\"C:\\Windows\\system32\\backgroundTaskHost.exe\" -ServerName:App.AppXmtcan0h2tfbfy7k9kn8hbxb6dmzz1zh0.mca",
-      "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\cvtres.exe /NOLOGO /READONLY /MACHINE:IX86 \"/OUT:C:\\Users\\Windows\\AppData\\Local\\Temp\\RESDCED.tmp\" \"c:\\Users\\Windows\\AppData\\Local\\Temp\\CSCCFEA0CEE2A1F4AE18AF54A423DB26F87.TMP\"",
-      "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\cvtres.exe /NOLOGO /READONLY /MACHINE:IX86 \"/OUT:C:\\Users\\Windows\\AppData\\Local\\Temp\\RES2D40.tmp\" \"c:\\Users\\Windows\\AppData\\Local\\Temp\\CSCA746000E8F234F96B22361DC431260E4.TMP\""
+      "\"C:\\Windows\\system32\\BackgroundTaskHost.exe\" -ServerName:BackgroundTaskHost.WebAccountProvider",
+      "\"C:\\Windows\\SystemApps\\ShellExperienceHost_cw5n1h2txyewy\\ShellExperienceHost.exe\" -ServerName:App.AppXtk181tbxbce2qsex02s8tw7hfxa9xb3t.mca",
+      "C:\\Windows\\system32\\DllHost.exe /Processid:{338B40F9-9D68-4B53-A793-6B9AA0C5F63B}",
+      "C:\\Windows\\system32\\wbem\\wmiprvse.exe -secured -Embedding"
     ],
     "registry_keys_written": {
       "items": [
         "HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Control\\MediaResources",
-        "HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Control\\MediaResources\\msvideo",
-        "HKEY_CURRENT_USER\\Software\\E57D80BA1266314B7834",
-        "HKEY_CURRENT_USER\\SOFTWARE\\E57D80BA1266314B7834\\6811BC599CE86F2C75458CFE8C444638587548D52057207A5116A25A51B21E9A",
-        "HKEY_CURRENT_USER\\SOFTWARE\\E57D80BA1266314B7834\\4968FE9F00492AB5435E49A892414D835416C1E37E4A0DB63572BC96CF79F1D6",
-        "HKEY_CURRENT_USER\\SOFTWARE\\E57D80BA1266314B7834\\6D814665E3D09571870C947FC11FA3DF4854F92CB354B5CC4D4F7E2887F71366"
+        "HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Control\\MediaResources\\msvideo"
       ],
-      "total_count": 6,
+      "total_count": 2,
       "truncated": false
     }
   },
   "process_tree": [
     {
       "name": "866ac5e19171919e0861.exe",
-      "pid": 3128,
+      "pid": 7616,
       "parent_id": 4484,
       "module_path": "C:\\Users\\Windows\\AppData\\Local\\Temp\\866ac5e19171919e0861.exe",
       "children": [
         {
           "name": "jsc.exe",
-          "pid": 5548,
-          "parent_id": 3128,
+          "pid": 6240,
+          "parent_id": 7616,
           "module_path": "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\jsc.exe",
-          "children": [
-            {
-              "name": "csc.exe",
-              "pid": 9940,
-              "parent_id": 5548,
-              "module_path": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe",
-              "children": [
-                {
-                  "name": "cvtres.exe",
-                  "pid": 936,
-                  "parent_id": 9940,
-                  "module_path": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\cvtres.exe",
-                  "children": []
-                }
-              ]
-            },
-            {
-              "name": "jsc.exe",
-              "pid": 10340,
-              "parent_id": 5548,
-              "module_path": "C:\\Users\\Windows\\AppData\\Local\\Temp\\jsc.exe",
-              "children": []
-            },
-            {
-              "name": "csc.exe",
-              "pid": 15000,
-              "parent_id": 5548,
-              "module_path": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe",
-              "children": [
-                {
-                  "name": "cvtres.exe",
-                  "pid": 15496,
-                  "parent_id": 15000,
-                  "module_path": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\cvtres.exe",
-                  "children": []
-                }
-              ]
-            }
-          ]
+          "children": []
         }
       ]
     },
@@ -2294,11 +1155,75 @@
       "pid": 772,
       "parent_id": 640,
       "module_path": "C:\\Windows\\System32\\svchost.exe",
-      "children": []
+      "children": [
+        {
+          "name": "dllhost.exe",
+          "pid": 9220,
+          "parent_id": 772,
+          "module_path": "C:\\Windows\\System32\\dllhost.exe",
+          "children": []
+        },
+        {
+          "name": "FileCoAuth.exe",
+          "pid": 10068,
+          "parent_id": 772,
+          "module_path": "C:\\Users\\Windows\\AppData\\Local\\Microsoft\\OneDrive\\26.139.0720.0007\\FileCoAuth.exe",
+          "children": []
+        },
+        {
+          "name": "dllhost.exe",
+          "pid": 2264,
+          "parent_id": 772,
+          "module_path": "C:\\Windows\\System32\\dllhost.exe",
+          "children": []
+        },
+        {
+          "name": "dllhost.exe",
+          "pid": 3560,
+          "parent_id": 772,
+          "module_path": "C:\\Windows\\System32\\dllhost.exe",
+          "children": []
+        },
+        {
+          "name": "dllhost.exe",
+          "pid": 8420,
+          "parent_id": 772,
+          "module_path": "C:\\Windows\\System32\\dllhost.exe",
+          "children": []
+        },
+        {
+          "name": "FileCoAuth.exe",
+          "pid": 1816,
+          "parent_id": 772,
+          "module_path": "C:\\Users\\Windows\\AppData\\Local\\Microsoft\\OneDrive\\26.139.0720.0007\\FileCoAuth.exe",
+          "children": []
+        },
+        {
+          "name": "FileCoAuth.exe",
+          "pid": 3244,
+          "parent_id": 772,
+          "module_path": "C:\\Users\\Windows\\AppData\\Local\\Microsoft\\OneDrive\\26.139.0720.0007\\FileCoAuth.exe",
+          "children": []
+        },
+        {
+          "name": "FileCoAuth.exe",
+          "pid": 10096,
+          "parent_id": 772,
+          "module_path": "C:\\Users\\Windows\\AppData\\Local\\Microsoft\\OneDrive\\26.139.0720.0007\\FileCoAuth.exe",
+          "children": []
+        },
+        {
+          "name": "WmiPrvSE.exe",
+          "pid": 1184,
+          "parent_id": 772,
+          "module_path": "C:\\Windows\\System32\\wbem\\WmiPrvSE.exe",
+          "children": []
+        }
+      ]
     },
     {
       "name": "svchost.exe",
-      "pid": 7916,
+      "pid": 8116,
       "parent_id": 640,
       "module_path": "C:\\Windows\\System32\\svchost.exe",
       "children": []
@@ -2409,17 +1334,6 @@
         "evasion",
         "c2",
         "fileless",
-        "shellcode"
-      ]
-    },
-    {
-      "name": "unbacked_process_enumeration",
-      "description": "Attempted to enumerate running processes from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "categories": [
-        "discovery",
-        "fileless",
-        "reconnaissance",
         "shellcode"
       ]
     },

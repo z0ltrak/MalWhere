@@ -21,32 +21,32 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # --- Config patch (build-time, host-agnostic only) -------------------------
-# service_bind_address: listen on all interfaces. cape and inetsim both run
-#   with network_mode: host (see docker-compose.yml + routing.conf comments
-#   for why), so "all interfaces" here means the host's real interfaces —
-#   that's exactly what's needed for the guest VM to reach this service.
 # service_run_as_user: bind the privileged ports (53/80/443) as root, then
 #   drop to the unprivileged inetsim user for each connection handler —
 #   the package creates this user in postinst, no extra setup needed.
 #
-# dns_default_ip is NOT patched here — it has to be the host's own
-# libvirt-bridge-facing IP, which varies per machine and isn't known at
-# build time. entrypoint.sh patches it at container start from the
-# LIBVIRT_GATEWAY environment variable (sourced from .env, written by
-# scripts/host-prereqs.sh — same value CAPE's own conf files reference as
-# %(ENV:LIBVIRT_GATEWAY)s).
+# service_bind_address is NOT patched here (was hardcoded to 0.0.0.0 --
+# "all interfaces" -- until this collided with malwhere-misp's own need for
+# host port 443: both are host-network-mode/host-port-mapped services that
+# want it, and the guest VM only ever reaches inetsim through one specific
+# interface anyway, the libvirt bridge). Patched at runtime in entrypoint.sh
+# to the same LIBVIRT_GATEWAY IP already used for dns_default_ip below --
+# host-agnostic and not known at build time, same reasoning as that one.
 RUN sed -i \
-        -e 's/^#service_bind_address .*/service_bind_address 0.0.0.0/' \
         -e 's/^#service_run_as_user .*/service_run_as_user inetsim/' \
         /etc/inetsim/inetsim.conf && \
-    grep -q '^service_bind_address 0.0.0.0' /etc/inetsim/inetsim.conf && \
     grep -q '^service_run_as_user inetsim' /etc/inetsim/inetsim.conf
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+# 127.0.0.1 would silently stop working once service_bind_address narrows
+# to LIBVIRT_GATEWAY -- shell form (not exec/JSON form) so this expands the
+# container's own env at check time, not build time; the fallback only
+# matters if the container somehow starts without LIBVIRT_GATEWAY set
+# (entrypoint.sh already fails fast on that before inetsim itself starts).
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD nc -z 127.0.0.1 80 || exit 1
+    CMD nc -z ${LIBVIRT_GATEWAY:-127.0.0.1} 80 || exit 1
 
 # Runs in the foreground by design (the init.d script backgrounds this same
 # binary with start-stop-daemon for a real host install — we skip that and

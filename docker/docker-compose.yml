@@ -407,7 +407,14 @@ services:
     container_name: malwhere-misp
     profiles: [sandbox]
     ports:
-      - "443:443" # MISP web UI
+      # Bound to loopback only, not "443:443" (which Docker publishes on
+      # 0.0.0.0 by default): a 0.0.0.0 bind blocks ANY other bind on the
+      # same port network-wide, host-network-mode services included --
+      # found colliding with inetsim's own port 443 (see inetsim's
+      # entrypoint.sh, which narrows IT to the libvirt bridge IP only).
+      # 127.0.0.1 still serves the documented https://localhost access
+      # pattern with no behavior change, just without the wildcard.
+      - "127.0.0.1:443:443" # MISP web UI
     volumes:
       - misp_data:/var/www/MISP/app/files
       - misp_logs:/var/www/MISP/app/tmp/logs

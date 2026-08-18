@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T10:33:21.380480+00:00",
+  "generated_at": "2026-08-18T12:02:07.498540+00:00",
   "sample": {
     "family": "asyncrat",
     "static_sha256": "866ac5e19171919e0861a591f746f7b8b746a59cb9aec48306539569d83373c2",
@@ -48,89 +48,14 @@
         "type": "PE32+ executable (GUI) x86-64, for MS Windows"
       },
       {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "774cec1fc33b44ce37c1cc3be2f6b2cdb6afca892ac99762747a0234a2f9384a",
-        "md5": "59c3026d500244d86ea0cc37b146fb04",
-        "sha1": "aa0a27b91b3f5c2c5b0d0d9cd9a22853baed6859",
-        "filename": "jsc.exe",
-        "type": "PE32 executable (console) Intel 80386 Mono/.Net assembly, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "97d5b2464371cc9a0712dd5dcb1b83940b3c9e3bbe505e5a068f4126def9b567",
-        "md5": "989d1f618c8d6fa47385bb96fd7852f6",
-        "sha1": "9fdc9f62ad54d80d3c31523e9d126c0646d93a2e",
-        "filename": "CSCA746000E8F234F96B22361DC431260E4.TMP",
-        "type": "MSVC .res"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "ef197777b013332f561df748f5b07cf35797c51d779df16c9401d2c37e1e8096",
-        "md5": "b1981db5489d7a07ab183c2db154e2cd",
-        "sha1": "9f1c19bfaa838802e4a9fa281e45b8764feb950d",
-        "filename": "RES2D40.tmp",
-        "type": "Intel 80386 COFF object file, not stripped, 3 sections, symbol offset=0x6c0, 10 symbols, created Tue Aug 18 08:32:52 2026, 1st section name \".debug$S\""
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "84a10332fb41e3a4b7a21be7886f762ba1ca41aa17743e5d0ca8fc90b3494e5d",
-        "md5": "515e4b44e0e72466e5f385a9599c9146",
-        "sha1": "f8300d28a2603c72b1a9b8729c130ad26a7c9429",
-        "filename": "RESDCED.tmp",
-        "type": "Intel 80386 COFF object file, not stripped, 3 sections, symbol offset=0x6c0, 10 symbols, created Tue Aug 18 08:32:31 2026, 1st section name \".debug$S\""
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "3ee1bf1ab210527e7543dc78ca3511904bf7770d571eb0d11746edd9f5bf814a",
-        "md5": "b7d40eb7e1328728d647678e1ea0a4dc",
-        "sha1": "43850a88c7f012df9e7349886497271c83e2bdaa",
-        "filename": "guardian_src_b90abfcbd75f49a5a793335891ec9b3d.cs",
-        "type": "ASCII text, with CRLF line terminators"
-      },
-      {
         "role": "cape_payload",
         "source": "dynamic",
-        "sha256": "4cf0347f4f13aaeab78ed05b137b8d076602c4e0a59dd8a5460d8088ab5af38e",
-        "md5": "8b1aa64ab2226fbfcd40ea62ed09d995",
-        "sha1": "3583334a0337c97c94cfca437e41f24b7697227a",
-        "filename": "4cf0347f4f13aaeab78ed05b137b8d076602c4e0a59dd8a5460d8088ab5af38e",
-        "type": "PE32 executable (DLL) (GUI) Intel 80386 Mono/.Net assembly, for MS Windows",
-        "cape_type": "Unpacked PE Image: 32-bit DLL"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "2d3a58ad60becdcf1563549ffb540c7ef6f2b395dc821f7f29118540c7487311",
-        "md5": "0b90aac8396e3baf040b89050cc877cc",
-        "sha1": "292334c80c53c2f1fe2401901d4b7b9678202cb7",
-        "filename": "2d3a58ad60becdcf1563549ffb540c7ef6f2b395dc821f7f29118540c7487311",
-        "type": "data",
-        "cape_type": "unknown"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "e0557aa545c5d7d6afff18fb52ee6bdc856d46b0abd67fe586db0eb5f22b86a7",
-        "md5": "ee26393cb6fcd60f07223e5aa207fbdb",
-        "sha1": "944ba8add48562ee8c24acfcb90da3cf8fdae9ba",
-        "filename": "e0557aa545c5d7d6afff18fb52ee6bdc856d46b0abd67fe586db0eb5f22b86a7",
-        "type": "data",
-        "cape_type": "Unpacked Shellcode"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "6811bc599ce86f2c75458cfe8c444638587548d52057207a5116a25a51b21e9a",
-        "md5": "d7528acb0fd8b381f51ccd0092426f75",
-        "sha1": "1f551aeae145094e0b913238847742e28113d425",
-        "filename": "6811bc599ce86f2c75458cfe8c444638587548d52057207a5116a25a51b21e9a",
-        "type": "PE32 executable (DLL) (GUI) Intel 80386 Mono/.Net assembly, for MS Windows",
-        "cape_type": "Unpacked PE Image: 32-bit DLL"
+        "sha256": "da83c9c8566fe5a2dd2b2ea004175422dd47122b536e570ced82765259b9e507",
+        "md5": "3c99e22e782cdaa1ea6bf4061d953c98",
+        "sha1": "d193bdd984aa64c2d51ef493d75b44ef06d57c16",
+        "filename": "da83c9c8566fe5a2dd2b2ea004175422dd47122b536e570ced82765259b9e507",
+        "type": "PE32 executable (GUI) Intel 80386, for MS Windows",
+        "cape_type": "XWorm payload: 32-bit executable"
       },
       {
         "role": "cape_payload",
@@ -145,42 +70,22 @@
       {
         "role": "cape_payload",
         "source": "dynamic",
-        "sha256": "0fd45e05875e63923d15cb5511fb8abd31a5a4c19263424d74f7ed58f8f36353",
-        "md5": "b2e8f55e0a4848f06390460bcbf508b3",
-        "sha1": "ee66ffb41e9b67bc23fdc9ef4b053c9190eb3b80",
-        "filename": "0fd45e05875e63923d15cb5511fb8abd31a5a4c19263424d74f7ed58f8f36353",
-        "type": "PE32 executable (DLL) (GUI) Intel 80386 Mono/.Net assembly, for MS Windows",
-        "cape_type": "Unpacked PE Image: 32-bit DLL"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "3f3eae7ae2c0f09eef42f72a478c0bd00124f8c7112f3bd2dc56bea05c38244e",
-        "md5": "4feacca01c1b5953e10024a174a6b2e8",
-        "sha1": "96bad302e6f3d897d391c384c9413a18a9925e19",
-        "filename": "3f3eae7ae2c0f09eef42f72a478c0bd00124f8c7112f3bd2dc56bea05c38244e",
+        "sha256": "f618bb8e9006dcb961383413aa6d64bd8fa062f5ff8a3e8bebec15ba7d39d5dc",
+        "md5": "6a61a1883634503d83da5dc7f84c7fcd",
+        "sha1": "fdbc36571eb2663fe394b839987dbed0ea414aaf",
+        "filename": "f618bb8e9006dcb961383413aa6d64bd8fa062f5ff8a3e8bebec15ba7d39d5dc",
         "type": "data",
         "cape_type": "Unpacked Shellcode"
       },
       {
         "role": "cape_payload",
         "source": "dynamic",
-        "sha256": "291a867e24eb55bdeec297bb409fedb82229cb7349c9687490033d06e2ad3a0b",
-        "md5": "36003a79929bd44932a8f71c57eae3bb",
-        "sha1": "492bb86f72e3963445b48c74f04a91f869e9750d",
-        "filename": "291a867e24eb55bdeec297bb409fedb82229cb7349c9687490033d06e2ad3a0b",
+        "sha256": "74e3b1d95a5e6f7d53342f65e0411950e87808277e33c2a084231f8b9956674e",
+        "md5": "002f6275925ffb2a0f2df252ff10edae",
+        "sha1": "4204ebcd524d64ef4e969b64a8140ee42f519a18",
+        "filename": "74e3b1d95a5e6f7d53342f65e0411950e87808277e33c2a084231f8b9956674e",
         "type": "data",
         "cape_type": "Unpacked Shellcode"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "4e5b174d324c09cef64f5ba2e6dee8fcafc5c2a2da629149e72c7df2258f560a",
-        "md5": "da7518dc56a2d9799c4e240b26ff4ceb",
-        "sha1": "7b734558ecbe883abbdf7057228a48673355700f",
-        "filename": "4e5b174d324c09cef64f5ba2e6dee8fcafc5c2a2da629149e72c7df2258f560a",
-        "type": "PE32 executable (GUI) Intel 80386, for MS Windows",
-        "cape_type": "XWorm payload: 32-bit executable"
       },
       {
         "role": "cape_payload",
@@ -195,49 +100,10 @@
       {
         "role": "cape_payload",
         "source": "dynamic",
-        "sha256": "7baaad8e934d0e932c3d52cf715cfdb7338cbd13ca0dc2a117ff65a2f196b261",
-        "md5": "e699cf292aa6314577723fc3563062b1",
-        "sha1": "e09ee0f984fe91c28c07404874b0b9536dc2fd30",
-        "filename": "7baaad8e934d0e932c3d52cf715cfdb7338cbd13ca0dc2a117ff65a2f196b261",
-        "type": "data",
-        "cape_type": "Unpacked Shellcode"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "593d421242088474499669c22b4c0bd731b6d5cd4892e0cbb0684d986be1ce00",
-        "md5": "eb63687bf17bec95f93d85cc05d3ab58",
-        "sha1": "bf98779e36971c4abd6e1c4954680f469617a96f",
-        "filename": "593d421242088474499669c22b4c0bd731b6d5cd4892e0cbb0684d986be1ce00",
-        "type": "data",
-        "cape_type": "Unpacked Shellcode"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "164b0977eaa28e23b77afcd6c73a7775b8b46553e37b671a384fbff86ebefaf7",
-        "md5": "248e3d9c4057aca64794925e87ef45de",
-        "sha1": "27773e707a5dcb211d2e272e156145128cef52f7",
-        "filename": "164b0977eaa28e23b77afcd6c73a7775b8b46553e37b671a384fbff86ebefaf7",
-        "type": "data",
-        "cape_type": "Unpacked Shellcode"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "b8f036555957089bf8bf0c8b0adc9bf443600a6651651def225350a943e7ea86",
-        "md5": "7313c9a3865aaf0d1fbe43ecf702782d",
-        "sha1": "397c06a8bdc142a6da8d7eb0d14147391fb97224",
-        "filename": "b8f036555957089bf8bf0c8b0adc9bf443600a6651651def225350a943e7ea86",
-        "type": "PE32 executable (DLL) (GUI) Intel 80386 Mono/.Net assembly, for MS Windows"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "2273ffd70e7cf3bad8a79795d1a9b499171a1cac8a0d994571267dbe435cf7a0",
-        "md5": "16d116d54d6215cee20deaee07e05a4f",
-        "sha1": "fd17b8272165141c0b6213e21f58a8d57796e10a",
-        "filename": "2273ffd70e7cf3bad8a79795d1a9b499171a1cac8a0d994571267dbe435cf7a0",
+        "sha256": "f82eece7867d2a435d9d8c3f931b7160f45d0785df4f83879f5d433abcd0d1ca",
+        "md5": "638d7aca393095161f5a835b29852978",
+        "sha1": "9f6d0bdc7e60457020ba5e951a7ae6407bf67d80",
+        "filename": "f82eece7867d2a435d9d8c3f931b7160f45d0785df4f83879f5d433abcd0d1ca",
         "type": "data",
         "cape_type": "Unpacked Shellcode"
       }
@@ -246,12 +112,6 @@
       "domains": [
         {
           "value": "cdn.onenote.net",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "keyauth.win",
           "sources": [
             "dynamic"
           ]
@@ -265,19 +125,13 @@
           ]
         },
         {
-          "value": "104.26.0.5",
+          "value": "85.208.10.204",
           "sources": [
             "dynamic"
           ]
         },
         {
           "value": "203.202.232.132",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "85.208.10.204",
           "sources": [
             "dynamic"
           ]
@@ -297,7 +151,7 @@
           ]
         },
         {
-          "value": "http://schemas.microsoft.com/SMI/2019/WindowsSettings\">UTF-8</activeCodePage>",
+          "value": "http://schemas.microsoft.com/SMI/2016/WindowsSettings\">PerMonitorV2</dpiAwareness>",
           "sources": [
             "static"
           ]
@@ -309,75 +163,9 @@
           ]
         },
         {
-          "value": "http://schemas.microsoft.com/SMI/2016/WindowsSettings\">PerMonitorV2</dpiAwareness>",
+          "value": "http://schemas.microsoft.com/SMI/2019/WindowsSettings\">UTF-8</activeCodePage>",
           "sources": [
             "static"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787046343&P2=404&P3=2&P4=LYOSv5BGbKSEtZstPE8GMK0s62C19IjuZye2EayUZLBcmBTn5deXapSWm%2fPuXUwavwBi411iPWb%2fMoFt%2fJ36bw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/c/msdownload/update/software/defu/2024/01/mpsigstub_6103d9f6bf95c772c8b7ee89aee370cdca4642f8.exe?cacheHostOrigin=2.au.download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/phf/d/dod/ph/prod5/msdownload/update/software/defu/2026/07/1024/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe.json?cacheHostOrigin=download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/phf/d/dod/ph/prod8/msdownload/update/software/defu/2026/08/1024/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe.json?cacheHostOrigin=download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/phf/c/doc/ph/prod5/msdownload/update/software/defu/2026/08/1024/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe.json?cacheHostOrigin=download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/c/msdownload/update/software/defu/2026/08/am_delta_d659512d3acd2020a54b1f8ceac7d8763167e6c0.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/phf/c/doc/ph/prod5/msdownload/update/software/ftpk/2023/09/1024/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab.json?cacheHostOrigin=download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=2.au.download.windowsupdate.com",
-          "sources": [
-            "dynamic"
           ]
         },
         {
@@ -387,67 +175,7 @@
           ]
         },
         {
-          "value": "http://85.208.10.204/phf/d/dod/ph/prod5/msdownload/update/software/updt/2023/12/1024/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab.json?cacheHostOrigin=download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/phf/c/doc/ph/prod5/msdownload/update/software/secu/2025/09/1024/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab.json?cacheHostOrigin=download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/phf/d/dod/ph/prod5/msdownload/update/software/uprl/2026/08/1024/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe.json?cacheHostOrigin=download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787650373&P2=404&P3=2&P4=Rddb366RCHI05hJw0Y6sOl8OzJ6Zp53q6qb2hxute6cF7P3ZykvKAIM%2bbVYQhr3mFXRbcT3MR9jQ3MRD1w6KMg%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/d/msdownload/update/software/updt/2023/12/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab?cacheHostOrigin=3.au.download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/d/msdownload/update/software/updt/2024/05/windows10.0-kb5001716-x64_a2bb12707df4d0d7ecfc8693d3ce965aa0ff2c9d.cab?cacheHostOrigin=4.au.download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/c/msdownload/update/software/secu/2025/09/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab?cacheHostOrigin=4.au.download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/d/msdownload/update/software/uprl/2026/08/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/filestreamingservice//files/af08325a-a4d7-4d06-9037-dff7a4325c40/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/filestreamingservice//files/4bb97abf-ed3a-4447-bac6-93373bb889e0/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "http://85.208.10.204/filestreamingservice//files/31568bc2-a514-408d-beb6-1439e703c889/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
+          "value": "http://85.208.10.204/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787659091&P2=404&P3=2&P4=nYEiEweN6Abume7wUUT155lbMsE5XN7OwFHQ4jZGqpim5iT7bmRSexTus99gEhfVo6fIlRIqkNq9VaNBdKeVkQ%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
           "sources": [
             "dynamic"
           ]
@@ -475,30 +203,6 @@
           "sources": [
             "dynamic"
           ]
-        },
-        {
-          "value": "HKEY_CURRENT_USER\\Software\\E57D80BA1266314B7834",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "HKEY_CURRENT_USER\\SOFTWARE\\E57D80BA1266314B7834\\6811BC599CE86F2C75458CFE8C444638587548D52057207A5116A25A51B21E9A",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "HKEY_CURRENT_USER\\SOFTWARE\\E57D80BA1266314B7834\\4968FE9F00492AB5435E49A892414D835416C1E37E4A0DB63572BC96CF79F1D6",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "HKEY_CURRENT_USER\\SOFTWARE\\E57D80BA1266314B7834\\6D814665E3D09571870C947FC11FA3DF4854F92CB354B5CC4D4F7E2887F71366",
-          "sources": [
-            "dynamic"
-          ]
         }
       ],
       "file_paths": [],
@@ -510,13 +214,13 @@
           ]
         },
         {
-          "value": "1f676c76-80e1-4239-95bb-83d0f6d0da78",
+          "value": "e2011457-1546-43c5-a5fe-008deee3d3f0",
           "sources": [
             "static"
           ]
         },
         {
-          "value": "4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38",
+          "value": "1f676c76-80e1-4239-95bb-83d0f6d0da78",
           "sources": [
             "static"
           ]
@@ -528,13 +232,37 @@
           ]
         },
         {
-          "value": "e2011457-1546-43c5-a5fe-008deee3d3f0",
+          "value": "4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38",
           "sources": [
             "static"
           ]
         },
         {
           "value": "taFdiWQVNTqreQ9V",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Local\\SM0:9220:304:WilStaging_02",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Local\\SM0:2264:304:WilStaging_02",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Local\\SM0:3560:304:WilStaging_02",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Local\\SM0:8420:304:WilStaging_02",
           "sources": [
             "dynamic"
           ]
@@ -574,92 +302,6 @@
           "confidence": "high",
           "name": "",
           "justification": "CAPE signature 'registry_credential_store_access' fired (severity=3, confidence=100%, categories=['persistence', 'lateral', 'credential_dumping'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1027",
-      "technique_name": "Obfuscated Files or Information",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "high",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "dotnet_code_compile",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'dotnet_code_compile' fired (severity=3, confidence=100%, categories=['evasion', 'execution', 'dropper', 'dotnet', 'exploit', 'office'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_crypto_operations",
-          "confidence": "low",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_crypto_operations' fired (severity=3, confidence=40%, categories=['evasion', 'c2', 'fileless', 'obfuscation', 'shellcode'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "pe_deep_entrypoint",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'pe_deep_entrypoint' fired (severity=3, confidence=50%, categories=['packer', 'static'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "pe_tls_callbacks",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'pe_tls_callbacks' fired (severity=2, confidence=50%, categories=['packer', 'anti-debug', 'static'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "dotnet_csc_build",
-          "confidence": "low",
-          "name": "",
-          "justification": "CAPE signature 'dotnet_csc_build' fired (severity=3, confidence=20%, categories=['command'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1027.004",
-      "technique_name": "Unknown ATT&CK technique (T1027.004)",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "high",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "dotnet_code_compile",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'dotnet_code_compile' fired (severity=3, confidence=100%, categories=['evasion', 'execution', 'dropper', 'dotnet', 'exploit', 'office'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "dotnet_csc_build",
-          "confidence": "low",
-          "name": "",
-          "justification": "CAPE signature 'dotnet_csc_build' fired (severity=3, confidence=20%, categories=['command'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -706,14 +348,6 @@
           "confidence": "medium",
           "name": "",
           "justification": "CAPE signature 'registers_vectored_exception_handler' fired (severity=2, confidence=80%, categories=['evasion', 'execution', 'injection'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "exception_driven_execution",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'exception_driven_execution' fired (severity=3, confidence=50%, categories=['evasion', 'anti_debugging', 'stealth', 'obfuscation'])"
         },
         {
           "source": "dynamic",
@@ -784,29 +418,6 @@
       "cross_level_sibling": null
     },
     {
-      "technique_id": "T1057",
-      "technique_name": "Process Discovery",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "high",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_process_enumeration",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_process_enumeration' fired (severity=3, confidence=100%, categories=['discovery', 'fileless', 'reconnaissance', 'shellcode'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
       "technique_id": "T1059",
       "technique_name": "Command and Scripting Interpreter",
       "final_confidence": "high",
@@ -824,29 +435,6 @@
           "confidence": "high",
           "name": "",
           "justification": "CAPE signature 'unbacked_library_load' fired (severity=3, confidence=100%, categories=['evasion', 'execution', 'fileless'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1070",
-      "technique_name": "Indicator Removal",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "high",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "deletes_executed_files",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'deletes_executed_files' fired (severity=3, confidence=100%, categories=['persistence', 'stealth'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -882,14 +470,6 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "network_ip_exe",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'network_ip_exe' fired (severity=5, confidence=100%, categories=['network', 'downloader'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
           "evidence": "network_http",
           "confidence": "low",
           "name": "",
@@ -918,14 +498,6 @@
           "confidence": "high",
           "name": "",
           "justification": "CAPE signature 'static_pe_anomaly' fired (severity=3, confidence=80%, categories=['static'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "suspicious_tld",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'suspicious_tld' fired (severity=2, confidence=100%, categories=['network'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -973,14 +545,6 @@
       "static_best_confidence": null,
       "dynamic_best_confidence": "high",
       "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "creates_largekey",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'creates_largekey' fired (severity=3, confidence=80%, categories=['stealth'])"
-        },
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
@@ -1176,14 +740,6 @@
           "confidence": "high",
           "name": "",
           "justification": "CAPE signature 'unbacked_library_load' fired (severity=3, confidence=100%, categories=['evasion', 'execution', 'fileless'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "dropper",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'dropper' fired (severity=2, confidence=50%, categories=['dropper'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -1223,6 +779,45 @@
           "confidence": "high",
           "name": "Debugger Evasion",
           "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1027",
+      "technique_name": "Obfuscated Files or Information",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "dynamic"
+      ],
+      "static_best_confidence": null,
+      "dynamic_best_confidence": "medium",
+      "evidence": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "unbacked_crypto_operations",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'unbacked_crypto_operations' fired (severity=3, confidence=40%, categories=['evasion', 'c2', 'fileless', 'obfuscation', 'shellcode'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "pe_deep_entrypoint",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'pe_deep_entrypoint' fired (severity=3, confidence=50%, categories=['packer', 'static'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "pe_tls_callbacks",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'pe_tls_callbacks' fired (severity=2, confidence=50%, categories=['packer', 'anti-debug', 'static'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -1304,61 +899,15 @@
       ],
       "cross_level_corroboration": false,
       "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1518",
-      "technique_name": "Unknown ATT&CK technique (T1518)",
-      "final_confidence": "low",
-      "confidence_score": 30,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "low",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "amsi_enumeration",
-          "confidence": "low",
-          "name": "",
-          "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1562",
-      "technique_name": "Impair Defenses",
-      "final_confidence": "low",
-      "confidence_score": 30,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "low",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "amsi_enumeration",
-          "confidence": "low",
-          "name": "",
-          "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
     }
   ],
   "summary": {
-    "total_techniques": 22,
-    "high": 17,
-    "medium": 3,
-    "low": 2,
+    "total_techniques": 17,
+    "high": 13,
+    "medium": 4,
+    "low": 0,
     "both_sources": 1,
     "static_only": 3,
-    "dynamic_only": 18
+    "dynamic_only": 13
   }
 }

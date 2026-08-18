@@ -19,6 +19,19 @@ grep -q "^dns_default_ip ${LIBVIRT_GATEWAY}$" /etc/inetsim/inetsim.conf || {
     exit 1
 }
 
+# service_bind_address: narrowed from 0.0.0.0 ("all interfaces") to just
+# this one -- the guest VM only ever reaches inetsim via the libvirt
+# bridge anyway (same IP as dns_default_ip above), and 0.0.0.0 meant
+# nothing else on the host could ever bind port 443 (found colliding with
+# malwhere-misp's own port 443). Same LIBVIRT_GATEWAY var, same
+# build-time-vs-runtime reasoning as dns_default_ip.
+sed -i "s/^service_bind_address .*/service_bind_address ${LIBVIRT_GATEWAY}/;s/^#service_bind_address .*/service_bind_address ${LIBVIRT_GATEWAY}/" \
+    /etc/inetsim/inetsim.conf
+grep -q "^service_bind_address ${LIBVIRT_GATEWAY}$" /etc/inetsim/inetsim.conf || {
+    echo "FATAL: failed to patch service_bind_address into inetsim.conf." >&2
+    exit 1
+}
+
 # /var/log/inetsim is bind-mounted from the host (see docker-compose.yml),
 # which overrides whatever ownership the package's postinst set up at build
 # time. Per-connection handlers run as the unprivileged `inetsim` user
