@@ -205,11 +205,21 @@ meaningful rather than cosmetic, precision should be measurably higher
 among \emph{high}-confidence findings (those corroborated across
 sources or across technique levels) than among single-source
 \emph{medium}/\emph{low} findings. Across the three validated samples,
-every false positive identified in the audit above originated from a
-single-source finding; no finding that reached \emph{high} confidence
-through cross-source or cross-level corroboration was among the 15
-discrepancies investigated. This is consistent with the reconciliation
-model doing real calibration work rather than merely relabeling
-findings, though the small sample size (three families) means this
-should be read as a directional signal, not a statistically powered
-claim, a limitation stated explicitly in \S\ref{sec:limitations}.
+14 of the 15 discrepancies identified in the audit above originated
+from a single-source finding. The one exception, RoningLoader's
+\technique{T1497}, reached \emph{high} confidence through genuine
+cross-source corroboration -- a coherent anti-sandbox API combination in
+the static evidence, three independent CAPE signatures in the dynamic
+evidence -- yet remains one of the two findings left deliberately open
+above, specifically because no independent textual confirmation exists
+in the manual report, not because either source's evidence is weak.
+Read this way it does not contradict the calibration argument: the
+model correctly recognized strong, corroborated evidence; what is
+genuinely uncertain is whether the ground truth is complete, the same
+asymmetry the \technique{T1620} case establishes elsewhere in this
+audit, not whether the confidence tier assigned to it was earned. This
+is consistent with the reconciliation model doing real calibration work
+rather than merely relabeling findings, though the small sample size
+(three families) means this should be read as a directional signal, not
+a statistically powered claim, a limitation stated explicitly in
+\S\ref{sec:limitations}.

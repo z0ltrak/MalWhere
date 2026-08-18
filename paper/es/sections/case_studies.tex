@@ -210,15 +210,30 @@ lista C2 HTTP de 31 nodos y 29 IP \'unicas recuperada mediante
 ingenier\'ia inversa manual, con el mismo protocolo que produjo la
 Tabla~\ref{tab:validation}. Tras el filtro de ruido de sandbox, la
 salida de captura din\'amica de la
-tuber\'ia coincide exactamente con esa lista: 29 de 29, cero
-omisiones, cero contaminaci\'on restante. La propia firma
+tuber\'ia recupera exactamente esa lista: 29 de 29, cero
+omisiones. La propia firma
 \code{dead\_connect} de CAPE (confianza 100\%, ``31 unique'' intentos
 inalcanzables) corrobora de forma independiente por qu\'e cada una de
 ellas aparece como inalcanzable en la traza del sandbox: el sandboxing
 con contenci\'on prioritaria (\S\ref{sec:limitations}, punto~6)
 significa que los propios intentos de conexi\'on de la muestra a su C2
 real fallan por dise\~no, no porque las direcciones recuperadas sean
-ficticias.
+ficticias. Sin embargo, la contaminaci\'on no es del todo cero: al
+reauditar esta misma afirmaci\'on durante la migraci\'on a ATT\&CK v19
+(2026-08) se encontraron 5 IP adicionales que los dos filtros
+anteriores no capturan, ninguna afecta a las puntuaciones a nivel de
+t\'ecnica anteriores, ya que el filtrado de IOC y la puntuaci\'on de
+t\'ecnicas son independientes. Dos, que resuelven a nombres de host
+\code{*.msedge.net} autoexplicativos en el propio ASN de Microsoft,
+se confirmaron y se a\~nadieron a la lista de permitidos del mismo modo
+que las entradas existentes; las tres restantes, una que resuelve a
+\code{ip-api.com} (un servicio p\'ublico de geolocalizaci\'on por IP,
+plausiblemente una t\'ecnica gen\'uina de autorreconocimiento
+anti-sandbox y no contaminaci\'on en absoluto) y dos direcciones sin
+resolver en rangos de Cloudflare, se dejan abiertas a la espera de la
+misma disciplina de verificaci\'on individual aplicada a cada otra
+entrada de esta lista de permitidos, en lugar de a\~nadirse solo por su
+ASN (\S\ref{sec:limitations}).
 
 La lecci\'on se generaliza igual que en los dem\'as casos: cada
 exclusi\'on es una entrada espec\'ifica, justificada individualmente y

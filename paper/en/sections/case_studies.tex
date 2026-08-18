@@ -179,14 +179,25 @@ The fix is independently checkable against WhiteSnakeStealer's own
 ground truth, which documents a 31-node, 29-unique-IP HTTP C2 list
 recovered by manual reverse engineering, the same protocol that
 produced Table~\ref{tab:validation}. After the sandbox-noise filter,
-the pipeline's dynamic-capture output
-matches that list exactly: 29 of 29, zero missed, zero remaining
-contamination. CAPE's own \code{dead\_connect} signature (confidence
+the pipeline's dynamic-capture output recovers that list exactly: 29 of
+29, zero missed. CAPE's own \code{dead\_connect} signature (confidence
 100\%, ``31 unique'' unreachable attempts) independently corroborates
 why every one of these reads as unreachable in the sandbox trace:
 containment-first sandboxing (\S\ref{sec:limitations}, item~6) means the
 sample's own connection attempts to its real C2 fail by design, not
-because the recovered addresses are fabricated.
+because the recovered addresses are fabricated. Contamination is not
+fully zero, though: re-auditing this exact claim during the ATT\&CK
+migration (2026-08) found 5 further IPs the two filters above do not
+catch, none affecting the technique-level scores above since IOC
+filtering and technique scoring are independent. Two, resolving to
+self-identifying \code{*.msedge.net} hostnames on Microsoft's own ASN,
+were confirmed and added to the allowlist the same way the existing
+entries were; the remaining three, one resolving to \code{ip-api.com}
+(a public IP-geolocation lookup, plausibly a genuine anti-sandbox
+self-recon technique rather than contamination at all) and two
+unresolved Cloudflare-range addresses, are left open pending the same
+individual verification discipline applied to every other entry in this
+allowlist, rather than added on ASN alone (\S\ref{sec:limitations}).
 
 The lesson generalizes the same way the other cases do: every exclusion
 is a specific, individually-justified, auditable entry, logged with its

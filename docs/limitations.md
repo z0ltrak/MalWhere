@@ -5,13 +5,14 @@ diagnosed to a specific, verifiable cause rather than asserted generally.
 Drafted as source material for the thesis's own limitations discussion, not
 as thesis prose itself.
 
-Current evaluation state (family-level P/R/F1, `evaluation/results/summary.md`):
-Akira 1.00/1.00/1.00 (zero missed, zero false positives), WhiteSnake
-1.00/0.80/0.89 (zero false positives, 9 missed techniques remaining),
-RoningLoader 0.90/0.68/0.78 (0.88/0.84/0.86 counting the resubmission loop's
-dropped-component coverage: see §1; 2 open false positives, §4). RoningLoader
-is the only sample with any false positives left; both are deliberately
-unresolved pending the analyst's own read of the evidence, not oversights.
+Current evaluation state (family-level P/R/F1, `evaluation/results/summary.md`,
+post ATT&CK v14->v19 migration, 2026-08): Akira 0.92/1.00/0.96 (1 false
+positive: T1070, see §3), WhiteSnake 1.00/0.80/0.89 (zero false positives, 9
+missed techniques remaining), RoningLoader 0.85/0.68/0.76 (0.84/0.84/0.84
+counting the resubmission loop's dropped-component coverage: see §1; 3 open
+false positives -- T1027/T1497, §4, plus T1070, §3). Every false positive
+across all three samples is deliberately left present or unresolved pending
+the analyst's own read of the evidence, not an oversight.
 
 ## 1. Small validation set (N=3)
 
@@ -402,3 +403,33 @@ within Initial Access/Lateral Movement's few genuinely-applicable
 sub-techniques (e.g. T1091 Removable Media, T1570 Lateral Tool Transfer)
 is the only realistic further increment; Reconnaissance/Resource
 Development are a hard boundary, not a backlog item.
+
+## 12. Network IOC contamination allowlist: 2 fixed, 3 open
+
+Re-auditing the "zero remaining contamination" claim in the Network IOC
+Contamination case study (`§sec:case-ioc-noise` in the paper) during the
+ATT&CK v19 migration (2026-08) found WhiteSnakeStealer's live pipeline
+output carried 34 IPs, not the 29 the case study claims -- the claim was
+stale, not a live bug in the technique-scoring path (`evaluation`'s F1
+numbers are untouched by IOC filtering, confirmed by re-running the full
+evaluation harness before and after). Each of the 5 extras was resolved
+via live ASN/reverse-DNS lookup, not guessed:
+
+- **Fixed, added to `_BENIGN_INFRASTRUCTURE_IPS`**: `104.212.67.104`
+  (`chi26r9c.msedge.net`) and `104.212.67.66` (`bna30r9a.msedge.net`),
+  both Microsoft AS8075. Unlike the Azure Front Door case the code
+  deliberately excludes (unexplained hostname, domain-fronting
+  ambiguity), these resolve to self-identifying `*.msedge.net` names --
+  no ambiguity to be cautious about.
+- **Open, needs the same individual-verification discipline before
+  either allowlisting or accepting as a finding**: `172.64.154.167`
+  (Cloudflare AS13335, no hostname, repeats identically in both
+  RoningLoader and WhiteSnakeStealer -- matches the cross-family-repeat
+  test the existing allowlist entries were built on, but no hostname to
+  confirm it's not fronted content); `104.18.33.89` (Cloudflare,
+  WhiteSnakeStealer-only, no repeat, weakest case for either allowlisting
+  or trusting); `208.95.112.1` (resolves to `ip-api.com`, a public
+  IP-geolocation lookup service -- plausibly *not* contamination at all
+  but a genuine anti-sandbox self-recon technique, worth checking against
+  the manual report's own VM-detection findings before deciding whether
+  this belongs in ground truth rather than the allowlist).

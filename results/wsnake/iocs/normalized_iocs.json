@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T19:07:15.530794+00:00",
+  "generated_at": "2026-08-18T20:32:40.197043+00:00",
   "sources": {
     "static_report": "static/reports/wsnake/sample_static.json",
     "dynamic_report": "dynamic/reports/wsnake/dynamic_report.json"
@@ -89,12 +89,6 @@
       }
     ],
     "ips": [
-      {
-        "value": "104.212.67.104",
-        "sources": [
-          "dynamic"
-        ]
-      },
       {
         "value": "208.95.112.1",
         "sources": [
@@ -283,12 +277,6 @@
       },
       {
         "value": "206.166.251.4",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "104.212.67.66",
         "sources": [
           "dynamic"
         ]
@@ -1170,6 +1158,12 @@
     {
       "reason": "known_benign_infrastructure",
       "origin": "dynamic",
+      "field": "domains",
+      "raw_value": "104.212.67.104"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
       "field": "hosts",
       "raw_value": "96.16.86.160"
     },
@@ -1184,6 +1178,12 @@
       "origin": "dynamic",
       "field": "hosts",
       "raw_value": "96.16.86.208"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "104.212.67.66"
     },
     {
       "reason": "known_benign_infrastructure",

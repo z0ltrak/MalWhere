@@ -85,6 +85,14 @@ _BENIGN_INFRASTRUCTURE_IPS = frozenset({
     # Akamai International B.V. (AS20940) -- Windows Update/Defender CDN
     "96.16.86.160", "96.16.86.208", "96.16.86.210", "96.16.86.212",
     "96.16.86.214", "96.16.86.215", "96.16.86.219",
+    # Microsoft Corporation (AS8075) -- Azure Front Door / msedge.net, found
+    # auditing WhiteSnakeStealer post-migration (2026-08). Unlike the
+    # unexplained-hostname Azure Front Door case deliberately excluded
+    # above, these resolve to self-identifying msedge.net names (confirmed
+    # via reverse DNS, not guessed), removing the domain-fronting ambiguity
+    # that exclusion was about.
+    "104.212.67.104",  # chi26r9c.msedge.net
+    "104.212.67.66",   # bna30r9a.msedge.net
 })
 
 

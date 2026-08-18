@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T19:07:28.448581+00:00",
+  "generated_at": "2026-08-18T20:32:51.559678+00:00",
   "sample": {
     "family": "wsnake",
     "static_sha256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312",
@@ -86,12 +86,6 @@
         }
       ],
       "ips": [
-        {
-          "value": "104.212.67.104",
-          "sources": [
-            "dynamic"
-          ]
-        },
         {
           "value": "208.95.112.1",
           "sources": [
@@ -280,12 +274,6 @@
         },
         {
           "value": "206.166.251.4",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "104.212.67.66",
           "sources": [
             "dynamic"
           ]
