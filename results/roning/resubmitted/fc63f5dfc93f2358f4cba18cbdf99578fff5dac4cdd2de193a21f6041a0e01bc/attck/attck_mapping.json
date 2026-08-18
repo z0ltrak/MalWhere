@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:32.993111+00:00",
+  "generated_at": "2026-08-18T07:57:30.877334+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc",
@@ -25,14 +25,7 @@
       }
     ],
     "network_iocs": {
-      "domains": [
-        {
-          "value": "enpug.bin",
-          "sources": [
-            "static"
-          ]
-        }
-      ],
+      "domains": [],
       "ips": [],
       "urls": [],
       "emails": []
@@ -90,7 +83,9 @@
           "name": "File and Directory Discovery",
           "justification": "The malware string 'FindNextFile' was found in the binary, alongside 1 other string(s) also characteristic of File and Directory Discovery. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1134",
@@ -119,7 +114,9 @@
           "name": "Privilege Escalation",
           "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1497",
@@ -148,7 +145,9 @@
           "name": "Virtualization/Sandbox Evasion",
           "justification": "The malware string 'QueryPerformanceCounter' was found in the binary, alongside 1 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1622",
@@ -177,7 +176,9 @@
           "name": "Debugger Evasion",
           "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1055",
@@ -198,7 +199,9 @@
           "name": "Process Injection",
           "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1070",
@@ -219,7 +222,9 @@
           "name": "Indicator Removal on Host",
           "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1486",
@@ -240,7 +245,9 @@
           "name": "Data Encrypted for Impact",
           "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     }
   ],
   "summary": {

@@ -3707,9 +3707,7 @@
   "attck_mappings": [],
   "config": {
     "ips": [],
-    "domains": [
-      "123.txt"
-    ],
+    "domains": [],
     "urls": [],
     "emails": [],
     "registry_paths": [],

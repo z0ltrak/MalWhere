@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:30.374449+00:00",
+  "generated_at": "2026-08-18T07:57:28.669558+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9",
@@ -25,26 +25,7 @@
       }
     ],
     "network_iocs": {
-      "domains": [
-        {
-          "value": "sdk.sample",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "crl.microsoft.com",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "d3d11install.pdb",
-          "sources": [
-            "static"
-          ]
-        }
-      ],
+      "domains": [],
       "ips": [
         {
           "value": "6.0.0.0",
@@ -135,7 +116,9 @@
           "name": "Virtualization/Sandbox Evasion",
           "justification": "The API functions Sleep, QueryPerformanceCounter, GetTickCount are all imported by the binary. This combination is characteristic of Virtualization/Sandbox Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1622",
@@ -172,7 +155,9 @@
           "name": "Debugger Evasion",
           "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1059",
@@ -193,7 +178,9 @@
           "name": "Command and Scripting Interpreter",
           "justification": "The malware string 'ShellExecuteW' was found in the binary. This string is characteristic of Command and Scripting Interpreter behavior. The presence of this specific string alone (no other Command and Scripting Interpreter-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1070",
@@ -222,7 +209,9 @@
           "name": "Indicator Removal on Host",
           "justification": "The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1071",
@@ -243,7 +232,9 @@
           "name": "Application Layer Protocol",
           "justification": "Found 1 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1486",
@@ -264,7 +255,9 @@
           "name": "Data Encrypted for Impact",
           "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     }
   ],
   "summary": {

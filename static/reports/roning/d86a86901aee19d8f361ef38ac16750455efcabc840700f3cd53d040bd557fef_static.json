@@ -3631,12 +3631,7 @@
   "attck_mappings": [],
   "config": {
     "ips": [],
-    "domains": [
-      "apcinject.pdb",
-      "h.data",
-      "b.reloc",
-      "h.rdata"
-    ],
+    "domains": [],
     "urls": [],
     "emails": [],
     "registry_paths": [],

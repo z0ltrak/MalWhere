@@ -32,14 +32,21 @@ class IndicatorDetector:
         'RegSetValue': 'Registry modification (T1112)',
         'RegDeleteKey': 'Registry deletion (T1112)',
 
-        # Network
-        'socket': 'Network socket (S0105)',
-        'connect': 'Network connection (S0105)',
-        'send': 'Network sending (S0105)',
-        'recv': 'Network receiving (S0105)',
-        'WSASocket': 'Network socket (S0105)',
-        'WSAStartup': 'Network initialization (S0105)',
-        'InternetOpen': 'Internet access (S0105)',
+        # Network -- 'S0105' was a MITRE Software ID (a specific
+        # tool/malware family), not a Technique ID; wrong citation, not a
+        # formatting nit (see the same fix in attck_mapper.py's
+        # IMPORT_MAPPING for the full reasoning). The raw Winsock
+        # primitives below are too generic to safely cite one technique
+        # from import presence alone, so they're left uncited here;
+        # InternetOpen is WinINet's HTTP-specific entry point, specific
+        # enough to defensibly cite T1071 (Application Layer Protocol).
+        'socket': 'Network socket',
+        'connect': 'Network connection',
+        'send': 'Network sending',
+        'recv': 'Network receiving',
+        'WSASocket': 'Network socket',
+        'WSAStartup': 'Network initialization',
+        'InternetOpen': 'Internet access (T1071)',
         'URLDownloadToFile': 'File download (T1105)',
 
         # Cryptography

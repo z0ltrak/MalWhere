@@ -5942,9 +5942,7 @@
       "6.0.0.0"
     ],
     "domains": [
-      "sdk.sample",
-      "crl.microsoft.com",
-      "d3d11install.pdb"
+      "crl.microsoft.com"
     ],
     "urls": [
       "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",

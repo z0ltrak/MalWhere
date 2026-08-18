@@ -2106,12 +2106,12 @@
       "IsDebuggerPresent (Anti-debugging (T1622))",
       "QueryPerformanceCounter (Anti-debugging/timing (T1497))",
       "TerminateProcess (Process termination (T1489))",
-      "WSAStartup (Network initialization (S0105))",
+      "WSAStartup (Network initialization)",
       "WriteFile (File writing (T1486))",
-      "connect (Network connection (S0105))",
-      "recv (Network receiving (S0105))",
-      "send (Network sending (S0105))",
-      "socket (Network socket (S0105))"
+      "connect (Network connection)",
+      "recv (Network receiving)",
+      "send (Network sending)",
+      "socket (Network socket)"
     ],
     "suspicious_strings": [
       {
@@ -6973,14 +6973,6 @@
       "justification": "The API function 'RegOpenKeyExA' is imported by the binary. This API is commonly used to perform Registry Run Keys / Startup Folder. Importing this function alone (no other Registry Run Keys / Startup Folder-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
     },
     {
-      "technique": "S0105",
-      "name": "Network Communication",
-      "source": "import",
-      "evidence": "send, recv, WSAStartup, WSACleanup, socket, connect",
-      "confidence": "high",
-      "justification": "The API functions send, recv, WSAStartup, WSACleanup, socket, connect are all imported by the binary. This combination is characteristic of Network Communication \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
-    },
-    {
       "technique": "T1622",
       "name": "Debugger Evasion",
       "source": "yara",
@@ -6991,10 +6983,7 @@
   ],
   "config": {
     "ips": [],
-    "domains": [
-      "quhlpsvc.exe",
-      "ayagent.aye"
-    ],
+    "domains": [],
     "urls": [],
     "emails": [],
     "registry_paths": [],

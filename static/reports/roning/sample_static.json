@@ -53078,11 +53078,6 @@
   ],
   "config": {
     "domains": [
-      "wtf8.rs",
-      "v0.rs",
-      "d3d11install.pdb",
-      "kernel32.dllfailed",
-      "sdk.sample",
       "crl.microsoft.com"
     ],
     "file_paths": [

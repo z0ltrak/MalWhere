@@ -5046,9 +5046,7 @@
   ],
   "config": {
     "ips": [],
-    "domains": [
-      "enpug.bin"
-    ],
+    "domains": [],
     "urls": [],
     "emails": [],
     "registry_paths": [],

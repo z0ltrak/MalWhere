@@ -9488,16 +9488,7 @@
   ],
   "config": {
     "ips": [],
-    "domains": [
-      "srb.scsistatus",
-      "zam64.pdb",
-      "srb.srbstatus",
-      "h.data",
-      "fltmgr.sys",
-      "b.reloc",
-      "h.hook",
-      "registeredprocesses.count"
-    ],
+    "domains": [],
     "urls": [],
     "emails": [],
     "registry_paths": [],

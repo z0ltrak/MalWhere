@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:31.409887+00:00",
+  "generated_at": "2026-08-18T07:57:29.594974+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "65367ad3a97da1b56896ba69abbbac238990f74921aba0e726db0b6d7e2c67e8",
@@ -78,7 +78,9 @@
           "name": "File and Directory Discovery",
           "justification": "The API functions FindClose, FindNextFileW are all imported by the binary. This combination is characteristic of File and Directory Discovery \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1497",
@@ -115,7 +117,9 @@
           "name": "Virtualization/Sandbox Evasion",
           "justification": "The API functions GetTickCount, Sleep, QueryPerformanceCounter are all imported by the binary. This combination is characteristic of Virtualization/Sandbox Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1622",
@@ -152,7 +156,9 @@
           "name": "Debugger Evasion",
           "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1057",
@@ -173,7 +179,9 @@
           "name": "Process Discovery",
           "justification": "The API function 'CreateToolhelp32Snapshot' is imported by the binary. This API is commonly used to perform Process Discovery. Importing this function alone (no other Process Discovery-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1070",
@@ -202,7 +210,9 @@
           "name": "Indicator Removal on Host",
           "justification": "The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1082",
@@ -223,7 +233,9 @@
           "name": "System Information Discovery",
           "justification": "The malware string 'GetSystemInfo' was found in the binary. This string is characteristic of System Information Discovery behavior. The presence of this specific string alone (no other System Information Discovery-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1486",
@@ -244,7 +256,9 @@
           "name": "Data Encrypted for Impact",
           "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     }
   ],
   "summary": {

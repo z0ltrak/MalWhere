@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:30.574255+00:00",
+  "generated_at": "2026-08-18T07:57:28.837493+00:00",
   "sources": {
     "static_report": "static/reports/roning/1cbb3d517793c2239d0c8e7e05ba2bce1e920bb50355d10889bd41b6b7a69a61_static.json",
     "dynamic_report": null
@@ -28,122 +28,7 @@
     }
   ],
   "network_iocs": {
-    "domains": [
-      {
-        "value": "crl.microsoft.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "ocsp.digicert",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "subca.ocsp",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "ccsca2021.ocsp",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "h.rdata",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "ocsp.verisign",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "logo.verisign.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl.verisign.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "subca.repository.certum",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "ccsca2021.crl.certum",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "repository.certum.pl",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "cacerts.digicert.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "h.data",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl3.digicert.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "b.reloc",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl.certum.pl",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "csc3-2010-aia.verisign.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "subca.crl.certum",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "csc3-2010-crl.verisign.com",
-        "sources": [
-          "static"
-        ]
-      }
-    ],
+    "domains": [],
     "ips": [],
     "urls": [
       {
@@ -279,10 +164,58 @@
   "technique_observations": [],
   "discarded_entries": [
     {
-      "reason": "looks_like_filename_not_domain",
+      "reason": "known_benign_infrastructure",
       "origin": "static",
       "field": "domains",
-      "raw_value": "fltmgr.sys"
+      "raw_value": "crl.microsoft.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "logo.verisign.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.verisign.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "repository.certum.pl"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "cacerts.digicert.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl3.digicert.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.certum.pl"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "csc3-2010-aia.verisign.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "csc3-2010-crl.verisign.com"
     }
   ]
 }

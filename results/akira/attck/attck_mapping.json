@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T18:53:29.396588+00:00",
+  "generated_at": "2026-08-18T07:49:21.395210+00:00",
   "sample": {
     "family": "akira",
     "static_sha256": "06c2a137c31aae5d02b4d7df61ffd31f1af9a9e59978f15b3f7265cc751bff1f",
@@ -81,19 +81,7 @@
           ]
         },
         {
-          "value": "asio.misc",
-          "sources": [
-            "static"
-          ]
-        },
-        {
           "value": "akiralkzxzq2dsrzsrvbr2xgbbu2wgsmxryd4csgfameg52n7efvr2id.onion",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "asio.system",
           "sources": [
             "static"
           ]
@@ -103,23 +91,11 @@
           "sources": [
             "dynamic"
           ]
-        },
-        {
-          "value": "www.msftconnecttest.com",
-          "sources": [
-            "dynamic"
-          ]
         }
       ],
       "ips": [
         {
           "value": "140.82.121.3",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "185.43.182.40",
           "sources": [
             "dynamic"
           ]

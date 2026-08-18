@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T18:53:29.612015+00:00",
+  "generated_at": "2026-08-18T07:40:27.422002+00:00",
   "sources": {
     "static_report": "static/reports/wsnake/sample_static.json",
     "dynamic_report": "dynamic/reports/wsnake/dynamic_report.json"
@@ -75,24 +75,6 @@
   ],
   "network_iocs": {
     "domains": [
-      {
-        "value": "settingsdesigner.settingssinglefilegenerator",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "myapplication.app",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "kmicrosoft.visualstudio.editors",
-        "sources": [
-          "static"
-        ]
-      },
       {
         "value": "90f364fdc014e0961d460c2d63103332.afd.footprintdns.com",
         "sources": [

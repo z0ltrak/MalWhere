@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T18:53:29.475072+00:00",
+  "generated_at": "2026-08-18T07:40:27.500630+00:00",
   "sources": {
     "static_report": "static/reports/roning/sample_static.json",
     "dynamic_report": "dynamic/reports/roning/dynamic_report.json"
@@ -383,49 +383,7 @@
   "network_iocs": {
     "domains": [
       {
-        "value": "wtf8.rs",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "v0.rs",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "d3d11install.pdb",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "kernel32.dllfailed",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "sdk.sample",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl.microsoft.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
         "value": "www.baidu.com",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "www.msftconnecttest.com",
         "sources": [
           "dynamic"
         ]
@@ -440,12 +398,6 @@
       },
       {
         "value": "103.235.46.115",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "2.20.253.87",
         "sources": [
           "dynamic"
         ]
@@ -1659,5 +1611,18 @@
       ]
     }
   ],
-  "discarded_entries": []
+  "discarded_entries": [
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.microsoft.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "domains",
+      "raw_value": "www.msftconnecttest.com"
+    }
+  ]
 }

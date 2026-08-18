@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:29.825169+00:00",
+  "generated_at": "2026-08-18T07:57:28.242595+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "03f41826ee5624e938ff9de7b621fc954decdf4b6f8cc266c43706881053c1ba",
@@ -25,122 +25,7 @@
       }
     ],
     "network_iocs": {
-      "domains": [
-        {
-          "value": "ocsp.comodoca",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "zam64.pdb",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "secure.comodo.net",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "crl.comodoca.com",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "crl.microsoft.com",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "ocsp.digicert",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "crl.usertrust.com",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "subca.ocsp",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "ccsca2021.ocsp",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "subca.repository.certum",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "crt.comodoca.com",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "ccsca2021.crl.certum",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "repository.certum.pl",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "cacerts.digicert.com",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "ocsp.usertrust",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "srb.scsistatus",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "h.data",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "crl3.digicert.com",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "b.reloc",
-          "sources": [
-            "static"
-          ]
-        }
-      ],
+      "domains": [],
       "ips": [],
       "urls": [
         {
@@ -313,7 +198,9 @@
           "name": "Indicator Removal on Host",
           "justification": "The malware string 'DeleteFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1055",
@@ -334,7 +221,9 @@
           "name": "Process Injection",
           "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1486",
@@ -355,7 +244,9 @@
           "name": "Data Encrypted for Impact",
           "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1497",
@@ -376,7 +267,9 @@
           "name": "Virtualization/Sandbox Evasion",
           "justification": "The malware string 'Sleep' was found in the binary. This string is characteristic of Virtualization/Sandbox Evasion behavior. The presence of this specific string alone (no other Virtualization/Sandbox Evasion-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     }
   ],
   "summary": {

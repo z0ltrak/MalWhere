@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:30.769411+00:00",
+  "generated_at": "2026-08-18T07:57:28.994424+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c",
@@ -25,14 +25,7 @@
       }
     ],
     "network_iocs": {
-      "domains": [
-        {
-          "value": "trustinstaller.bin",
-          "sources": [
-            "static"
-          ]
-        }
-      ],
+      "domains": [],
       "ips": [],
       "urls": [],
       "emails": []
@@ -84,7 +77,9 @@
           "name": "Process Injection",
           "justification": "The API functions VirtualAllocEx, CreateRemoteThread, OpenProcess, WriteProcessMemory are all imported by the binary. This combination is characteristic of Process Injection \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1070",
@@ -113,7 +108,9 @@
           "name": "Indicator Removal on Host",
           "justification": "The API functions CreateFileA, CreateFileW are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1083",
@@ -150,7 +147,9 @@
           "name": "File and Directory Discovery",
           "justification": "The API functions FindClose, FindNextFileW are all imported by the binary. This combination is characteristic of File and Directory Discovery \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1497",
@@ -179,7 +178,9 @@
           "name": "Virtualization/Sandbox Evasion",
           "justification": "The API functions Sleep, QueryPerformanceCounter are all imported by the binary. This combination is characteristic of Virtualization/Sandbox Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1622",
@@ -216,7 +217,9 @@
           "name": "Debugger Evasion",
           "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1059",
@@ -237,7 +240,9 @@
           "name": "Command and Scripting Interpreter",
           "justification": "The API function 'CreateProcessA' is imported by the binary. This API is commonly used to perform Command and Scripting Interpreter. Importing this function alone (no other Command and Scripting Interpreter-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1486",
@@ -258,7 +263,9 @@
           "name": "Data Encrypted for Impact",
           "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     }
   ],
   "summary": {

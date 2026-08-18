@@ -8066,13 +8066,13 @@
       "ShellExecuteW (Process creation (T1059))",
       "TerminateProcess (Process termination (T1489))",
       "VirtualAllocEx (Process injection (T1055))",
-      "WSAStartup (Network initialization (S0105))",
+      "WSAStartup (Network initialization)",
       "WriteFile (File writing (T1486))",
       "WriteProcessMemory (Process injection (T1055))",
-      "connect (Network connection (S0105))",
-      "recv (Network receiving (S0105))",
-      "send (Network sending (S0105))",
-      "socket (Network socket (S0105))"
+      "connect (Network connection)",
+      "recv (Network receiving)",
+      "send (Network sending)",
+      "socket (Network socket)"
     ],
     "suspicious_strings": [
       {
@@ -13088,14 +13088,6 @@
       "justification": "The API functions RegSetValueExA, RegCreateKeyExA are all imported by the binary. This combination is characteristic of Registry Run Keys / Startup Folder \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
     },
     {
-      "technique": "S0105",
-      "name": "Network Communication",
-      "source": "import",
-      "evidence": "send, WSAStartup, WSACleanup, connect, recv, socket",
-      "confidence": "high",
-      "justification": "The API functions send, WSAStartup, WSACleanup, connect, recv, socket are all imported by the binary. This combination is characteristic of Network Communication \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
-    },
-    {
       "technique": "T1622",
       "name": "Debugger Evasion",
       "source": "yara",
@@ -13144,26 +13136,13 @@
       "2.5.4.3"
     ],
     "domains": [
-      "ocsp.comodoca",
-      "alt-svc.html",
-      "zam64.pdb",
       "secure.comodo.net",
       "crl.comodoca.com",
       "crl.microsoft.com",
-      "fltmgr.sys",
-      "vmservice.sys",
-      "8.te",
-      "ocsp.digicert",
-      "subca.ocsp",
       "crl.usertrust.com",
-      "ccsca2021.ocsp",
-      "subca.repository.certum",
-      "h.rdata",
-      "ocsp.verisign",
       "crt.comodoca.com",
       "logo.verisign.com",
-      "crl.verisign.com",
-      "ccsca2021.crl.certum"
+      "crl.verisign.com"
     ],
     "urls": [
       "http://subca.ocsp-certum.com01",

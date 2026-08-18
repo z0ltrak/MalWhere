@@ -9,12 +9,63 @@ from .models import DiscardedEntry, HashEntry, TaggedValue
 
 # Filenames that static string-extraction sometimes misclassifies as domains
 # (e.g. "rstrtmgr.dll" — a DLL name that happens to parse as a valid-looking
-# hostname). Not exhaustive, just the extensions actually seen doing this.
-_FILENAME_EXTENSIONS = (".dll", ".exe", ".sys", ".ocx", ".drv", ".cpl")
+# hostname, or "wtf8.rs" / "d3d11install.pdb" — Rust source paths and PDB
+# debug strings embedded in the binary). Not exhaustive, just the extensions
+# actually seen doing this.
+_FILENAME_EXTENSIONS = (
+    ".dll", ".exe", ".sys", ".ocx", ".drv", ".cpl", ".pdb", ".obj", ".lib",
+    ".rs", ".c", ".cpp", ".cc", ".h", ".hpp", ".cs", ".py", ".go", ".java",
+    ".rc",
+)
+
+# Real domains that show up as normal Windows/sandbox housekeeping rather
+# than anything the sample itself chose to contact: NCSI connectivity
+# checks, certificate revocation/OCSP lookups, time sync (dynamic
+# detonation), and Authenticode certificate-chain infrastructure (CRL/OCSP/
+# repository endpoints embedded in any code-signed PE's certificate table --
+# static extraction). Reporting these as IOCs is misleading -- a STIX/MISP
+# consumer has no way to tell them apart from an actual C2 domain
+# otherwise. Kept deliberately small and exact/suffix-matched (not a
+# general reputation allowlist): only entries confirmed to be OS/sandbox/
+# PKI-generated, not "probably benign" guesses about the sample's own
+# behavior. The CA entries were found auditing RoningLoader's 26 resubmitted
+# components -- every code-signed one carried its signer's CRL/OCSP chain.
+_BENIGN_INFRASTRUCTURE = (
+    "www.msftconnecttest.com",
+    "msftconnecttest.com",
+    "ipv6.msftconnecttest.com",
+    "www.msftncsi.com",
+    "dns.msftncsi.com",
+    "crl.microsoft.com",
+    "schemas.microsoft.com",
+    "ocsp.msocsp.com",
+    "ctldl.windowsupdate.com",
+    "time.windows.com",
+    "teredo.ipv6.microsoft.com",
+    # Authenticode certificate-chain infrastructure (CA CRL/OCSP/repository
+    # endpoints), not sample-chosen C2.
+    "crl.comodoca.com",
+    "crt.comodoca.com",
+    "secure.comodo.net",
+    "crl.usertrust.com",
+    "cacerts.digicert.com",
+    "crl3.digicert.com",
+    "crl.verisign.com",
+    "logo.verisign.com",
+    "csc3-2010-aia.verisign.com",
+    "csc3-2010-crl.verisign.com",
+    "repository.certum.pl",
+    "crl.certum.pl",
+)
 
 
 def _looks_like_filename(value: str) -> bool:
     return value.lower().endswith(_FILENAME_EXTENSIONS)
+
+
+def _is_benign_infrastructure(value: str) -> bool:
+    value_lower = value.lower()
+    return any(value_lower == b or value_lower.endswith("." + b) for b in _BENIGN_INFRASTRUCTURE)
 
 
 def _is_valid_ip(value: str) -> bool:
@@ -108,6 +159,16 @@ def merge_network_iocs(
                 )
             )
             continue
+        if _is_benign_infrastructure(d):
+            discarded.append(
+                DiscardedEntry(
+                    reason="known_benign_infrastructure",
+                    origin="static",
+                    field="domains",
+                    raw_value=d,
+                )
+            )
+            continue
         add(domains, d, "static")
     for ip in static_config.get("ips", []) or []:
         add(ips, ip, "static")
@@ -124,6 +185,16 @@ def merge_network_iocs(
                 discarded.append(
                     DiscardedEntry(
                         reason="looks_like_filename_not_domain",
+                        origin="dynamic",
+                        field="domains",
+                        raw_value=domain,
+                    )
+                )
+                continue
+            if domain and _is_benign_infrastructure(domain):
+                discarded.append(
+                    DiscardedEntry(
+                        reason="known_benign_infrastructure",
                         origin="dynamic",
                         field="domains",
                         raw_value=domain,

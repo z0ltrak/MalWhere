@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:29.884940+00:00",
+  "generated_at": "2026-08-18T07:57:28.303505+00:00",
   "sources": {
     "static_report": "static/reports/roning/05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5_static.json",
     "dynamic_report": null
@@ -28,50 +28,7 @@
     }
   ],
   "network_iocs": {
-    "domains": [
-      {
-        "value": "srb.scsistatus",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "zam64.pdb",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "srb.srbstatus",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "h.data",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "b.reloc",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "h.hook",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "registeredprocesses.count",
-        "sources": [
-          "static"
-        ]
-      }
-    ],
+    "domains": [],
     "ips": [],
     "urls": [],
     "emails": []
@@ -152,12 +109,5 @@
       ]
     }
   ],
-  "discarded_entries": [
-    {
-      "reason": "looks_like_filename_not_domain",
-      "origin": "static",
-      "field": "domains",
-      "raw_value": "fltmgr.sys"
-    }
-  ]
+  "discarded_entries": []
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:31.684459+00:00",
+  "generated_at": "2026-08-18T07:57:29.819835+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
@@ -25,26 +25,7 @@
       }
     ],
     "network_iocs": {
-      "domains": [
-        {
-          "value": "h.data",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "b.reloc",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "h.rdata",
-          "sources": [
-            "static"
-          ]
-        }
-      ],
+      "domains": [],
       "ips": [],
       "urls": [],
       "emails": []

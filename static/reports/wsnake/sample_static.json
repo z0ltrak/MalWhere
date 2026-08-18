@@ -6312,11 +6312,7 @@
   ],
   "config": {
     "ips": [],
-    "domains": [
-      "settingsdesigner.settingssinglefilegenerator",
-      "myapplication.app",
-      "kmicrosoft.visualstudio.editors"
-    ],
+    "domains": [],
     "urls": [],
     "emails": [],
     "registry_paths": [],

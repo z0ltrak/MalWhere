@@ -4037,7 +4037,7 @@
       "ShellExecuteW (Process creation (T1059))",
       "TerminateProcess (Process termination (T1489))",
       "WNetGetConnectionW (Network share enumeration (T1135))",
-      "WSAStartup (Network initialization (S0105))",
+      "WSAStartup (Network initialization)",
       "WTSEnumerateProcessesW (Process enumeration (T1057))",
       "WTSFreeMemory (Process enumeration (T1057))",
       "WriteFile (File writing (T1486))"
@@ -8942,14 +8942,6 @@
       "justification": "The API functions UnhandledExceptionFilter, SetUnhandledExceptionFilter, IsDebuggerPresent are all imported by the binary. This combination is characteristic of Debugger Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
     },
     {
-      "technique": "S0105",
-      "name": "Network Communication",
-      "source": "import",
-      "evidence": "WSAStartup, WSACleanup",
-      "confidence": "high",
-      "justification": "The API functions WSAStartup, WSACleanup are all imported by the binary. This combination is characteristic of Network Communication \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
-    },
-    {
       "technique": "T1562.001",
       "name": "Impair Defenses: Disable or Modify Tools",
       "source": "import",
@@ -8978,10 +8970,7 @@
     "ips": [],
     "domains": [
       "akiral2iz6a7qgd3ayp3l6yub7xx2uep76idk3u2kollpj5z3z636bad.onion",
-      "asio.misc",
-      "rstrtmgr.dll",
-      "akiralkzxzq2dsrzsrvbr2xgbbu2wgsmxryd4csgfameg52n7efvr2id.onion",
-      "asio.system"
+      "akiralkzxzq2dsrzsrvbr2xgbbu2wgsmxryd4csgfameg52n7efvr2id.onion"
     ],
     "urls": [
       "https://akiral2iz6a7qgd3ayp3l6yub7xx2uep76idk3u2kollpj5z3z636bad.onion.",

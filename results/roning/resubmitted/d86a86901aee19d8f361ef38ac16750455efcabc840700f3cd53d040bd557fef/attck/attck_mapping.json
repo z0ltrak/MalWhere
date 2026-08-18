@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:32.729232+00:00",
+  "generated_at": "2026-08-18T07:57:30.654765+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
@@ -25,32 +25,7 @@
       }
     ],
     "network_iocs": {
-      "domains": [
-        {
-          "value": "apcinject.pdb",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "h.data",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "b.reloc",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "h.rdata",
-          "sources": [
-            "static"
-          ]
-        }
-      ],
+      "domains": [],
       "ips": [],
       "urls": [],
       "emails": []

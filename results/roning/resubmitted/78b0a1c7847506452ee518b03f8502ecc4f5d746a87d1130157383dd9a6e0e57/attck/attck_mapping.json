@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:31.543323+00:00",
+  "generated_at": "2026-08-18T07:57:29.717992+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "78b0a1c7847506452ee518b03f8502ecc4f5d746a87d1130157383dd9a6e0e57",
@@ -25,32 +25,7 @@
       }
     ],
     "network_iocs": {
-      "domains": [
-        {
-          "value": "d3d11install.pdb",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "wtf8.rs",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "v0.rs",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "kernel32.dllfailed",
-          "sources": [
-            "static"
-          ]
-        }
-      ],
+      "domains": [],
       "ips": [],
       "urls": [],
       "emails": []
@@ -133,7 +108,9 @@
           "name": "Indicator Removal on Host",
           "justification": "The API functions CreateFileW, CreateFileA are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1083",
@@ -170,7 +147,9 @@
           "name": "File and Directory Discovery",
           "justification": "The API functions FindNextFileW, FindClose are all imported by the binary. This combination is characteristic of File and Directory Discovery \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1497",
@@ -199,7 +178,9 @@
           "name": "Virtualization/Sandbox Evasion",
           "justification": "The API functions Sleep, QueryPerformanceCounter are all imported by the binary. This combination is characteristic of Virtualization/Sandbox Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1547.001",
@@ -244,7 +225,9 @@
           "name": "Registry Run Keys / Startup Folder",
           "justification": "The API functions RegSetValueExW, RegOpenKeyExW, RegCreateKeyExW are all imported by the binary. This combination is characteristic of Registry Run Keys / Startup Folder \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1622",
@@ -281,7 +264,9 @@
           "name": "Debugger Evasion",
           "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1486",
@@ -302,7 +287,9 @@
           "name": "Data Encrypted for Impact",
           "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     }
   ],
   "summary": {

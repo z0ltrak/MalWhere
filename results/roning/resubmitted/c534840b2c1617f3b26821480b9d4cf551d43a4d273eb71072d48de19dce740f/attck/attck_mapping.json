@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:32.599517+00:00",
+  "generated_at": "2026-08-18T07:57:30.563042+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "c534840b2c1617f3b26821480b9d4cf551d43a4d273eb71072d48de19dce740f",
@@ -25,14 +25,7 @@
       }
     ],
     "network_iocs": {
-      "domains": [
-        {
-          "value": "ayagent.aye",
-          "sources": [
-            "static"
-          ]
-        }
-      ],
+      "domains": [],
       "ips": [],
       "urls": [],
       "emails": []
@@ -76,7 +69,9 @@
           "name": "Process Discovery",
           "justification": "The API functions CreateToolhelp32Snapshot, Process32First, Process32Next are all imported by the binary. This combination is characteristic of Process Discovery \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1059",
@@ -97,7 +92,9 @@
           "name": "Command and Scripting Interpreter",
           "justification": "The API functions CreateProcessA, ShellExecuteA are all imported by the binary. This combination is characteristic of Command and Scripting Interpreter \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1070",
@@ -134,7 +131,9 @@
           "name": "Indicator Removal on Host",
           "justification": "The API functions DeleteFileA, CreateFileA, CreateFileW are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1115",
@@ -179,7 +178,9 @@
           "name": "Clipboard Data",
           "justification": "The API functions OpenClipboard, CloseClipboard, GetClipboardData, EmptyClipboard, SetClipboardData are all imported by the binary. This combination is characteristic of Clipboard Data \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1134",
@@ -208,7 +209,9 @@
           "name": "Privilege Escalation",
           "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1497",
@@ -245,7 +248,9 @@
           "name": "Virtualization/Sandbox Evasion",
           "justification": "The API functions GetTickCount, QueryPerformanceCounter, Sleep are all imported by the binary. This combination is characteristic of Virtualization/Sandbox Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1622",
@@ -282,7 +287,9 @@
           "name": "Debugger Evasion",
           "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1055",
@@ -303,7 +310,9 @@
           "name": "Process Injection",
           "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1056.001",
@@ -324,7 +333,9 @@
           "name": "Keylogging",
           "justification": "The API function 'GetAsyncKeyState' is imported by the binary. This API is commonly used to perform Keylogging. Importing this function alone (no other Keylogging-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1082",
@@ -345,7 +356,9 @@
           "name": "System Information Discovery",
           "justification": "The API function 'GetComputerNameA' is imported by the binary. This API is commonly used to perform System Information Discovery. Importing this function alone (no other System Information Discovery-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1547.001",
@@ -366,7 +379,9 @@
           "name": "Registry Run Keys / Startup Folder",
           "justification": "The API function 'RegOpenKeyExA' is imported by the binary. This API is commonly used to perform Registry Run Keys / Startup Folder. Importing this function alone (no other Registry Run Keys / Startup Folder-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1486",
@@ -387,7 +402,9 @@
           "name": "Data Encrypted for Impact",
           "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     }
   ],
   "summary": {

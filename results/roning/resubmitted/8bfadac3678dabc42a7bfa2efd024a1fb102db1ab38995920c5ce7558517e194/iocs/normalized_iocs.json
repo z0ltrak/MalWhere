@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:31.759336+00:00",
+  "generated_at": "2026-08-18T07:57:29.868367+00:00",
   "sources": {
     "static_report": "static/reports/roning/8bfadac3678dabc42a7bfa2efd024a1fb102db1ab38995920c5ce7558517e194_static.json",
     "dynamic_report": null
@@ -28,122 +28,7 @@
     }
   ],
   "network_iocs": {
-    "domains": [
-      {
-        "value": "ocsp.comodoca",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "zam64.pdb",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "secure.comodo.net",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl.comodoca.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl.microsoft.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "ocsp.digicert",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl.usertrust.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "subca.ocsp",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "ccsca2021.ocsp",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "subca.repository.certum",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crt.comodoca.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "ccsca2021.crl.certum",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "repository.certum.pl",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "cacerts.digicert.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "ocsp.usertrust",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "srb.scsistatus",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "h.data",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl3.digicert.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "b.reloc",
-        "sources": [
-          "static"
-        ]
-      }
-    ],
+    "domains": [],
     "ips": [],
     "urls": [
       {
@@ -448,10 +333,52 @@
   ],
   "discarded_entries": [
     {
-      "reason": "looks_like_filename_not_domain",
+      "reason": "known_benign_infrastructure",
       "origin": "static",
       "field": "domains",
-      "raw_value": "fltmgr.sys"
+      "raw_value": "secure.comodo.net"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.comodoca.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.microsoft.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.usertrust.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crt.comodoca.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "repository.certum.pl"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "cacerts.digicert.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl3.digicert.com"
     }
   ]
 }

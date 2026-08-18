@@ -215,13 +215,20 @@ class ATTACKMapper:
         # Akira: its manual report shows share *targets* come from an
         # operator-supplied --share_file argument, not discovery.
 
-        # Network
-        'WSAStartup': 'S0105',
-        'WSACleanup': 'S0105',
-        'socket': 'S0105',
-        'connect': 'S0105',
-        'send': 'S0105',
-        'recv': 'S0105',
+        # Network -- WSAStartup/WSACleanup/socket/connect/send/recv removed:
+        # 'S0105' is a MITRE Software ID (a specific tool/malware family),
+        # not a Technique ID, so this table was emitting a value the
+        # normalizer's ID-format check correctly rejects (invalid_technique_
+        # id_format), meaning these six imports have never actually
+        # produced a technique in any report. Not just a wrong ID either --
+        # raw Winsock init/send/recv is present in essentially any
+        # networked Windows program and, like TerminateProcess above, is
+        # too generic to safely auto-map to one specific technique from
+        # import presence alone (could underlie T1071, T1095, T1041,
+        # T1105...). Real network-C2 evidence (onion URLs, config IPs) is
+        # already captured with a specific technique in map_config()'s
+        # T1071 rule below -- that's the trustworthy signal, not bare
+        # socket-API presence.
 
         # File System
         'FindFirstFileW': 'T1083',
@@ -307,7 +314,6 @@ class ATTACKMapper:
         'T1055': 'Process Injection',
         'T1489': 'Service Stop',
         'T1135': 'Network Share Discovery',
-        'S0105': 'Network Communication',
         'T1070': 'Indicator Removal on Host',
         'T1486': 'Data Encrypted for Impact',
         'T1490': 'Inhibit System Recovery',

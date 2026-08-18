@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:30.506008+00:00",
+  "generated_at": "2026-08-18T07:57:28.780291+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2",
@@ -25,14 +25,7 @@
       }
     ],
     "network_iocs": {
-      "domains": [
-        {
-          "value": "123.txt",
-          "sources": [
-            "static"
-          ]
-        }
-      ],
+      "domains": [],
       "ips": [],
       "urls": [],
       "emails": []

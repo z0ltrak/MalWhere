@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:32.534954+00:00",
+  "generated_at": "2026-08-18T07:57:30.507933+00:00",
   "sources": {
     "static_report": "static/reports/roning/c534840b2c1617f3b26821480b9d4cf551d43a4d273eb71072d48de19dce740f_static.json",
     "dynamic_report": null
@@ -28,14 +28,7 @@
     }
   ],
   "network_iocs": {
-    "domains": [
-      {
-        "value": "ayagent.aye",
-        "sources": [
-          "static"
-        ]
-      }
-    ],
+    "domains": [],
     "ips": [],
     "urls": [],
     "emails": []
@@ -292,24 +285,5 @@
       ]
     }
   ],
-  "discarded_entries": [
-    {
-      "reason": "looks_like_filename_not_domain",
-      "origin": "static",
-      "field": "domains",
-      "raw_value": "quhlpsvc.exe"
-    },
-    {
-      "reason": "invalid_technique_id_format",
-      "origin": "static",
-      "raw_entry": {
-        "technique": "S0105",
-        "name": "Network Communication",
-        "source": "import",
-        "evidence": "send, recv, WSAStartup, WSACleanup, socket, connect",
-        "confidence": "high",
-        "justification": "The API functions send, recv, WSAStartup, WSACleanup, socket, connect are all imported by the binary. This combination is characteristic of Network Communication \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
-      }
-    }
-  ]
+  "discarded_entries": []
 }

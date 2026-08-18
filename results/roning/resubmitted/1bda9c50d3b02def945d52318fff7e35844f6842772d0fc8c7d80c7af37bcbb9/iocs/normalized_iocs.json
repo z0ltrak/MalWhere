@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:30.307268+00:00",
+  "generated_at": "2026-08-18T07:57:28.612019+00:00",
   "sources": {
     "static_report": "static/reports/roning/1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9_static.json",
     "dynamic_report": null
@@ -28,26 +28,7 @@
     }
   ],
   "network_iocs": {
-    "domains": [
-      {
-        "value": "sdk.sample",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl.microsoft.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "d3d11install.pdb",
-        "sources": [
-          "static"
-        ]
-      }
-    ],
+    "domains": [],
     "ips": [
       {
         "value": "6.0.0.0",
@@ -217,5 +198,12 @@
       ]
     }
   ],
-  "discarded_entries": []
+  "discarded_entries": [
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.microsoft.com"
+    }
+  ]
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:31.481210+00:00",
+  "generated_at": "2026-08-18T07:57:29.643479+00:00",
   "sources": {
     "static_report": "static/reports/roning/78b0a1c7847506452ee518b03f8502ecc4f5d746a87d1130157383dd9a6e0e57_static.json",
     "dynamic_report": null
@@ -28,32 +28,7 @@
     }
   ],
   "network_iocs": {
-    "domains": [
-      {
-        "value": "d3d11install.pdb",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "wtf8.rs",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "v0.rs",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "kernel32.dllfailed",
-        "sources": [
-          "static"
-        ]
-      }
-    ],
+    "domains": [],
     "ips": [],
     "urls": [],
     "emails": []

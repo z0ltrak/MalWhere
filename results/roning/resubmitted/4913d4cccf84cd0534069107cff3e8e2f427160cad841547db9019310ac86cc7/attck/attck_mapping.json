@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:31.025936+00:00",
+  "generated_at": "2026-08-18T07:57:29.310977+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "4913d4cccf84cd0534069107cff3e8e2f427160cad841547db9019310ac86cc7",
@@ -62,7 +62,9 @@
           "name": "Process Injection",
           "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1082",
@@ -83,7 +85,9 @@
           "name": "System Information Discovery",
           "justification": "The API function 'GetUserNameW' is imported by the binary. This API is commonly used to perform System Information Discovery. Importing this function alone (no other System Information Discovery-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     },
     {
       "technique_id": "T1134",
@@ -104,7 +108,9 @@
           "name": "Privilege Escalation",
           "justification": "The API function 'OpenProcessToken' is imported by the binary. This API is commonly used to perform Privilege Escalation. Importing this function alone (no other Privilege Escalation-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     }
   ],
   "summary": {

@@ -180,15 +180,96 @@ class ConfigExtractor:
 
         return [{'ip': ip, 'xor_key': f'0x{key:02x}'} for ip, key in found.items()][:10]
 
+    # Curated allowlist of real TLDs. Not the full ~1500-entry IANA list --
+    # covers the gTLDs/ccTLDs actually seen in malware C2 infrastructure
+    # (abused cheap/free ccTLDs like .tk/.ml/.cf, common bulletproof-hosting
+    # gTLDs like .xyz/.top/.icu, plus the major country/region ccTLDs) so a
+    # dotted string with a fabricated "TLD" (.editors, .misc, .system,
+    # .dllfailed, .sample -- all seen misparsed from .NET/C++ identifiers)
+    # gets rejected outright rather than relying on a namespace denylist.
+    _VALID_TLDS = frozenset({
+        'com', 'net', 'org', 'info', 'biz', 'name', 'pro', 'mobi', 'asia',
+        'tel', 'xxx', 'coop', 'museum', 'aero', 'jobs', 'travel',
+        'xyz', 'top', 'club', 'online', 'site', 'live', 'life', 'click',
+        'link', 'icu', 'buzz', 'work', 'host', 'space', 'store', 'tech',
+        'dev', 'app', 'cloud', 'email', 'download', 'win', 'bid', 'loan',
+        'men', 'date', 'review', 'science', 'party', 'trade', 'accountant',
+        'stream', 'gdn', 'vip', 'fun', 'rest', 'cyou', 'monster', 'sbs',
+        'io', 'co', 'me', 'cc', 'tv', 'ws', 'to', 'sh', 'nu', 'la', 'fm',
+        'ac', 'gg', 'je', 'im', 'is', 'li', 'ai', 'gl',
+        'onion',
+        'us', 'uk', 'de', 'fr', 'nl', 'ru', 'cn', 'jp', 'kr', 'in', 'br',
+        'au', 'ca', 'es', 'it', 'pl', 'se', 'no', 'fi', 'dk', 'ch', 'at',
+        'be', 'cz', 'gr', 'pt', 'ro', 'hu', 'ua', 'by', 'kz', 'tr', 'ir',
+        'sa', 'ae', 'il', 'eg', 'za', 'ng', 'ke', 'mx', 'ar', 'cl', 'pe',
+        've', 'id', 'vn', 'th', 'my', 'ph', 'sg', 'hk', 'tw', 'nz', 'ie',
+        'lu', 'mc', 'sm', 'va', 'ad', 'mt', 'cy', 'ee', 'lv', 'lt', 'si',
+        'sk', 'bg', 'hr', 'rs', 'ba', 'mk', 'al', 'md', 'ge', 'am', 'az',
+        'uz', 'tm', 'kg', 'tj', 'mn', 'np', 'lk', 'bd', 'pk', 'af', 'iq',
+        'sy', 'jo', 'lb', 'kw', 'qa', 'bh', 'om', 'ye', 'ly', 'tn', 'dz',
+        'ma', 'sd', 'et', 'gh', 'tz', 'ug', 'zm', 'zw', 'mz', 'ao', 'cm',
+        'ci', 'sn', 'ml', 'bf', 'ne', 'td', 'cf', 'cg', 'cd', 'ga', 'gq',
+        'gw', 'gm', 'lr', 'sl', 'tg', 'bj', 'mr', 'dj', 'so', 'er', 'rw',
+        'bi', 'mw', 'na', 'bw', 'ls', 'sz', 'mg', 'mu', 'sc', 'km', 'cv',
+        'st', 'tk', 'ga',
+    })
+
+    # Filename/debug/source-code extensions that the domain regex can
+    # mis-tokenize as a fake TLD when they follow a real one, or are
+    # themselves short enough to slip past other checks (e.g. "sdk.sample").
+    _NON_DOMAIN_EXTENSIONS = (
+        '.exe', '.dll', '.sys', '.ocx', '.drv', '.cpl', '.pdb', '.obj',
+        '.lib', '.rs', '.c', '.cpp', '.cc', '.h', '.hpp', '.cs', '.py',
+        '.go', '.java', '.rc', '.sample', '.config',
+    )
+
     def _find_domains(self, strings: List[str]) -> List[str]:
-        """Find domain names in strings with noise filtering."""
+        """Find domain names in strings with noise filtering.
+
+        Three independent filters, each catching a distinct class of false
+        positive seen in practice (.NET/C++ identifiers mis-tokenized by the
+        dotted-string regex as domains):
+          1. Known non-domain extensions -- rejects source/debug file
+             references like d3d11install.pdb, wtf8.rs.
+          2. TLD allowlist -- rejects fabricated "TLDs" like .editors, .misc,
+             .system, .dllfailed, .sample (see _VALID_TLDS above).
+          3. Compound-identifier casing -- .NET/C++ namespaces and type
+             names are essentially always PascalCase/camelCase compounds
+             (MyApplication, SettingsDesigner); real embedded C2 domains are
+             not. A lowercase-then-uppercase transition inside the matched
+             substring (checked on the ORIGINAL case, before normalizing to
+             lowercase) is a strong signal of a code identifier rather than
+             a domain literal.
+        """
         domains = set()
 
-        # Noise patterns to ignore
+        # Legacy exact-prefix noise patterns (anchored: re.match, not
+        # re.search) -- kept as a cheap first pass, but the TLD allowlist
+        # and casing check below are what actually catch namespace noise
+        # that doesn't start at the string's first label (e.g.
+        # "KMicrosoft.VisualStudio.Editors" is rejected by the fabricated
+        # ".editors" TLD, not by this list). Kept anchored so a real domain
+        # that merely contains "microsoft." mid-string (crl.microsoft.com)
+        # isn't discarded here.
         NOISE_PATTERNS = [
             r'^[a-z]{1,3}\.[a-z]{1,3}$',      # 2-3 letter random domains (e.g., "tb.kf")
             r'^[0-9]+\.[0-9]+\.[0-9]+',        # Version strings (e.g., "1.1.2.2")
             r'^[a-z]+\.[a-z]{1,2}$',           # Short domain (e.g., "i.xo", "g.kx")
+            # A 1-2 char, possibly-numeric first label ("0.na", "9r.dk") is
+            # essentially never a real second-level domain -- it's noise
+            # that only started surviving once the TLD allowlist below grew
+            # to include the (very real) short ccTLDs these happened to
+            # collide with. Real domains overwhelmingly have a first label
+            # of 3+ chars, so this is a safe, targeted cut.
+            r'^[a-z0-9]{1,2}\.[a-z]{2,}$',
+            # A first label of 3 chars or fewer that mixes in a digit or
+            # hyphen ("w1d.gg", "s-.mz") is the same class of noise as the
+            # pattern above, just past the length-2 cutoff -- no real
+            # domain a malware author would hand-type looks like this. Pure
+            # 3-letter labels (a real brand TLD like "ibm.com") are left
+            # alone; only the digit/hyphen mix is targeted.
+            r'^(?=[a-z0-9-]{1,3}\.)[a-z0-9-]*[0-9-][a-z0-9-]*\.[a-z]{2,}$',
+
             r'(?i)system\.',                   # System.* namespaces
             r'(?i)runtime\.',                  # Runtime.* namespaces
             r'(?i)microsoft\.',                # Microsoft.* namespaces
@@ -196,15 +277,11 @@ class ConfigExtractor:
             r'(?i)configuration\.',            # Configuration.* namespaces
             r'(?i)diagnostics\.',              # Diagnostics.* namespaces
             r'(?i)management\.',               # Management.* namespaces
-            r'(?i)net\.',                      # Net.* namespaces
             r'(?i)security\.',                 # Security.* namespaces
             r'(?i)threading\.',                # Threading.* namespaces
             r'(?i)xml\.',                      # XML.* namespaces
-            r'(?i)io\.',                       # IO.* namespaces
-            r'(?i)text\.',                     # Text.* namespaces
             r'(?i)windows\.',                  # Windows.* namespaces
             r'(?i)aspnet\.',                   # ASP.NET namespaces
-            r'(?i)system\.',                   # System.* namespaces
         ]
 
         for s in strings:
@@ -213,18 +290,31 @@ class ConfigExtractor:
                 domain_lower = domain.lower()
 
                 # Skip obvious noise
-                if domain.endswith('.exe') or domain.endswith('.dll'):
+                if domain_lower.endswith(self._NON_DOMAIN_EXTENSIONS):
                     continue
                 if domain.startswith('www') or domain.startswith('http'):
                     continue
 
-                # Skip noise patterns
+                # Skip noise patterns. Anchored (re.match, not re.search) so
+                # a real domain that merely contains e.g. "microsoft." mid-
+                # string (crl.microsoft.com) isn't discarded here -- the TLD
+                # allowlist and casing check below are what catch namespace
+                # noise; this list only needs to catch the exact-prefix case.
                 is_noise = False
                 for pattern in NOISE_PATTERNS:
                     if re.match(pattern, domain_lower):
                         is_noise = True
                         break
                 if is_noise:
+                    continue
+
+                # Reject fabricated TLDs (real domains only, not code paths)
+                tld = domain_lower.rsplit('.', 1)[-1]
+                if tld not in self._VALID_TLDS:
+                    continue
+
+                # Reject compound-identifier casing (checked pre-lowercase)
+                if re.search(r'[a-z][A-Z]', domain):
                     continue
 
                 domains.add(domain_lower)

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:30.015999+00:00",
+  "generated_at": "2026-08-18T07:57:28.418857+00:00",
   "sources": {
     "static_report": "static/reports/roning/11a6cb1d63a14e4a34aeedc43fa640d782c41533cc02ffdace19c3b5eacc03de_static.json",
     "dynamic_report": null
@@ -28,116 +28,7 @@
     }
   ],
   "network_iocs": {
-    "domains": [
-      {
-        "value": "ocsp.comodoca",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "alt-svc.html",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "zam64.pdb",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "secure.comodo.net",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl.comodoca.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl.microsoft.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "8.te",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "ocsp.digicert",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "subca.ocsp",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl.usertrust.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "ccsca2021.ocsp",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "subca.repository.certum",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "h.rdata",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "ocsp.verisign",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crt.comodoca.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "logo.verisign.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "crl.verisign.com",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "ccsca2021.crl.certum",
-        "sources": [
-          "static"
-        ]
-      }
-    ],
+    "domains": [],
     "ips": [
       {
         "value": "101.3.4.2",
@@ -745,28 +636,46 @@
   ],
   "discarded_entries": [
     {
-      "reason": "looks_like_filename_not_domain",
+      "reason": "known_benign_infrastructure",
       "origin": "static",
       "field": "domains",
-      "raw_value": "fltmgr.sys"
+      "raw_value": "secure.comodo.net"
     },
     {
-      "reason": "looks_like_filename_not_domain",
+      "reason": "known_benign_infrastructure",
       "origin": "static",
       "field": "domains",
-      "raw_value": "vmservice.sys"
+      "raw_value": "crl.comodoca.com"
     },
     {
-      "reason": "invalid_technique_id_format",
+      "reason": "known_benign_infrastructure",
       "origin": "static",
-      "raw_entry": {
-        "technique": "S0105",
-        "name": "Network Communication",
-        "source": "import",
-        "evidence": "send, WSAStartup, WSACleanup, connect, recv, socket",
-        "confidence": "high",
-        "justification": "The API functions send, WSAStartup, WSACleanup, connect, recv, socket are all imported by the binary. This combination is characteristic of Network Communication \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
-      }
+      "field": "domains",
+      "raw_value": "crl.microsoft.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.usertrust.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crt.comodoca.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "logo.verisign.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.verisign.com"
     }
   ]
 }

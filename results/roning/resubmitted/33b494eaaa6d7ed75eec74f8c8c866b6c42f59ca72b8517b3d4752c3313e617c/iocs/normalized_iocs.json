@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:30.706645+00:00",
+  "generated_at": "2026-08-18T07:57:28.940633+00:00",
   "sources": {
     "static_report": "static/reports/roning/33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c_static.json",
     "dynamic_report": null
@@ -28,14 +28,7 @@
     }
   ],
   "network_iocs": {
-    "domains": [
-      {
-        "value": "trustinstaller.bin",
-        "sources": [
-          "static"
-        ]
-      }
-    ],
+    "domains": [],
     "ips": [],
     "urls": [],
     "emails": []

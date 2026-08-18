@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:32.930407+00:00",
+  "generated_at": "2026-08-18T07:57:30.823817+00:00",
   "sources": {
     "static_report": "static/reports/roning/fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc_static.json",
     "dynamic_report": null
@@ -28,14 +28,7 @@
     }
   ],
   "network_iocs": {
-    "domains": [
-      {
-        "value": "enpug.bin",
-        "sources": [
-          "static"
-        ]
-      }
-    ],
+    "domains": [],
     "ips": [],
     "urls": [],
     "emails": []

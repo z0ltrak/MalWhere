@@ -2031,12 +2031,7 @@
   "attck_mappings": [],
   "config": {
     "ips": [],
-    "domains": [
-      "h.data",
-      "b.reloc",
-      "h.rdata",
-      "fltmgr.sys"
-    ],
+    "domains": [],
     "urls": [],
     "emails": [],
     "registry_paths": [],

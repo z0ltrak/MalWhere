@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-12T13:28:30.897844+00:00",
+  "generated_at": "2026-08-18T07:57:29.108956+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d",
@@ -69,7 +69,9 @@
           "name": "Modify Registry",
           "justification": "Found 1 registry paths in the configuration. Registry modifications are used for persistence, configuration storage, and defense evasion (T1112)."
         }
-      ]
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     }
   ],
   "summary": {

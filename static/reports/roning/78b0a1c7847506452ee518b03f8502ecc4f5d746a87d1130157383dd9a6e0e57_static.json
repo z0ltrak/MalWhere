@@ -6973,12 +6973,7 @@
   ],
   "config": {
     "ips": [],
-    "domains": [
-      "d3d11install.pdb",
-      "wtf8.rs",
-      "v0.rs",
-      "kernel32.dllfailed"
-    ],
+    "domains": [],
     "urls": [],
     "emails": [],
     "registry_paths": [],

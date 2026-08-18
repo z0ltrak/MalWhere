@@ -6465,9 +6465,7 @@
   ],
   "config": {
     "ips": [],
-    "domains": [
-      "trustinstaller.bin"
-    ],
+    "domains": [],
     "urls": [],
     "emails": [],
     "registry_paths": [],

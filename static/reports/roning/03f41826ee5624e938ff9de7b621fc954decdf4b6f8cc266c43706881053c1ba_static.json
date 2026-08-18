@@ -9888,26 +9888,14 @@
   "config": {
     "ips": [],
     "domains": [
-      "ocsp.comodoca",
-      "zam64.pdb",
       "secure.comodo.net",
       "crl.comodoca.com",
       "crl.microsoft.com",
-      "fltmgr.sys",
-      "ocsp.digicert",
       "crl.usertrust.com",
-      "subca.ocsp",
-      "ccsca2021.ocsp",
-      "subca.repository.certum",
       "crt.comodoca.com",
-      "ccsca2021.crl.certum",
       "repository.certum.pl",
       "cacerts.digicert.com",
-      "ocsp.usertrust",
-      "srb.scsistatus",
-      "h.data",
-      "crl3.digicert.com",
-      "b.reloc"
+      "crl3.digicert.com"
     ],
     "urls": [
       "http://subca.ocsp-certum.com01",
