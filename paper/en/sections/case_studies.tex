@@ -2,7 +2,7 @@
 \label{sec:case-studies}
 
 Aggregate numbers (\S\ref{sec:evaluation}) show \emph{that} the
-pipeline performs well; the four cases below show \emph{why}: concrete
+pipeline performs well; the five cases below show \emph{why}: concrete
 instances of the validation discipline finding and resolving a real
 problem, each illustrating a different class of failure a purely
 numeric evaluation would not surface on its own.
@@ -131,3 +131,66 @@ second sample, not just the one that motivated building it, before
 being trusted. Had this capability been declared production-ready after
 RoningLoader alone, the pipeline would have shipped with a
 false-positive generator that happened not to have fired yet.
+
+\subsection{Network IOC Contamination: Parsing Noise and Sandbox
+  Background Traffic}
+\label{sec:case-ioc-noise}
+
+Auditing the pipeline's STIX/MISP-facing IOC output directly, rather
+than only the ATT\&CK technique scores \S\ref{sec:evaluation} already
+covers, surfaced two independent contamination sources neither
+technique-level metric can see, since neither changes which techniques
+are reported: fixing both left every sample's technique set, precision,
+and recall bit-for-bit unchanged.
+
+First, the static domain extractor's dotted-string regex was filtered
+only by a hand-written denylist of namespace prefixes anchored to the
+start of the match, so it mis-tokenized compiler metadata as domains:
+\code{kernel32.dllfailed}, \code{asio.misc}, and, across RoningLoader's
+26 resubmitted components (\S\ref{sec:resubmission}), an entire class of
+Authenticode certificate-chain endpoints (\code{crl.comodoca.com},
+\code{cacerts.digicert.com}) present in essentially any code-signed PE.
+None of these are adversary-chosen infrastructure, yet every STIX bundle
+exported before the fix promoted them to full \code{domain-name}
+indicators regardless. A TLD allowlist, a compound-identifier casing
+check (\code{MyApplication.app} is PascalCase in a way a human-typed C2
+domain essentially never is), and a small, exact-matched allowlist for
+the confirmed-benign PKI endpoints removed every instance across all
+three families and all 26 resubmitted components.
+
+Second, and unrelated to the first, CAPE's dynamic network capture
+(\code{network.hosts}) is a whole-VM PCAP dump with no per-process
+attribution: it cannot distinguish the sample's own connections from the
+sandbox guest's background OS traffic. Cross-referencing every IP
+observed across all three families' detonations against ASN registration
+data found 18, none tied to any domain the sample itself resolved,
+resolving to Microsoft Corporation (Azure AD/Teams telemetry) or Akamai
+(the CDN fronting Windows Update and Defender cloud lookups), and
+repeating byte-for-byte across a ransomware family, an infostealer, and
+a loader, three samples with no plausible reason to share
+infrastructure. A narrowly-scoped allowlist of these specific,
+individually-confirmed IPs, deliberately not a blanket ASN or CIDR rule
+(an Azure-Front-Door-fronted hostname elsewhere in the same dataset was
+left untouched, since domain fronting through a major CDN is a real
+adversary technique and ASN alone is not evidence of innocence there),
+removed them from the reported IOCs.
+
+The fix is independently checkable against WhiteSnakeStealer's own
+ground truth, which documents a 31-node, 29-unique-IP HTTP C2 list
+recovered by manual reverse engineering, the same protocol that
+produced Table~\ref{tab:validation}. After the sandbox-noise filter,
+the pipeline's dynamic-capture output
+matches that list exactly: 29 of 29, zero missed, zero remaining
+contamination. CAPE's own \code{dead\_connect} signature (confidence
+100\%, ``31 unique'' unreachable attempts) independently corroborates
+why every one of these reads as unreachable in the sandbox trace:
+containment-first sandboxing (\S\ref{sec:limitations}, item~6) means the
+sample's own connection attempts to its real C2 fail by design, not
+because the recovered addresses are fabricated.
+
+The lesson generalizes the same way the other cases do: every exclusion
+is a specific, individually-justified, auditable entry, logged with its
+own reason string, not a general reputation filter, since the whole
+point of this pipeline over a reputation aggregator
+(\S\ref{sec:related-work}) is that every decision stays traceable to a
+concrete cause rather than asserted.

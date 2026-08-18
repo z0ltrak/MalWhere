@@ -127,4 +127,17 @@ como una advertencia abierta.
   ambas describen actividad del atacante que precede a la existencia
   de la propia muestra.
 
+\item \textbf{La captura de red din\'amica no tiene atribuci\'on por
+  proceso.} La lista \code{network.hosts} de CAPE refleja el
+  tr\'afico de toda la m\'aquina virtual del sandbox, no solo el del
+  propio proceso de la muestra, por lo que la telemetr\'ia de fondo del
+  sistema operativo hu\'esped puede aparecer indistinguible de las
+  conexiones reales de la muestra (\S\ref{sec:case-ioc-noise}). La
+  mitigaci\'on aplicada es una lista de permitidos estrecha con las IP
+  espec\'ificas confirmadas individualmente que realmente contaminaban
+  las detonaciones de estas tres muestras, no un filtro general de ASN
+  o de reputaci\'on; una muestra reci\'en detonada podr\'ia mostrar la
+  misma clase de contaminaci\'on bajo una IP distinta que la lista
+  actual todav\'ia no cubre.
+
 \end{enumerate}

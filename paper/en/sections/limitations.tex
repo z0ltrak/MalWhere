@@ -106,4 +106,15 @@ either already mitigated concretely or scoped as a precise next step
   are a structural boundary rather than unaddressed backlog, since both
   describe attacker activity that precedes the sample's own existence.
 
+\item \textbf{Dynamic network capture has no per-process attribution.}
+  CAPE's \code{network.hosts} list reflects the whole sandbox VM's
+  traffic, not just the sample's own process, so the guest OS's own
+  background telemetry can appear indistinguishably from the sample's
+  real connections (\S\ref{sec:case-ioc-noise}). The mitigation applied
+  is a narrow, individually-confirmed allowlist of the specific IPs
+  actually observed contaminating these three samples' detonations, not
+  a general ASN or reputation filter; a newly detonated sample could
+  surface the same class of contamination under a different IP the
+  current allowlist does not yet cover.
+
 \end{enumerate}
