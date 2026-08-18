@@ -320,6 +320,7 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 > **MISP note:** MISP must be accessed at `https://localhost` (port 443 mapped directly).
 > Accessing via `https://localhost:8443` will fail due to internal redirect behaviour.
 > Accept the self-signed certificate warning in your browser on first access.
+> `inetsim` also wants port 443, see Known Issues below, "`inetsim` and `misp` both want port 443", for how the two now coexist.
 
 > **MISP login gotcha:** the real bootstrap admin account is `admin@admin.test`,
 > not the `MISP_EMAIL` value set in docker-compose.yml (`admin@malwhere.local`),
@@ -511,7 +512,10 @@ docker compose -f docker/docker-compose.yml --profile core up -d pipeline
 ## Known Issues & Fixes
 
 ### MISP redirects to wrong port
-MISP must run on port 443 directly. The `MISP_BASEURL` env var is ignored if the internal port differs from the external port. Keep the mapping as `443:443`.
+MISP must be reachable on host port 443 (container port 443, not remapped to something like 8443). The `MISP_BASEURL` env var is ignored if the internal port differs from the external port. The current mapping, `127.0.0.1:443:443`, satisfies this (host port is still 443, just bound to loopback only, see the next entry for why): don't change the port number, `443:443` on either side of the colon.
+
+### `inetsim` and `misp` both want port 443
+`inetsim` runs with `network_mode: host` and (by design) needs to be reachable from the guest VM, so it binds `service_bind_address` to the host's libvirt-bridge IP (narrowed from `0.0.0.0`, see `docker/inetsim/entrypoint.sh`). `misp`'s own port 443 is bound to `127.0.0.1` specifically (`docker-compose.yml`'s `misp` service), not the Docker-default `0.0.0.0`, for exactly this reason: a `0.0.0.0` bind on either service blocks *any* other bind on that port host-wide, so if either one goes back to binding all interfaces, they collide again and one of them fails to start (MISP errors with "address already in use"; `inetsim`'s own log shows `https_443_tcp - failed!` while its other services start fine). Both together were verified end to end with a real CAPE detonation to confirm the guest VM still reaches `inetsim` correctly on the narrower bind (same domains/IPs/signatures as before the fix).
 
 ### MISP's MySQL password drifts from `.env`
 The `misp` MySQL user's actual password is set once, during `mysql_data`'s very first init, to whatever `MYSQL_PASSWORD` was *at that time*, it does not get updated on later container recreates just because `.env` changed. If MISP's logs show `ERROR 1045 (28000): Access denied for user 'misp'@'...'` in a loop (`docker logs malwhere-misp`), that's this, the password baked into the volume no longer matches `.env`. Fix directly against MySQL:

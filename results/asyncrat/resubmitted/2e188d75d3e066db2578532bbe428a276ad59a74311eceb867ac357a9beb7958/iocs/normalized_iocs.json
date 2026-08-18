@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-18T12:55:21.500617+00:00",
+  "sources": {
+    "static_report": "static/reports/asyncrat/2e188d75d3e066db2578532bbe428a276ad59a74311eceb867ac357a9beb7958_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "asyncrat",
+    "static_sha256": "2e188d75d3e066db2578532bbe428a276ad59a74311eceb867ac357a9beb7958",
+    "static_md5": "7794f5b0115cf2c394001416d9416065",
+    "static_sha1": "4e7b6c88c9f6bfa0605635f0cc1c5dc860fe2a7e",
+    "static_imphash": null,
+    "static_ssdeep": "6:ou+jJNmBO0YTRNQvZqzwOVonMUFycFGREPeIkBxDugpomUaHXYsMDJ:oBOOplNQv8toMUF6E2I09ZXYX",
+    "static_tlsh": "T110E072A79012B122825180BEE4242AABA00300A22B8936E398882D24C9837D3E8F56D0",
+    "static_filename": "2e188d75d3e066db2578532bbe428a276ad59a74311eceb867ac357a9beb7958",
+    "static_file_type": "unknown"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "2e188d75d3e066db2578532bbe428a276ad59a74311eceb867ac357a9beb7958",
+      "md5": "7794f5b0115cf2c394001416d9416065",
+      "sha1": "4e7b6c88c9f6bfa0605635f0cc1c5dc860fe2a7e",
+      "filename": "2e188d75d3e066db2578532bbe428a276ad59a74311eceb867ac357a9beb7958",
+      "type": "unknown"
+    }
+  ],
+  "network_iocs": {
+    "domains": [],
+    "ips": [],
+    "urls": [],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [
+      {
+        "value": "C:\\sf437qpt\\dll\\ASNDCJ.dll",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [],
+  "discarded_entries": []
+}

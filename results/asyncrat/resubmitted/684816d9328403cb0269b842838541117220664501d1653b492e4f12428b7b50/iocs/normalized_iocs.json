@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-18T12:55:21.615495+00:00",
+  "sources": {
+    "static_report": "static/reports/asyncrat/684816d9328403cb0269b842838541117220664501d1653b492e4f12428b7b50_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "asyncrat",
+    "static_sha256": "684816d9328403cb0269b842838541117220664501d1653b492e4f12428b7b50",
+    "static_md5": "d959dfe1a491499b579c2b67cde0d970",
+    "static_sha1": "46be320b6a60e75e77e743c6de528243e9ce34d1",
+    "static_imphash": "f34d5f2d4577ed6d9ceec516c1f5a744",
+    "static_ssdeep": "384:gYaJWq4Ava7Rm32oDuuw3+q5XwYeLBEqvh0FbOKTCOQLrRApkFTBLTAOZwpGd2vt:IxC3fOJ5yqvGFbO75LrVFo9jeOjhXbP",
+    "static_tlsh": "T136E23B4877E04312D5FEAFF02DF2B10A1675E11B9923EB5E0CD8CA962B639C146507EB",
+    "static_filename": "684816d9328403cb0269b842838541117220664501d1653b492e4f12428b7b50",
+    "static_file_type": "pe_dotnet"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "684816d9328403cb0269b842838541117220664501d1653b492e4f12428b7b50",
+      "md5": "d959dfe1a491499b579c2b67cde0d970",
+      "sha1": "46be320b6a60e75e77e743c6de528243e9ce34d1",
+      "filename": "684816d9328403cb0269b842838541117220664501d1653b492e4f12428b7b50",
+      "type": "pe_dotnet"
+    }
+  ],
+  "network_iocs": {
+    "domains": [],
+    "ips": [],
+    "urls": [],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [
+      {
+        "value": "f9597bb1-8ca7-491e-afa8-501d5f298be2",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [
+    {
+      "technique": "T1113",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CopyFromScreen",
+          "confidence": "medium",
+          "name": "Screen Capture",
+          "justification": "The malware string 'CopyFromScreen' was found in the binary. This string is characteristic of Screen Capture behavior. The presence of this specific string alone (no other Screen Capture-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1125",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "avicap32.dll",
+          "confidence": "high",
+          "name": "Video Capture",
+          "justification": "The malware string 'avicap32.dll' was found in the binary. This string is characteristic of Video Capture behavior. The presence of this specific string alone (no other Video Capture-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1497",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "Sleep",
+          "confidence": "low",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'Sleep' was found in the binary. This string is characteristic of Virtualization/Sandbox Evasion behavior. The presence of this specific string alone (no other Virtualization/Sandbox Evasion-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "1 mutexes found",
+          "confidence": "medium",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "Found 1 mutex names in the configuration. Mutexes are often used to check for a running instance (single-instance enforcement) and for sandbox detection (T1497)."
+        }
+      ]
+    },
+    {
+      "technique": "T1560.001",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "GZipStream",
+          "confidence": "medium",
+          "name": "Archive via Utility",
+          "justification": "The malware string 'GZipStream' was found in the binary. This string is characteristic of Archive via Utility behavior. The presence of this specific string alone (no other Archive via Utility-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    }
+  ],
+  "discarded_entries": []
+}

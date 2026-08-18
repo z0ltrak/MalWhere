@@ -10300,10 +10300,10 @@
       "schemas.microsoft.com"
     ],
     "urls": [
-      "http://schemas.microsoft.com/SMI/2016/WindowsSettings\">true</longPathAware>",
-      "http://schemas.microsoft.com/SMI/2016/WindowsSettings\">PerMonitorV2</dpiAwareness>",
       "http://schemas.microsoft.com/SMI/2005/WindowsSettings\">true/pm</dpiAware>",
-      "http://schemas.microsoft.com/SMI/2019/WindowsSettings\">UTF-8</activeCodePage>"
+      "http://schemas.microsoft.com/SMI/2016/WindowsSettings\">true</longPathAware>",
+      "http://schemas.microsoft.com/SMI/2019/WindowsSettings\">UTF-8</activeCodePage>",
+      "http://schemas.microsoft.com/SMI/2016/WindowsSettings\">PerMonitorV2</dpiAwareness>"
     ],
     "emails": [
       "Y@System.GC.HeapAffinitizeRanges"
@@ -10311,11 +10311,11 @@
     "registry_paths": [],
     "file_paths": [],
     "mutexes": [
-      "8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a",
-      "e2011457-1546-43c5-a5fe-008deee3d3f0",
       "1f676c76-80e1-4239-95bb-83d0f6d0da78",
-      "35138b9a-5d96-4fbd-8e2d-a2440225f93a",
-      "4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38"
+      "4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38",
+      "e2011457-1546-43c5-a5fe-008deee3d3f0",
+      "8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a",
+      "35138b9a-5d96-4fbd-8e2d-a2440225f93a"
     ],
     "encryption_keys": [
       {
@@ -10328,7 +10328,7 @@
     "xor_recovered_iocs": []
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-18T11:56:34.102994",
+  "analysis_timestamp": "2026-08-18T12:50:51.058728",
   "errors": [
     "FLOSS timed out with: floss --no static --json -- /samples/866ac5e19171919e0861a591f746f7b8b746a59cb9aec48306539569d83373c2.exe"
   ]

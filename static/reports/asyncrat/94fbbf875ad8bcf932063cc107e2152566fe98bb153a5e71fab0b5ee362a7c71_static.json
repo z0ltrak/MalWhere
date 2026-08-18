@@ -1,0 +1,89 @@
+{
+  "filename": "94fbbf875ad8bcf932063cc107e2152566fe98bb153a5e71fab0b5ee362a7c71",
+  "size_bytes": 60,
+  "size_mb": 0.0,
+  "extension": "",
+  "file_type": "unknown",
+  "file_type_info": {
+    "type": "unknown",
+    "confidence": "low"
+  },
+  "md5": "ca4024fa7da450f46a3eb9d635ee7934",
+  "sha1": "7d29aad2684374fe426a07d7a574fd59eb5da57e",
+  "sha256": "94fbbf875ad8bcf932063cc107e2152566fe98bb153a5e71fab0b5ee362a7c71",
+  "ssdeep": "3:Uaql/stnyzNkfZCwztPtAF9:UF/sVyhkfZCwzJtg9",
+  "tlsh": "T167A0024A8282E2F7C451173945C4F6038308B817955AEB21298453411F5A14F8402623",
+  "is_dotnet": false,
+  "metadata": {},
+  "sections": [],
+  "imports": [],
+  "exports": [],
+  "resources": [],
+  "strings": {
+    "standard": [],
+    "floss": [],
+    "decoded": [],
+    "deobfuscated": [],
+    "dotnet_strings": []
+  },
+  "packer": {
+    "detected": false,
+    "packers": [],
+    "confidence": "none"
+  },
+  "indicators": {
+    "suspicious_imports": [],
+    "suspicious_strings": [],
+    "high_entropy_sections": [],
+    "anti_debug": [],
+    "anti_vm": [],
+    "ransomware_indicators": [],
+    "anti_sandbox": [],
+    "anti_vm_strings": [],
+    "anti_sandbox_strings": [],
+    "sleep_functions": []
+  },
+  "embedded_files": [],
+  "discovered_keys": [],
+  "yara": {
+    "matches": [],
+    "matched_rules": [],
+    "packer_detected": false,
+    "packers": [],
+    "attck_mapping": []
+  },
+  "entropy_analysis": {
+    "high_entropy_sections": [],
+    "suspicious_entropy": [],
+    "packed_sections": [],
+    "encrypted_data": [],
+    "overall_entropy": 4.136550632945934,
+    "justification": "Overall file entropy is 4.14, which is within the normal range for executables (typically 5.5-6.5). No significant entropy anomalies detected.",
+    "crypto_indicators": []
+  },
+  "attck_mappings": [],
+  "config": {
+    "ips": [],
+    "domains": [],
+    "urls": [],
+    "emails": [],
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": [],
+    "xor_recovered_iocs": []
+  },
+  "nsis_detected": false,
+  "analysis_timestamp": "2026-08-18T12:55:20.555408",
+  "errors": [],
+  "resubmission_lineage": {
+    "parent_hash": "866ac5e19171919e0861a591f746f7b8b746a59cb9aec48306539569d83373c2",
+    "parent_family": "asyncrat",
+    "discovery_mechanism": "cape_payload",
+    "original_name": "94fbbf875ad8bcf932063cc107e2152566fe98bb153a5e71fab0b5ee362a7c71",
+    "cape_task_id": 7,
+    "depth": 1,
+    "discovered_at": "2026-08-18T12:55:09.402252+00:00"
+  }
+}

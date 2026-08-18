@@ -96,7 +96,7 @@
       "techniqueID": "T1071",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: network_cnc_http, network_http, network_questionable_http_path, procmem_yara, static_pe_anomaly, unbacked_memory_network_connection",
+      "comment": "dynamic corroborated; evidence: encrypted_ioc, network_cnc_http, network_http, network_ip_exe, network_questionable_http_path, procmem_yara, reads_memory_remote_process, static_pe_anomaly, unbacked_memory_network_connection",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [

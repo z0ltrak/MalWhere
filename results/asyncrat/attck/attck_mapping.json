@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T12:02:07.498540+00:00",
+  "generated_at": "2026-08-18T12:55:21.960722+00:00",
   "sample": {
     "family": "asyncrat",
     "static_sha256": "866ac5e19171919e0861a591f746f7b8b746a59cb9aec48306539569d83373c2",
@@ -50,12 +50,12 @@
       {
         "role": "cape_payload",
         "source": "dynamic",
-        "sha256": "da83c9c8566fe5a2dd2b2ea004175422dd47122b536e570ced82765259b9e507",
-        "md5": "3c99e22e782cdaa1ea6bf4061d953c98",
-        "sha1": "d193bdd984aa64c2d51ef493d75b44ef06d57c16",
-        "filename": "da83c9c8566fe5a2dd2b2ea004175422dd47122b536e570ced82765259b9e507",
-        "type": "PE32 executable (GUI) Intel 80386, for MS Windows",
-        "cape_type": "XWorm payload: 32-bit executable"
+        "sha256": "94fbbf875ad8bcf932063cc107e2152566fe98bb153a5e71fab0b5ee362a7c71",
+        "md5": "ca4024fa7da450f46a3eb9d635ee7934",
+        "sha1": "7d29aad2684374fe426a07d7a574fd59eb5da57e",
+        "filename": "94fbbf875ad8bcf932063cc107e2152566fe98bb153a5e71fab0b5ee362a7c71",
+        "type": "data",
+        "cape_type": "Unpacked Shellcode"
       },
       {
         "role": "cape_payload",
@@ -70,20 +70,10 @@
       {
         "role": "cape_payload",
         "source": "dynamic",
-        "sha256": "f618bb8e9006dcb961383413aa6d64bd8fa062f5ff8a3e8bebec15ba7d39d5dc",
-        "md5": "6a61a1883634503d83da5dc7f84c7fcd",
-        "sha1": "fdbc36571eb2663fe394b839987dbed0ea414aaf",
-        "filename": "f618bb8e9006dcb961383413aa6d64bd8fa062f5ff8a3e8bebec15ba7d39d5dc",
-        "type": "data",
-        "cape_type": "Unpacked Shellcode"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "74e3b1d95a5e6f7d53342f65e0411950e87808277e33c2a084231f8b9956674e",
-        "md5": "002f6275925ffb2a0f2df252ff10edae",
-        "sha1": "4204ebcd524d64ef4e969b64a8140ee42f519a18",
-        "filename": "74e3b1d95a5e6f7d53342f65e0411950e87808277e33c2a084231f8b9956674e",
+        "sha256": "e3f7aef1c568a7d0da1532265d94df5c8e9d04e78e2f9bb6b5b09049b6bb718b",
+        "md5": "5b46a8d7b1d990fce873c326c32ed6f9",
+        "sha1": "2dcf07740ae1c6f577cb70c040eb52f5addb2fd8",
+        "filename": "e3f7aef1c568a7d0da1532265d94df5c8e9d04e78e2f9bb6b5b09049b6bb718b",
         "type": "data",
         "cape_type": "Unpacked Shellcode"
       },
@@ -100,12 +90,22 @@
       {
         "role": "cape_payload",
         "source": "dynamic",
-        "sha256": "f82eece7867d2a435d9d8c3f931b7160f45d0785df4f83879f5d433abcd0d1ca",
-        "md5": "638d7aca393095161f5a835b29852978",
-        "sha1": "9f6d0bdc7e60457020ba5e951a7ae6407bf67d80",
-        "filename": "f82eece7867d2a435d9d8c3f931b7160f45d0785df4f83879f5d433abcd0d1ca",
+        "sha256": "2e188d75d3e066db2578532bbe428a276ad59a74311eceb867ac357a9beb7958",
+        "md5": "7794f5b0115cf2c394001416d9416065",
+        "sha1": "4e7b6c88c9f6bfa0605635f0cc1c5dc860fe2a7e",
+        "filename": "2e188d75d3e066db2578532bbe428a276ad59a74311eceb867ac357a9beb7958",
         "type": "data",
         "cape_type": "Unpacked Shellcode"
+      },
+      {
+        "role": "cape_payload",
+        "source": "dynamic",
+        "sha256": "684816d9328403cb0269b842838541117220664501d1653b492e4f12428b7b50",
+        "md5": "d959dfe1a491499b579c2b67cde0d970",
+        "sha1": "46be320b6a60e75e77e743c6de528243e9ce34d1",
+        "filename": "684816d9328403cb0269b842838541117220664501d1653b492e4f12428b7b50",
+        "type": "PE32 executable (GUI) Intel 80386, for MS Windows",
+        "cape_type": "XWorm payload: 32-bit executable"
       }
     ],
     "network_iocs": {
@@ -145,19 +145,13 @@
       ],
       "urls": [
         {
-          "value": "http://schemas.microsoft.com/SMI/2016/WindowsSettings\">true</longPathAware>",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://schemas.microsoft.com/SMI/2016/WindowsSettings\">PerMonitorV2</dpiAwareness>",
-          "sources": [
-            "static"
-          ]
-        },
-        {
           "value": "http://schemas.microsoft.com/SMI/2005/WindowsSettings\">true/pm</dpiAware>",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://schemas.microsoft.com/SMI/2016/WindowsSettings\">true</longPathAware>",
           "sources": [
             "static"
           ]
@@ -169,13 +163,181 @@
           ]
         },
         {
+          "value": "http://schemas.microsoft.com/SMI/2016/WindowsSettings\">PerMonitorV2</dpiAwareness>",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/filestreamingservice/files/dd21b210-5be5-4ba4-8cd8-6c026909e6eb?P1=1787058329&P2=404&P3=2&P4=aBx1b9wujtJ3tvuG473BXjA%2ftSuMdV5Px%2bYSLNVaKI6tbeuwneOBjywxba%2b21s1Z0v%2f5AFbrDsmlOoeqvubmqw%3d%3d&cacheHostOrigin=tlu.dl.delivery.mp.microsoft.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
           "value": "http://85.208.10.204/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56/pieceshash?cacheHostOrigin=msedge.f.dl.delivery.mp.microsoft.com",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "http://85.208.10.204/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787659091&P2=404&P3=2&P4=nYEiEweN6Abume7wUUT155lbMsE5XN7OwFHQ4jZGqpim5iT7bmRSexTus99gEhfVo6fIlRIqkNq9VaNBdKeVkQ%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
+          "value": "http://85.208.10.204/filestreamingservice/files/753bb2df-a166-494f-aa7d-5678b1ef0c56?P1=1787662311&P2=404&P3=2&P4=ADy7ueFw3guO%2bFenPmsvEspzriZ59DVQ5vQKoILNSpkHuRYUVraeDkxLc%2bSZfzvGrabSlWPUlORMszBMa3iwPQ%3d%3d&cacheHostOrigin=msedge.b.tlu.dl.delivery.mp.microsoft.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/c/msdownload/update/software/defu/2024/01/mpsigstub_6103d9f6bf95c772c8b7ee89aee370cdca4642f8.exe?cacheHostOrigin=2.au.download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/phf/d/dod/ph/prod5/msdownload/update/software/defu/2026/07/1024/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe.json?cacheHostOrigin=download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/phf/d/dod/ph/prod8/msdownload/update/software/defu/2026/08/1024/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe.json?cacheHostOrigin=download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/d/msdownload/update/software/defu/2026/07/am_engine_db6f1f741002398f57e417866cf30419c75a387a.exe?cacheHostOrigin=4.au.download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/d/msdownload/update/software/defu/2026/08/am_base_5b36d1b18f5c745f69f22d3516a506b2d2141961.exe?cacheHostOrigin=3.au.download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/phf/d/dod/ph/prod8/msdownload/update/software/defu/2026/08/1024/am_delta_6b5d20c3ecc802b4324c34f4c501c322faf22b34.exe.json?cacheHostOrigin=download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/d/msdownload/update/software/defu/2026/08/am_delta_6b5d20c3ecc802b4324c34f4c501c322faf22b34.exe?cacheHostOrigin=2.au.download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/phf/c/doc/ph/prod5/msdownload/update/software/ftpk/2023/09/1024/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab.json?cacheHostOrigin=download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/c/msdownload/update/software/ftpk/2023/09/windows10.0-kb5011048-x64_8bac8a1de5a48c93c3fb1e55582ce2ea79848f00.cab?cacheHostOrigin=3.au.download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/phf/d/dod/ph/prod5/msdownload/update/software/updt/2023/12/1024/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab.json?cacheHostOrigin=download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/phf/c/doc/ph/prod5/msdownload/update/software/secu/2025/09/1024/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab.json?cacheHostOrigin=download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/phf/d/dod/ph/prod5/msdownload/update/software/uprl/2026/08/1024/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe.json?cacheHostOrigin=download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/d/msdownload/update/software/updt/2023/12/windows10.0-kb5033052-x64_e8532308d036eab072373f07c16de03b6d2c7469.cab?cacheHostOrigin=4.au.download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/d/msdownload/update/software/updt/2024/05/windows10.0-kb5001716-x64_a2bb12707df4d0d7ecfc8693d3ce965aa0ff2c9d.cab?cacheHostOrigin=3.au.download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/c/msdownload/update/software/secu/2025/09/windows10.0-kb5066135-x64-ndp48_cf6ef8abaf08a1d539382ea258a95f2fe6589880.cab?cacheHostOrigin=3.au.download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/d/msdownload/update/software/uprl/2026/08/windows-kb890830-x64-v5.144_a43bf735764ea1c5ae2a1bd15602a9a6baf378e7.exe?cacheHostOrigin=2.au.download.windowsupdate.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/filestreamingservice//files/af08325a-a4d7-4d06-9037-dff7a4325c40/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/filestreamingservice//files/4bb97abf-ed3a-4447-bac6-93373bb889e0/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/filestreamingservice//files/31568bc2-a514-408d-beb6-1439e703c889/pieceshash?cacheHostOrigin=dl.delivery.mp.microsoft.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/filestreamingservice/files/4bb97abf-ed3a-4447-bac6-93373bb889e0?P1=1787058192&P2=404&P3=2&P4=ax9NmxgmY5TzVlu3iVsbx8WFA7ICiyDyqtnZlgx1o%2bV7Xef1V4aXE83OyPxMaA2zZ0KgGJqE2rwWz%2bkjDNHOow%3d%3d&cacheHostOrigin=3.tlu.dl.delivery.mp.microsoft.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/filestreamingservice/files/af08325a-a4d7-4d06-9037-dff7a4325c40?P1=1787058252&P2=404&P3=2&P4=XNmMo9KLxIapIa%2fbZtRHLIZgZsu8lF%2fIqshMC1cy0jcKunCH%2fpxa%2biRfjmoiqvU%2b3na820cJLsOMa295SmwEgQ%3d%3d&cacheHostOrigin=3.tlu.dl.delivery.mp.microsoft.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/filestreamingservice/files/31568bc2-a514-408d-beb6-1439e703c889?P1=1787058212&P2=404&P3=2&P4=EoD8Um5tiI42BuV5got4Zrj6ARGk0TiqrhLif7lzVX1CbIMYTa37drm3Xrpjp0oKJke6U%2b32k37fRYN1i3Qhmw%3d%3d&cacheHostOrigin=3.tlu.dl.delivery.mp.microsoft.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/filestreamingservice/files/af74329d-b580-45ba-98c8-34bf4f27f853?P1=1787058172&P2=404&P3=2&P4=UAHZ4PLWadTb04iF3olPnjiSY4CRbk2jBLq6oPoQnrpeQITCeoR6VlZXkGbmjB2M5b8fZ23rxfqKYPgiH%2b814g%3d%3d&cacheHostOrigin=3.tlu.dl.delivery.mp.microsoft.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/filestreamingservice/files/a8821f7f-f5b3-4a84-99d5-9d563b6adb99?P1=1787058172&P2=404&P3=2&P4=YQG78FJ7IDZYBMKPWojaFv7pA1h46JtlkPmqsWcsj5rtgD92qu0%2fFotr8mjM17QsNk7COu8l9IQEofc8WD2GQA%3d%3d&cacheHostOrigin=3.tlu.dl.delivery.mp.microsoft.com",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "http://85.208.10.204/filestreamingservice/files/4b3a45b1-1a01-4c3f-8330-18bcfd342b14?P1=1787058172&P2=404&P3=2&P4=cvcdeoasQ1LnYp0NkPTvh7htHxYGC%2f19sZrD17YnJ9db2OaiMIZATi0TX3aRAN66VAnMGWfW2bZuAEcrm0qGHw%3d%3d&cacheHostOrigin=3.tlu.dl.delivery.mp.microsoft.com",
           "sources": [
             "dynamic"
           ]
@@ -208,25 +370,7 @@
       "file_paths": [],
       "mutexes": [
         {
-          "value": "8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "e2011457-1546-43c5-a5fe-008deee3d3f0",
-          "sources": [
-            "static"
-          ]
-        },
-        {
           "value": "1f676c76-80e1-4239-95bb-83d0f6d0da78",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "35138b9a-5d96-4fbd-8e2d-a2440225f93a",
           "sources": [
             "static"
           ]
@@ -238,31 +382,37 @@
           ]
         },
         {
+          "value": "e2011457-1546-43c5-a5fe-008deee3d3f0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "35138b9a-5d96-4fbd-8e2d-a2440225f93a",
+          "sources": [
+            "static"
+          ]
+        },
+        {
           "value": "taFdiWQVNTqreQ9V",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "Local\\SM0:9220:304:WilStaging_02",
+          "value": "Local\\SM0:11452:304:WilStaging_02",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "Local\\SM0:2264:304:WilStaging_02",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "Local\\SM0:3560:304:WilStaging_02",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "Local\\SM0:8420:304:WilStaging_02",
+          "value": "Local\\SM0:14984:304:WilStaging_02",
           "sources": [
             "dynamic"
           ]
@@ -454,6 +604,22 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
+          "evidence": "encrypted_ioc",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'encrypted_ioc' fired (severity=2, confidence=100%, categories=['encryption'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "reads_memory_remote_process",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'reads_memory_remote_process' fired (severity=2, confidence=100%, categories=['memory scraping', 'injection'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
           "evidence": "unbacked_memory_network_connection",
           "confidence": "high",
           "name": "",
@@ -466,6 +632,14 @@
           "confidence": "low",
           "name": "",
           "justification": "CAPE signature 'network_cnc_http' fired (severity=2, confidence=30%, categories=['network', 'c2'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "network_ip_exe",
+          "confidence": "high",
+          "name": "",
+          "justification": "CAPE signature 'network_ip_exe' fired (severity=5, confidence=100%, categories=['network', 'downloader'])"
         },
         {
           "source": "dynamic",
