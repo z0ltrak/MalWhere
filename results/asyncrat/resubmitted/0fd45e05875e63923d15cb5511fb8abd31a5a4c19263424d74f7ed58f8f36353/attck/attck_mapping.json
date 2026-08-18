@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-18T09:50:02.629281+00:00",
+  "sample": {
+    "family": "asyncrat",
+    "static_sha256": "0fd45e05875e63923d15cb5511fb8abd31a5a4c19263424d74f7ed58f8f36353",
+    "static_md5": "b2e8f55e0a4848f06390460bcbf508b3",
+    "static_sha1": "ee66ffb41e9b67bc23fdc9ef4b053c9190eb3b80",
+    "static_imphash": "476f92c8f9ddbcb805cdc5c61fbc5635",
+    "static_ssdeep": "3072:Vf5sHQ5MLM3Cu5WFj7ylLxgy35PKPvX7DqXr8GyCdF:J5TEFfyguKPPa782",
+    "static_tlsh": "T18B04A2C4657788A5EA8DDFFB5B631B8E01FAC0E36151FE120FD3C7C889466960A09973",
+    "static_filename": "0fd45e05875e63923d15cb5511fb8abd31a5a4c19263424d74f7ed58f8f36353",
+    "static_file_type": "pe_dotnet"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "0fd45e05875e63923d15cb5511fb8abd31a5a4c19263424d74f7ed58f8f36353",
+        "md5": "b2e8f55e0a4848f06390460bcbf508b3",
+        "sha1": "ee66ffb41e9b67bc23fdc9ef4b053c9190eb3b80",
+        "filename": "0fd45e05875e63923d15cb5511fb8abd31a5a4c19263424d74f7ed58f8f36353",
+        "type": "pe_dotnet"
+      }
+    ],
+    "network_iocs": {
+      "domains": [],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [],
+      "mutexes": [
+        {
+          "value": "e7a55d32-d525-46d7-b504-58afa65fa19e",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "encryption_keys": [
+        {
+          "value": "{'hex': '4D53392A6A24D5E801ADA14E79B43F9BEBB79150', 'length': 40, 'description': 'SHA1 key'}",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [
+    {
+      "technique_id": "T1497",
+      "technique_name": "Virtualization/Sandbox Evasion",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "1 mutexes found",
+          "confidence": "medium",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "Found 1 mutex names in the configuration. Mutexes are often used to check for a running instance (single-instance enforcement) and for sandbox detection (T1497)."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    }
+  ],
+  "summary": {
+    "total_techniques": 1,
+    "high": 0,
+    "medium": 1,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 1,
+    "dynamic_only": 0
+  }
+}

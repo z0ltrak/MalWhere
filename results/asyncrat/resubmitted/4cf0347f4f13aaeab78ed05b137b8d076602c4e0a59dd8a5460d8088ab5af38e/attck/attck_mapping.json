@@ -1,0 +1,155 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-18T09:59:06.695456+00:00",
+  "sample": {
+    "family": "asyncrat",
+    "static_sha256": "4cf0347f4f13aaeab78ed05b137b8d076602c4e0a59dd8a5460d8088ab5af38e",
+    "static_md5": "8b1aa64ab2226fbfcd40ea62ed09d995",
+    "static_sha1": "3583334a0337c97c94cfca437e41f24b7697227a",
+    "static_imphash": "476f92c8f9ddbcb805cdc5c61fbc5635",
+    "static_ssdeep": "3072:zrFdSZQ3hhhhhhhhhhhhhhhhhhhhhhhhhhhUB1y6A4DIg6hIgTNJT:zhyQ3hhhhhhhhhhhhhhhhhhhhhhhhhhD",
+    "static_tlsh": "T16EB3C6446AA09A76D68E2FB31229278C53B27C0315C3BD3B1DCF8B6D0E55DC85116EBE",
+    "static_filename": "4cf0347f4f13aaeab78ed05b137b8d076602c4e0a59dd8a5460d8088ab5af38e",
+    "static_file_type": "pe_dotnet"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "4cf0347f4f13aaeab78ed05b137b8d076602c4e0a59dd8a5460d8088ab5af38e",
+        "md5": "8b1aa64ab2226fbfcd40ea62ed09d995",
+        "sha1": "3583334a0337c97c94cfca437e41f24b7697227a",
+        "filename": "4cf0347f4f13aaeab78ed05b137b8d076602c4e0a59dd8a5460d8088ab5af38e",
+        "type": "pe_dotnet"
+      }
+    ],
+    "network_iocs": {
+      "domains": [],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [],
+      "mutexes": [
+        {
+          "value": "29f77a2a-ec8f-4c5c-899c-261aba86d1e7",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [
+    {
+      "technique_id": "T1071",
+      "technique_name": "Application Layer Protocol",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "1 C2 IPs found",
+          "confidence": "medium",
+          "name": "Application Layer Protocol",
+          "justification": "Found 1 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1113",
+      "technique_name": "Screen Capture",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CopyFromScreen",
+          "confidence": "medium",
+          "name": "Screen Capture",
+          "justification": "The malware string 'CopyFromScreen' was found in the binary. This string is characteristic of Screen Capture behavior. The presence of this specific string alone (no other Screen Capture-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1497",
+      "technique_name": "Virtualization/Sandbox Evasion",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "1 mutexes found",
+          "confidence": "medium",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "Found 1 mutex names in the configuration. Mutexes are often used to check for a running instance (single-instance enforcement) and for sandbox detection (T1497)."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1560.001",
+      "technique_name": "Archive Collected Data: Archive via Utility",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "GZipStream",
+          "confidence": "medium",
+          "name": "Archive via Utility",
+          "justification": "The malware string 'GZipStream' was found in the binary. This string is characteristic of Archive via Utility behavior. The presence of this specific string alone (no other Archive via Utility-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    }
+  ],
+  "summary": {
+    "total_techniques": 4,
+    "high": 0,
+    "medium": 4,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 4,
+    "dynamic_only": 0
+  }
+}

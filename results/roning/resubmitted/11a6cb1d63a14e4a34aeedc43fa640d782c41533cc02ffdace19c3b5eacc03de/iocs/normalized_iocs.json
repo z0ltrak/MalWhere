@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:28.418857+00:00",
+  "generated_at": "2026-08-18T09:57:42.313778+00:00",
   "sources": {
     "static_report": "static/reports/roning/11a6cb1d63a14e4a34aeedc43fa640d782c41533cc02ffdace19c3b5eacc03de_static.json",
     "dynamic_report": null
@@ -29,128 +29,7 @@
   ],
   "network_iocs": {
     "domains": [],
-    "ips": [
-      {
-        "value": "101.3.4.2",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.12",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.17",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.46",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.10",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.42",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.5",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.7",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.11",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.45",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.72",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.29.18",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.43",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.13",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.41",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.6",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.29.17",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.65",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.9",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "2.5.4.3",
-        "sources": [
-          "static"
-        ]
-      }
-    ],
+    "ips": [],
     "urls": [
       {
         "value": "http://subca.ocsp-certum.com01",

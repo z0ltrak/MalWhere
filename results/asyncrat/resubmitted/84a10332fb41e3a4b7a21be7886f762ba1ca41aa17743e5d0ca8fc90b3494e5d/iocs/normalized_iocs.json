@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-18T09:50:03.960770+00:00",
+  "sources": {
+    "static_report": "static/reports/asyncrat/84a10332fb41e3a4b7a21be7886f762ba1ca41aa17743e5d0ca8fc90b3494e5d_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "asyncrat",
+    "static_sha256": "84a10332fb41e3a4b7a21be7886f762ba1ca41aa17743e5d0ca8fc90b3494e5d",
+    "static_md5": "515e4b44e0e72466e5f385a9599c9146",
+    "static_sha1": "f8300d28a2603c72b1a9b8729c130ad26a7c9429",
+    "static_imphash": null,
+    "static_ssdeep": "24:H2K9AVq7MtjLzCoH9wKlxNMl2xmyEuZhNMsnFCPNnqpdt4+lEbNFjMyi0+eMqP:sVqot9+KlxKl2AXulMyFOqXSfbNtmhm",
+    "static_tlsh": "T11B41534093E44B1BE1720B3028F75726A678FE56EEEA435DB888122F1E12744DDC36F1",
+    "static_filename": "84a10332fb41e3a4b7a21be7886f762ba1ca41aa17743e5d0ca8fc90b3494e5d",
+    "static_file_type": "unknown"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "84a10332fb41e3a4b7a21be7886f762ba1ca41aa17743e5d0ca8fc90b3494e5d",
+      "md5": "515e4b44e0e72466e5f385a9599c9146",
+      "sha1": "f8300d28a2603c72b1a9b8729c130ad26a7c9429",
+      "filename": "84a10332fb41e3a4b7a21be7886f762ba1ca41aa17743e5d0ca8fc90b3494e5d",
+      "type": "unknown"
+    }
+  ],
+  "network_iocs": {
+    "domains": [],
+    "ips": [],
+    "urls": [],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [
+      {
+        "value": "C:\\Users\\Windows\\AppData\\Local\\Temp",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\cvtres.exe",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "c:\\Users\\Windows\\AppData\\Local\\Temp\\CSCCFEA0CEE2A1F4AE18AF54A423DB26F87.TMP",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "C:\\Users\\Windows\\AppData\\Local\\Temp\\RESDCED.tmp",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [],
+  "discarded_entries": []
+}

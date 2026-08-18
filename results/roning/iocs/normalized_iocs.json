@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T08:18:22.497101+00:00",
+  "generated_at": "2026-08-18T09:41:35.561825+00:00",
   "sources": {
     "static_report": "static/reports/roning/sample_static.json",
     "dynamic_report": "dynamic/reports/roning/dynamic_report.json"
@@ -390,12 +390,6 @@
       }
     ],
     "ips": [
-      {
-        "value": "6.0.0.0",
-        "sources": [
-          "static"
-        ]
-      },
       {
         "value": "103.235.46.115",
         "sources": [

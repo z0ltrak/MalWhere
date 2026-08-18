@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T08:22:08.115844+00:00",
+  "generated_at": "2026-08-18T09:41:35.636235+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
@@ -387,12 +387,6 @@
         }
       ],
       "ips": [
-        {
-          "value": "6.0.0.0",
-          "sources": [
-            "static"
-          ]
-        },
         {
           "value": "103.235.46.115",
           "sources": [

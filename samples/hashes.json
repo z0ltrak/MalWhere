@@ -25,5 +25,14 @@
     "acquired": "2025-07-07",
     "vt_score": "44/64",
     "notes": "DragonBreath APT-Q-27, NSIS dropper"
+  },
+  {
+    "family": "AsyncRAT",
+    "type": "RAT/Backdoor",
+    "sha256": "866ac5e19171919e0861a591f746f7b8b746a59cb9aec48306539569d83373c2",
+    "source": "MalwareBazaar",
+    "acquired": "2026-08-18",
+    "vt_score": "pending",
+    "notes": "candidate 4th validation family; .NET single-file/AppHost-bundled x64 PE (not classic .NET Framework MSIL, no mscoree/mscorlib strings), original filename e-dekont_html.exe, delivered as an email attachment (phishing lure), fake assembly identity 'Peridot.DesktopUtility'. Public CAPE reference: https://www.capesandbox.com/analysis/81676/"
   }
 ]

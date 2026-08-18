@@ -177,7 +177,14 @@ services:
     volumes:
       - ../static/reports:/input/static:ro
       - ../dynamic/reports:/input/dynamic:ro
-      - ./cape/work/storage:/input/dynamic/storage:ro # dropped/injected/dumped binaries — lives under cape's /work bind mount, not a separate named volume (see cape service's comment on why)
+      # NOT ./cape/work/storage:/input/dynamic/storage:ro (removed): Docker
+      # can't create that nested mountpoint inside the already-mounted
+      # read-only /input/dynamic above it (mkdir on a ro mount fails), so
+      # this container could never actually start with that line present.
+      # Also genuinely dead weight -- nothing under pipeline/ ever reads
+      # /input/dynamic/storage; dropped/injected/dumped binary bytes are
+      # read from the resubmission queue (docker/resubmit_queue), not
+      # from here.
       - ../pipeline:/app:ro
       - ../results:/results
       - pipeline_results:/output

@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-18T09:50:03.612633+00:00",
+  "sample": {
+    "family": "asyncrat",
+    "static_sha256": "6811bc599ce86f2c75458cfe8c444638587548d52057207a5116a25a51b21e9a",
+    "static_md5": "d7528acb0fd8b381f51ccd0092426f75",
+    "static_sha1": "1f551aeae145094e0b913238847742e28113d425",
+    "static_imphash": "dae02f32a21e03ce65412f6e56942daa",
+    "static_ssdeep": "6144:DIvVus7BTlHoHkOaX7FsOSdpf2W1nQI/jHdky96:cVus7RlIELXz8lLLX96",
+    "static_tlsh": "T1C2A411D97527C468CD88DDE731AB479D10BA50E7A401FE6E0FC3D589A9632C20B29C7B",
+    "static_filename": "6811bc599ce86f2c75458cfe8c444638587548d52057207a5116a25a51b21e9a",
+    "static_file_type": "pe_dotnet"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "6811bc599ce86f2c75458cfe8c444638587548d52057207a5116a25a51b21e9a",
+        "md5": "d7528acb0fd8b381f51ccd0092426f75",
+        "sha1": "1f551aeae145094e0b913238847742e28113d425",
+        "filename": "6811bc599ce86f2c75458cfe8c444638587548d52057207a5116a25a51b21e9a",
+        "type": "pe_dotnet"
+      }
+    ],
+    "network_iocs": {
+      "domains": [],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [],
+      "mutexes": [
+        {
+          "value": "0d4bf90c-b451-4ca2-902a-47f88a36c74f",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "encryption_keys": [
+        {
+          "value": "{'hex': '4D53392A6A24D5E801ADA14E79B43F9BEBB79150', 'length': 40, 'description': 'SHA1 key'}",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "{'hex': '618DBF6F3AD1478CB89DCEF3869087F7F55EFBB0', 'length': 40, 'description': 'SHA1 key'}",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "{'hex': '269A7E88F6E1A5F66BD76E9DE35CDEC94749E7A1', 'length': 40, 'description': 'SHA1 key'}",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "{'hex': 'EE6165DC336B6B6D656AD9A1DDF6B16CA4698E69', 'length': 40, 'description': 'SHA1 key'}",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [
+    {
+      "technique_id": "T1140",
+      "technique_name": "Unknown ATT&CK technique (T1140)",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "dotnet_api",
+          "evidence": "System.Convert::FromBase64String",
+          "confidence": "medium",
+          "name": "Deobfuscate/Decode Files or Information",
+          "justification": "The managed .NET API call 'System.Convert::FromBase64String' was resolved from the assembly's method bodies. This BCL API is specific enough to Deobfuscate/Decode Files or Information that its presence alone indicates the capability, but with less certainty than a corroborated combination would."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1497",
+      "technique_name": "Virtualization/Sandbox Evasion",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "1 mutexes found",
+          "confidence": "medium",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "Found 1 mutex names in the configuration. Mutexes are often used to check for a running instance (single-instance enforcement) and for sandbox detection (T1497)."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    }
+  ],
+  "summary": {
+    "total_techniques": 2,
+    "high": 0,
+    "medium": 2,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 2,
+    "dynamic_only": 0
+  }
+}

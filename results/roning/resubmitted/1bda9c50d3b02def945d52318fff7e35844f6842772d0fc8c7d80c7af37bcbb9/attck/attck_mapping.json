@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:28.669558+00:00",
+  "generated_at": "2026-08-18T09:41:37.407173+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9",
@@ -26,14 +26,7 @@
     ],
     "network_iocs": {
       "domains": [],
-      "ips": [
-        {
-          "value": "6.0.0.0",
-          "sources": [
-            "static"
-          ]
-        }
-      ],
+      "ips": [],
       "urls": [
         {
           "value": "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",

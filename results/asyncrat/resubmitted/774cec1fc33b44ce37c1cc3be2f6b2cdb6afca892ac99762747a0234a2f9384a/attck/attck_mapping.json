@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-18T09:50:03.809448+00:00",
+  "sample": {
+    "family": "asyncrat",
+    "static_sha256": "774cec1fc33b44ce37c1cc3be2f6b2cdb6afca892ac99762747a0234a2f9384a",
+    "static_md5": "59c3026d500244d86ea0cc37b146fb04",
+    "static_sha1": "aa0a27b91b3f5c2c5b0d0d9cd9a22853baed6859",
+    "static_imphash": "f34d5f2d4577ed6d9ceec516c1f5a744",
+    "static_ssdeep": "96:0dew7V9c5p3Cdck8BynqgHlNxPvEXe7M1ayFuzNt:0vScoyqgHj+Xe7Mno",
+    "static_tlsh": "T130C1D74797CC43AAE0A60734B8B303512774E8224BABAB9F29E4133F7EB535018536F0",
+    "static_filename": "774cec1fc33b44ce37c1cc3be2f6b2cdb6afca892ac99762747a0234a2f9384a",
+    "static_file_type": "pe_dotnet"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "774cec1fc33b44ce37c1cc3be2f6b2cdb6afca892ac99762747a0234a2f9384a",
+        "md5": "59c3026d500244d86ea0cc37b146fb04",
+        "sha1": "aa0a27b91b3f5c2c5b0d0d9cd9a22853baed6859",
+        "filename": "774cec1fc33b44ce37c1cc3be2f6b2cdb6afca892ac99762747a0234a2f9384a",
+        "type": "pe_dotnet"
+      }
+    ],
+    "network_iocs": {
+      "domains": [],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [],
+      "mutexes": [],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [
+    {
+      "technique_id": "T1057",
+      "technique_name": "Process Discovery",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateToolhelp32Snapshot",
+          "confidence": "medium",
+          "name": "Process Discovery",
+          "justification": "The API function 'CreateToolhelp32Snapshot' is imported by the binary. This API is commonly used to perform Process Discovery. Importing this function alone (no other Process Discovery-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    }
+  ],
+  "summary": {
+    "total_techniques": 1,
+    "high": 0,
+    "medium": 1,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 1,
+    "dynamic_only": 0
+  }
+}

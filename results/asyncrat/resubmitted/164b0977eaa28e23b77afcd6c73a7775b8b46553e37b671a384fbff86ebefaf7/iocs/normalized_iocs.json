@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-18T09:50:02.689911+00:00",
+  "sources": {
+    "static_report": "static/reports/asyncrat/164b0977eaa28e23b77afcd6c73a7775b8b46553e37b671a384fbff86ebefaf7_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "asyncrat",
+    "static_sha256": "164b0977eaa28e23b77afcd6c73a7775b8b46553e37b671a384fbff86ebefaf7",
+    "static_md5": "248e3d9c4057aca64794925e87ef45de",
+    "static_sha1": "27773e707a5dcb211d2e272e156145128cef52f7",
+    "static_imphash": null,
+    "static_ssdeep": "96:5wSc3WLStAvlubFT2Jbbr4FOOa6Wccod2gV2f7WMDgRg:5wSSiGA2R2lX4WNcco0gV27TDgRg",
+    "static_tlsh": "T134F1826CEB6694FCE3002B396A9073B2C39554472E3AADC4914090953F375AF26961CB",
+    "static_filename": "164b0977eaa28e23b77afcd6c73a7775b8b46553e37b671a384fbff86ebefaf7",
+    "static_file_type": "unknown"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "164b0977eaa28e23b77afcd6c73a7775b8b46553e37b671a384fbff86ebefaf7",
+      "md5": "248e3d9c4057aca64794925e87ef45de",
+      "sha1": "27773e707a5dcb211d2e272e156145128cef52f7",
+      "filename": "164b0977eaa28e23b77afcd6c73a7775b8b46553e37b671a384fbff86ebefaf7",
+      "type": "unknown"
+    }
+  ],
+  "network_iocs": {
+    "domains": [],
+    "ips": [],
+    "urls": [],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [],
+  "discarded_entries": []
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-18T09:50:04.413464+00:00",
+  "sample": {
+    "family": "asyncrat",
+    "static_sha256": "e0557aa545c5d7d6afff18fb52ee6bdc856d46b0abd67fe586db0eb5f22b86a7",
+    "static_md5": "ee26393cb6fcd60f07223e5aa207fbdb",
+    "static_sha1": "944ba8add48562ee8c24acfcb90da3cf8fdae9ba",
+    "static_imphash": null,
+    "static_ssdeep": "6:ou+jJbEuQRNQvZqzwOVetFycFGypdkBxDugvqaFTY5DJ:oBiuQRNQv8t0Fzd0DqiTY7",
+    "static_tlsh": "T1ABE0EB331823B221461180FED42439BDA44700A22B8B3AC385D03F3C8A93BE3ECF4AC4",
+    "static_filename": "e0557aa545c5d7d6afff18fb52ee6bdc856d46b0abd67fe586db0eb5f22b86a7",
+    "static_file_type": "unknown"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "e0557aa545c5d7d6afff18fb52ee6bdc856d46b0abd67fe586db0eb5f22b86a7",
+        "md5": "ee26393cb6fcd60f07223e5aa207fbdb",
+        "sha1": "944ba8add48562ee8c24acfcb90da3cf8fdae9ba",
+        "filename": "e0557aa545c5d7d6afff18fb52ee6bdc856d46b0abd67fe586db0eb5f22b86a7",
+        "type": "unknown"
+      }
+    ],
+    "network_iocs": {
+      "domains": [],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [
+        {
+          "value": "C:\\sf437qpt\\dll\\zvKgtVjW.dll",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "mutexes": [],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [],
+  "summary": {
+    "total_techniques": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 0,
+    "dynamic_only": 0
+  }
+}

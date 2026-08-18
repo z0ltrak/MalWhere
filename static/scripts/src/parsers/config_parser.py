@@ -2,6 +2,7 @@
 
 import re
 import struct
+from collections import Counter
 from typing import List, Dict, Any
 from pathlib import Path
 
@@ -97,8 +98,29 @@ class ConfigExtractor:
 
         return strings
 
+    # Certificate-attribute and certificate-extension OID arcs -- X.509's
+    # "2.5.4.*" (id-at-*: commonName, countryName, ...) and "2.5.29.*"
+    # (id-ce-*: subjectAltName, basicConstraints, ...) are complete,
+    # correctly-bounded 4-part dotted-decimal tokens in their own right
+    # (not a chain fragment the lookaround below would catch), and appear
+    # verbatim as strings in essentially any Authenticode-signed PE's
+    # embedded certificate. Found on RoningLoader's own resubmitted
+    # components (11a6cb1d..., 1668cc75...): a real C2 IP starting "2.5."
+    # is not impossible in principle, but these two exact arcs are among
+    # the most standardized OID prefixes there are.
+    _OID_IP_PREFIXES = ('2.5.4.', '2.5.29.')
+
     def _find_ips(self, strings: List[str]) -> List[str]:
-        ip_pattern = r'\b(?:\d{1,3}\.){3}\d{1,3}\b'
+        # Negative lookaround excludes matches that are actually a 4-group
+        # window sliced out of a *longer* dotted-decimal chain -- found on
+        # the same RoningLoader components: "101.3.4.2" turned out to be
+        # a mid-string fragment of the real OID "2.16.840.1.101.3.4.2.4"
+        # (a NIST hash-algorithm identifier), which \b alone doesn't catch
+        # since \b only checks one adjacent character's word/non-word
+        # class, not whether more digits-and-dots continue past it. A
+        # real embedded IP is never itself a fragment of a longer
+        # dotted-decimal run.
+        ip_pattern = r'(?<!\d\.)\b(?:\d{1,3}\.){3}\d{1,3}\b(?!\.\d)'
         ips = set()
         for s in strings:
             matches = re.findall(ip_pattern, s)
@@ -109,6 +131,18 @@ class ConfigExtractor:
                     if ip.startswith('1.') and len(ip) <= 7:
                         continue
                     if ip.startswith('17.9.') or ip.startswith('1.1.'):
+                        continue
+                    if ip.startswith(self._OID_IP_PREFIXES):
+                        continue
+                    # General case of the same problem: PE/.NET assembly
+                    # version numbers (MAJOR.MINOR.BUILD.REVISION, e.g.
+                    # "3.2.0.0", "6.0.0.0") are dotted-quads too, and the
+                    # trailing fields are conventionally 0 far more often
+                    # than a real embedded C2 IP's octets are (verified
+                    # against all 30 known-real C2 IPs across the two
+                    # validated families with numeric IOCs: zero of them
+                    # have 2+ zero octets outside the first position).
+                    if sum(1 for p in parts[1:] if p == '0') >= 2:
                         continue
                     ips.add(ip)
         return list(ips)[:20]
@@ -168,6 +202,34 @@ class ConfigExtractor:
                 if ip.startswith('1.') and len(ip) <= 7:
                     continue
                 if ip.startswith('17.9.') or ip.startswith('1.1.') or ip.startswith('0.'):
+                    continue
+                # Stricter than _find_ips's plaintext-scan threshold
+                # (2+ zero octets): a brute-force XOR decode is a much
+                # higher false-positive-risk source than a direct string
+                # match to begin with -- 256 candidate keys tried against
+                # arbitrary binary, not one targeted regex pass -- so even
+                # a single zero octet here is treated as the same
+                # null-padding signature this method is already known to
+                # be vulnerable to (see _XOR_MAX_MATCHES_PER_KEY's comment
+                # above). Found on a resubmitted AsyncRAT payload: key
+                # 0x2e -- the exact key already documented as the false-
+                # positive-cascade culprit -- decoded a single match,
+                # "3.2.0.2", that a real .NET assembly version tuple
+                # shape explains far better than a real C2 address does.
+                if sum(1 for p in parts[1:] if p == '0') >= 1:
+                    continue
+                # A second instance of the same root cause, one step more
+                # general: a repeating *non-zero* byte in a structural
+                # padding/alignment table (e.g. \x1c\x00\x00\x00 repeated)
+                # decodes to a repeating near-identical octet run just as
+                # readily as a null-padded one does -- found immediately
+                # after the fix above, on a *different* resubmitted
+                # AsyncRAT payload: key 0x32 decoded "222.222.222.232" from
+                # exactly such a table. A real routable IP essentially
+                # never has 3 of its 4 octets numerically identical; a
+                # decode artifact from repeating source bytes routinely
+                # does.
+                if max(Counter(parts).values()) >= 3:
                     continue
 
                 start, end = m.span()

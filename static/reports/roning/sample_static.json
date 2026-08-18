@@ -53094,9 +53094,7 @@
         "description": "SHA1 key"
       }
     ],
-    "ips": [
-      "6.0.0.0"
-    ],
+    "ips": [],
     "urls": [
       "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
       "http://www.microsoft.com/DirectX0",

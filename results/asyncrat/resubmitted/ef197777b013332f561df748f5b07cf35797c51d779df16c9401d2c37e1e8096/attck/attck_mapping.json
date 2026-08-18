@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-18T09:50:04.505686+00:00",
+  "sample": {
+    "family": "asyncrat",
+    "static_sha256": "ef197777b013332f561df748f5b07cf35797c51d779df16c9401d2c37e1e8096",
+    "static_md5": "b1981db5489d7a07ab183c2db154e2cd",
+    "static_sha1": "9f1c19bfaa838802e4a9fa281e45b8764feb950d",
+    "static_imphash": null,
+    "static_ssdeep": "24:HPK9AV8WEjLzCoHPwKlxNMl2xmyEuZhNMsnFCPNnqpdt4+lEbNFjMyi0+eMqP:XVXE94KlxKl2AXulMyFOqXSfbNtmhm",
+    "static_tlsh": "T13541234093E44B1AF172073029F7472AA678FE55EEEA475D7888122F2E12740DEC36F1",
+    "static_filename": "ef197777b013332f561df748f5b07cf35797c51d779df16c9401d2c37e1e8096",
+    "static_file_type": "unknown"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "ef197777b013332f561df748f5b07cf35797c51d779df16c9401d2c37e1e8096",
+        "md5": "b1981db5489d7a07ab183c2db154e2cd",
+        "sha1": "9f1c19bfaa838802e4a9fa281e45b8764feb950d",
+        "filename": "ef197777b013332f561df748f5b07cf35797c51d779df16c9401d2c37e1e8096",
+        "type": "unknown"
+      }
+    ],
+    "network_iocs": {
+      "domains": [],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [
+        {
+          "value": "C:\\Users\\Windows\\AppData\\Local\\Temp",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "c:\\Users\\Windows\\AppData\\Local\\Temp\\CSCA746000E8F234F96B22361DC431260E4.TMP",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\cvtres.exe",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Users\\Windows\\AppData\\Local\\Temp\\RES2D40.tmp",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "mutexes": [],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [],
+  "summary": {
+    "total_techniques": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 0,
+    "dynamic_only": 0
+  }
+}
