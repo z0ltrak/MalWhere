@@ -846,7 +846,7 @@ The malware replaces detected wallet addresses with attacker-controlled addresse
 | **Screen Capture** | T1113 | JPEG screenshots |
 | **Clipboard Data** | T1115 | Monitor and modify clipboard |
 | **Archive via Utility** | T1560.001 | GZip + ZIP compression |
-| **Data Encrypted** | T1022 | RC4 + RSA encryption |
+| **Archive Collected Data** | T1560 | RC4 + RSA encryption |
 | **Exfiltration Over C2 Channel** | T1041 | HTTP POST to 31 nodes |
 | **Exfiltration Over Alternative Protocol** | T1048 | Telegram Bot API |
 | **Email Collection** | T1114 | Thunderbird emails |

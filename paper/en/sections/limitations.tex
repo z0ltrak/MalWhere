@@ -39,9 +39,25 @@ either already mitigated concretely or scoped as a precise next step
   affected sample.
 
 \item \textbf{The false-positive audit} (\S\ref{sec:fp-audit}) checked
-  13 discrepancies individually; 10 were genuine pipeline errors now
-  fixed, 1 was a ground-truth extraction gap (\S\ref{sec:case-wsnake}),
-  and 2 remain open by design.
+  15 discrepancies individually; 12 were genuine pipeline errors now
+  fixed (10 outright, plus 2 confidence-calibration corrections whose
+  underlying generic evidence remains present, honestly downgraded,
+  rather than disappearing), 1 was a ground-truth extraction gap
+  (\S\ref{sec:case-wsnake}), and 2 remain open by design.
+
+\item \textbf{ATT\&CK version is pinned, and CAPE's own signature tags
+  are not.} All technique IDs in this pipeline, ground truth, and
+  Navigator layers target MITRE ATT\&CK v19.2. CAPE's community
+  signatures are frozen to whichever version they were last written
+  against, so signature-sourced tags are remapped to their current
+  identity at curation time (\S\ref{sec:dynamic}) rather than trusted
+  verbatim. Migrating ground truth from the previously-unpinned v14
+  identities to v19 is what surfaced the
+  \technique{T1070}/\technique{T1685.005} confidence-calibration bug
+  above (\S\ref{sec:fp-audit}): under the old IDs, family-level
+  matching had been pairing that finding with its ground-truth entry
+  by coincidental prefix overlap rather than genuine correspondence,
+  which would otherwise have masked the underlying issue indefinitely.
 
 \item \textbf{Two RoningLoader false positives are deliberately
   unresolved.} \technique{T1027} and \technique{T1497} both have real

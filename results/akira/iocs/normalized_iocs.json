@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T08:18:22.554840+00:00",
+  "generated_at": "2026-08-18T19:07:15.467604+00:00",
   "sources": {
     "static_report": "static/reports/akira/sample_static.json",
     "dynamic_report": "dynamic/reports/akira/dynamic_report.json"
@@ -256,25 +256,25 @@
           "source": "static",
           "source_type": "string_pattern",
           "evidence": "DeleteFile",
-          "confidence": "high",
+          "confidence": "medium",
           "name": "Indicator Removal on Host",
-          "justification": "The malware string 'DeleteFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+          "justification": "The malware string 'DeleteFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         },
         {
           "source": "static",
           "source_type": "string_pattern",
           "evidence": "CreateFile",
-          "confidence": "high",
+          "confidence": "low",
           "name": "Indicator Removal on Host",
-          "justification": "The malware string 'CreateFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         },
         {
           "source": "static",
           "source_type": "import",
           "evidence": "DeleteFileW, CreateFileW",
-          "confidence": "high",
+          "confidence": "medium",
           "name": "Indicator Removal on Host",
-          "justification": "The API functions DeleteFileW, CreateFileW are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+          "justification": "The API functions DeleteFileW, CreateFileW are imported by the binary. Each is individually associated with Indicator Removal on Host, but this specific combination doesn't form one of the corroborating patterns known to indicate Indicator Removal on Host with high confidence \u2014 treat this as suggestive rather than conclusive."
         }
       ]
     },
@@ -448,19 +448,6 @@
       ]
     },
     {
-      "technique": "T1562.001",
-      "observations": [
-        {
-          "source": "static",
-          "source_type": "import",
-          "evidence": "OpenProcess, TerminateProcess, WTSEnumerateProcessesW",
-          "confidence": "medium",
-          "name": "Impair Defenses: Disable or Modify Tools",
-          "justification": "The API functions OpenProcess, TerminateProcess, WTSEnumerateProcessesW are all imported by the binary. This is a coherent enumerate-then-kill primitive: deliberately searching the process list (WTSEnumerateProcessesW) rather than acting on a handle already held, then opening and terminating a match. Consistent with Impair Defenses: Disable or Modify Tools (T1562.001) even without a decrypted target name to confirm which process is targeted -- medium rather than high confidence for that reason."
-        }
-      ]
-    },
-    {
       "technique": "T1622",
       "observations": [
         {
@@ -486,6 +473,19 @@
           "confidence": "high",
           "name": "Debugger Evasion",
           "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
+        }
+      ]
+    },
+    {
+      "technique": "T1685",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "OpenProcess, TerminateProcess, WTSEnumerateProcessesW",
+          "confidence": "medium",
+          "name": "Disable or Modify Tools",
+          "justification": "The API functions OpenProcess, TerminateProcess, WTSEnumerateProcessesW are all imported by the binary. This is a coherent enumerate-then-kill primitive: deliberately searching the process list (WTSEnumerateProcessesW) rather than acting on a handle already held, then opening and terminating a match. Consistent with Disable or Modify Tools (T1685) even without a decrypted target name to confirm which process is targeted -- medium rather than high confidence for that reason."
         }
       ]
     }

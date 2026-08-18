@@ -96,10 +96,10 @@ concreta.
 \toprule
 \textbf{Muestra} & \textbf{Precisi\'on} & \textbf{Exhaustividad} & \textbf{F1} & \textbf{Notas} \\
 \midrule
-Akira (ransomware) & 1.00 & 1.00 & 1.00 & binario de una sola etapa \\
+Akira (ransomware) & 0.92 & 1.00 & 0.96 & binario de una sola etapa \\
 WhiteSnakeStealer (.NET) & 1.00 & 0.80 & 0.89 & binario de una sola etapa \\
-RoningLoader (solo padre) & 0.90 & 0.68 & 0.78 & solo el cargador \\
-RoningLoader (+reenv\'io) & 0.88 & 0.84 & 0.86 & cargador + 3 componentes soltados \\
+RoningLoader (solo padre) & 0.85 & 0.68 & 0.76 & solo el cargador \\
+RoningLoader (+reenv\'io) & 0.84 & 0.84 & 0.84 & cargador + 3 componentes soltados \\
 \bottomrule
 \end{tabular}
 \caption{Precisi\'on/exhaustividad/F1 a nivel de familia por muestra
@@ -116,11 +116,11 @@ cliente RAT son hallazgos reales que la verdad de referencia espera
 pero que el binario padre por s\'i solo no puede presentar. La
 exhaustividad sube 16 puntos en cuanto se analizan de forma
 independiente los tres componentes soltados y se cuentan sus
-hallazgos, a un coste de 2 puntos de precisi\'on por la superficie
+hallazgos, a un coste de 1 punto de precisi\'on por la superficie
 a\~nadida, una compensaci\'on que la mejora del F1 agregado
-(0.78~$\rightarrow$~0.86) demuestra que mereci\'o la pena.
+(0.76~$\rightarrow$~0.84) demuestra que mereci\'o la pena.
 
-La precisi\'on est\'a en o cerca de 1.00 en las cuatro filas, es decir,
+La precisi\'on es alta en las cuatro filas (0.84--1.00), es decir,
 el peque\~no n\'umero de hallazgos que reporta la tuber\'ia rara vez son
 err\'oneos. Esta es la consecuencia directa e intencionada de la
 filosof\'ia de combinaci\'on coherente de \S\ref{sec:static-rules} y la
@@ -137,7 +137,7 @@ calibrada'' de ``la verdad de referencia resulta ser permisiva''. A
 diferencia de un agregador de reputaci\'on que muestra la etiqueta de
 cada motor o sandbox tal cual, cada discrepancia entre el resultado de
 la tuber\'ia y la verdad de referencia encontrada en las tres muestras,
-13 en total (4 Akira, 4 WhiteSnakeStealer, 5 RoningLoader), se
+15 en total (5 Akira, 4 WhiteSnakeStealer, 6 RoningLoader), se
 rastre\'o individualmente hasta una causa concreta y verificable en
 lugar de aceptarse o descartarse solo por la cifra agregada. Cada una
 se contrast\'o con el \emph{texto completo} del informe manual
@@ -161,6 +161,34 @@ El resultado de esta auditor\'ia, por causa:
     evidencia en bruto, al inspeccionarlo, nombraba un objetivo
     inconsistente con la t\'ecnica afirmada (detallado en
     \S\ref{sec:dynamic}).
+  \item \textbf{Dos correcciones de calibraci\'on de confianza}, en
+    Akira y RoningLoader: el mismo hueco de comprobaci\'on de
+    combinaci\'on de la correcci\'on de \technique{T1055} anterior
+    reapareci\'o para \technique{T1070} (Indicator Removal) --
+    \code{CreateFileW}/\code{CreateFile}, ya marcada como ``gen\'erica''
+    en la tabla de mapeo, segu\'ia cont\'andose ciegamente como
+    corroboraci\'on junto a \code{DeleteFileW}/\code{DeleteFile} y se
+    promov\'ia a confianza \emph{alta}. Migrar la verdad de referencia a
+    ATT\&CK v19 (\S\ref{sec:limitations}) es lo que lo saco\'o a la luz:
+    la antigua entrada de verdad de referencia \technique{T1070.001}
+    hab\'ia estado emparej\'andose con este hallazgo por pura
+    coincidencia de prefijo de identificador bajo el emparejamiento a
+    nivel de familia, no porque la evidencia tratara gen\'uinamente
+    sobre el asunto real de esa entrada (el borrado de registros de
+    eventos); mover esa entrada a su identidad v19
+    (\technique{T1685.005}, que ya no comparte el prefijo
+    \technique{T1070}) rompi\'o la coincidencia casual. Corregido de la
+    misma manera que el caso de \technique{T1055}, excluyendo la
+    importaci\'on/cadena gen\'erica de la corroboraci\'on en ambas
+    direcciones. A diferencia de aquel caso, la evidencia subyacente
+    aqu\'i es real (ambos binarios importan efectivamente estas
+    funciones), simplemente no lo bastante espec\'ifica para confirmar
+    la t\'ecnica afirmada, as\'i que el hallazgo permanece presente
+    tras la correcci\'on, ahora con su confianza honesta
+    \emph{media}/\emph{baja}, en lugar de desaparecer del todo -- una
+    ilustraci\'on directa de la relaci\'on entre confianza y precisi\'on
+    examinada en \S\ref{sec:confidence-calibration}, no un
+    contraejemplo de ella.
   \item \textbf{Un hueco de extracci\'on de verdad de referencia}, no un
     error de la tuber\'ia: el propio informe manual de
     WhiteSnakeStealer discute la carga reflexiva de DLL en su texto
@@ -185,7 +213,7 @@ discrepancias de aspecto similar dejadas abiertas, es deliberada: el
 factor distintivo es si existe confirmaci\'on independiente en el
 documento fuente, no si la evidencia propia de la tuber\'ia parece
 convincente. El resultado pr\'actico de ejecutar esta auditor\'ia se
-aprecia en la columna de corregidos: 10 de las 13 discrepancias se
+aprecia en la columna de corregidos: 12 de las 15 discrepancias se
 tradujeron en mejoras concretas y verificables al conjunto de reglas
 (\S\ref{sec:coverage}) y a la l\'ogica de agregaci\'on
 (\S\ref{sec:case-installer}) en lugar de absorberse en silencio dentro
@@ -193,6 +221,7 @@ de una cifra agregada, precisamente el paso diagn\'ostico que una
 visualizaci\'on de veredictos uno junto a otro no puede ofrecer.
 
 \subsection{Calibraci\'on de confianza}
+\label{sec:confidence-calibration}
 
 Si el modelo de reconciliaci\'on de confianza (\S\ref{sec:reconciliation})
 es significativo y no meramente cosm\'etico, la precisi\'on deber\'ia
@@ -202,7 +231,7 @@ entre los hallazgos de \emph{media}/\emph{baja} de una sola fuente. En
 las tres muestras validadas, cada falso positivo identificado en la
 auditor\'ia anterior tuvo su origen en un hallazgo de una sola fuente;
 ning\'un hallazgo que alcanzara confianza \emph{alta} mediante
-corroboraci\'on entre fuentes o entre niveles estuvo entre las 13
+corroboraci\'on entre fuentes o entre niveles estuvo entre las 15
 discrepancias investigadas. Esto es consistente con que el modelo de
 reconciliaci\'on realiza una calibraci\'on real y no simplemente
 reetiqueta hallazgos, aunque el tama\~no reducido de la muestra (tres

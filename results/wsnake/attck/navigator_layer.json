@@ -1,7 +1,7 @@
 {
   "name": "MalWhere - wsnake",
   "versions": {
-    "attack": "14",
+    "attack": "19",
     "navigator": "4.9.1",
     "layer": "4.5"
   },
@@ -453,24 +453,6 @@
       ]
     },
     {
-      "techniqueID": "T1022",
-      "score": 60,
-      "color": "#ffe766",
-      "comment": "static corroborated; evidence: System.Security.Cryptography.RSACryptoServiceProvider::Encrypt",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "medium"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    },
-    {
       "techniqueID": "T1033",
       "score": 60,
       "color": "#ffe766",
@@ -611,6 +593,24 @@
         {
           "name": "sources",
           "value": "dynamic"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1560",
+      "score": 60,
+      "color": "#ffe766",
+      "comment": "static corroborated; evidence: System.Security.Cryptography.RSACryptoServiceProvider::Encrypt",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "medium"
+        },
+        {
+          "name": "sources",
+          "value": "static"
         }
       ]
     },

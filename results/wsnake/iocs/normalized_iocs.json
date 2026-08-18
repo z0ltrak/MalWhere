@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T08:18:22.416610+00:00",
+  "generated_at": "2026-08-18T19:07:15.530794+00:00",
   "sources": {
     "static_report": "static/reports/wsnake/sample_static.json",
     "dynamic_report": "dynamic/reports/wsnake/dynamic_report.json"
@@ -490,19 +490,6 @@
           "confidence": "high",
           "name": "System Network Configuration Discovery",
           "justification": "The managed .NET API calls System.Net.NetworkInformation.NetworkInterface::GetAllNetworkInterfaces, System.Net.NetworkInformation.NetworkInterface::GetIPProperties were resolved from the assembly's method bodies (call/callvirt/newobj targets, not just type/method names). Multiple corroborating BCL API calls, not one in isolation, is what makes this a strong signal for System Network Configuration Discovery."
-        }
-      ]
-    },
-    {
-      "technique": "T1022",
-      "observations": [
-        {
-          "source": "static",
-          "source_type": "dotnet_api",
-          "evidence": "System.Security.Cryptography.RSACryptoServiceProvider::Encrypt",
-          "confidence": "medium",
-          "name": "Data Encrypted",
-          "justification": "The managed .NET API call 'System.Security.Cryptography.RSACryptoServiceProvider::Encrypt' was resolved from the assembly's method bodies. This BCL API is specific enough to Data Encrypted that its presence alone indicates the capability, but with less certainty than a corroborated combination would."
         }
       ]
     },
@@ -1112,6 +1099,19 @@
           "confidence": "high",
           "name": "Credentials from Password Stores",
           "justification": "The malware string 'NativeCredential' was found in the binary, alongside 2 other string(s) also characteristic of Credentials from Password Stores. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1560",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "dotnet_api",
+          "evidence": "System.Security.Cryptography.RSACryptoServiceProvider::Encrypt",
+          "confidence": "medium",
+          "name": "Archive Collected Data",
+          "justification": "The managed .NET API call 'System.Security.Cryptography.RSACryptoServiceProvider::Encrypt' was resolved from the assembly's method bodies. This BCL API is specific enough to Archive Collected Data that its presence alone indicates the capability, but with less certainty than a corroborated combination would."
         }
       ]
     },

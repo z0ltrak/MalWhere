@@ -42,8 +42,8 @@ def main():
     )
     parser.add_argument(
         "--attck-version",
-        default="14",
-        help="ATT&CK version to record in the Navigator layer (default: 14, matching ATTCK_VERSION)"
+        default="19",
+        help="ATT&CK version to record in the Navigator layer (default: 19, matching ATTCK_VERSION)"
     )
     parser.add_argument(
         "--verbose", "-v",

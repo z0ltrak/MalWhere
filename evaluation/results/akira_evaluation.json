@@ -13,7 +13,6 @@
     "f1": 0.88,
     "matched_techniques": [
       "T1057",
-      "T1070",
       "T1071",
       "T1083",
       "T1486",
@@ -22,27 +21,27 @@
       "T1622",
       "T1027",
       "T1033",
-      "T1059"
+      "T1059",
+      "T1685"
     ],
     "false_positive_techniques": [
       "T1027.002",
-      "T1562.001"
+      "T1070"
     ],
     "missed_techniques": [
-      "T1562"
+      "T1685.005"
     ]
   },
   "family_level": {
-    "tp": 13,
-    "fp": 0,
+    "tp": 12,
+    "fp": 1,
     "fn": 0,
     "gt_matched_count": 12,
-    "precision": 1.0,
+    "precision": 0.9231,
     "recall": 1.0,
-    "f1": 1.0,
+    "f1": 0.96,
     "matched_techniques": [
       "T1057",
-      "T1070",
       "T1071",
       "T1083",
       "T1486",
@@ -53,31 +52,33 @@
       "T1027.002",
       "T1033",
       "T1059",
-      "T1562.001"
+      "T1685"
     ],
-    "false_positive_techniques": [],
+    "false_positive_techniques": [
+      "T1070"
+    ],
     "missed_techniques": []
   },
   "precision_by_confidence": {
     "high": {
-      "count": 8,
-      "tp": 8,
+      "count": 7,
+      "tp": 7,
       "fp": 0,
       "precision": 1.0
     },
     "medium": {
-      "count": 5,
+      "count": 6,
       "tp": 5,
-      "fp": 0,
-      "precision": 1.0
+      "fp": 1,
+      "precision": 0.8333
     }
   },
   "precision_by_source": {
     "static": {
       "count": 8,
-      "tp": 8,
-      "fp": 0,
-      "precision": 1.0
+      "tp": 7,
+      "fp": 1,
+      "precision": 0.875
     },
     "dynamic+static": {
       "count": 2,

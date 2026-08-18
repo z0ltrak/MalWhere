@@ -103,9 +103,20 @@ surfaced it:
   confidence: but `string_attck_mapper.py` mapped the same APIs from their
   string-form evidence with no equivalent check, so fixing only the import
   table left Akira's `OpenProcess` false positive (its manual report maps
-  this exact code (enumerate, then terminate) to T1057/T1562, never
+  this exact code (enumerate, then terminate) to T1057/T1685, never
   T1055) still firing from the string path. Both tables now apply the same
-  standard.
+  standard. The same "2+ present = high confidence" gap resurfaced later for
+  T1070 (Indicator Removal): `CreateFileW`/`CreateFile` is explicitly
+  commented as generic, yet paired with `DeleteFileW`/`DeleteFile` it was
+  still blindly promoted to high confidence in both tables. Fixed the same
+  way, excluding the generic evidence from corroboration in either
+  direction. Found auditing the ATT&CK v14->v19 migration (2026-08): the
+  old ground truth's `T1070.001` (Clear Windows Event Logs) had been
+  matching this finding purely by ID-prefix coincidence under family-level
+  matching, not because the evidence was actually about event logs; moving
+  that ground-truth entry to its new ID (`T1685.005`, no longer sharing a
+  `T1070` prefix) broke the coincidental match and exposed the
+  long-standing confidence bug.
 - **A signature's own raw evidence contradicted its name.** CAPE's
   `antiav_servicestop` (`-> T1489 Service Stop`) fired on RoningLoader, but
   its raw `data` field names the specific service: `{"service":

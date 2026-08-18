@@ -74,7 +74,7 @@ class StringATTACKMapper:
         # positive on Akira, whose manual report maps this exact code
         # (WTSEnumerateProcessesW + OpenProcess + WaitForSingleObject +
         # CloseHandle, a plain enumerate-and-terminate loop) to
-        # T1057/T1562, never T1055.
+        # T1057/T1685, never T1055.
         'AdjustTokenPrivileges': {'technique': 'T1134', 'confidence': 'medium'},
         'LookupPrivilegeValue': {'technique': 'T1134', 'confidence': 'medium'},
         'OpenProcessToken': {'technique': 'T1134', 'confidence': 'medium'},
@@ -83,7 +83,7 @@ class StringATTACKMapper:
         # TerminateProcess previously mapped to T1489 "Service Stop" -- also
         # wrong, same root cause as the Rm* fix above. It's a fully generic
         # process-kill API; string presence alone can't tell you the target
-        # (an AV process -> T1562.001, a locked-file holder -> no clean ID,
+        # (an AV process -> T1685, a locked-file holder -> no clean ID,
         # its own child process -> no clean ID). Dropped rather than
         # reassigned, same call already made for the equivalent WhiteSnake
         # ground-truth finding.
@@ -150,10 +150,12 @@ class StringATTACKMapper:
 
         # Defense Evasion
         # Clear Windows Event Logs: this exact invocation (wevtutil's
-        # "cl" subcommand) is the CLI mechanism MITRE's T1070.001 page
+        # "cl" subcommand) is the CLI mechanism MITRE's T1685.005 page
         # names directly -- narrower than bare "wevtutil" (which also
-        # covers benign query/export operations).
-        'wevtutil cl': {'technique': 'T1070.001', 'confidence': 'high'},
+        # covers benign query/export operations). Was T1070.001 under the
+        # Indicator Removal parent; moved to a new T1685 "Disable or
+        # Modify Tools" parent in ATT&CK v19 (migrated 2026-08).
+        'wevtutil cl': {'technique': 'T1685.005', 'confidence': 'high'},
         # Regsvr32 (Squiblydoo): scrobj.dll is the specific legitimate
         # Windows Script Component Runtime DLL this technique abuses to
         # execute a scriptlet via regsvr32 -- narrower and more specific

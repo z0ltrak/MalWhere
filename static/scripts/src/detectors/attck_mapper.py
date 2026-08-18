@@ -275,7 +275,7 @@ class ATTACKMapper:
         'System.Windows.Forms.Clipboard::GetDataObject': 'T1115',
         'System.Net.NetworkInformation.NetworkInterface::GetAllNetworkInterfaces': 'T1016',
         'System.Net.NetworkInformation.NetworkInterface::GetIPProperties': 'T1016',
-        'System.Security.Cryptography.RSACryptoServiceProvider::Encrypt': 'T1022',
+        'System.Security.Cryptography.RSACryptoServiceProvider::Encrypt': 'T1560',
         'System.Net.WebClient::UploadData': 'T1041',
         'System.Net.WebClient::UploadString': 'T1041',
         'System.Net.HttpListener::Start': 'T1090',
@@ -320,7 +320,11 @@ class ATTACKMapper:
         'T1071': 'Application Layer Protocol',
         'T1105': 'Ingress Tool Transfer',
         'T1016': 'System Network Configuration Discovery',
-        'T1022': 'Data Encrypted',
+        # T1022 "Data Encrypted" was revoked in ATT&CK v19 -- MITRE folded
+        # "encrypt data before exfil" into T1560's own definition, which
+        # now explicitly covers compression AND encryption prior to
+        # exfiltration. Migrated 2026-08 (ATT&CK v14 -> v19).
+        'T1560': 'Archive Collected Data',
         'T1047': 'Windows Management Instrumentation',
         'T1090': 'Proxy',
         'T1041': 'Exfiltration Over C2 Channel',
@@ -328,7 +332,7 @@ class ATTACKMapper:
         'T1132': 'Data Encoding',
         'T1560.001': 'Archive via Utility',
         'T1074': 'Data Staged',
-        'T1036.005': 'Masquerading as Legitimate Software',
+        'T1036.005': 'Match Legitimate Resource Name or Location',  # ATT&CK v19 name (v14: "Match Legitimate Name or Location")
         'T1543.003': 'Windows Service',
         'T1053.005': 'Scheduled Task',
         'T1548.002': 'Bypass User Account Control',
@@ -337,7 +341,11 @@ class ATTACKMapper:
         'T1119': 'Automated Collection',
         'T1555': 'Credentials from Password Stores',
         'T1140': 'Deobfuscate/Decode Files or Information',
-        'T1562.001': 'Impair Defenses: Disable or Modify Tools',
+        # T1562 "Impair Defenses" was retired in ATT&CK v19; its
+        # "Disable or Modify Tools" sub-technique (T1562.001) was promoted
+        # to become the new parent technique T1685 in its own right, not a
+        # sub-technique of anything. Migrated 2026-08 (ATT&CK v14 -> v19).
+        'T1685': 'Disable or Modify Tools',
         # Persistence / Defense Evasion coverage extension -- see
         # string_attck_mapper.py's STRING_MAPPING for the evidence tables.
         'T1546.010': 'Event Triggered Execution: AppInit DLLs',
@@ -347,7 +355,11 @@ class ATTACKMapper:
         'T1546.012': 'Event Triggered Execution: Image File Execution Options Injection',
         'T1546.003': 'Event Triggered Execution: Windows Management Instrumentation Event Subscription',
         'T1197': 'BITS Jobs',
-        'T1070.001': 'Indicator Removal: Clear Windows Event Logs',
+        # Moved out of the Indicator Removal (T1070) family entirely in
+        # ATT&CK v19, now a sub-technique of the new T1685 "Disable or
+        # Modify Tools" parent instead. Same real-world behavior, new
+        # catalog position. Migrated 2026-08 (ATT&CK v14 -> v19).
+        'T1685.005': 'Disable or Modify Tools: Clear Windows Event Logs',
         'T1218.010': 'System Binary Proxy Execution: Regsvr32',
         'T1218.005': 'System Binary Proxy Execution: Mshta',
         'T1055.012': 'Process Injection: Process Hollowing',
@@ -435,14 +447,15 @@ class ATTACKMapper:
     # BOTH a process-listing API (deliberately searching the process list,
     # not just killing a handle you already have) AND OpenProcess (opening
     # a handle to something found in that list) is a coherent
-    # enumerate-then-kill primitive, specific enough for Impair Defenses:
-    # Disable or Modify Tools (T1562.001) even without the decrypted
-    # target name. Found auditing Akira's missing T1562: its manual report
-    # documents exactly this combination (WTSEnumerateProcessesW +
-    # OpenProcess + TerminateProcess) as decrypt-and-terminate-a-hardcoded-
-    # process, mapped by the analyst to T1562 alongside T1057 for the same
-    # code -- not instead of it.
-    _T1562_KILL_COMBO = {'WTSEnumerateProcessesW', 'OpenProcess', 'TerminateProcess'}
+    # enumerate-then-kill primitive, specific enough for Disable or Modify
+    # Tools (T1685; was T1562.001 under the now-retired T1562 "Impair
+    # Defenses" parent -- migrated 2026-08, ATT&CK v14 -> v19) even without
+    # the decrypted target name. Found auditing Akira's missing T1562 (as
+    # it was called then): its manual report documents exactly this
+    # combination (WTSEnumerateProcessesW + OpenProcess + TerminateProcess)
+    # as decrypt-and-terminate-a-hardcoded-process, mapped by the analyst
+    # to T1562 alongside T1057 for the same code -- not instead of it.
+    _T1685_KILL_COMBO = {'WTSEnumerateProcessesW', 'OpenProcess', 'TerminateProcess'}
 
     # Process Hollowing (T1055.012), a specific sub-technique of the
     # already-covered parent T1055. MITRE's own page describes the
@@ -460,6 +473,21 @@ class ATTACKMapper:
     # not an evasive one.
     _T1055_HOLLOW_COMBO = {'CreateProcessW', 'WriteProcessMemory', 'SetThreadContext', 'ResumeThread'}
     _T1055_HOLLOW_UNMAP = {'NtUnmapViewOfSection', 'ZwUnmapViewOfSection'}
+
+    # CreateFileW/A is IMPORT_MAPPING's own "Low confidence (generic)" entry
+    # for T1070 -- opening a file is what every file-touching program does,
+    # so pairing it with DeleteFileW isn't corroboration of deletion intent,
+    # just confirms the binary does file I/O at all. The blind "2+ imports
+    # for one technique = high" rule below doesn't know that and was
+    # promoting DeleteFileW+CreateFileW to 'high' regardless. Found auditing
+    # a real false positive on Akira, exposed only after the ATT&CK v19
+    # migration moved the genuine ground-truth match (Clear Windows Event
+    # Logs) from T1070.001 to T1685.005 -- family-level matching had been
+    # masking this via coincidental ID-prefix overlap with the old T1070.001
+    # entry. Excluded from corroboration in both directions: it doesn't
+    # count toward promoting other T1070 evidence, and other evidence
+    # doesn't promote it either.
+    _T1070_GENERIC_IMPORTS = {'CreateFileW', 'CreateFileA'}
 
     # Application Window Discovery (T1010). GetWindowTextW alone is
     # ubiquitous -- any GUI app reads its OWN window's title. EnumWindows
@@ -508,13 +536,19 @@ class ATTACKMapper:
         pattern_count_by_technique: Dict[str, int] = {}
         for item in string_results:
             technique = item['technique']
+            # CreateFile is STRING_MAPPING's own 'low'/generic entry for
+            # T1070 -- excluded from corroboration for the same reason
+            # map_imports excludes CreateFileW/A from T1070's combo bump
+            # (see _T1070_GENERIC_IMPORTS above).
+            if technique == 'T1070' and item.get('pattern') == 'CreateFile':
+                continue
             pattern_count_by_technique[technique] = pattern_count_by_technique.get(technique, 0) + 1
 
         mappings = []
         for item in string_results:
             technique = item['technique']
             evidence = item.get('pattern', item.get('string', ''))
-            corroborating = pattern_count_by_technique[technique]
+            corroborating = pattern_count_by_technique.get(technique, 0)
             confidence = 'high' if corroborating >= 2 else item.get('confidence', 'medium')
 
             mappings.append(ATTACKMapping(
@@ -649,9 +683,18 @@ class ATTACKMapper:
                     # injection primitive. Akira's manual report maps
                     # this exact code (WTSEnumerateProcessesW + OpenProcess
                     # + WaitForSingleObject + CloseHandle, a plain
-                    # enumerate-and-terminate loop) to T1057/T1562, never
+                    # enumerate-and-terminate loop) to T1057/T1685, never
                     # T1055.
                     continue
+            elif technique == 'T1070':
+                corroborating = func_set - self._T1070_GENERIC_IMPORTS
+                if len(corroborating) >= 2:
+                    confidence = 'high'
+                elif corroborating:
+                    confidence = self._determine_import_confidence(next(iter(corroborating)))
+                else:
+                    # Only the generic CreateFileW/A present, nothing else.
+                    confidence = 'low'
             elif len(functions) >= 2:
                 confidence = 'high'
             else:
@@ -674,11 +717,11 @@ class ATTACKMapper:
             ))
 
         all_function_names = {imp.function for imp in imports}
-        if self._T1562_KILL_COMBO.issubset(all_function_names):
-            evidence = ', '.join(sorted(self._T1562_KILL_COMBO))
+        if self._T1685_KILL_COMBO.issubset(all_function_names):
+            evidence = ', '.join(sorted(self._T1685_KILL_COMBO))
             mappings.append(ATTACKMapping(
-                technique='T1562.001',
-                name=self._get_technique_name('T1562.001'),
+                technique='T1685',
+                name=self._get_technique_name('T1685'),
                 source='import',
                 evidence=evidence,
                 confidence='medium',
@@ -686,8 +729,8 @@ class ATTACKMapper:
                     f"The API functions {evidence} are all imported by the binary. This is a "
                     f"coherent enumerate-then-kill primitive: deliberately searching the process "
                     f"list (WTSEnumerateProcessesW) rather than acting on a handle already held, "
-                    f"then opening and terminating a match. Consistent with Impair Defenses: "
-                    f"Disable or Modify Tools (T1562.001) even without a decrypted target name to "
+                    f"then opening and terminating a match. Consistent with Disable or Modify "
+                    f"Tools (T1685) even without a decrypted target name to "
                     f"confirm which process is targeted -- medium rather than high confidence for "
                     f"that reason."
                 )

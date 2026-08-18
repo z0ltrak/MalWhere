@@ -72,7 +72,7 @@ three complementary mechanisms:
 \midrule
 T1055 (Process Injection) & \code{VirtualAllocEx} + \code{WriteProcessMemory} + \code{CreateRemoteThread}, or the read-primitive trio \code{OpenProcess} + \code{VirtualQueryEx} + \code{ReadProcessMemory} & \code{OpenProcess} alone \\
 T1055.012 (Process Hollowing) & \code{CreateProcessW} + \code{WriteProcessMemory} + \code{SetThreadContext} + \code{ResumeThread} + \code{Nt/ZwUnmapViewOfSection} & any single API \\
-T1562.001 (Impair Defenses) & \code{WTSEnumerateProcessesW} + \code{OpenProcess} + \code{TerminateProcess} & bare \code{TerminateProcess} \\
+T1685 (Disable or Modify Tools) & \code{WTSEnumerateProcessesW} + \code{OpenProcess} + \code{TerminateProcess} & bare \code{TerminateProcess} \\
 T1010 (Application Window Discovery) & \code{EnumWindows} + \code{GetWindowTextW} & bare \code{GetWindowTextW} \\
 T1134.001/.003 (Impersonation/Theft; Make and Impersonate Token) & \code{ImpersonateLoggedOnUser} + \code{DuplicateTokenEx} (.001) or \code{LogonUserW} (.003) & bare \code{Impersonate\-LoggedOnUser} \\
 \bottomrule
@@ -120,7 +120,14 @@ individually justified against the signature's own raw evidence (its
     own page defines as requiring a module backed by a file on disk;
     the signature's own description (``dynamically allocated,
     unbacked memory'') is the textbook opposite, mapped instead to
-    \technique{T1620} (Reflective Code Loading).
+    \technique{T1620} (Reflective Code Loading). The same table also
+    bridges a version gap: CAPE's community signatures are frozen to
+    whichever ATT\&CK version they were last written against, so
+    \technique{T1562}/\technique{T1562.001} and \technique{T1070.001}
+    tags fired by CAPE are remapped to their ATT\&CK v19 identities
+    (\technique{T1685}, \technique{T1685.005}) at curation time,
+    independent of this project's own pinned version
+    (\S\ref{sec:limitations}).
 \end{itemize}
 
 A further capability, added during coverage extension, checks CAPE's

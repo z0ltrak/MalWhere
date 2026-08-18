@@ -196,7 +196,7 @@ services:
       - MISP_URL=https://misp
       - MISP_KEY=${MISP_API_KEY:-changeme}
       - MISP_VERIFYCERT=false
-      - ATTCK_VERSION=14.1
+      - ATTCK_VERSION=19.2
       # Resubmission loop bound for pipeline/process_resubmissions.py.
       # RESUBMIT_MAX_DEPTH/RESUBMIT_MAX_ARTIFACTS are consumed by
       # dynamic/scripts/parse_cape.py instead (see its --resubmit-* flags) —

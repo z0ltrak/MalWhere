@@ -88,10 +88,10 @@ sub-technique genuinely was not distinguished.
 \toprule
 \textbf{Sample} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Notes} \\
 \midrule
-Akira (ransomware) & 1.00 & 1.00 & 1.00 & single-stage binary \\
+Akira (ransomware) & 0.92 & 1.00 & 0.96 & single-stage binary \\
 WhiteSnakeStealer (.NET) & 1.00 & 0.80 & 0.89 & single-stage binary \\
-RoningLoader (parent only) & 0.90 & 0.68 & 0.78 & loader only \\
-RoningLoader (+resubmission) & 0.88 & 0.84 & 0.86 & loader + 3 dropped components \\
+RoningLoader (parent only) & 0.85 & 0.68 & 0.76 & loader only \\
+RoningLoader (+resubmission) & 0.84 & 0.84 & 0.84 & loader + 3 dropped components \\
 \bottomrule
 \end{tabular}
 \caption{Family-level precision/recall/F1 per validated sample.}
@@ -105,11 +105,11 @@ understates recall by construction, since the rootkit driver's and the
 RAT client's own techniques are real findings the ground truth expects
 but the parent binary alone cannot exhibit. Recall rises 16 points once
 the three dropped components are independently analyzed and their
-findings counted, at a 2-point precision cost from the added surface
-area, a trade the aggregate F1 improvement (0.78~$\rightarrow$~0.86)
+findings counted, at a 1-point precision cost from the added surface
+area, a trade the aggregate F1 improvement (0.76~$\rightarrow$~0.84)
 shows was worth taking.
 
-Precision is at or near 1.00 across all four rows, i.e.\ the small
+Precision is high across all four rows (0.84--1.00), i.e.\ the small
 number of findings the pipeline reports at all are seldom wrong. This
 is the direct, intended consequence of the coherent-combination
 philosophy in \S\ref{sec:static-rules} and the signature-curation
@@ -124,7 +124,7 @@ Precision alone does not distinguish ``the pipeline is well-calibrated''
 from ``the ground truth happens to be permissive.'' Unlike a reputation
 aggregator that displays each engine's or sandbox's tag as given, every
 discrepancy between pipeline output and ground truth found across the
-three samples, 13 in total (4 Akira, 4 WhiteSnakeStealer, 5
+three samples, 15 in total (5 Akira, 4 WhiteSnakeStealer, 6
 RoningLoader), was individually traced to a specific, checkable cause
 rather than accepted or dismissed on the aggregate number alone. Each
 was checked against the \emph{full text} of the corresponding manual
@@ -146,6 +146,29 @@ The outcome of this audit, by cause:
     community-signature mappings whose own raw evidence field, on
     inspection, named a target inconsistent with the claimed technique
     (detailed in \S\ref{sec:dynamic}).
+  \item \textbf{Two confidence-calibration corrections}, on Akira and
+    RoningLoader: the same combination-check gap behind the
+    \technique{T1055} fix above recurred for \technique{T1070}
+    (Indicator Removal) -- \code{CreateFileW}/\code{CreateFile}, already
+    commented ``generic'' in the mapping table, was still blindly
+    counted as corroboration alongside \code{DeleteFileW}/\code{DeleteFile}
+    and promoted to \emph{high} confidence. Migrating ground truth to
+    ATT\&CK v19 (\S\ref{sec:limitations}) is what surfaced it: the old
+    \technique{T1070.001} ground-truth entry had been matching this
+    finding purely by ID-prefix coincidence under family-level
+    matching, not because the evidence was genuinely about the entry's
+    actual subject (event-log clearing); moving that entry to its
+    v19 identity (\technique{T1685.005}, no longer sharing a
+    \technique{T1070} prefix) broke the coincidental match. Fixed the
+    same way as the \technique{T1055} case, excluding the generic
+    import/string from corroboration in either direction. Unlike that
+    case, the underlying evidence here is real (both binaries do
+    import these functions), just not specific enough to confirm the
+    claimed technique, so the finding remains present post-fix at its
+    now-honest \emph{medium}/\emph{low} confidence rather than
+    disappearing outright -- a direct illustration of the
+    confidence/precision relationship examined in
+    \S\ref{sec:confidence-calibration}, not a counterexample to it.
   \item \textbf{One ground-truth extraction gap}, not a pipeline
     error: WhiteSnakeStealer's own manual report discusses reflective
     DLL loading in its narrative text but the corresponding
@@ -167,14 +190,15 @@ This asymmetry, one ground-truth gap fixed, two similar-looking
 discrepancies left open, is deliberate: the distinguishing factor is
 whether independent confirmation exists in the source document, not
 whether the pipeline's own evidence looks convincing. The practical
-payoff of running this audit at all is visible in the fixed column: 10
-of 13 discrepancies turned into concrete, verifiable improvements to
+payoff of running this audit at all is visible in the fixed column: 12
+of 15 discrepancies turned into concrete, verifiable improvements to
 the rule set (\S\ref{sec:coverage}) and the aggregation logic
 (\S\ref{sec:case-installer}) rather than being absorbed silently into
 an aggregate score, which is precisely the diagnostic step a
 side-by-side verdict display cannot offer.
 
 \subsection{Confidence Calibration}
+\label{sec:confidence-calibration}
 
 If the confidence reconciliation model (\S\ref{sec:reconciliation}) is
 meaningful rather than cosmetic, precision should be measurably higher
@@ -183,7 +207,7 @@ sources or across technique levels) than among single-source
 \emph{medium}/\emph{low} findings. Across the three validated samples,
 every false positive identified in the audit above originated from a
 single-source finding; no finding that reached \emph{high} confidence
-through cross-source or cross-level corroboration was among the 13
+through cross-source or cross-level corroboration was among the 15
 discrepancies investigated. This is consistent with the reconciliation
 model doing real calibration work rather than merely relabeling
 findings, though the small sample size (three families) means this

@@ -5,17 +5,12 @@
     {
       "technique_id": "T1005",
       "name": "Data from Local System",
-      "evidence": "Collects local files for exfiltration \u2014 verified `wallet.dat` capture (base64 in XML report), 15-currency crypto wallet targeting"
+      "evidence": "Collects local files for exfiltration, verified `wallet.dat` capture (base64 in XML report), 15-currency crypto wallet targeting"
     },
     {
       "technique_id": "T1016",
       "name": "System Network Configuration Discovery",
       "evidence": "LAN scanning"
-    },
-    {
-      "technique_id": "T1022",
-      "name": "Data Encrypted",
-      "evidence": "RC4 + RSA encryption"
     },
     {
       "technique_id": "T1027",
@@ -55,7 +50,7 @@
     {
       "technique_id": "T1055",
       "name": "Process Injection",
-      "evidence": "Creates a process in suspended state (process-hollowing precursor); confirmed dynamically via CAPE's `creates_suspended_process`, not caught in manual static RE \u2014 corroborated by `OpenProcess`/`VirtualQueryEx`/`ReadProcessMemory` used together"
+      "evidence": "Creates a process in suspended state (process-hollowing precursor); confirmed dynamically via CAPE's `creates_suspended_process`, not caught in manual static RE, corroborated by `OpenProcess`/`VirtualQueryEx`/`ReadProcessMemory` used together"
     },
     {
       "technique_id": "T1056.001",
@@ -213,6 +208,11 @@
       "evidence": "Chrome/Edge/Firefox/Opera"
     },
     {
+      "technique_id": "T1560",
+      "name": "Archive Collected Data",
+      "evidence": "RC4 + RSA encryption"
+    },
+    {
       "technique_id": "T1560.001",
       "name": "Archive via Utility",
       "evidence": "GZip + ZIP compression"
@@ -225,7 +225,7 @@
     {
       "technique_id": "T1620",
       "name": "Reflective Code Loading",
-      "evidence": "In-memory PE loading in `xEdACX` (see Appendix D Validation Summary \u2014 verified but not previously listed here)"
+      "evidence": "In-memory PE loading in `xEdACX` (see Appendix D Validation Summary, verified but not previously listed here)"
     }
   ],
   "duplicate_rows_collapsed": 2

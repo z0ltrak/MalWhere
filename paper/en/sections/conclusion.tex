@@ -23,11 +23,11 @@ Validated against three malware families with materially different
 architectures (a single-stage ransomware binary, a feature-rich .NET
 infostealer, and a four-component loader/rootkit/RAT chain) against
 ground truth built from function-level manual reverse engineering, the
-pipeline reached family-level F1 scores of 1.00, 0.89, and 0.86
-respectively, with near-perfect precision throughout
+pipeline reached family-level F1 scores of 0.96, 0.89, and 0.84
+respectively, with high precision throughout
 (\S\ref{sec:evaluation}). Those numbers are only as trustworthy as the
 process behind them, which is why this thesis places equal weight on
-the audit trail that produced them: 13 discrepancies between pipeline
+the audit trail that produced them: 15 discrepancies between pipeline
 output and ground truth were individually traced to a specific,
 checkable cause, not accepted or dismissed on the aggregate score
 alone (\S\ref{sec:fp-audit}); a real aggregation bug that had silently

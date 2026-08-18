@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T09:41:35.561825+00:00",
+  "generated_at": "2026-08-18T19:07:15.592710+00:00",
   "sources": {
     "static_report": "static/reports/roning/sample_static.json",
     "dynamic_report": "dynamic/reports/roning/dynamic_report.json"
@@ -417,13 +417,13 @@
     ],
     "urls": [
       {
-        "value": "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
+        "value": "http://www.microsoft.com/pki/certs/CSPCA.crt0",
         "sources": [
           "static"
         ]
       },
       {
-        "value": "http://www.microsoft.com/DirectX0",
+        "value": "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
         "sources": [
           "static"
         ]
@@ -435,13 +435,13 @@
         ]
       },
       {
-        "value": "http://www.microsoft.com/pki/certs/tspca.crt0",
+        "value": "http://www.microsoft.com/DirectX0",
         "sources": [
           "static"
         ]
       },
       {
-        "value": "http://www.microsoft.com/pki/certs/CSPCA.crt0",
+        "value": "http://www.microsoft.com/pki/certs/tspca.crt0",
         "sources": [
           "static"
         ]
@@ -754,6 +754,12 @@
         ]
       },
       {
+        "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\mod.rs",
+        "sources": [
+          "static"
+        ]
+      },
+      {
         "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\sys\\thread_local\\native\\lazy.rs",
         "sources": [
           "static"
@@ -761,12 +767,6 @@
       },
       {
         "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\mod.rs",
         "sources": [
           "static"
         ]
@@ -1027,9 +1027,9 @@
           "source": "static",
           "source_type": "import",
           "evidence": "CreateFileW, CreateFileA",
-          "confidence": "high",
+          "confidence": "low",
           "name": "Indicator Removal on Host",
-          "justification": "[from D3D11InstallHelper.dll] The API functions CreateFileW, CreateFileA are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+          "justification": "[from D3D11InstallHelper.dll] The API functions CreateFileW, CreateFileA are imported by the binary. Each is individually associated with Indicator Removal on Host, but this specific combination doesn't form one of the corroborating patterns known to indicate Indicator Removal on Host with high confidence \u2014 treat this as suggestive rather than conclusive."
         },
         {
           "source": "static",
@@ -1043,7 +1043,7 @@
           "source": "static",
           "source_type": "import",
           "evidence": "CreateFileW",
-          "confidence": "medium",
+          "confidence": "low",
           "name": "Indicator Removal on Host",
           "justification": "[from 66VOAk0O.exe] The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }
@@ -1052,14 +1052,6 @@
     {
       "technique": "T1071",
       "observations": [
-        {
-          "source": "static",
-          "source_type": "config",
-          "evidence": "1 C2 IPs found",
-          "confidence": "medium",
-          "name": "Application Layer Protocol",
-          "justification": "[from 66VOAk0O.exe] Found 1 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
-        },
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
@@ -1388,56 +1380,6 @@
       ]
     },
     {
-      "technique": "T1562",
-      "observations": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "antiav_servicestop",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'antiav_servicestop' fired (severity=3, confidence=100%, categories=['anti-av'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "antisandbox_unhook",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'antisandbox_unhook' fired (severity=3, confidence=60%, categories=['anti-sandbox'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_exception_filter",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_exception_filter' fired (severity=3, confidence=100%, categories=['defense_evasion', 'anti_debugging', 'fileless'])"
-        }
-      ]
-    },
-    {
-      "technique": "T1562.001",
-      "observations": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "antiav_servicestop",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'antiav_servicestop' fired (severity=3, confidence=100%, categories=['anti-av'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "antisandbox_unhook",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'antisandbox_unhook' fired (severity=3, confidence=60%, categories=['anti-sandbox'])"
-        }
-      ]
-    },
-    {
       "technique": "T1574",
       "observations": [
         {
@@ -1529,6 +1471,51 @@
           "confidence": "high",
           "name": "Debugger Evasion",
           "justification": "[from 66VOAk0O.exe] YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
+        }
+      ]
+    },
+    {
+      "technique": "T1685",
+      "observations": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "antiav_servicestop",
+          "confidence": "high",
+          "name": "",
+          "justification": "CAPE signature 'antiav_servicestop' fired (severity=3, confidence=100%, categories=['anti-av'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "antiav_servicestop",
+          "confidence": "high",
+          "name": "",
+          "justification": "CAPE signature 'antiav_servicestop' fired (severity=3, confidence=100%, categories=['anti-av'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "antisandbox_unhook",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'antisandbox_unhook' fired (severity=3, confidence=60%, categories=['anti-sandbox'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "antisandbox_unhook",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'antisandbox_unhook' fired (severity=3, confidence=60%, categories=['anti-sandbox'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "unbacked_exception_filter",
+          "confidence": "high",
+          "name": "",
+          "justification": "CAPE signature 'unbacked_exception_filter' fired (severity=3, confidence=100%, categories=['defense_evasion', 'anti_debugging', 'fileless'])"
         }
       ]
     }

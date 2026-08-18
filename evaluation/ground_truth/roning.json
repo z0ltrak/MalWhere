@@ -28,11 +28,6 @@
       "evidence": "`cmd /c`, `PowerShell`, batch scripts"
     },
     {
-      "technique_id": "T1070",
-      "name": "Indicator Removal",
-      "evidence": "Event log clearing via PowerShell"
-    },
-    {
       "technique_id": "T1071.001",
       "name": "Web Protocols",
       "evidence": "HTTP to Baidu for time sync"
@@ -103,11 +98,6 @@
       "evidence": "MetaMask extension targeting"
     },
     {
-      "technique_id": "T1562",
-      "name": "Impair Defenses",
-      "evidence": "Terminate AV processes, disable firewall"
-    },
-    {
       "technique_id": "T1571",
       "name": "Non-Standard Port",
       "evidence": "C2 on port 5552"
@@ -126,6 +116,16 @@
       "technique_id": "T1622",
       "name": "Debugger Evasion",
       "evidence": "Anti-debugging in driver"
+    },
+    {
+      "technique_id": "T1685",
+      "name": "Disable or Modify Tools",
+      "evidence": "Terminate AV processes, disable firewall"
+    },
+    {
+      "technique_id": "T1685.005",
+      "name": "Disable or Modify Tools: Clear Windows Event Logs",
+      "evidence": "Event log clearing via PowerShell"
     }
   ],
   "duplicate_rows_collapsed": 0

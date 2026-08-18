@@ -34,20 +34,23 @@ The evaluation methodology goes beyond raw precision and recall: every
 false positive found during validation was individually traced to its
 exact evidence (a specific import combination, a sandbox signature's
 raw data field, a string pattern) and checked against the full text of
-the corresponding manual report, not just its summary table. Of 13
-false positives found this way across the three samples, ten were
-genuine pipeline errors with identifiable, fixed root causes, one was
-a gap in how ground truth was extracted rather than a pipeline error,
-and two were deliberately left open pending independent confirmation
-rather than resolved on the pipeline's own evidence alone. Static
-detection coverage was subsequently extended from roughly 30 to
-approximately 85 MITRE ATT\&CK technique IDs, every addition sourced
-from MITRE's own technique descriptions and verified not to introduce
-new findings on the validated samples before being trusted.
+the corresponding manual report, not just its summary table. Of 15
+false positives found this way across the three samples, twelve were
+genuine pipeline errors with identifiable, fixed root causes (ten
+outright, plus two confidence-calibration corrections whose underlying
+generic evidence remains present, honestly downgraded, rather than
+disappearing), one was a gap in how ground truth was extracted rather
+than a pipeline error, and two were deliberately left open pending
+independent confirmation rather than resolved on the pipeline's own
+evidence alone. Static detection coverage was subsequently extended
+from roughly 30 to approximately 85 MITRE ATT\&CK technique IDs, every
+addition sourced from MITRE's own technique descriptions and verified
+not to introduce new findings on the validated samples before being
+trusted.
 
-The resulting pipeline reaches family-level F1 scores of 1.00 (Akira),
-0.89 (WhiteSnakeStealer), and 0.86 (RoningLoader, counting its
-resubmitted components), with near-perfect precision across all three
+The resulting pipeline reaches family-level F1 scores of 0.96 (Akira),
+0.89 (WhiteSnakeStealer), and 0.84 (RoningLoader, counting its
+resubmitted components), with high precision across all three
 samples. The thesis argues that this audit trail, every rule tied to
 verifiable evidence, every error diagnosed to a specific cause, every
 extension checked for regression, is what makes the pipeline's output

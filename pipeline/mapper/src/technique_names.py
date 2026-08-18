@@ -57,9 +57,14 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1552": "Unsecured Credentials",
     "T1552.001": "Unsecured Credentials: Credentials In Files",
     "T1555": "Credentials from Password Stores",
+    "T1560": "Archive Collected Data",
     "T1560.001": "Archive Collected Data: Archive via Utility",
-    "T1562": "Impair Defenses",
-    "T1562.001": "Impair Defenses: Disable or Modify Tools",
+    # T1562 "Impair Defenses" was retired in ATT&CK v19; T1562.001
+    # "Disable or Modify Tools" was promoted to become the new parent
+    # technique T1685 in its own right. Migrated 2026-08 (v14 -> v19),
+    # see static/scripts/src/detectors/attck_mapper.py's own migration
+    # comment for the full reasoning.
+    "T1685": "Disable or Modify Tools",
     "T1564": "Hide Artifacts",
     "T1564.003": "Hide Artifacts: Hidden Window",
     "T1568": "Dynamic Resolution",
@@ -77,7 +82,9 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1546.012": "Event Triggered Execution: Image File Execution Options Injection",
     "T1546.003": "Event Triggered Execution: Windows Management Instrumentation Event Subscription",
     "T1197": "BITS Jobs",
-    "T1070.001": "Indicator Removal: Clear Windows Event Logs",
+    # Moved out of Indicator Removal (T1070) into the new T1685 parent in
+    # ATT&CK v19 (migrated 2026-08, was T1070.001).
+    "T1685.005": "Disable or Modify Tools: Clear Windows Event Logs",
     "T1218.010": "System Binary Proxy Execution: Regsvr32",
     "T1218.005": "System Binary Proxy Execution: Mshta",
     "T1055.012": "Process Injection: Process Hollowing",

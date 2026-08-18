@@ -1,7 +1,7 @@
 {
   "name": "MalWhere - roning",
   "versions": {
-    "attack": "14",
+    "attack": "19",
     "navigator": "4.9.1",
     "layer": "4.5"
   },
@@ -75,28 +75,10 @@
       ]
     },
     {
-      "techniqueID": "T1070",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "static corroborated; evidence: CreateFile, CreateFileW, CreateFileW, CreateFileA",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    },
-    {
       "techniqueID": "T1071",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic+static corroborated; evidence: 1 C2 IPs found, contains_pe_overlay, unbacked_dns_resolution, unbacked_memory_network_connection",
+      "comment": "dynamic corroborated; evidence: contains_pe_overlay, unbacked_dns_resolution, unbacked_memory_network_connection",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -106,7 +88,7 @@
         },
         {
           "name": "sources",
-          "value": "dynamic, static"
+          "value": "dynamic"
         }
       ]
     },
@@ -255,42 +237,6 @@
       ]
     },
     {
-      "techniqueID": "T1562",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: antiav_servicestop, antisandbox_unhook, unbacked_exception_filter",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1562.001",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: antiav_servicestop, antisandbox_unhook",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
       "techniqueID": "T1620",
       "score": 100,
       "color": "#e60d0d",
@@ -323,6 +269,24 @@
         {
           "name": "sources",
           "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1685",
+      "score": 100,
+      "color": "#e60d0d",
+      "comment": "dynamic corroborated; evidence: antiav_servicestop, antisandbox_unhook, unbacked_exception_filter",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "high"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
         }
       ]
     },
@@ -377,6 +341,24 @@
         {
           "name": "sources",
           "value": "dynamic"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1070",
+      "score": 30,
+      "color": "#8ec843",
+      "comment": "static corroborated; evidence: CreateFile, CreateFileW, CreateFileW, CreateFileA",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "low"
+        },
+        {
+          "name": "sources",
+          "value": "static"
         }
       ]
     },

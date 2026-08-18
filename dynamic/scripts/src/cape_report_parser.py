@@ -80,7 +80,20 @@ _UNRELIABLE_SIGNATURES = {
 # unbacked_library_load signatures are — per their own names — about
 # exactly the opposite: API/library resolution from memory NOT backed by a
 # file. That's T1620's textbook definition, not T1129's.
-_TECHNIQUE_REMAP = {"T1129": "T1620"}
+_TECHNIQUE_REMAP = {
+    "T1129": "T1620",
+    # CAPE's own community signatures still tag whatever ATT&CK IDs they
+    # were last written against, not necessarily current -- these four
+    # are ATT&CK v14 IDs since revoked/restructured in v19 (this
+    # project's own migration, 2026-08; see attck_mapper.py's TECHNIQUE_NAMES
+    # for the full reasoning on each). Remapped here so a raw CAPE tag of
+    # the old ID doesn't silently reintroduce a retired technique into our
+    # own output regardless of which signature produced it.
+    "T1022": "T1560",        # Data Encrypted -> Archive Collected Data
+    "T1562": "T1685",        # Impair Defenses -> Disable or Modify Tools
+    "T1562.001": "T1685",    # (was a sub-technique; T1685 is now the parent itself)
+    "T1070.001": "T1685.005",  # Indicator Removal: Clear Windows Event Logs -> Disable or Modify Tools: Clear Windows Event Logs
+}
 
 # T1568 "Dynamic Resolution" is specifically about C2 infrastructure using
 # an algorithm to calculate addressing (DGA-style), per MITRE's own

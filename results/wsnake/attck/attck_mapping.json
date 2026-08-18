@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T08:22:06.515169+00:00",
+  "generated_at": "2026-08-18T19:07:28.448581+00:00",
   "sample": {
     "family": "wsnake",
     "static_sha256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312",
@@ -1274,29 +1274,6 @@
       "cross_level_sibling": null
     },
     {
-      "technique_id": "T1022",
-      "technique_name": "Unknown ATT&CK technique (T1022)",
-      "final_confidence": "medium",
-      "confidence_score": 60,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "medium",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "dotnet_api",
-          "evidence": "System.Security.Cryptography.RSACryptoServiceProvider::Encrypt",
-          "confidence": "medium",
-          "name": "Data Encrypted",
-          "justification": "The managed .NET API call 'System.Security.Cryptography.RSACryptoServiceProvider::Encrypt' was resolved from the assembly's method bodies. This BCL API is specific enough to Data Encrypted that its presence alone indicates the capability, but with less certainty than a corroborated combination would."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
       "technique_id": "T1033",
       "technique_name": "System Owner/User Discovery",
       "final_confidence": "medium",
@@ -1483,6 +1460,29 @@
           "confidence": "medium",
           "name": "",
           "justification": "Executed command '\"cmd.exe\" /c chcp 65001 && netsh wlan show networks mode=bssid | findstr \"SSID BSSID Signal\"' matches the known pattern 'netsh wlan show'."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1560",
+      "technique_name": "Archive Collected Data",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "dotnet_api",
+          "evidence": "System.Security.Cryptography.RSACryptoServiceProvider::Encrypt",
+          "confidence": "medium",
+          "name": "Archive Collected Data",
+          "justification": "The managed .NET API call 'System.Security.Cryptography.RSACryptoServiceProvider::Encrypt' was resolved from the assembly's method bodies. This BCL API is specific enough to Archive Collected Data that its presence alone indicates the capability, but with less certainty than a corroborated combination would."
         }
       ],
       "cross_level_corroboration": false,

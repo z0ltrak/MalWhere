@@ -41,21 +41,24 @@ validaci\'on se rastre\'o individualmente hasta su evidencia exacta
 (una combinaci\'on de importaciones concreta, el campo de datos crudo
 de una firma de sandbox, un patr\'on de cadena) y se contrast\'o con el
 texto completo del informe manual correspondiente, no solo con su
-tabla resumen. De los 13 falsos positivos encontrados de esta forma en
-las tres muestras, diez eran errores gen\'uinos de la tuber\'ia con
-causa ra\'iz identificada y corregida, uno era un hueco en c\'omo se
-extrajo la verdad de referencia y no un error de la tuber\'ia, y dos se
-dejaron abiertos deliberadamente a la espera de confirmaci\'on
-independiente en lugar de resolverse solo con la evidencia propia de la
-tuber\'ia. La cobertura de detecci\'on est\'atica se ampli\'o
-posteriormente de unas 30 a aproximadamente 85 identificadores de
-t\'ecnica MITRE ATT\&CK, cada adici\'on obtenida de las propias
-descripciones de t\'ecnica de MITRE y verificada para no introducir
-nuevos hallazgos en las muestras validadas antes de confiar en ella.
+tabla resumen. De los 15 falsos positivos encontrados de esta forma en
+las tres muestras, doce eran errores gen\'uinos de la tuber\'ia con
+causa ra\'iz identificada y corregida (diez sin m\'as, m\'as dos
+correcciones de calibraci\'on de confianza cuya evidencia gen\'erica
+subyacente permanece presente, honestamente rebajada, en lugar de
+desaparecer), uno era un hueco en c\'omo se extrajo la verdad de
+referencia y no un error de la tuber\'ia, y dos se dejaron abiertos
+deliberadamente a la espera de confirmaci\'on independiente en lugar
+de resolverse solo con la evidencia propia de la tuber\'ia. La
+cobertura de detecci\'on est\'atica se ampli\'o posteriormente de unas
+30 a aproximadamente 85 identificadores de t\'ecnica MITRE ATT\&CK,
+cada adici\'on obtenida de las propias descripciones de t\'ecnica de
+MITRE y verificada para no introducir nuevos hallazgos en las muestras
+validadas antes de confiar en ella.
 
 La tuber\'ia resultante alcanza puntuaciones F1 a nivel de familia de
-1.00 (Akira), 0.89 (WhiteSnakeStealer) y 0.86 (RoningLoader, contando
-sus componentes reenviados), con precisi\'on cercana al 100\,\% en las
+0.96 (Akira), 0.89 (WhiteSnakeStealer) y 0.84 (RoningLoader, contando
+sus componentes reenviados), con precisi\'on alta en las
 tres muestras. La tesis argumenta que este rastro de auditor\'ia, cada
 regla ligada a evidencia verificable, cada error diagnosticado a una
 causa concreta, cada extensi\'on comprobada frente a regresiones, es lo

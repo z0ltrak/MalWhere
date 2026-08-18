@@ -47,10 +47,29 @@ como una advertencia abierta.
   afectada.
 
 \item \textbf{La auditor\'ia de falsos positivos} (\S\ref{sec:fp-audit})
-  comprob\'o 13 discrepancias individualmente; 10 eran errores
-  gen\'uinos de la tuber\'ia, ahora corregidos, 1 era un hueco de
-  extracci\'on de verdad de referencia (\S\ref{sec:case-wsnake}), y 2
-  permanecen abiertas por dise\~no.
+  comprob\'o 15 discrepancias individualmente; 12 eran errores
+  gen\'uinos de la tuber\'ia, ahora corregidos (10 sin m\'as, m\'as 2
+  correcciones de calibraci\'on de confianza cuya evidencia gen\'erica
+  subyacente permanece presente, honestamente rebajada, en lugar de
+  desaparecer), 1 era un hueco de extracci\'on de verdad de referencia
+  (\S\ref{sec:case-wsnake}), y 2 permanecen abiertas por dise\~no.
+
+\item \textbf{La versi\'on de ATT\&CK est\'a fijada, y las propias
+  etiquetas de firma de CAPE no lo est\'an.} Todos los identificadores
+  de t\'ecnica en esta tuber\'ia, la verdad de referencia y las capas
+  de Navigator apuntan a MITRE ATT\&CK v19.2. Las firmas de la
+  comunidad de CAPE quedan fijadas a la versi\'on con la que se
+  escribieron por \'ultima vez, as\'i que las etiquetas provenientes de
+  firmas se reasignan a su identidad actual en el momento de la
+  curaci\'on (\S\ref{sec:dynamic}) en lugar de confiarse tal cual.
+  Migrar la verdad de referencia desde las identidades v14, antes sin
+  fijar, a v19 es lo que sac\'o a la luz el fallo de calibraci\'on de
+  confianza de \technique{T1070}/\technique{T1685.005} anterior
+  (\S\ref{sec:fp-audit}): bajo los identificadores antiguos, el
+  emparejamiento a nivel de familia hab\'ia estado emparejando ese
+  hallazgo con su entrada de verdad de referencia por coincidencia de
+  prefijo en lugar de correspondencia gen\'uina, lo que de otro modo
+  habr\'ia enmascarado el problema subyacente indefinidamente.
 
 \item \textbf{Dos falsos positivos de RoningLoader quedan sin resolver
   deliberadamente.} \technique{T1027} y \technique{T1497} tienen

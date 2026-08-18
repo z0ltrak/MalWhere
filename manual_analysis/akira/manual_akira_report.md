@@ -203,7 +203,7 @@ void entry(void)
 - `WaitForSingleObject`: Wait for process termination
 - `CloseHandle`: Close process handle
 
-**ATT&CK Mapping:** T1057 (Process Discovery), T1562 (Impair Defenses)
+**ATT&CK Mapping:** T1057 (Process Discovery), T1685 (Disable or Modify Tools)
 
 ### Event Log Clearing
 
@@ -215,7 +215,7 @@ Get-WinEvent -ListLog * | where { $_.RecordCount } | ForEach-Object -Process{
 }
 ```
 
-**ATT&CK Mapping:** T1070 (Indicator Removal)
+**ATT&CK Mapping:** T1685.005 (Clear Windows Event Logs)
 
 ### Volume Shadow Copy (VSS) Deletion
 
@@ -518,10 +518,10 @@ struct custom_string {
 | Inhibit System Recovery | T1490 | VSS deletion (PowerShell) |
 | Debugger Evasion | T1622 | Anti-debugging wrapper |
 | Virtualization/Sandbox Evasion | T1497 | CPU/AVX checks |
-| Impair Defenses | T1562 | Process termination |
+| Disable or Modify Tools | T1685 | Process termination |
 | Process Discovery | T1057 | Process enumeration |
 | File and Directory Discovery | T1083 | `open_directory_iterator` walks target directories (wildcard-based, per-drive) to find files to encrypt, see Directory Traversal & File Processing |
-| Indicator Removal | T1070 | Event log clearing |
+| Disable or Modify Tools: Clear Windows Event Logs | T1685.005 | Event log clearing |
 | Command and Scripting Interpreter | T1059 | PowerShell execution |
 | System Owner/User Discovery | T1033 | Checks own process token for Administrator/UAC elevation status |
 | Application Layer Protocol | T1071 | 2 `.onion` URLs embedded in the binary (Tor-based C2/leak-site channel) |

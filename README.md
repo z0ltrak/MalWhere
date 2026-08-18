@@ -297,6 +297,14 @@ how much a single run queues/processes: see `docker/docker-compose.yml`'s
 
 ## ATT&CK Confidence Model
 
+All technique IDs across this pipeline, ground truth, and the Navigator
+layers target **MITRE ATT&CK v19.2**. CAPE's own community signatures are
+frozen to whichever version they were last written against, so
+signature-sourced technique tags are remapped to their current v19
+identity at curation time (`dynamic/scripts/src/cape_report_parser.py`)
+rather than trusted verbatim; see `docs/limitations.md` for what this
+caught.
+
 Static rules use a three-tier system to avoid promoting a single generic
 indicator to high confidence on its own:
 
@@ -338,17 +346,19 @@ paper.
 
 | Sample | Precision | Recall | F1 | Notes |
 |---|---|---|---|---|
-| Akira (ransomware) | 1.00 | 1.00 | 1.00 | single-stage binary |
+| Akira (ransomware) | 0.92 | 1.00 | 0.96 | single-stage binary |
 | WhiteSnakeStealer (.NET infostealer) | 1.00 | 0.80 | 0.89 | single-stage binary |
-| RoningLoader (loader only) | 0.90 | 0.68 | 0.78 | parent binary alone |
-| RoningLoader (+ resubmission) | 0.88 | 0.84 | 0.86 | loader + 3 ground-truthed dropped components |
+| RoningLoader (loader only) | 0.85 | 0.68 | 0.76 | parent binary alone |
+| RoningLoader (+ resubmission) | 0.84 | 0.84 | 0.84 | loader + 3 ground-truthed dropped components |
 
 Family-level matching (a parent technique and its sub-technique count as
-the same finding). All 13 discrepancies found across the three samples
-during validation were individually traced to a specific cause: 10 fixed
-pipeline errors, 1 ground-truth extraction gap, 2 left open pending
-independent confirmation. See the paper's evaluation and case-studies
-sections for the full audit.
+the same finding). All 15 discrepancies found across the three samples
+during validation were individually traced to a specific cause: 12 fixed
+pipeline errors (10 outright, plus 2 confidence-calibration corrections
+whose underlying generic evidence remains present, honestly downgraded,
+rather than disappearing — see `docs/limitations.md`), 1 ground-truth
+extraction gap, 2 left open pending independent confirmation. See the
+paper's evaluation and case-studies sections for the full audit.
 
 ### Generality Smoke Test
 

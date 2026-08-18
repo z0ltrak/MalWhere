@@ -23,11 +23,6 @@
       "evidence": "PowerShell execution"
     },
     {
-      "technique_id": "T1070",
-      "name": "Indicator Removal",
-      "evidence": "Event log clearing"
-    },
-    {
       "technique_id": "T1071",
       "name": "Application Layer Protocol",
       "evidence": "2 `.onion` URLs embedded in the binary (Tor-based C2/leak-site channel)"
@@ -35,7 +30,7 @@
     {
       "technique_id": "T1083",
       "name": "File and Directory Discovery",
-      "evidence": "`open_directory_iterator` walks target directories (wildcard-based, per-drive) to find files to encrypt \u2014 see Directory Traversal & File Processing"
+      "evidence": "`open_directory_iterator` walks target directories (wildcard-based, per-drive) to find files to encrypt, see Directory Traversal & File Processing"
     },
     {
       "technique_id": "T1486",
@@ -53,14 +48,19 @@
       "evidence": "CPU/AVX checks"
     },
     {
-      "technique_id": "T1562",
-      "name": "Impair Defenses",
-      "evidence": "Process termination"
-    },
-    {
       "technique_id": "T1622",
       "name": "Debugger Evasion",
       "evidence": "Anti-debugging wrapper"
+    },
+    {
+      "technique_id": "T1685",
+      "name": "Disable or Modify Tools",
+      "evidence": "Process termination"
+    },
+    {
+      "technique_id": "T1685.005",
+      "name": "Disable or Modify Tools: Clear Windows Event Logs",
+      "evidence": "Event log clearing"
     }
   ],
   "duplicate_rows_collapsed": 0

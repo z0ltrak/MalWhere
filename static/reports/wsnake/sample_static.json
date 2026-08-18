@@ -6286,12 +6286,12 @@
       "justification": "The managed .NET API calls System.Net.WebClient::UploadData, System.Net.WebClient::UploadString were resolved from the assembly's method bodies (call/callvirt/newobj targets, not just type/method names). Multiple corroborating BCL API calls, not one in isolation, is what makes this a strong signal for Exfiltration Over C2 Channel."
     },
     {
-      "technique": "T1022",
-      "name": "Data Encrypted",
+      "technique": "T1560",
+      "name": "Archive Collected Data",
       "source": "dotnet_api",
       "evidence": "System.Security.Cryptography.RSACryptoServiceProvider::Encrypt",
       "confidence": "medium",
-      "justification": "The managed .NET API call 'System.Security.Cryptography.RSACryptoServiceProvider::Encrypt' was resolved from the assembly's method bodies. This BCL API is specific enough to Data Encrypted that its presence alone indicates the capability, but with less certainty than a corroborated combination would."
+      "justification": "The managed .NET API call 'System.Security.Cryptography.RSACryptoServiceProvider::Encrypt' was resolved from the assembly's method bodies. This BCL API is specific enough to Archive Collected Data that its presence alone indicates the capability, but with less certainty than a corroborated combination would."
     },
     {
       "technique": "T1115",
@@ -6325,6 +6325,6 @@
     "xor_recovered_iocs": []
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-12T18:49:53.302398",
+  "analysis_timestamp": "2026-08-18T19:02:48.690503",
   "errors": []
 }

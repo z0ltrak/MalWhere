@@ -6984,8 +6984,8 @@
             "name": "Indicator Removal on Host",
             "source": "import",
             "evidence": "CreateFileW, CreateFileA",
-            "confidence": "high",
-            "justification": "The API functions CreateFileW, CreateFileA are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+            "confidence": "low",
+            "justification": "The API functions CreateFileW, CreateFileA are imported by the binary. Each is individually associated with Indicator Removal on Host, but this specific combination doesn't form one of the corroborating patterns known to indicate Indicator Removal on Host with high confidence \u2014 treat this as suggestive rather than conclusive."
           },
           {
             "technique": "T1497",
@@ -7022,21 +7022,16 @@
         ],
         "config": {
           "ips": [],
-          "domains": [
-            "wtf8.rs",
-            "v0.rs",
-            "d3d11install.pdb",
-            "kernel32.dllfailed"
-          ],
+          "domains": [],
           "urls": [],
           "emails": [],
           "registry_paths": [],
           "file_paths": [
             "C:\\Program Files\\DirectX",
             "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\local.rs",
+            "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\mod.rs",
             "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\sys\\thread_local\\native\\lazy.rs",
-            "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs",
-            "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\mod.rs"
+            "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs"
           ],
           "mutexes": [],
           "encryption_keys": [
@@ -7065,7 +7060,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-12T18:51:19.348484",
+        "analysis_timestamp": "2026-08-18T19:04:14.805649",
         "errors": []
       },
       "keys_used": 1458,
@@ -12977,7 +12972,7 @@
             "name": "Indicator Removal on Host",
             "source": "import",
             "evidence": "CreateFileW",
-            "confidence": "medium",
+            "confidence": "low",
             "justification": "The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
           },
           {
@@ -13003,31 +12998,19 @@
             "evidence": "AntiDebug_IsDebuggerPresent",
             "confidence": "high",
             "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
-          },
-          {
-            "technique": "T1071",
-            "name": "Application Layer Protocol",
-            "source": "config",
-            "evidence": "1 C2 IPs found",
-            "confidence": "medium",
-            "justification": "Found 1 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
           }
         ],
         "config": {
-          "ips": [
-            "6.0.0.0"
-          ],
+          "ips": [],
           "domains": [
-            "d3d11install.pdb",
-            "sdk.sample",
             "crl.microsoft.com"
           ],
           "urls": [
+            "http://www.microsoft.com/pki/certs/CSPCA.crt0",
             "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
-            "http://www.microsoft.com/DirectX0",
             "http://crl.microsoft.com/pki/crl/products/tspca.crl0H",
-            "http://www.microsoft.com/pki/certs/tspca.crt0",
-            "http://www.microsoft.com/pki/certs/CSPCA.crt0"
+            "http://www.microsoft.com/DirectX0",
+            "http://www.microsoft.com/pki/certs/tspca.crt0"
           ],
           "emails": [],
           "registry_paths": [],
@@ -13038,7 +13021,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-12T18:51:39.529086",
+        "analysis_timestamp": "2026-08-18T19:04:33.491677",
         "errors": []
       },
       "keys_used": 1458,
@@ -14064,7 +14047,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-12T18:51:51.761483",
+        "analysis_timestamp": "2026-08-18T19:04:45.574143",
         "errors": []
       },
       "keys_used": 1458,
@@ -17337,7 +17320,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-12T18:52:04.531296",
+        "analysis_timestamp": "2026-08-18T19:04:57.252375",
         "errors": []
       },
       "keys_used": 1458,
@@ -20717,7 +20700,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-12T18:52:25.582981",
+        "analysis_timestamp": "2026-08-18T19:05:16.483579",
         "errors": []
       },
       "keys_used": 1458,
@@ -24315,7 +24298,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-12T18:52:41.279281",
+        "analysis_timestamp": "2026-08-18T19:05:30.746561",
         "errors": []
       },
       "keys_used": 1458,
@@ -27597,7 +27580,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-12T18:52:53.091938",
+        "analysis_timestamp": "2026-08-18T19:05:42.174549",
         "errors": []
       },
       "keys_used": 1458,
@@ -31033,7 +31016,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-12T18:53:05.135508",
+        "analysis_timestamp": "2026-08-18T19:05:53.914732",
         "errors": []
       },
       "keys_used": 1458,
@@ -52952,8 +52935,8 @@
       "name": "Indicator Removal on Host",
       "source": "import",
       "evidence": "CreateFileW, CreateFileA",
-      "confidence": "high",
-      "justification": "[from D3D11InstallHelper.dll] The API functions CreateFileW, CreateFileA are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+      "confidence": "low",
+      "justification": "[from D3D11InstallHelper.dll] The API functions CreateFileW, CreateFileA are imported by the binary. Each is individually associated with Indicator Removal on Host, but this specific combination doesn't form one of the corroborating patterns known to indicate Indicator Removal on Host with high confidence \u2014 treat this as suggestive rather than conclusive."
     },
     {
       "technique": "T1497",
@@ -53040,7 +53023,7 @@
       "name": "Indicator Removal on Host",
       "source": "import",
       "evidence": "CreateFileW",
-      "confidence": "medium",
+      "confidence": "low",
       "justification": "[from 66VOAk0O.exe] The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
     },
     {
@@ -53066,26 +53049,15 @@
       "evidence": "AntiDebug_IsDebuggerPresent",
       "confidence": "high",
       "justification": "[from 66VOAk0O.exe] YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
-    },
-    {
-      "technique": "T1071",
-      "name": "Application Layer Protocol",
-      "source": "config",
-      "evidence": "1 C2 IPs found",
-      "confidence": "medium",
-      "justification": "[from 66VOAk0O.exe] Found 1 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
     }
   ],
   "config": {
-    "domains": [
-      "crl.microsoft.com"
-    ],
     "file_paths": [
       "C:\\Program Files\\DirectX",
       "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\local.rs",
+      "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\mod.rs",
       "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\sys\\thread_local\\native\\lazy.rs",
-      "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs",
-      "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\mod.rs"
+      "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs"
     ],
     "encryption_keys": [
       {
@@ -53094,22 +53066,24 @@
         "description": "SHA1 key"
       }
     ],
-    "ips": [],
+    "domains": [
+      "crl.microsoft.com"
+    ],
     "urls": [
+      "http://www.microsoft.com/pki/certs/CSPCA.crt0",
       "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
-      "http://www.microsoft.com/DirectX0",
       "http://crl.microsoft.com/pki/crl/products/tspca.crl0H",
-      "http://www.microsoft.com/pki/certs/tspca.crt0",
-      "http://www.microsoft.com/pki/certs/CSPCA.crt0"
+      "http://www.microsoft.com/DirectX0",
+      "http://www.microsoft.com/pki/certs/tspca.crt0"
     ]
   },
   "nsis_detected": true,
-  "analysis_timestamp": "2026-08-12T18:53:05.193279",
+  "analysis_timestamp": "2026-08-18T19:05:53.973310",
   "errors": [
     "Detected NSIS installer: Nullsoft.NSIS.exehead",
     "Using 7z for NSIS extraction",
     "Using 7z for NSIS extraction",
-    "Running: 7z x -y /samples/roning/sample.exe -o/tmp/nsis_extract_cy1wvyrp",
+    "Running: 7z x -y /samples/roning/sample.exe -o/tmp/nsis_extract_7sbnsh4q",
     "7z return code: 0",
     "7z stdout: \n7-Zip [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21\np7zip Version 16.02 (locale=C.UTF-8,Utf16=on,HugeFiles=on,64 bits,16 CPUs AMD Ryzen 7 4800H with Radeon Graphics          (860F01),...",
     "Extracted: 9ZUPMq.3w (unknown, 2858217 bytes)",

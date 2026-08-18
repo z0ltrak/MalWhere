@@ -79,7 +79,7 @@ ATT\&CK mediante tres mecanismos complementarios:
 \midrule
 T1055 (Process Injection) & \code{VirtualAllocEx} + \code{WriteProcessMemory} + \code{CreateRemoteThread}, o el tr\'io de lectura \code{OpenProcess} + \code{VirtualQueryEx} + \code{ReadProcessMemory} & \code{OpenProcess} en solitario \\
 T1055.012 (Process Hollowing) & \code{CreateProcessW} + \code{WriteProcessMemory} + \code{SetThreadContext} + \code{ResumeThread} + \code{Nt/ZwUnmapViewOfSection} & cualquier API individual \\
-T1562.001 (Impair Defenses) & \code{WTSEnumerateProcessesW} + \code{OpenProcess} + \code{TerminateProcess} & \code{TerminateProcess} sola \\
+T1685 (Disable or Modify Tools) & \code{WTSEnumerateProcessesW} + \code{OpenProcess} + \code{TerminateProcess} & \code{TerminateProcess} sola \\
 T1010 (Application Window Discovery) & \code{EnumWindows} + \code{GetWindowTextW} & \code{GetWindowTextW} sola \\
 T1134.001/.003 (Impersonation/Theft; Make and Impersonate Token) & \code{ImpersonateLoggedOnUser} + \code{DuplicateTokenEx} (.001) o \code{LogonUserW} (.003) & \code{Impersonate\-LoggedOnUser} sola \\
 \bottomrule
@@ -132,7 +132,15 @@ campo \code{data}, no solo su nombre o categor\'ia):
     p\'agina de MITRE define como un m\'odulo respaldado por un fichero
     en disco; la descripci\'on de la propia firma (``memoria asignada
     din\'amicamente, sin respaldo'') es exactamente lo contrario, y
-    \technique{T1620} (Reflective Code Loading) encaja en su lugar.
+    \technique{T1620} (Reflective Code Loading) encaja en su lugar. La
+    misma tabla tambi\'en salva una diferencia de versi\'on: las firmas
+    de la comunidad de CAPE quedan fijadas a la versi\'on de ATT\&CK
+    con la que se escribieron por \'ultima vez, as\'i que las etiquetas
+    \technique{T1562}/\technique{T1562.001} y \technique{T1070.001}
+    que dispara CAPE se reasignan a sus identidades de ATT\&CK v19
+    (\technique{T1685}, \technique{T1685.005}) en el momento de la
+    curaci\'on, con independencia de la versi\'on propia de este
+    proyecto (\S\ref{sec:limitations}).
 \end{itemize}
 
 Una capacidad adicional, a\~nadida durante la ampliaci\'on de

@@ -3,7 +3,7 @@
   "source": "cape",
   "source_report_path": "docker/cape/work/storage/analyses/2/reports/report.json",
   "cape_task_id": 2,
-  "parsed_at": "2026-08-12T16:00:50.891767+00:00",
+  "parsed_at": "2026-08-18T16:15:20.681843+00:00",
   "target": {
     "filename": "binary",
     "md5": "73a84cba28d14625441e1b0eac2a67f1",
@@ -800,7 +800,7 @@
   ],
   "attck_mappings": [
     {
-      "technique": "T1562.001",
+      "technique": "T1685",
       "name": "",
       "source": "dynamic_signature",
       "evidence": "antiav_servicestop",
@@ -808,7 +808,7 @@
       "justification": "CAPE signature 'antiav_servicestop' fired (severity=3, confidence=100%, categories=['anti-av'])"
     },
     {
-      "technique": "T1562",
+      "technique": "T1685",
       "name": "",
       "source": "dynamic_signature",
       "evidence": "antiav_servicestop",
@@ -832,7 +832,7 @@
       "justification": "CAPE signature 'antisandbox_system_parameters_info' fired (severity=2, confidence=50%, categories=['anti-sandbox', 'anti-analysis'])"
     },
     {
-      "technique": "T1562.001",
+      "technique": "T1685",
       "name": "",
       "source": "dynamic_signature",
       "evidence": "antisandbox_unhook",
@@ -840,7 +840,7 @@
       "justification": "CAPE signature 'antisandbox_unhook' fired (severity=3, confidence=60%, categories=['anti-sandbox'])"
     },
     {
-      "technique": "T1562",
+      "technique": "T1685",
       "name": "",
       "source": "dynamic_signature",
       "evidence": "antisandbox_unhook",
@@ -952,7 +952,7 @@
       "justification": "CAPE signature 'injection_write_process' fired (severity=2, confidence=100%, categories=['injection', 'unpacking'])"
     },
     {
-      "technique": "T1562",
+      "technique": "T1685",
       "name": "",
       "source": "dynamic_signature",
       "evidence": "unbacked_exception_filter",

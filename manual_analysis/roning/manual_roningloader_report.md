@@ -559,11 +559,11 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v Enab
 | System Owner/User Discovery | T1033 | Checks own process token for Administrator/UAC elevation status |
 | Input Capture | T1056 | DirectInput keylogger |
 | Clipboard Data | T1115 | Clipboard monitoring and hijacking |
-| Impair Defenses | T1562 | Terminate AV processes, disable firewall |
+| Disable or Modify Tools | T1685 | Terminate AV processes, disable firewall |
 | Debugger Evasion | T1622 | Anti-debugging in driver |
 | Modify Registry | T1112 | C2 configuration via registry |
 | Command and Scripting Interpreter | T1059 | `cmd /c`, `PowerShell`, batch scripts |
-| Indicator Removal | T1070 | Event log clearing via PowerShell |
+| Disable or Modify Tools: Clear Windows Event Logs | T1685.005 | Event log clearing via PowerShell |
 | Inhibit System Recovery | T1490 | VSS deletion |
 | Web Protocols | T1071.001 | HTTP to Baidu for time sync |
 | Non-Standard Port | T1571 | C2 on port 5552 |
