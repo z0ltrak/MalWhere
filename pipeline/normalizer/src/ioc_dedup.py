@@ -59,6 +59,35 @@ _BENIGN_INFRASTRUCTURE = (
 )
 
 
+# IPs with no attached hostname (so the domain-based check above can't
+# catch them) that showed up identically across all three unrelated
+# families' detonations -- confirmed via ipinfo.io ASN lookup, not
+# guessed: every one resolves to Microsoft Corporation (AS8075/AS8068,
+# the Azure AD / Windows telemetry range) or Akamai (AS20940, which
+# fronts Windows Update/Defender cloud traffic), always on port 443, never
+# tied to a domain the sample itself looked up. A ransomware family, an
+# infostealer, and a loader do not coincidentally share C2 infrastructure
+# -- this is the sandbox VM's own background OS traffic leaking into
+# CAPE's whole-VM PCAP capture (CAPE has no per-process network
+# attribution), not anything the malware chose to contact. Deliberately
+# does NOT include the Azure Front Door IPs behind
+# 90f364fdc014e0961d460c2d63103332.afd.footprintdns.com (also Microsoft
+# ASN) -- that hostname is unexplained and domain fronting through a
+# major CDN is a real technique, so ASN alone isn't enough evidence there;
+# only entries with zero ambiguity (no hostname, cross-sample repeat) are
+# listed here.
+_BENIGN_INFRASTRUCTURE_IPS = frozenset({
+    # Microsoft Corporation (AS8075/AS8068) -- Azure AD / Teams telemetry
+    "108.140.32.194", "52.113.196.254",
+    "40.126.53.6", "40.126.53.9", "40.126.53.16", "40.126.53.18",
+    "20.190.181.2", "20.190.181.3", "20.190.181.23", "20.231.128.66",
+    "4.242.235.91",
+    # Akamai International B.V. (AS20940) -- Windows Update/Defender CDN
+    "96.16.86.160", "96.16.86.208", "96.16.86.210", "96.16.86.212",
+    "96.16.86.214", "96.16.86.215", "96.16.86.219",
+})
+
+
 def _looks_like_filename(value: str) -> bool:
     return value.lower().endswith(_FILENAME_EXTENSIONS)
 
@@ -66,6 +95,10 @@ def _looks_like_filename(value: str) -> bool:
 def _is_benign_infrastructure(value: str) -> bool:
     value_lower = value.lower()
     return any(value_lower == b or value_lower.endswith("." + b) for b in _BENIGN_INFRASTRUCTURE)
+
+
+def _is_benign_infrastructure_ip(value: str) -> bool:
+    return value in _BENIGN_INFRASTRUCTURE_IPS
 
 
 def _is_valid_ip(value: str) -> bool:
@@ -205,11 +238,48 @@ def merge_network_iocs(
                 add(domains, domain, "dynamic")
             ip = entry.get("ip", "")
             if ip and _is_valid_ip(ip):
-                add(ips, ip, "dynamic")
+                if _is_benign_infrastructure_ip(ip):
+                    discarded.append(
+                        DiscardedEntry(
+                            reason="known_benign_infrastructure",
+                            origin="dynamic",
+                            field="domains",
+                            raw_value=ip,
+                        )
+                    )
+                else:
+                    add(ips, ip, "dynamic")
         for entry in net.get("hosts", []) or []:
             ip = entry.get("ip", "")
+            hostname = entry.get("hostname", "")
+            # CAPE's network.hosts list is a whole-VM connection dump with
+            # no per-process attribution, so the same benign-infrastructure
+            # domain can show up here again under a *different* resolved IP
+            # than the one already caught in the domains loop above (e.g. a
+            # CDN-backed host resolving to several edge IPs) -- check the
+            # hostname here too, not just the domains loop.
+            if hostname and _is_benign_infrastructure(hostname):
+                discarded.append(
+                    DiscardedEntry(
+                        reason="known_benign_infrastructure",
+                        origin="dynamic",
+                        field="hosts",
+                        raw_value=f"{ip} ({hostname})",
+                    )
+                )
+                continue
             if ip and _is_valid_ip(ip):
-                add(ips, ip, "dynamic")
+                if _is_benign_infrastructure_ip(ip):
+                    discarded.append(
+                        DiscardedEntry(
+                            reason="known_benign_infrastructure",
+                            origin="dynamic",
+                            field="hosts",
+                            raw_value=ip,
+                        )
+                    )
+                else:
+                    add(ips, ip, "dynamic")
         for entry in net.get("http_requests", []) or []:
             url = entry.get("uri") or entry.get("url") or ""
             if url:

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:49:16.256313+00:00",
+  "generated_at": "2026-08-18T08:18:22.554840+00:00",
   "sources": {
     "static_report": "static/reports/akira/sample_static.json",
     "dynamic_report": "dynamic/reports/akira/dynamic_report.json"
@@ -99,66 +99,6 @@
     "ips": [
       {
         "value": "140.82.121.3",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "185.43.182.25",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "2.20.253.87",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "2.20.253.75",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "96.16.86.160",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "40.126.53.9",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "20.231.128.66",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "20.190.181.23",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "20.190.181.3",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "40.126.53.6",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "40.126.53.16",
         "sources": [
           "dynamic"
         ]
@@ -556,6 +496,66 @@
       "origin": "dynamic",
       "field": "domains",
       "raw_value": "www.msftconnecttest.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "185.43.182.25 (www.msftconnecttest.com)"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "2.20.253.87 (www.msftconnecttest.com)"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "2.20.253.75 (www.msftconnecttest.com)"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "96.16.86.160"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "40.126.53.9"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "20.231.128.66"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "20.190.181.23"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "20.190.181.3"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "40.126.53.6"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "40.126.53.16"
     }
   ]
 }

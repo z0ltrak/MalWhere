@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:40:50.606698+00:00",
+  "generated_at": "2026-08-18T08:22:06.515169+00:00",
   "sample": {
     "family": "wsnake",
     "static_sha256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312",
@@ -255,12 +255,6 @@
           ]
         },
         {
-          "value": "96.16.86.160",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
           "value": "194.164.198.113",
           "sources": [
             "dynamic"
@@ -291,55 +285,7 @@
           ]
         },
         {
-          "value": "40.126.53.16",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "96.16.86.208",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
           "value": "104.212.67.66",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "96.16.86.215",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "96.16.86.212",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "96.16.86.214",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "96.16.86.210",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "96.16.86.219",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "4.242.235.91",
           "sources": [
             "dynamic"
           ]

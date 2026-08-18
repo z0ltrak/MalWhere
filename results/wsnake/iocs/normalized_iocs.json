@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:40:27.422002+00:00",
+  "generated_at": "2026-08-18T08:18:22.416610+00:00",
   "sources": {
     "static_report": "static/reports/wsnake/sample_static.json",
     "dynamic_report": "dynamic/reports/wsnake/dynamic_report.json"
@@ -258,12 +258,6 @@
         ]
       },
       {
-        "value": "96.16.86.160",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
         "value": "194.164.198.113",
         "sources": [
           "dynamic"
@@ -294,55 +288,7 @@
         ]
       },
       {
-        "value": "40.126.53.16",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "96.16.86.208",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
         "value": "104.212.67.66",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "96.16.86.215",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "96.16.86.212",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "96.16.86.214",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "96.16.86.210",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "96.16.86.219",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "4.242.235.91",
         "sources": [
           "dynamic"
         ]
@@ -1220,5 +1166,60 @@
       ]
     }
   ],
-  "discarded_entries": []
+  "discarded_entries": [
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "96.16.86.160"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "40.126.53.16"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "96.16.86.208"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "96.16.86.215"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "96.16.86.212"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "96.16.86.214"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "96.16.86.210"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "96.16.86.219"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "dynamic",
+      "field": "hosts",
+      "raw_value": "4.242.235.91"
+    }
+  ]
 }
