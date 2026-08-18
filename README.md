@@ -179,7 +179,8 @@ produced when done:
 Useful flags:
 - `--task-id N`: reuse an already-completed CAPE task instead of
   re-detonating (CAPE's own analysis IDs in this project's validated
-  runs: `1`=wsnake, `2`=roning, `3`=akira, `4`/`5`=asyncrat)
+  runs: `1`=wsnake, `2`=roning, `3`=akira, `4`+=asyncrat, re-run several
+  times since it's a generality smoke test, not a fixed reference sample)
 - `--skip-dynamic`: static analysis only, no CAPE submission
 - `--skip-resubmit`: skip resubmitting dropped files
 - `--misp` / `--misp-publish`: also push to MISP (needs the `sandbox`
@@ -359,10 +360,12 @@ automatic resubmission of its dropped payloads, to check that the
 pipeline generalizes rather than being quietly overfit to the validated
 set. **This has no manual ground truth and is not in the F1 table above**,
 but it did what a smoke test is for: static-only analysis on the outer
-stub found almost nothing (14 generic evasion signals), dynamic
-detonation plus resubmitting the unpacked payload reached 22 real
-techniques (process injection, reflective loading, persistence, C2,
-credential access) that the outer stub alone never revealed, and
+stub found almost nothing (14 generic evasion signals), while dynamic
+detonation plus resubmitting the unpacked payload consistently reaches
+1.5-2x that many real techniques (process injection, reflective loading,
+persistence, C2, credential access, 17-22 across four separate real
+detonations so far, dynamic analysis isn't perfectly deterministic
+run-to-run) that the outer stub alone never revealed, and
 auditing the resulting IOCs against this same false-positive discipline
 found and fixed three new extraction bugs the original three families
 never happened to trigger (a XOR-recovery false positive shaped like a
