@@ -380,6 +380,12 @@ docker exec malwhere-static python3 /scripts/analyze.py \
 
 ## Resubmission Loop
 
+`run_pipeline.py` at the repo root runs this whole loop automatically as
+part of a normal end-to-end analysis (on by default, `--skip-resubmit`
+opts out) -- everything below is the manual, step-by-step version of what
+it does, useful for debugging one stage in isolation or resubmitting
+against an already-parsed dynamic report without rerunning detonation.
+
 Multi-stage malware drops payloads with real capabilities of their own,
 this sample set's own RoningLoader drops a rootkit driver (`vally3dka.sys`),
 an AV-killer DLL (`goldendays.dll`), and a Gh0st RAT client. Without this

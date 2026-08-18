@@ -227,3 +227,24 @@ reputaci\'on general, ya que la raz\'on de ser de esta tuber\'ia frente
 a un agregador de reputaci\'on (\S\ref{sec:related-work}) es
 precisamente que cada decisi\'on permanece trazable a una causa
 concreta en lugar de simplemente afirmarse.
+
+La generalidad de la propia correcci\'on se comprob\'o, no se asumi\'o.
+Ejecutar la misma disciplina frente a una cuarta familia
+estructuralmente distinta, un RAT/backdoor .NET envuelto en un crypter
+nativo, a\~nadida espec\'ificamente para comprobar si la tuber\'ia
+generaliza m\'as all\'a de las tres familias validadas, sac\'o a la luz
+dos instancias m\'as del mismo fallo en los propios componentes
+reenviados de esa familia: un valor recuperado por XOR con la forma
+exacta de una tupla de versi\'on de ensamblado .NET, y una segunda
+tabla de relleno de bytes repetidos que decodificaba a una cascada de
+cuartetos punteados casi id\'entica bajo una clave distinta. El mismo
+ejercicio motiv\'o un barrido del conjunto de datos ya confirmado que
+encontr\'o una clase no vista hasta entonces en absoluto: OID de tipo
+de atributo y de extensi\'on de certificado X.509 (\code{2.5.4.*},
+\code{2.5.29.*}) en dos de los propios componentes reenviados de
+RoningLoader, confundidos con IP por el mismo extractor basado en
+expresiones regulares. Cada uno se corrigi\'o de la misma forma que el
+primero: una regla general y justificada por evidencia en lugar de una
+excepci\'on codificada a mano, verificada frente a cada IP gen\'uina
+conocida en las dos familias validadas con IOC num\'ericos antes de
+confiar en ella.

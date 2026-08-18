@@ -194,3 +194,16 @@ own reason string, not a general reputation filter, since the whole
 point of this pipeline over a reputation aggregator
 (\S\ref{sec:related-work}) is that every decision stays traceable to a
 concrete cause rather than asserted.
+
+The fix's own generality was checked, not assumed: running the same
+discipline against a fourth, structurally unrelated family (a
+native-crypter-wrapped .NET RAT/backdoor, added specifically to test
+generalization past the three validated ones) surfaced two further
+instances of the same failure mode on that family's own resubmitted
+components, a XOR-recovered value shaped like a .NET version tuple and a
+second repeating-byte-padding cascade under a different key, plus a
+class never seen before: X.509 certificate OIDs (\code{2.5.4.*},
+\code{2.5.29.*}) mistaken for IPs on two of RoningLoader's own
+resubmitted components, found by the same sweep. Each was fixed the same
+way: a general, evidenced rule, verified against every known-real IP
+across both families before being trusted.

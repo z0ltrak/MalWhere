@@ -59,12 +59,17 @@ malware sample
          └──────────────────┘
 ```
 
+`run_pipeline.py` runs this whole chain automatically for a given sample,
+static and dynamic analysis, resubmission of any dropped files, mapping,
+and export, end to end (see [Quickstart](#quickstart)).
+
 ---
 
 ## Repository Structure
 
 ```
 malwhere/
+├── run_pipeline.py               # Single E2E entry point (static -> CAPE -> resubmission -> ATT&CK -> STIX/MISP)
 ├── samples/                     # Hash manifests only, NO binaries committed
 │   └── .gitignore
 ├── static/
@@ -90,7 +95,9 @@ malwhere/
 │   │   ├── stix/                # STIX 2.1 bundles
 │   │   └── resubmitted/         # Per-dropped-file iocs/+attck/, one dir per sha256 (26 for roning)
 │   ├── wsnake/
-│   └── akira/
+│   ├── akira/
+│   └── asyncrat/                # 4th family, generality smoke test (no manual ground truth yet,
+│                                 #   see "Generality Smoke Test" below -- not in the F1 table)
 ├── evaluation/
 │   ├── ground_truth/            # Structured ground truth parsed from manual_analysis/ reports
 │   ├── results/                 # P/R/F1 vs. ground truth, by confidence tier and source agreement
@@ -147,18 +154,59 @@ docker compose --profile core --profile sandbox up -d
 
 ### Run the pipeline on a sample
 
+`run_pipeline.py` is the single entry point: static analysis, CAPE
+submission, detonation, resubmission of every dropped file (each gets its
+own independent analysis, not merged into the parent's), ATT&CK mapping,
+and STIX export, all chained automatically. Drop the sample under
+`samples/` first, that's the directory already bind-mounted read-only
+into the containers as `/samples`, then:
+
+```bash
+python3 run_pipeline.py --sample samples/<sha256>.exe --family roning
+```
+
+Auto-starts whatever containers it needs (`static` always; `cape`/
+`inetsim` only when actually detonating) and prints exactly what it
+produced when done:
+
+```
+[run_pipeline] ATT&CK mapping:          results/roning/attck/attck_mapping.json
+[run_pipeline] Navigator layer:         results/roning/attck/navigator_layer.json
+[run_pipeline] STIX bundle:             results/roning/stix/bundle.stix2
+[run_pipeline] Resubmitted components:  results/roning/resubmitted/*/attck/attck_mapping.json
+```
+
+Useful flags:
+- `--task-id N`: reuse an already-completed CAPE task instead of
+  re-detonating (CAPE's own analysis IDs in this project's validated
+  runs: `1`=wsnake, `2`=roning, `3`=akira, `4`/`5`=asyncrat)
+- `--skip-dynamic`: static analysis only, no CAPE submission
+- `--skip-resubmit`: skip resubmitting dropped files
+- `--misp` / `--misp-publish`: also push to MISP (needs the `sandbox`
+  profile's MISP running; off by default, and even with `--misp` the
+  event is created as an unpublished draft unless `--misp-publish` is
+  also given, matching `export_misp.py`'s own safe default)
+
+It's idempotent: re-running against an already-processed `--task-id`
+just confirms/regenerates the same output rather than redoing expensive
+work (both the static resubmission pass and the merge pass skip anything
+already normalized+mapped).
+
+<details>
+<summary>Running each stage by hand (what <code>run_pipeline.py</code> automates)</summary>
+
 Static analysis runs inside its container (scripts are volume-mounted, so
 edits on the host reflect immediately: no rebuild needed):
 
 ```bash
-docker cp /path/to/sample.exe malwhere-static:/samples/roning/sample.exe
 docker exec malwhere-static python3 /scripts/analyze.py \
-    --sample /samples/roning/sample.exe --output /reports/roning/
-# -> static/reports/roning/sample_static.json (host path, via the volume mount)
+    --sample /samples/<sha256>.exe --output /reports/roning/
+# -> static/reports/roning/<sha256>_static.json (host path, via the volume mount)
 ```
 
-Dynamic analysis parses a CAPE report already produced by the sandbox,
-either by CAPE task ID or a direct path to its `report.json`:
+Submit to CAPE, then parse its report by task ID once detonation finishes
+(`docker compose exec cape ... submit.py` prints the task ID; poll
+`http://127.0.0.1:8000/apiv2/tasks/status/<id>/` for `"reported"`):
 
 ```bash
 python3 dynamic/scripts/parse_cape.py --task-id 2 --output dynamic/reports/roning/
@@ -170,7 +218,7 @@ Normalize both sources, map to ATT&CK, then export:
 
 ```bash
 python3 pipeline/normalizer/normalize.py \
-    --static static/reports/roning/sample_static.json \
+    --static static/reports/roning/<sha256>_static.json \
     --dynamic dynamic/reports/roning/dynamic_report.json \
     --output results/roning/iocs/
 # -> results/roning/iocs/normalized_iocs.json
@@ -193,16 +241,15 @@ python3 pipeline/exporter/export_misp.py \
     --mapping results/roning/attck/attck_mapping.json --publish
 ```
 
-`--task-id` maps to CAPE's own analysis IDs (`1`=wsnake, `2`=roning,
-`3`=akira in this project's validated runs). `parse_cape.py`, `normalize.py`,
-and `map_attck.py` are all pure-stdlib and run with plain `python3`, no
-venv, no container. `export_stix.py`/`export_misp.py` are the ones that
-need third-party packages (`stix2`, `pymisp`): `pip install -r
-docker/pipeline/requirements.txt` into a venv first, or run them inside
-the `pipeline` container (`docker exec malwhere-pipeline python3
-/app/exporter/export_stix.py ...`), which already has them installed.
+`parse_cape.py`, `normalize.py`, and `map_attck.py` are all pure-stdlib
+and run with plain `python3`, no venv, no container. `export_stix.py`/
+`export_misp.py` are the ones that need third-party packages (`stix2`,
+`pymisp`): `pip install -r docker/pipeline/requirements.txt` into a venv
+first, or run them inside the `pipeline` container (`docker exec
+malwhere-pipeline python3 /app/exporter/export_stix.py ...`), which
+already has them installed.
 
-### Resubmitting dropped files for their own analysis
+#### Resubmitting dropped files for their own analysis
 
 Multi-stage malware drops payloads with real capabilities of their own,
 RoningLoader alone drops a rootkit driver, an AV-killer DLL, and a Gh0st
@@ -214,12 +261,12 @@ the parent sample, instead of only recording their hashes as IOCs:
 python3 dynamic/scripts/parse_cape.py --task-id 2 --output dynamic/reports/roning/ \
     --resubmit-dir docker/resubmit_queue --family roning
 # -> docker/resubmit_queue/manifest/{sha256}.json + artifacts/{sha256}
-#    (bind-mounted into the static/pipeline containers at /resubmit)
+#    (bind-mounted into the static container at /resubmit)
 ```
 
-Then, run each half of the loop in its own container, static analysis
-needs `static`'s pefile/YARA/FLOSS/Ghidra environment; normalize+map is
-pure-stdlib and reads the tagged output back out via `pipeline`'s mounts:
+Then, run each half of the loop, static analysis needs `static`'s
+pefile/YARA/FLOSS/Ghidra environment; the merge half is pure-stdlib and
+runs directly on the host:
 
 ```bash
 # Static half: analyzes each queued artifact, tags it with parent_hash +
@@ -229,7 +276,7 @@ docker exec malwhere-static python3 /scripts/process_resubmissions.py --verbose
 # Merge half: finds anything tagged with resubmission_lineage that hasn't
 # been normalized+mapped yet, runs it through the same pipeline as a
 # top-level sample would go through
-docker exec malwhere-pipeline python3 /app/process_resubmissions.py --verbose
+python3 pipeline/process_resubmissions.py --verbose
 # -> results/roning/resubmitted/{sha256}/iocs/normalized_iocs.json
 # -> results/roning/resubmitted/{sha256}/attck/attck_mapping.json
 ```
@@ -240,8 +287,10 @@ aren't evidence the *parent* binary performs those techniques, and blending
 the two would misattribute confidence in `pipeline/mapper/src/reconcile.py`'s
 cross-source model. `RESUBMIT_MAX_ARTIFACTS`/`RESUBMIT_TIME_BUDGET_MIN` bound
 how much a single run queues/processes: see `docker/docker-compose.yml`'s
-`static`/`pipeline` service `environment:` blocks, or override per-invocation
-with `--resubmit-max-artifacts`/`--time-budget-min`.
+`static` service `environment:` block, or override per-invocation with
+`--resubmit-max-artifacts`/`--time-budget-min`.
+
+</details>
 
 ---
 
@@ -299,6 +348,28 @@ during validation were individually traced to a specific cause: 10 fixed
 pipeline errors, 1 ground-truth extraction gap, 2 left open pending
 independent confirmation. See the paper's evaluation and case-studies
 sections for the full audit.
+
+### Generality Smoke Test
+
+A 4th family, AsyncRAT (a native-crypter-wrapped .NET RAT/backdoor,
+structurally unlike all three validated families: not ransomware, not a
+multi-stage NSIS loader, not a plain .NET infostealer), was run through
+the full `run_pipeline.py` chain, including a real CAPE detonation and
+automatic resubmission of its dropped payloads, to check that the
+pipeline generalizes rather than being quietly overfit to the validated
+set. **This has no manual ground truth and is not in the F1 table above**,
+but it did what a smoke test is for: static-only analysis on the outer
+stub found almost nothing (14 generic evasion signals), dynamic
+detonation plus resubmitting the unpacked payload reached 22 real
+techniques (process injection, reflective loading, persistence, C2,
+credential access) that the outer stub alone never revealed, and
+auditing the resulting IOCs against this same false-positive discipline
+found and fixed three new extraction bugs the original three families
+never happened to trigger (a XOR-recovery false positive shaped like a
+.NET assembly version number, a repeating-byte-padding decode artifact,
+and X.509 certificate OIDs misparsed as IPs), all now fixed and verified
+against every ground-truth IP across the validated families. See
+`results/asyncrat/` and the paper's case studies for the full account.
 
 ---
 
