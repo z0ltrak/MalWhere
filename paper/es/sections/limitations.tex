@@ -14,7 +14,7 @@ como una advertencia abierta.
 
 \begin{enumerate}
 
-\item \textbf{Conjunto de validaci\'on peque\~no (N=3).} Tres familias
+\item \label{lim:n3} \textbf{Conjunto de validaci\'on peque\~no (N=3).} Tres familias
   son pocas para una afirmaci\'on con potencia estad\'istica, y es el
   punto que m\'as merece escrutinio en este trabajo. Tres mitigaciones
   concretas: la verdad de referencia es ingenier\'ia inversa manual a
@@ -36,7 +36,8 @@ como una advertencia abierta.
   un truco estad\'istico. Ampliar a m\'as familias sigue siendo el
   siguiente paso de mayor valor (\S\ref{sec:future-work}).
 
-\item \textbf{Un error de agregaci\'on, encontrado y corregido durante
+\item \label{lim:aggregation-bug} \textbf{Un error de agregaci\'on,
+  encontrado y corregido durante
   la validaci\'on.} Detallado como caso de estudio en
   \S\ref{sec:case-installer}: el informe est\'atico de una muestra
   instalador describi\'o una DLL auxiliar side-loaded incluida, no la
@@ -46,15 +47,8 @@ como una advertencia abierta.
   correcci\'on mejor\'o directamente la exhaustividad en la muestra
   afectada.
 
-\item \textbf{La auditor\'ia de falsos positivos} (\S\ref{sec:fp-audit})
-  comprob\'o 15 discrepancias individualmente; 12 eran errores
-  gen\'uinos de la tuber\'ia, ahora corregidos (10 sin m\'as, m\'as 2
-  correcciones de calibraci\'on de confianza cuya evidencia gen\'erica
-  subyacente permanece presente, honestamente rebajada, en lugar de
-  desaparecer), 1 era un hueco de extracci\'on de verdad de referencia
-  (\S\ref{sec:case-wsnake}), y 2 permanecen abiertas por dise\~no.
-
-\item \textbf{La versi\'on de ATT\&CK est\'a fijada, y las propias
+\item \label{lim:attck-version} \textbf{La versi\'on de ATT\&CK
+  est\'a fijada, y las propias
   etiquetas de firma de CAPE no lo est\'an.} Todos los identificadores
   de t\'ecnica en esta tuber\'ia, la verdad de referencia y las capas
   de Navigator apuntan a MITRE ATT\&CK v19.2. Las firmas de la
@@ -71,23 +65,23 @@ como una advertencia abierta.
   prefijo en lugar de correspondencia gen\'uina, lo que de otro modo
   habr\'ia enmascarado el problema subyacente indefinidamente.
 
-\item \textbf{Dos falsos positivos de RoningLoader quedan sin resolver
-  deliberadamente.} \technique{T1027} y \technique{T1497} tienen
+\item \label{lim:open-fps} \textbf{Dos falsos positivos de RoningLoader
+  quedan sin resolver deliberadamente.} \technique{T1027} y \technique{T1497} tienen
   ambos evidencia real de apoyo pero ninguna confirmaci\'on textual
   independiente en el resto del informe manual, a diferencia del caso
   de \technique{T1620} que s\'i se corrigi\'o. Editar la verdad de
   referencia solo con la evidencia propia de la tuber\'ia ser\'ia un
   razonamiento circular.
 
-\item \textbf{La extracci\'on de verdad de referencia depende de la
-  completitud de la tabla.} Un extractor basado en tablas markdown solo
+\item \label{lim:gt-table} \textbf{La extracci\'on de verdad de
+  referencia depende de la completitud de la tabla.} Un extractor basado en tablas markdown solo
   es tan completo como la propia tabla, incluso cuando la narrativa de
   un informe dice m\'as. \S\ref{sec:case-wsnake} es una instancia
   concreta, corregida en el documento fuente en lugar de sortearse en
   el extractor.
 
-\item \textbf{El sandboxing con contenci\'on prioritaria limita la
-  observaci\'on de red/C2.} CAPE detona cada muestra contra la red
+\item \label{lim:containment} \textbf{El sandboxing con contenci\'on
+  prioritaria limita la observaci\'on de red/C2.} CAPE detona cada muestra contra la red
   simulada de INetSim, sin salida real, por dise\~no. Varias t\'ecnicas
   no detectadas en las tres muestras se agrupan en torno a
   comportamiento de exfiltraci\'on y proxy/t\'unel
@@ -97,8 +91,8 @@ como una advertencia abierta.
   investigaci\'on con contenci\'on prioritaria, no un defecto a
   corregir.
 
-\item \textbf{La recuperaci\'on est\'atica de claves/configuraci\'on
-  tiene un techo preciso.} El XOR de un solo byte es exhaustivamente
+\item \label{lim:key-ceiling} \textbf{La recuperaci\'on est\'atica de
+  claves/configuraci\'on tiene un techo preciso.} El XOR de un solo byte es exhaustivamente
   forzable por fuerza bruta (128 claves), y as\'i se us\'o para
   recuperar la IP de C2 de RoningLoader sin conocimiento previo de la
   clave, pero solo tras a\~nadir dos filtros independientes de falsos
@@ -113,14 +107,8 @@ como una advertencia abierta.
   existe como bytes en disco, no en una afirmaci\'on general de que
   ``el cifrado es dif\'icil''.
 
-\item \textbf{La verdad de referencia es el mejor or\'aculo disponible,
-  no uno perfecto.} Un hallazgo autom\'atico ausente en un informe
-  manual puede ser un falso positivo gen\'uino o un verdadero positivo
-  poco documentado (\S\ref{sec:case-wsnake}); un hallazgo documentado
-  que la tuber\'ia no detecta puede ser un hueco real o un techo del
-  entorno de sandbox (punto 6 anterior).
-
-\item \textbf{Limitaciones a nivel de herramienta.} La decodificaci\'on
+\item \label{lim:tool-constraints} \textbf{Limitaciones a nivel de
+  herramienta.} La decodificaci\'on
   de cadenas basada en emulaci\'on de FLOSS agot\'o el tiempo en Akira,
   la muestra m\'as agresiva en anti-an\'alisis, registrado
   expl\'icitamente en lugar de faltar en silencio. La recuperaci\'on
@@ -130,7 +118,7 @@ como una advertencia abierta.
   confiar en ella, tras detectarse as\'i la cascada de falsos positivos
   de la clave XOR (\S\ref{sec:case-xor}) en lugar de al primer \'exito.
 
-\item \textbf{Reproducibilidad.} La \S\ref{sec:deployment} describe el
+\item \label{lim:reproducibility} \textbf{Reproducibilidad.} La \S\ref{sec:deployment} describe el
   despliegue completo con \code{docker-compose}; el \'unico hueco que
   merece repetirse aqu\'i es que la m\'aquina virtual Windows del
   perfil \code{sandbox}
@@ -138,16 +126,16 @@ como una advertencia abierta.
   documentada con sus propias notas de soluci\'on de problemas, ya que
   no puede crearse solo con \code{docker-compose}.
 
-\item \textbf{La cobertura de reglas est\'aticas es deliberadamente
-  estrecha.} Aproximadamente 85 de las 474 t\'ecnicas relevantes para
+\item \label{lim:rule-coverage} \textbf{La cobertura de reglas
+  est\'aticas es deliberadamente estrecha.} Aproximadamente 85 de las 474 t\'ecnicas relevantes para
   Windows en MITRE tienen una regla est\'atica dedicada
   (\S\ref{sec:coverage}); Reconnaissance y Resource Development son un
   l\'imite estructural, no una lista pendiente por abordar, ya que
   ambas describen actividad del atacante que precede a la existencia
   de la propia muestra.
 
-\item \textbf{La captura de red din\'amica no tiene atribuci\'on por
-  proceso.} La lista \code{network.hosts} de CAPE refleja el
+\item \label{lim:network-attribution} \textbf{La captura de red
+  din\'amica no tiene atribuci\'on por proceso.} La lista \code{network.hosts} de CAPE refleja el
   tr\'afico de toda la m\'aquina virtual del sandbox, no solo el del
   propio proceso de la muestra, por lo que la telemetr\'ia de fondo del
   sistema operativo hu\'esped puede aparecer indistinguible de las

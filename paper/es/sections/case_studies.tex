@@ -112,7 +112,7 @@ exhaustivamente las 256 claves posibles contra regiones candidatas de
 texto cifrado y compara el resultado con una expresi\'on regular de IP
 en formato punteado, la t\'ecnica que recuper\'o la IP de C2 gen\'uina
 de RoningLoader (\code{202.95.11.173}) sin conocimiento previo de la
-clave (\S\ref{sec:limitations}, punto~7). Ejecutada sin salvaguardas
+clave (\S\ref{sec:limitations}, punto~\ref{lim:key-ceiling}). Ejecutada sin salvaguardas
 contra una segunda muestra, WhiteSnakeStealer, la misma rutina
 produjo 8 coincidencias de cuarteto punteado sint\'acticamente
 v\'alidas pero completamente espurias a partir de una \'unica clave
@@ -143,7 +143,7 @@ WhiteSnakeStealer ahora se descartan correctamente.
 
 La lecci\'on se generaliz\'o m\'as all\'a de esta correcci\'on
 concreta: es lo que motiv\'o la pol\'itica expl\'icita del proyecto
-(\S\ref{sec:limitations}, punto~9) de que cualquier nueva capacidad de
+(\S\ref{sec:limitations}, punto~\ref{lim:tool-constraints}) de que cualquier nueva capacidad de
 recuperaci\'on basada en b\'usqueda exhaustiva debe validarse frente a
 una segunda muestra, no solo la que motiv\'o su construcci\'on, antes
 de confiar en ella. De haberse declarado esta capacidad lista para
@@ -215,7 +215,7 @@ omisiones. La propia firma
 \code{dead\_connect} de CAPE (confianza 100\%, ``31 unique'' intentos
 inalcanzables) corrobora de forma independiente por qu\'e cada una de
 ellas aparece como inalcanzable en la traza del sandbox: el sandboxing
-con contenci\'on prioritaria (\S\ref{sec:limitations}, punto~6)
+con contenci\'on prioritaria (\S\ref{sec:limitations}, punto~\ref{lim:containment})
 significa que los propios intentos de conexi\'on de la muestra a su C2
 real fallan por dise\~no, no porque las direcciones recuperadas sean
 ficticias. La contaminaci\'on no era del todo cero, sin embargo: al

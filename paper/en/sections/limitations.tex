@@ -12,7 +12,7 @@ either already mitigated concretely or scoped as a precise next step
 
 \begin{enumerate}
 
-\item \textbf{Small validation set (N=3).} Three families is too few
+\item \label{lim:n3} \textbf{Small validation set (N=3).} Three families is too few
   for a statistically powered claim, and is the point most deserving of
   scrutiny in this work. Three concrete mitigations: ground truth is
   function-level, Ghidra-verified manual reverse engineering per sample,
@@ -30,7 +30,8 @@ either already mitigated concretely or scoped as a precise next step
   statistical trick. Extending to further families remains the
   highest-value follow-up (\S\ref{sec:future-work}).
 
-\item \textbf{An aggregation bug, found and fixed during validation.}
+\item \label{lim:aggregation-bug} \textbf{An aggregation bug, found and
+  fixed during validation.}
   Detailed as a case study in \S\ref{sec:case-installer}: an installer
   sample's static report described one bundled side-loaded helper DLL,
   not the malicious payload, for most of the validation process, until
@@ -38,15 +39,8 @@ either already mitigated concretely or scoped as a precise next step
   rather than merely computed. The fix directly improved recall on the
   affected sample.
 
-\item \textbf{The false-positive audit} (\S\ref{sec:fp-audit}) checked
-  15 discrepancies individually; 12 were genuine pipeline errors now
-  fixed (10 outright, plus 2 confidence-calibration corrections whose
-  underlying generic evidence remains present, honestly downgraded,
-  rather than disappearing), 1 was a ground-truth extraction gap
-  (\S\ref{sec:case-wsnake}), and 2 remain open by design.
-
-\item \textbf{ATT\&CK version is pinned, and CAPE's own signature tags
-  are not.} All technique IDs in this pipeline, ground truth, and
+\item \label{lim:attck-version} \textbf{ATT\&CK version is pinned, and
+  CAPE's own signature tags are not.} All technique IDs in this pipeline, ground truth, and
   Navigator layers target MITRE ATT\&CK v19.2. CAPE's community
   signatures are frozen to whichever version they were last written
   against, so signature-sourced tags are remapped to their current
@@ -59,21 +53,22 @@ either already mitigated concretely or scoped as a precise next step
   by coincidental prefix overlap rather than genuine correspondence,
   which would otherwise have masked the underlying issue indefinitely.
 
-\item \textbf{Two RoningLoader false positives are deliberately
-  unresolved.} \technique{T1027} and \technique{T1497} both have real
+\item \label{lim:open-fps} \textbf{Two RoningLoader false positives are
+  deliberately unresolved.} \technique{T1027} and \technique{T1497} both have real
   supporting evidence but no independent textual confirmation elsewhere
   in the manual report, unlike the \technique{T1620} case that was
   fixed. Editing ground truth on the pipeline's own evidence alone would
   be circular reasoning.
 
-\item \textbf{Ground-truth extraction depends on table completeness.}
+\item \label{lim:gt-table} \textbf{Ground-truth extraction depends on
+  table completeness.}
   A markdown-table-based extractor is only as complete as the table
   itself, even when a report's prose says more.
   \S\ref{sec:case-wsnake} is a concrete instance, fixed at the source
   document rather than worked around in the extractor.
 
-\item \textbf{Containment-first sandboxing limits network/C2
-  observation.} CAPE detonates against INetSim's simulated network with
+\item \label{lim:containment} \textbf{Containment-first sandboxing
+  limits network/C2 observation.} CAPE detonates against INetSim's simulated network with
   no real egress, by design. Several missed techniques across all three
   samples cluster around exfiltration and proxy/tunneling behavior
   (\technique{T1041}, \technique{T1090}, \technique{T1571/T1572},
@@ -81,7 +76,8 @@ either already mitigated concretely or scoped as a precise next step
   is a structural property of a containment-first research environment,
   not a defect to fix.
 
-\item \textbf{Static key/config recovery has a precise ceiling.}
+\item \label{lim:key-ceiling} \textbf{Static key/config recovery has a
+  precise ceiling.}
   Single-byte XOR is exhaustively brute-forceable (128 keys), and was
   used to recover RoningLoader's C2 IP with no prior key knowledge, but
   only after two independent false-positive filters were added
@@ -94,13 +90,7 @@ either already mitigated concretely or scoped as a precise next step
   exists as bytes on disk, not a general statement that ``encryption is
   hard.''
 
-\item \textbf{Ground truth is the best available oracle, not a perfect
-  one.} An automated finding absent from a manual report may be a
-  genuine false positive or an under-documented true positive
-  (\S\ref{sec:case-wsnake}); a documented finding the pipeline misses
-  may be a real gap or a sandbox-environment ceiling (item~6 above).
-
-\item \textbf{Tool-level constraints.} FLOSS's emulation-based string
+\item \label{lim:tool-constraints} \textbf{Tool-level constraints.} FLOSS's emulation-based string
   decoding timed out on Akira, the most anti-analysis-heavy sample,
   logged explicitly rather than silently absent. AES/ChaCha20 recovery
   only succeeds against a zero nonce/IV. Any new brute-force-based
@@ -109,20 +99,22 @@ either already mitigated concretely or scoped as a precise next step
   cascade (\S\ref{sec:case-xor}) was caught this way rather than on
   first success.
 
-\item \textbf{Reproducibility.} \S\ref{sec:deployment} describes the
+\item \label{lim:reproducibility} \textbf{Reproducibility.} \S\ref{sec:deployment} describes the
   full \code{docker-compose} deployment; the one gap worth restating
   here is that the \code{sandbox} profile's Windows guest VM needs
   one-time manual host provisioning (libvirt/KVM), documented with its
   own troubleshooting notes, since it cannot be created by
   \code{docker-compose} alone.
 
-\item \textbf{Static rule coverage is deliberately narrow.} Roughly 85
+\item \label{lim:rule-coverage} \textbf{Static rule coverage is
+  deliberately narrow.} Roughly 85
   of 474 Windows-relevant MITRE techniques have a dedicated static
   rule (\S\ref{sec:coverage}); Reconnaissance and Resource Development
   are a structural boundary rather than unaddressed backlog, since both
   describe attacker activity that precedes the sample's own existence.
 
-\item \textbf{Dynamic network capture has no per-process attribution.}
+\item \label{lim:network-attribution} \textbf{Dynamic network capture
+  has no per-process attribution.}
   CAPE's \code{network.hosts} list reflects the whole sandbox VM's
   traffic, not just the sample's own process, so the guest OS's own
   background telemetry can appear indistinguishably from the sample's

@@ -246,7 +246,7 @@ the three named components against their per-component ground truth,
 since parent-only scoring structurally understates what the full
 pipeline, resubmission loop included, found; the remaining 23 are
 additional real evaluation surface in a different sense
-(\S\ref{sec:limitations}, item~1), each confirmed to produce sane,
+(\S\ref{sec:limitations}, item~\ref{lim:n3}), each confirmed to produce sane,
 non-crashing, lineage-tagged output rather than contributing new scored
 precision/recall data points.
 
@@ -288,7 +288,13 @@ checking real technique counts for every remaining MITRE tactic
 structurally out of scope regardless of effort, since both describe
 attacker activity that occurs before the malware sample exists;
 Initial Access and Lateral Movement are technically in scope but poor
-fits for what single-binary detonation analysis can observe.
+fits for what single-binary detonation analysis can observe: for a
+ransomware family like Akira specifically, real-world lateral movement
+is typically carried out by the human operator with generic tooling
+(RDP, PsExec, Cobalt Strike) between initial access and the ransomware
+binary's own deployment, so the capability usually is not encoded in
+the sample being detonated at all, a poor fit no larger sandbox
+testbed would change.
 
 \subsection{Deployment and Reproducibility}
 \label{sec:deployment}

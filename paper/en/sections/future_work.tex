@@ -4,7 +4,7 @@
 \begin{itemize}
 
 \item \textbf{Additional validated families.} The single highest-value
-  extension (\S\ref{sec:limitations}, item~1) is full manual
+  extension (\S\ref{sec:limitations}, item~\ref{lim:n3}) is full manual
   reverse-engineering-backed validation of further families. A lighter,
   informal check was already run against a 4th, untuned family
   (AsyncRAT): a real CAPE detonation plus automatic resubmission of its
@@ -36,9 +36,14 @@
 
 \item \textbf{Extending Initial Access and Lateral Movement coverage
   where genuinely applicable.} The bulk of both tactics is a structural
-  poor fit for single-binary detonation analysis (\S\ref{sec:coverage}),
-  but a small number of sub-techniques observable from within one
-  sample's own artifacts remain uncovered:
+  poor fit for single-binary detonation analysis (\S\ref{sec:coverage}):
+  Lateral Movement in particular is, for the ransomware families this
+  pipeline targets, typically carried out by the human operator with
+  generic tooling (RDP, PsExec, Cobalt Strike) rather than encoded in
+  the ransomware binary's own capability, so most of the tactic is out
+  of reach regardless of sandbox scale. A small number of
+  sub-techniques observable from within one sample's own artifacts
+  remain uncovered, however:
   \technique{T1091} (Replication Through Removable Media) and
   \technique{T1570} (Lateral Tool Transfer) are the two concrete
   candidates identified.
@@ -51,7 +56,7 @@
 
 \item \textbf{Runtime key-recovery via emulation.} The RC4 key that
   never exists as contiguous bytes in RoningLoader's DLL
-  (\S\ref{sec:limitations}, item~7) is, in principle, recoverable by
+  (\S\ref{sec:limitations}, item~\ref{lim:key-ceiling}) is, in principle, recoverable by
   emulating its assembly routine (e.g.\ with Unicorn) rather than any
   static byte-pattern search, a materially larger engineering effort
   than the current static config-recovery module, and scoped out of

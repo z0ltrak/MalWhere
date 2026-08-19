@@ -274,7 +274,7 @@ componentes nombrados frente a su verdad de referencia por componente,
 ya que puntuar solo el componente padre subestima estructuralmente lo
 que encuentra la tuber\'ia completa, incluyendo el bucle de reenv\'io;
 los 23 restantes son superficie de evaluaci\'on real adicional en un
-sentido distinto (\S\ref{sec:limitations}, punto~1), cada uno
+sentido distinto (\S\ref{sec:limitations}, punto~\ref{lim:n3}), cada uno
 confirmado como productor de un resultado sensato, sin ca\'idas y
 etiquetado con linaje, en lugar de aportar nuevos puntos de datos de
 precisi\'on/exhaustividad puntuados.
@@ -323,7 +323,13 @@ importar el esfuerzo, ya que ambas describen actividad del atacante
 que ocurre antes de que la muestra de malware exista; Initial Access y
 Lateral Movement est\'an t\'ecnicamente dentro de alcance pero encajan
 mal con lo que puede observar un an\'alisis de detonaci\'on de un solo
-binario.
+binario: para una familia de ransomware como Akira en concreto, el
+movimiento lateral real lo suele ejecutar el operador humano con
+herramientas gen\'ericas (RDP, PsExec, Cobalt Strike) entre el acceso
+inicial y el despliegue del propio binario de ransomware, de modo que
+la capacidad normalmente no est\'a codificada en la muestra detonada
+en absoluto, un mal encaje que ning\'un banco de pruebas de sandbox
+mayor cambiar\'ia.
 
 \subsection{Despliegue y reproducibilidad}
 \label{sec:deployment}

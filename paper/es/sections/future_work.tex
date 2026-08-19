@@ -4,7 +4,7 @@
 \begin{itemize}
 
 \item \textbf{Familias adicionales validadas.} La extensi\'on de mayor
-  valor (\S\ref{sec:limitations}, punto~1) es una validaci\'on
+  valor (\S\ref{sec:limitations}, punto~\ref{lim:n3}) es una validaci\'on
   completa respaldada por ingenier\'ia inversa manual de m\'as
   familias. Ya se realiz\'o una comprobaci\'on m\'as ligera e informal
   frente a una 4\textsuperscript{a} familia sin afinar (AsyncRAT): una
@@ -42,8 +42,14 @@
 \item \textbf{Ampliar la cobertura de Initial Access y Lateral
   Movement donde encaje realmente.} La mayor parte de ambas
   t\'acticas encaja mal estructuralmente con el an\'alisis de
-  detonaci\'on de un solo binario (\S\ref{sec:coverage}), pero
-  queda un peque\~no n\'umero de subt\'ecnicas observables desde los
+  detonaci\'on de un solo binario (\S\ref{sec:coverage}): Lateral
+  Movement en concreto, para las familias de ransomware a las que
+  apunta esta tuber\'ia, la suele ejecutar el operador humano con
+  herramientas gen\'ericas (RDP, PsExec, Cobalt Strike) en lugar de
+  estar codificada en la capacidad propia del binario de ransomware,
+  de modo que la mayor parte de la t\'actica queda fuera de alcance
+  sin importar la escala del sandbox. Sin embargo, queda un peque\~no
+  n\'umero de subt\'ecnicas observables desde los
   propios artefactos de una muestra sin cubrir:
   \technique{T1091} (Replication Through Removable Media) y
   \technique{T1570} (Lateral Tool Transfer) son las dos candidatas
@@ -60,7 +66,7 @@
 \item \textbf{Recuperaci\'on de claves en tiempo de ejecuci\'on
   mediante emulaci\'on.} La clave RC4 que nunca existe como bytes
   contiguos en la DLL de RoningLoader (\S\ref{sec:limitations},
-  punto~7) es, en principio, recuperable emulando su rutina de
+  punto~\ref{lim:key-ceiling}) es, en principio, recuperable emulando su rutina de
   ensamblado (p.\ ej.\ con Unicorn) en lugar de mediante cualquier
   b\'usqueda de patr\'on de bytes est\'atica, un esfuerzo de
   ingenier\'ia sustancialmente mayor que el m\'odulo actual de
