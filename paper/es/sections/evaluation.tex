@@ -57,7 +57,9 @@ asume.
 \textbf{Muestra} & \textbf{Recuperado de forma independiente, la tuber\'ia no lo toca} \\
 \midrule
 Akira & Tabla ATT\&CK de 17 filas construida a partir de descompilaci\'on de Ghidra a nivel de funci\'on de los mecanismos internos de threading, logging y cifrado de la muestra. \\
+\rowline
 RoningLoader & Los cuatro componentes de la cadena (instalador, \code{D3D11InstallHelper.dll}, driver rootkit, cliente RAT) descompilados por separado, incluyendo identificar \code{DoD3D11InstallUsingMSI} del auxiliar como una reimplementaci\'on compilada en Rust de \code{env::var()}. \\
+\rowline
 WhiteSnakeStealer & Clave RC4 recuperada mediante an\'alisis de texto plano conocido, y el formato completo del paquete C2 \code{WSR\$} (XML de informaci\'on del sistema cifrado con RC4 y comprimido con Deflate, con una clave envuelta en RSA) reconstruido directamente a partir del desensamblado. \\
 \bottomrule
 \end{tabular}
@@ -98,8 +100,11 @@ concreta.
 \textbf{Muestra} & \textbf{Precisi\'on} & \textbf{Exhaustividad} & \textbf{F1} & \textbf{Notas} \\
 \midrule
 Akira (ransomware) & 0.92 & 1.00 & 0.96 & binario de una sola etapa \\
+\rowline
 WhiteSnakeStealer (.NET) & 1.00 & 0.80 & 0.89 & binario de una sola etapa \\
+\rowline
 RoningLoader (solo padre) & 0.85 & 0.68 & 0.76 & solo el cargador \\
+\rowline
 RoningLoader (+reenv\'io) & 0.84 & 0.84 & 0.84 & cargador + 3 componentes soltados \\
 \bottomrule
 \end{tabular}

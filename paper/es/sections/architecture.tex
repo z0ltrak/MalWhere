@@ -84,9 +84,13 @@ ATT\&CK mediante tres mecanismos complementarios:
 \textbf{T\'ecnica} & \textbf{Combinaci\'on requerida} & \textbf{Rechazado en solitario} \\
 \midrule
 T1055 (Process Injection) & \code{VirtualAllocEx} + \code{WriteProcessMemory} + \code{CreateRemoteThread}, o el tr\'io de lectura \code{OpenProcess} + \code{VirtualQueryEx} + \code{ReadProcessMemory} & \code{OpenProcess} en solitario \\
+\rowline
 T1055.012 (Process Hollowing) & \code{CreateProcessW} + \code{WriteProcessMemory} + \code{SetThreadContext} + \code{ResumeThread} + \code{Nt/ZwUnmapViewOfSection} & cualquier API individual \\
+\rowline
 T1685 (Disable or Modify Tools) & \code{WTSEnumerateProcessesW} + \code{OpenProcess} + \code{TerminateProcess} & \code{TerminateProcess} sola \\
+\rowline
 T1010 (Application Window Discovery) & \code{EnumWindows} + \code{GetWindowTextW} & \code{GetWindowTextW} sola \\
+\rowline
 T1134.001/.003 (Impersonation/Theft; Make and Impersonate Token) & \code{ImpersonateLoggedOnUser} + \code{DuplicateTokenEx} (.001) o \code{LogonUserW} (.003) & \code{Impersonate\-LoggedOnUser} sola \\
 \bottomrule
 \end{tabular}
@@ -345,12 +349,19 @@ La Tabla~\ref{tab:deployment} enumera cada servicio y su perfil.
 \textbf{Servicio} & \textbf{Perfil} & \textbf{Funci\'on} & \textbf{Memoria} \\
 \midrule
 \code{static} & core & Motor est\'atico PE/ELF (\code{pefile}, YARA, FLOSS, Ghidra headless) & 3g \\
+\rowline
 \code{pipeline} & core & Normalizador, mapeador, exportador (STIX/MISP) & 1g \\
+\rowline
 \code{navigator} & core & Visualizaci\'on de capas del ATT\&CK Navigator & 512m \\
+\rowline
 \code{redis} & sandbox & Backend de sesi\'on/trabajos de MISP & 256m \\
+\rowline
 \code{inetsim} & sandbox & Red simulada para la detonaci\'on, sin salida real & 256m \\
+\rowline
 \code{cape} & sandbox & Controlador del sandbox CAPE (detonaci\'on KVM/libvirt) & 6g \\
+\rowline
 \code{mysql} & sandbox & Almacenamiento relacional de MISP & 1g \\
+\rowline
 \code{misp} & sandbox & N\'ucleo de MISP (almacenamiento de eventos, API, datos de galaxia) & 2g \\
 \bottomrule
 \end{tabular}

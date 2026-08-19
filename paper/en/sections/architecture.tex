@@ -76,9 +76,13 @@ three complementary mechanisms:
 \textbf{Technique} & \textbf{Required combination} & \textbf{Rejected alone} \\
 \midrule
 T1055 (Process Injection) & \code{VirtualAllocEx} + \code{WriteProcessMemory} + \code{CreateRemoteThread}, or the read-primitive trio \code{OpenProcess} + \code{VirtualQueryEx} + \code{ReadProcessMemory} & \code{OpenProcess} alone \\
+\rowline
 T1055.012 (Process Hollowing) & \code{CreateProcessW} + \code{WriteProcessMemory} + \code{SetThreadContext} + \code{ResumeThread} + \code{Nt/ZwUnmapViewOfSection} & any single API \\
+\rowline
 T1685 (Disable or Modify Tools) & \code{WTSEnumerateProcessesW} + \code{OpenProcess} + \code{TerminateProcess} & bare \code{TerminateProcess} \\
+\rowline
 T1010 (Application Window Discovery) & \code{EnumWindows} + \code{GetWindowTextW} & bare \code{GetWindowTextW} \\
+\rowline
 T1134.001/.003 (Impersonation/Theft; Make and Impersonate Token) & \code{ImpersonateLoggedOnUser} + \code{DuplicateTokenEx} (.001) or \code{LogonUserW} (.003) & bare \code{Impersonate\-LoggedOnUser} \\
 \bottomrule
 \end{tabular}
@@ -309,12 +313,19 @@ every service and its profile.
 \textbf{Service} & \textbf{Profile} & \textbf{Role} & \textbf{Memory} \\
 \midrule
 \code{static} & core & PE/ELF static engine (\code{pefile}, YARA, FLOSS, Ghidra headless) & 3g \\
+\rowline
 \code{pipeline} & core & Normalizer, mapper, exporter (STIX/MISP) & 1g \\
+\rowline
 \code{navigator} & core & ATT\&CK Navigator layer visualization & 512m \\
+\rowline
 \code{redis} & sandbox & MISP session/job backend & 256m \\
+\rowline
 \code{inetsim} & sandbox & Simulated network for detonation, no real egress & 256m \\
+\rowline
 \code{cape} & sandbox & CAPE sandbox controller (KVM/libvirt detonation) & 6g \\
+\rowline
 \code{mysql} & sandbox & MISP's relational store & 1g \\
+\rowline
 \code{misp} & sandbox & MISP core (event storage, API, galaxy data) & 2g \\
 \bottomrule
 \end{tabular}

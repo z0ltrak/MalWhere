@@ -13,6 +13,7 @@
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{xcolor}
+\usepackage{colortbl}
 \usepackage{listings}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
@@ -72,6 +73,8 @@
 % ---------------------------------------------------------------------------
 \newcommand{\code}[1]{\texttt{\small #1}}
 \newcommand{\technique}[1]{\texttt{#1}}
+\definecolor{rowrule}{gray}{0.75}
+\newcommand{\rowline}{\arrayrulecolor{rowrule}\hline\arrayrulecolor{black}}
 
 \begin{document}
 

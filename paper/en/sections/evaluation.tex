@@ -52,7 +52,9 @@ than a restatement of what the tooling already assumes.
 \textbf{Sample} & \textbf{Independently recovered, pipeline never touches it} \\
 \midrule
 Akira & 17-row ATT\&CK table built from function-level Ghidra decompilation of the sample's threading, logging, and encryption internals. \\
+\rowline
 RoningLoader & All four chain components (installer, \code{D3D11InstallHelper.dll}, rootkit driver, RAT client) decompiled separately, including identifying the helper DLL's \code{DoD3D11InstallUsingMSI} as a Rust-compiled reimplementation of \code{env::var()}. \\
+\rowline
 WhiteSnakeStealer & RC4 key recovered via known-plaintext analysis, and the full \code{WSR\$} C2 packet format (RC4-encrypted, Deflate-compressed system-info XML with an RSA-wrapped key) reconstructed directly from the disassembly. \\
 \bottomrule
 \end{tabular}
@@ -90,8 +92,11 @@ sub-technique genuinely was not distinguished.
 \textbf{Sample} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Notes} \\
 \midrule
 Akira (ransomware) & 0.92 & 1.00 & 0.96 & single-stage binary \\
+\rowline
 WhiteSnakeStealer (.NET) & 1.00 & 0.80 & 0.89 & single-stage binary \\
+\rowline
 RoningLoader (parent only) & 0.85 & 0.68 & 0.76 & loader only \\
+\rowline
 RoningLoader (+resubmission) & 0.84 & 0.84 & 0.84 & loader + 3 dropped components \\
 \bottomrule
 \end{tabular}
