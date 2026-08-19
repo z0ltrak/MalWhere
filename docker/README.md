@@ -14,8 +14,10 @@
 8. [Daily Workflow](#daily-workflow)
 9. [Running Static Analysis](#running-static-analysis)
 10. [Resubmission Loop](#resubmission-loop)
-11. [Stopping the Environment](#stopping-the-environment)
-12. [Known Issues & Fixes](#known-issues--fixes)
+11. [Verifying the Static Container](#verifying-the-static-container)
+12. [Stopping the Environment](#stopping-the-environment)
+13. [Rebuilding Images](#rebuilding-images)
+14. [Known Issues & Fixes](#known-issues--fixes)
 
 ---
 
@@ -121,7 +123,7 @@ nano Dockerfile
 
 ### Post-Build: PostgreSQL Setup
 
-After the image is built and you start the sandbox profile, the `cape-entry` service initializes the database on first boot. If it fails (which can happen if PostgreSQL isn't ready in time), create the role manually:
+After the image is built and you start the sandbox profile, the `cape` container initializes its PostgreSQL/MongoDB databases (`cape_task_db`, `cape_postgres_data`, `cape_mongo_data`) on first boot. If it fails (which can happen if PostgreSQL isn't ready in time), create the role manually:
 
 ```bash
 # Start the sandbox profile first
@@ -273,7 +275,7 @@ assuming it didn't work.
 | Profile | Services | Estimated RAM | When to use |
 |---|---|---|---|
 | `core` | static, pipeline, navigator | ~4.5 GB | Daily development, static analysis |
-| `sandbox` | cape, redis, misp, mysql | ~9.5 GB | Sample execution, dynamic analysis |
+| `sandbox` | cape, inetsim, redis, misp, mysql | ~9.5 GB | Sample execution, dynamic analysis |
 | `core` + `sandbox` | All | ~14 GB | Full end-to-end analysis |
 
 > Always include the same `--profile` flags when starting and stopping. Omitting them will leave containers running.
@@ -530,9 +532,6 @@ Related to the above but separate: the real bootstrap admin account is `admin@ad
 
 ### `redis` needs to be running before `misp` starts
 MISP uses `redis` for session storage: if it's down, MISP's web/API layer fails on *every* request (including pure API calls) with a misleading "Authentication failed" error that has nothing to do with the API key. `docker-compose.yml`'s `misp` service now has `depends_on: redis` with a healthcheck, so a fresh `docker compose up` won't hit this: but if you ever stop `redis` manually while `misp` keeps running, you'll need to restart `misp` too, not just `redis`.
-
-### CAPE workers crash on first boot
-The `cape-entry` service needs `/work` to exist as a Docker volume. Ensure `cape_work:/work` is defined in both the `volumes:` section and the cape service.
 
 ### Static container: `tlsh` module not found
 REMnux installs `tlsh` in `/opt/malchive/lib/python3.8/site-packages/`. The Dockerfile copies it to `/usr/local/lib/python3.8/dist-packages/` to make it importable. If this breaks after a REMnux base image update, recheck the path with:
