@@ -186,8 +186,8 @@ why every one of these reads as unreachable in the sandbox trace:
 containment-first sandboxing (\S\ref{sec:limitations}, item~\ref{lim:containment}) means the
 sample's own connection attempts to its real C2 fail by design, not
 because the recovered addresses are fabricated. Contamination was not
-fully zero, though: re-auditing this exact claim during the ATT\&CK
-migration (2026-08) found 5 further IPs the two filters above did not
+fully zero, though: re-auditing this exact claim during the migration
+to ATT\&CK v19 (2026-08) found 5 further IPs the two filters above did not
 catch, none affecting the technique-level scores above since IOC
 filtering and technique scoring are independent. Two, resolving to
 self-identifying \code{*.msedge.net} hostnames on Microsoft's own ASN,
