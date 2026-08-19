@@ -15,7 +15,6 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{hyperref}
-\usepackage{titlesec}
 \usepackage{fancyhdr}
 \usepackage{caption}
 \usepackage{amsmath}
@@ -27,9 +26,16 @@
 \setlist[enumerate]{topsep=2pt,itemsep=1pt,parsep=0pt}
 \sloppy
 
-\titlespacing*{\section}{0pt}{10pt}{6pt}
-\titlespacing*{\subsection}{0pt}{8pt}{4pt}
-\titlespacing*{\subsubsection}{0pt}{6pt}{3pt}
+% titlesec's 2016 release silently drops the section number under the
+% current LaTeX kernel, so spacing is set directly via \@startsection.
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+  {10pt}{6pt}{\normalfont\Large\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {8pt}{4pt}{\normalfont\large\bfseries}}
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+  {6pt}{3pt}{\normalfont\normalsize\bfseries}}
+\makeatother
 
 \lstdefinestyle{code}{
   basicstyle=\ttfamily\scriptsize,
