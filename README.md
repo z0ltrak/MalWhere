@@ -377,12 +377,16 @@ persistence, C2, credential access, 17-22 across four separate real
 detonations so far, dynamic analysis isn't perfectly deterministic
 run-to-run) that the outer stub alone never revealed, and
 auditing the resulting IOCs against this same false-positive discipline
-found and fixed three new extraction bugs the original three families
-never happened to trigger (a XOR-recovery false positive shaped like a
-.NET assembly version number, a repeating-byte-padding decode artifact,
-and X.509 certificate OIDs misparsed as IPs), all now fixed and verified
-against every ground-truth IP across the validated families. See
-`results/asyncrat/` and the paper's case studies for the full account.
+found and fixed three new extraction bugs: a XOR-recovery false positive
+shaped like a .NET assembly version number and a repeating-byte-padding
+decode artifact, both on AsyncRAT's own resubmitted components; and a
+third bug class, X.509 certificate OIDs misparsed as IPs, which the
+resulting broader sweep actually caught on two of RoningLoader's own
+resubmitted components rather than AsyncRAT's, one of the original three
+families quietly carrying a bug this exercise is what surfaced. All
+three are now fixed and verified against every ground-truth IP across
+both families. See `results/asyncrat/` and the paper's case studies for
+the full account.
 
 ---
 
@@ -404,7 +408,7 @@ All dynamic analysis runs in an **isolated Docker network with no internet egres
 
 This project is the practical component of a Master's thesis submitted to the **Universidad Complutense de Madrid** in partial fulfillment of the MSc in Cybersecurity requirements.
 
-The accompanying academic paper presents the full methodology, related work, four detailed case studies, limitations, and evaluation metrics, in both English ([`paper/en/main.pdf`](paper/en/main.pdf)) and Spanish ([`paper/es/main.pdf`](paper/es/main.pdf)); LaTeX source for both is in [`paper/`](paper/).
+The accompanying academic paper presents the full methodology, related work, five detailed case studies, limitations, and evaluation metrics, in both English ([`paper/en/main.pdf`](paper/en/main.pdf)) and Spanish ([`paper/es/main.pdf`](paper/es/main.pdf)); LaTeX source for both is in [`paper/`](paper/).
 
 ---
 

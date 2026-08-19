@@ -6,13 +6,17 @@ Drafted as source material for the thesis's own limitations discussion, not
 as thesis prose itself.
 
 Current evaluation state (family-level P/R/F1, `evaluation/results/summary.md`,
-post ATT&CK v14->v19 migration, 2026-08): Akira 0.92/1.00/0.96 (1 false
-positive: T1070, see §3), WhiteSnake 1.00/0.80/0.89 (zero false positives, 9
-missed techniques remaining), RoningLoader 0.85/0.68/0.76 (0.84/0.84/0.84
-counting the resubmission loop's dropped-component coverage: see §1; 3 open
-false positives -- T1027/T1497, §4, plus T1070, §3). Every false positive
-across all three samples is deliberately left present or unresolved pending
-the analyst's own read of the evidence, not an oversight.
+post ATT&CK v14->v19 migration, 2026-08): Akira 0.92/1.00/0.96, WhiteSnake
+1.00/0.80/0.89, RoningLoader 0.85/0.68/0.76 (0.84/0.84/0.84 counting the
+resubmission loop's dropped-component coverage: see §1). 15 discrepancies
+were found across all three samples during the full audit (§3): 12 fixed
+(10 outright, plus 2 confidence-calibration corrections, on Akira's and
+RoningLoader's own T1070 findings, still present post-fix at honestly
+downgraded confidence rather than removed, see §3), 1 ground-truth
+extraction gap (§5), and 2 left open on RoningLoader pending independent
+confirmation (§4). Nothing here is an oversight: every one of the 15 was
+deliberately fixed, downgraded, or left open based on the analyst's own
+read of the evidence.
 
 ## 1. Small validation set (N=3)
 
@@ -91,9 +95,12 @@ Every false positive across all three samples' family-level evaluation was
 individually traced to its exact evidence (the specific import combination,
 CAPE signature's raw `data` field, or string pattern, never just the
 technique name or category) and checked against the *full* manual report
-text, not only its ATT&CK summary table. 13 were checked; 10 were genuine
-pipeline errors, now fixed; 1 was a ground-truth gap, not a pipeline error
-(§5); 2 remain open, deliberately (§4).
+text, not only its ATT&CK summary table. 15 were checked; 10 were genuine
+pipeline errors, now fixed; 2 were confidence-calibration corrections (the
+T1070 fix below, on both Akira and RoningLoader: the underlying evidence
+stays present, just honestly downgraded rather than removed); 1 was a
+ground-truth gap, not a pipeline error (§5); 2 remain open, deliberately
+(§4).
 
 Representative fixes, chosen because each generalizes beyond the sample that
 surfaced it:
@@ -316,7 +323,7 @@ legitimate uses was rejected outright or paired with a corroborating
 pattern (e.g. `msbuild.exe` alone at medium, `-EncodedCommand` +
 `-WindowStyle Hidden` needing both, `mshta.exe` + `.hta` needing both).
 
-Five batches so far, 42 new technique IDs, by tactic:
+Six batches, 55 new technique IDs, by tactic:
 - **Persistence + Defense Evasion** (11): AppInit DLLs, Winlogon Helper
   DLL, Security Support Provider, Authentication Package, IFEO Injection,
   WMI Event Subscription, BITS Jobs, Clear Windows Event Logs, Regsvr32
