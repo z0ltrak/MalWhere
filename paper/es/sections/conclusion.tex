@@ -1,7 +1,7 @@
 \section{Conclusi\'on}
 \label{sec:conclusion}
 
-Esta tesis ha presentado MalWhere, una tuber\'ia que combina
+Esta tesis ha presentado MalWhere, un pipeline que combina
 an\'alisis est\'atico y din\'amico de malware para producir
 inteligencia de amenazas con confianza cuantificada y conforme a
 est\'andares: mapeos de t\'ecnicas MITRE ATT\&CK exportados como
@@ -13,8 +13,8 @@ entre fuentes como entre niveles de especificidad de t\'ecnica
 correctamente la capacidad distribuida de una muestra multietapa al
 componente que realmente la presenta, en lugar de colapsarla en la
 puntuaci\'on propia del binario padre (\S\ref{sec:resubmission}).
-Frente a las herramientas revisadas en \S\ref{sec:related-work}, la
-tuber\'ia no pretende sustituir a un agregador de reputaci\'on amplio
+Frente a las herramientas revisadas en \S\ref{sec:related-work}, el
+pipeline no pretende sustituir a un agregador de reputaci\'on amplio
 como VirusTotal, al que ning\'un pipeline de investigaci\'on de un solo
 equipo puede igualar en escala bruta de corpus de env\'ios; es el paso
 que viene despu\'es, convirtiendo esa primera se\~nal en un mapeo
@@ -26,12 +26,12 @@ sustancialmente distintas (un binario de ransomware de una sola etapa,
 un infostealer .NET rico en funcionalidades, y una cadena de cuatro
 componentes cargador/rootkit/RAT) contra verdad de referencia
 construida a partir de ingenier\'ia inversa manual a nivel de
-funci\'on, la tuber\'ia alcanz\'o puntuaciones F1 a nivel de familia de
+funci\'on, el pipeline alcanz\'o puntuaciones F1 a nivel de familia de
 0.96, 0.89 y 0.84 respectivamente, con precisi\'on alta
 en todos los casos (\S\ref{sec:evaluation}). Esas cifras solo son tan
 fiables como el proceso que las produjo, raz\'on por la cual esta tesis
 otorga igual peso al rastro de auditor\'ia que las respalda: 15
-discrepancias entre el resultado de la tuber\'ia y la verdad de
+discrepancias entre el resultado del pipeline y la verdad de
 referencia se rastrearon individualmente hasta una causa concreta y
 verificable, no se aceptaron ni descartaron solo por la cifra agregada
 (\S\ref{sec:fp-audit}); se encontr\'o y corrigi\'o un error real de
@@ -49,7 +49,7 @@ discrepancia diagnosticada a una causa concreta, cada extensi\'on
 comprobada frente a regresiones antes de conservarse, es una
 contribuci\'on m\'as defendible que las cifras F1 destacadas por s\'i
 solas, y es la propiedad con mayor probabilidad de transferirse cuando
-la tuber\'ia se encuentre con una familia de malware para la que no ha
+el pipeline se encuentre con una familia de malware para la que no ha
 sido afinada. Precisamente porque esa transferencia todav\'ia no se ha
 medido, ampliar el conjunto de familias validadas
 (\S\ref{sec:future-work}) se identifica como el siguiente paso de

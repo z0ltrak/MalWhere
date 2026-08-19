@@ -30,15 +30,6 @@ either already mitigated concretely or scoped as a precise next step
   statistical trick. Extending to further families remains the
   highest-value follow-up (\S\ref{sec:future-work}).
 
-\item \label{lim:aggregation-bug} \textbf{An aggregation bug, found and
-  fixed during validation.}
-  Detailed as a case study in \S\ref{sec:case-installer}: an installer
-  sample's static report described one bundled side-loaded helper DLL,
-  not the malicious payload, for most of the validation process, until
-  the report's own \code{hash\_match} sanity field was actually checked
-  rather than merely computed. The fix directly improved recall on the
-  affected sample.
-
 \item \label{lim:attck-version} \textbf{ATT\&CK version is pinned, and
   CAPE's own signature tags are not.} All technique IDs in this pipeline, ground truth, and
   Navigator layers target MITRE ATT\&CK v19.2. CAPE's community
@@ -48,17 +39,8 @@ either already mitigated concretely or scoped as a precise next step
   verbatim. Migrating ground truth from the previously-unpinned v14
   identities to v19 is what surfaced the
   \technique{T1070}/\technique{T1685.005} confidence-calibration bug
-  above (\S\ref{sec:fp-audit}): under the old IDs, family-level
-  matching had been pairing that finding with its ground-truth entry
-  by coincidental prefix overlap rather than genuine correspondence,
-  which would otherwise have masked the underlying issue indefinitely.
-
-\item \label{lim:open-fps} \textbf{Two RoningLoader false positives are
-  deliberately unresolved.} \technique{T1027} and \technique{T1497} both have real
-  supporting evidence but no independent textual confirmation elsewhere
-  in the manual report, unlike the \technique{T1620} case that was
-  fixed. Editing ground truth on the pipeline's own evidence alone would
-  be circular reasoning.
+  detailed in \S\ref{sec:fp-audit}, which a version left unpinned would
+  have masked indefinitely.
 
 \item \label{lim:gt-table} \textbf{Ground-truth extraction depends on
   table completeness.}
@@ -109,9 +91,7 @@ either already mitigated concretely or scoped as a precise next step
 \item \label{lim:rule-coverage} \textbf{Static rule coverage is
   deliberately narrow.} Roughly 85
   of 474 Windows-relevant MITRE techniques have a dedicated static
-  rule (\S\ref{sec:coverage}); Reconnaissance and Resource Development
-  are a structural boundary rather than unaddressed backlog, since both
-  describe attacker activity that precedes the sample's own existence.
+  rule, the scoping rationale detailed in \S\ref{sec:coverage}.
 
 \item \label{lim:network-attribution} \textbf{Dynamic network capture
   has no per-process attribution.}

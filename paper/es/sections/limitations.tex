@@ -36,21 +36,10 @@ como una advertencia abierta.
   un truco estad\'istico. Ampliar a m\'as familias sigue siendo el
   siguiente paso de mayor valor (\S\ref{sec:future-work}).
 
-\item \label{lim:aggregation-bug} \textbf{Un error de agregaci\'on,
-  encontrado y corregido durante
-  la validaci\'on.} Detallado como caso de estudio en
-  \S\ref{sec:case-installer}: el informe est\'atico de una muestra
-  instalador describi\'o una DLL auxiliar side-loaded incluida, no la
-  carga maliciosa, durante la mayor parte del proceso de validaci\'on,
-  hasta que se comprob\'o realmente el propio campo de sanidad
-  \code{hash\_match} del informe en lugar de solo calcularlo. La
-  correcci\'on mejor\'o directamente la exhaustividad en la muestra
-  afectada.
-
 \item \label{lim:attck-version} \textbf{La versi\'on de ATT\&CK
   est\'a fijada, y las propias
   etiquetas de firma de CAPE no lo est\'an.} Todos los identificadores
-  de t\'ecnica en esta tuber\'ia, la verdad de referencia y las capas
+  de t\'ecnica en este pipeline, la verdad de referencia y las capas
   de Navigator apuntan a MITRE ATT\&CK v19.2. Las firmas de la
   comunidad de CAPE quedan fijadas a la versi\'on con la que se
   escribieron por \'ultima vez, as\'i que las etiquetas provenientes de
@@ -58,20 +47,9 @@ como una advertencia abierta.
   curaci\'on (\S\ref{sec:dynamic}) en lugar de confiarse tal cual.
   Migrar la verdad de referencia desde las identidades v14, antes sin
   fijar, a v19 es lo que sac\'o a la luz el fallo de calibraci\'on de
-  confianza de \technique{T1070}/\technique{T1685.005} anterior
-  (\S\ref{sec:fp-audit}): bajo los identificadores antiguos, el
-  emparejamiento a nivel de familia hab\'ia estado emparejando ese
-  hallazgo con su entrada de verdad de referencia por coincidencia de
-  prefijo en lugar de correspondencia gen\'uina, lo que de otro modo
-  habr\'ia enmascarado el problema subyacente indefinidamente.
-
-\item \label{lim:open-fps} \textbf{Dos falsos positivos de RoningLoader
-  quedan sin resolver deliberadamente.} \technique{T1027} y \technique{T1497} tienen
-  ambos evidencia real de apoyo pero ninguna confirmaci\'on textual
-  independiente en el resto del informe manual, a diferencia del caso
-  de \technique{T1620} que s\'i se corrigi\'o. Editar la verdad de
-  referencia solo con la evidencia propia de la tuber\'ia ser\'ia un
-  razonamiento circular.
+  confianza de \technique{T1070}/\technique{T1685.005} detallado en
+  \S\ref{sec:fp-audit}, que una versi\'on sin fijar habr\'ia
+  enmascarado indefinidamente.
 
 \item \label{lim:gt-table} \textbf{La extracci\'on de verdad de
   referencia depende de la completitud de la tabla.} Un extractor basado en tablas markdown solo
@@ -128,11 +106,8 @@ como una advertencia abierta.
 
 \item \label{lim:rule-coverage} \textbf{La cobertura de reglas
   est\'aticas es deliberadamente estrecha.} Aproximadamente 85 de las 474 t\'ecnicas relevantes para
-  Windows en MITRE tienen una regla est\'atica dedicada
-  (\S\ref{sec:coverage}); Reconnaissance y Resource Development son un
-  l\'imite estructural, no una lista pendiente por abordar, ya que
-  ambas describen actividad del atacante que precede a la existencia
-  de la propia muestra.
+  Windows en MITRE tienen una regla est\'atica dedicada, con la
+  justificaci\'on del alcance detallada en \S\ref{sec:coverage}.
 
 \item \label{lim:network-attribution} \textbf{La captura de red
   din\'amica no tiene atribuci\'on por proceso.} La lista \code{network.hosts} de CAPE refleja el

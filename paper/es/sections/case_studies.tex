@@ -1,8 +1,8 @@
 \section{Casos de estudio}
 \label{sec:case-studies}
 
-Las cifras agregadas (\S\ref{sec:evaluation}) muestran \emph{que} la
-tuber\'ia rinde bien; los cinco casos siguientes muestran \emph{por
+Las cifras agregadas (\S\ref{sec:evaluation}) muestran \emph{que} el
+pipeline rinde bien; los cinco casos siguientes muestran \emph{por
 qu\'e}: instancias concretas de la disciplina de validaci\'on
 encontrando y resolviendo un problema real, cada una ilustrando una
 clase de fallo distinta que una evaluaci\'on puramente num\'erica no
@@ -62,7 +62,7 @@ evidencia faltante y mejor\'o directamente la exhaustividad en la
 muestra afectada tras volver a evaluarla.
 
 La lecci\'on se generaliz\'o m\'as all\'a de esta correcci\'on
-concreta: motiv\'o tratar cada nueva capacidad de la tuber\'ia, el
+concreta: motiv\'o tratar cada nueva capacidad del pipeline, el
 bucle de reenv\'io en primer lugar, como necesitada de su propio paso
 expl\'icito de corroboraci\'on (manifiestos de linaje, comprobaciones
 cruzadas de hash) en lugar de confiar en que ``el c\'odigo se
@@ -70,7 +70,7 @@ ejecut\'o sin error'' implique ``el c\'odigo produjo el resultado
 correcto''. Encontrar y corregir esta clase de error antes de que
 pudiera subestimar en silencio la capacidad real de una muestra es en
 s\'i mismo una demostraci\'on concreta de para qu\'e sirve la
-disciplina de validaci\'on de la tuber\'ia.
+disciplina de validaci\'on del pipeline.
 
 \subsection{El hueco de verdad de referencia de WhiteSnakeStealer}
 \label{sec:case-wsnake}
@@ -78,7 +78,7 @@ disciplina de validaci\'on de la tuber\'ia.
 La \S\ref{sec:fp-audit} resume el resultado; el proceso merece
 detallarse una vez como ejemplo concreto de lo que significa en la
 pr\'actica ``auditado frente al texto completo del informe''. El
-resultado de la tuber\'ia para WhiteSnakeStealer inclu\'ia
+resultado del pipeline para WhiteSnakeStealer inclu\'ia
 \technique{T1620} (Reflective Code Loading) con evidencia est\'atica,
 llamadas espec\'ificas a la BCL de .NET consistentes con la carga de
 ensamblados en memoria. La propia tabla de T\'ecnicas ATT\&CK de la
@@ -92,15 +92,15 @@ describ\'ia exactamente el mecanismo de carga reflexiva que hab\'ia
 detectado la regla est\'atica: exist\'ia confirmaci\'on independiente
 del analista, simplemente no se hab\'ia trasladado a la tabla que lee
 el extractor autom\'atico de verdad de referencia. Esto es un hueco de
-documentaci\'on en el informe fuente, no un error de la tuber\'ia, y se
+documentaci\'on en el informe fuente, no un error del pipeline, y se
 corrigi\'o a\~nadiendo la fila que faltaba al propio informe (y
 regenerando la verdad de referencia a partir de \'el), en lugar de
-ajustar la confianza de la tuber\'ia o suprimir el hallazgo. Se
+ajustar la confianza del pipeline o suprimir el hallazgo. Se
 presenta aqu\'i espec\'ificamente porque dos casos estructuralmente
 similares en RoningLoader (\S\ref{sec:fp-audit}) se resolvieron en el
 sentido opuesto, dejados abiertos, precisamente porque les faltaba
 este tipo de confirmaci\'on textual independiente. Juntos, los dos
-desenlaces muestran que la evidencia propia de la tuber\'ia se trata
+desenlaces muestran que la evidencia propia del pipeline se trata
 igual independientemente de si la discrepancia termin\'o
 favoreci\'endola.
 
@@ -147,7 +147,7 @@ concreta: es lo que motiv\'o la pol\'itica expl\'icita del proyecto
 recuperaci\'on basada en b\'usqueda exhaustiva debe validarse frente a
 una segunda muestra, no solo la que motiv\'o su construcci\'on, antes
 de confiar en ella. De haberse declarado esta capacidad lista para
-producci\'on solo con RoningLoader, la tuber\'ia habr\'ia salido con un
+producci\'on solo con RoningLoader, el pipeline habr\'ia salido con un
 generador de falsos positivos que simplemente todav\'ia no se hab\'ia
 activado.
 
@@ -155,7 +155,7 @@ activado.
   tr\'afico de fondo del sandbox}
 \label{sec:case-ioc-noise}
 
-Auditar directamente la salida de IOC de la tuber\'ia orientada a
+Auditar directamente la salida de IOC del pipeline orientada a
 STIX/MISP, en lugar de solo las puntuaciones de t\'ecnicas ATT\&CK que
 ya cubre \S\ref{sec:evaluation}, sac\'o a la luz dos fuentes de
 contaminaci\'on independientes que ninguna m\'etrica a nivel de
@@ -209,8 +209,8 @@ propia verdad de referencia de WhiteSnakeStealer, que documenta una
 lista C2 HTTP de 31 nodos y 29 IP \'unicas recuperada mediante
 ingenier\'ia inversa manual, con el mismo protocolo que produjo la
 Tabla~\ref{tab:validation}. Tras el filtro de ruido de sandbox, la
-salida de captura din\'amica de la
-tuber\'ia recupera exactamente esa lista: 29 de 29, cero
+salida de captura din\'amica del
+pipeline recupera exactamente esa lista: 29 de 29, cero
 omisiones. La propia firma
 \code{dead\_connect} de CAPE (confianza 100\%, ``31 unique'' intentos
 inalcanzables) corrobora de forma independiente por qu\'e cada una de
@@ -249,7 +249,7 @@ muestra al propio \code{sample.exe} llamando a
 geolocalizaci\'on por IP sin ninguna cadena literal correspondiente en
 el binario, la URL evidentemente construida en tiempo de ejecuci\'on.
 Se trata de un hallazgo gen\'uino, iniciado por la propia muestra, no
-una afirmaci\'on de la tuber\'ia que se acepta sin m\'as: a\~nadido a
+una afirmaci\'on del pipeline que se acepta sin m\'as: a\~nadido a
 la verdad de referencia manual de WhiteSnakeStealer como
 \technique{T1016} (System Network Configuration Discovery, cuya propia
 p\'agina de MITRE cubre exactamente este patr\'on, una consulta en
@@ -267,7 +267,7 @@ afirmaci\'on m\'as fuerte.
 La lecci\'on se generaliza igual que en los dem\'as casos: cada
 exclusi\'on es una entrada espec\'ifica, justificada individualmente y
 auditable, registrada con su propia raz\'on, no un filtro de
-reputaci\'on general, ya que la raz\'on de ser de esta tuber\'ia frente
+reputaci\'on general, ya que la raz\'on de ser de este pipeline frente
 a un agregador de reputaci\'on (\S\ref{sec:related-work}) es
 precisamente que cada decisi\'on permanece trazable a una causa
 concreta en lugar de simplemente afirmarse.
@@ -275,7 +275,7 @@ concreta en lugar de simplemente afirmarse.
 La generalidad de la propia correcci\'on se comprob\'o, no se asumi\'o.
 Ejecutar la misma disciplina frente a una cuarta familia
 estructuralmente distinta, un RAT/backdoor .NET envuelto en un crypter
-nativo, a\~nadida espec\'ificamente para comprobar si la tuber\'ia
+nativo, a\~nadida espec\'ificamente para comprobar si el pipeline
 generaliza m\'as all\'a de las tres familias validadas, sac\'o a la luz
 dos instancias m\'as del mismo fallo en los propios componentes
 reenviados de esa familia: un valor recuperado por XOR con la forma

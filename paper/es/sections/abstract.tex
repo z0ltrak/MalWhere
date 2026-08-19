@@ -10,13 +10,13 @@ muchas se\~nales entre s\'i, de modo que producir un mapeo de
 t\'ecnica defendible y ligado a evidencia para una muestra concreta
 todav\'ia suele recaer en un analista de ingenier\'ia inversa que
 traza el c\'odigo manualmente y redacta un informe. Esta tesis
-presenta \textbf{MalWhere}, una tuber\'ia modular que combina
+presenta \textbf{MalWhere}, un pipeline modular que combina
 ingenier\'ia inversa est\'atica y detonaci\'on din\'amica en sandbox,
 reconcilia sus hallazgos en mapeos de t\'ecnicas MITRE ATT\&CK con
 confianza cuantificada, y exporta el resultado como paquetes STIX~2.1
 y eventos MISP en vivo.
 
-La tuber\'ia se valida frente a tres familias de malware con
+El pipeline se valida frente a tres familias de malware con
 arquitecturas distintas: un binario de ransomware (Akira); un
 cargador multietapa que suelta un driver rootkit, un m\'odulo
 antiantivirus y un cliente C2 de acceso remoto (RoningLoader); y un
@@ -24,7 +24,7 @@ infostealer .NET rico en funcionalidades (WhiteSnakeStealer). Cada una
 cuenta con verdad de referencia obtenida mediante ingenier\'ia inversa
 manual a nivel de funci\'on, verificada con Ghidra, no mediante un
 escaneo superficial. Dos contribuciones metodol\'ogicas van m\'as all\'a
-de una tuber\'ia est\'atica+din\'amica convencional: un modelo de
+de un pipeline est\'atico+din\'amico convencional: un modelo de
 reconciliaci\'on de confianza cruzada entre fuentes \emph{y} entre
 niveles de t\'ecnica, que trata una t\'ecnica observada tanto por
 evidencia est\'atica como din\'amica, o por una t\'ecnica padre y una
@@ -42,31 +42,31 @@ validaci\'on se rastre\'o individualmente hasta su evidencia exacta
 de una firma de sandbox, un patr\'on de cadena) y se contrast\'o con el
 texto completo del informe manual correspondiente, no solo con su
 tabla resumen. De los 15 falsos positivos encontrados de esta forma en
-las tres muestras, doce eran errores gen\'uinos de la tuber\'ia con
+las tres muestras, doce eran errores gen\'uinos del pipeline con
 causa ra\'iz identificada y corregida (diez sin m\'as, m\'as dos
 correcciones de calibraci\'on de confianza cuya evidencia gen\'erica
 subyacente permanece presente, honestamente rebajada, en lugar de
 desaparecer), uno era un hueco en c\'omo se extrajo la verdad de
-referencia y no un error de la tuber\'ia, y dos se dejaron abiertos
+referencia y no un error del pipeline, y dos se dejaron abiertos
 deliberadamente a la espera de confirmaci\'on independiente en lugar
-de resolverse solo con la evidencia propia de la tuber\'ia. La
+de resolverse solo con la evidencia propia del pipeline. La
 cobertura de detecci\'on est\'atica se ampli\'o posteriormente de unas
 30 a aproximadamente 85 identificadores de t\'ecnica MITRE ATT\&CK,
 cada adici\'on obtenida de las propias descripciones de t\'ecnica de
 MITRE y verificada para no introducir nuevos hallazgos en las muestras
 validadas antes de confiar en ella.
 
-La tuber\'ia resultante alcanza puntuaciones F1 a nivel de familia de
+El pipeline resultante alcanza puntuaciones F1 a nivel de familia de
 0.96 (Akira), 0.89 (WhiteSnakeStealer) y 0.84 (RoningLoader, contando
 sus componentes reenviados), con precisi\'on alta en las
 tres muestras. La tesis argumenta que este rastro de auditor\'ia, cada
 regla ligada a evidencia verificable, cada error diagnosticado a una
 causa concreta, cada extensi\'on comprobada frente a regresiones, es lo
-que hace que el resultado de la tuber\'ia sea utilizable precisamente
+que hace que el resultado del pipeline sea utilizable precisamente
 para la decisi\'on que las se\~nales no reconciliadas de un agregador de
 reputaci\'on no pueden sostener por s\'i solas, y es la propiedad con
-mayor probabilidad de transferirse a familias de malware que la
-tuber\'ia todav\'ia no ha visto.
+mayor probabilidad de transferirse a familias de malware que el
+pipeline todav\'ia no ha visto.
 
 \bigskip
 \noindent\textbf{Palabras clave:} an\'alisis de malware, inteligencia

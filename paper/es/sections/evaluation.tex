@@ -5,23 +5,23 @@
 
 La verdad de referencia de cada una de las tres familias se produjo
 mediante ingenier\'ia inversa manual, documentada como un informe de
-analista completo y nunca derivada del propio resultado de la
-tuber\'ia. Esta independencia es una salvaguarda metodol\'ogica
+analista completo y nunca derivada del propio resultado del
+pipeline. Esta independencia es una salvaguarda metodol\'ogica
 deliberada, no un detalle incidental: ambos motores dependen de
 herramientas de terceros (YARA, FLOSS, firmas de la comunidad de CAPE)
 que pueden por s\'i mismas mapear mal una t\'ecnica, de modo que la
 verdad de referencia tuvo que establecerse sin consultar los propios
-artefactos extra\'idos por la tuber\'ia, ya que de lo contrario validar
-la tuber\'ia frente a ella ser\'ia circular. En concreto, el mismo
+artefactos extra\'idos por el pipeline, ya que de lo contrario validar
+el pipeline frente a ella ser\'ia circular. En concreto, el mismo
 protocolo se aplic\'o a las tres familias, en este orden, y solo el
-\'ultimo paso llega a tocar el resultado propio de la tuber\'ia:
+\'ultimo paso llega a tocar el resultado propio del pipeline:
 
 \begin{enumerate}
   \item \textbf{Desensamblado est\'atico independiente.} Cada muestra
     se carg\'o en Ghidra y se descompil\'o funci\'on por funci\'on, cada
     funci\'on de inter\'es renombrada para reflejar su prop\'osito
     establecido, sin consultar la propia extracci\'on de importaciones
-    o cadenas de la tuber\'ia.
+    o cadenas del pipeline.
   \item \textbf{Observaci\'on din\'amica independiente.} La detonaci\'on
     en sandbox se observ\'o directamente (secuencia de llamadas a API,
     ficheros soltados, actividad de red), registrando el comportamiento
@@ -32,19 +32,19 @@ protocolo se aplic\'o a las tres familias, en este orden, y solo el
     claves.} Cuando una muestra cifraba u ofuscaba su configuraci\'on,
     la clave o el algoritmo se recuper\'o manualmente, completamente
     separado de los propios m\'odulos automatizados de fuerza bruta y
-    recuperaci\'on XOR de la tuber\'ia.
-  \item \textbf{Solo entonces, la comparaci\'on.} Se ejecut\'o la
-    tuber\'ia y se compar\'o su \code{attck\_mapping.json} con la tabla
+    recuperaci\'on XOR del pipeline.
+  \item \textbf{Solo entonces, la comparaci\'on.} Se ejecut\'o el
+    pipeline y se compar\'o su \code{attck\_mapping.json} con la tabla
     de T\'ecnicas ATT\&CK del informe terminado y producido de forma
     independiente (la auditor\'ia de falsos positivos,
     \S\ref{sec:fp-audit}). Por construcci\'on, cada discrepancia que
     encuentra es un desacuerdo entre dos artefactos producidos de forma
-    independiente, no la tuber\'ia comprobada frente a sus propias
+    independiente, no el pipeline comprobado frente a sus propias
     suposiciones.
 \end{enumerate}
 
 La Tabla~\ref{tab:validation} da un ejemplo concreto por familia de
-evidencia que este protocolo recuper\'o y que la tuber\'ia automatizada
+evidencia que este protocolo recuper\'o y que el pipeline automatizado
 nunca toca, que es lo que convierte cada informe en una comprobaci\'on
 independiente y no en una reformulaci\'on de lo que la herramienta ya
 asume.
@@ -54,7 +54,7 @@ asume.
 \small
 \begin{tabular}{@{}lp{9.5cm}@{}}
 \toprule
-\textbf{Muestra} & \textbf{Recuperado de forma independiente, la tuber\'ia no lo toca} \\
+\textbf{Muestra} & \textbf{Recuperado de forma independiente, el pipeline no lo toca} \\
 \midrule
 Akira & Tabla ATT\&CK de 17 filas construida a partir de descompilaci\'on de Ghidra a nivel de funci\'on de los mecanismos internos de threading, logging y cifrado de la muestra. \\
 \rowline
@@ -72,13 +72,13 @@ el protocolo de cuatro pasos anterior.}
 La tabla de T\'ecnicas ATT\&CK de cada informe se analiza despu\'es para
 producir un fichero de verdad de referencia estructurado
 (\code{extract\_ground\_truth.py}), que el arn\'es de evaluaci\'on
-compara con el propio \code{attck\_mapping.json} de la tuber\'ia.
+compara con el propio \code{attck\_mapping.json} del pipeline.
 
 Se reportan dos modos de emparejamiento. El emparejamiento
 \emph{estricto} exige una coincidencia exacta de identificador de
 t\'ecnica. El emparejamiento a \emph{nivel de familia} trata una
 t\'ecnica padre y cualquiera de sus subt\'ecnicas como equivalentes (un
-hallazgo de la tuber\'ia de \technique{T1547.001} cuenta frente a una
+hallazgo del pipeline de \technique{T1547.001} cuenta frente a una
 entrada de verdad de referencia de \technique{T1547} y viceversa), bajo
 la premisa de que un analista de seguridad que decide qu\'e hacer ante
 un mecanismo de persistencia se preocupa primero por \emph{qu\'e}
@@ -127,7 +127,7 @@ a\~nadida, una compensaci\'on que la mejora del F1 agregado
 (0.76~$\rightarrow$~0.84) demuestra que mereci\'o la pena.
 
 La precisi\'on es alta en las cuatro filas (0.84--1.00), es decir,
-el peque\~no n\'umero de hallazgos que reporta la tuber\'ia rara vez son
+el peque\~no n\'umero de hallazgos que reporta el pipeline rara vez son
 err\'oneos. Esta es la consecuencia directa e intencionada de la
 filosof\'ia de combinaci\'on coherente de \S\ref{sec:static-rules} y la
 disciplina de curaci\'on de firmas de \S\ref{sec:dynamic}: ambas
@@ -138,11 +138,11 @@ positivos a continuaci\'on existe para comprobar, no para asumir.
 \subsection{La auditor\'ia de falsos positivos}
 \label{sec:fp-audit}
 
-La precisi\'on por s\'i sola no distingue ``la tuber\'ia est\'a bien
-calibrada'' de ``la verdad de referencia resulta ser permisiva''. A
+La precisi\'on por s\'i sola no distingue ``el pipeline est\'a bien
+calibrado'' de ``la verdad de referencia resulta ser permisiva''. A
 diferencia de un agregador de reputaci\'on que muestra la etiqueta de
-cada motor o sandbox tal cual, cada discrepancia entre el resultado de
-la tuber\'ia y la verdad de referencia encontrada en las tres muestras,
+cada motor o sandbox tal cual, cada discrepancia entre el resultado
+del pipeline y la verdad de referencia encontrada en las tres muestras,
 15 en total (5 Akira, 4 WhiteSnakeStealer, 6 RoningLoader), se
 rastre\'o individualmente hasta una causa concreta y verificable en
 lugar de aceptarse o descartarse solo por la cifra agregada. Cada una
@@ -154,7 +154,7 @@ aparecer en su propia tabla ATT\&CK.
 El resultado de esta auditor\'ia, por causa:
 
 \begin{itemize}
-  \item \textbf{Diez errores gen\'uinos de la tuber\'ia}, cada uno
+  \item \textbf{Diez errores gen\'uinos del pipeline}, cada uno
     corregido en su causa ra\'iz: tres mapeos de regla est\'atica que no
     correspond\'ian con la definici\'on real de MITRE para la t\'ecnica
     afirmada (p.\ ej.\ \code{GetSystemInfo} mapeada a Descubrimiento de
@@ -196,19 +196,19 @@ El resultado de esta auditor\'ia, por causa:
     examinada en \S\ref{sec:confidence-calibration}, no un
     contraejemplo de ella.
   \item \textbf{Un hueco de extracci\'on de verdad de referencia}, no un
-    error de la tuber\'ia: el propio informe manual de
+    error del pipeline: el propio informe manual de
     WhiteSnakeStealer discute la carga reflexiva de DLL en su texto
     narrativo, pero la fila correspondiente de \technique{T1620} faltaba
     en la tabla ATT\&CK del propio informe, de modo que la extracci\'on
     autom\'atica de verdad de referencia nunca la captur\'o. El hallazgo
-    de la tuber\'ia era correcto; se corrigi\'o el documento fuente en
-    lugar de la tuber\'ia.
+    del pipeline era correcto; se corrigi\'o el documento fuente en
+    lugar del pipeline.
   \item \textbf{Dos dejados abiertos deliberadamente}, en RoningLoader
-    (\technique{T1027}, \technique{T1497}): la evidencia de apoyo de la
-    tuber\'ia para ambos es real, pero no existe confirmaci\'on expl\'icita
+    (\technique{T1027}, \technique{T1497}): la evidencia de apoyo del
+    pipeline para ambos es real, pero no existe confirmaci\'on expl\'icita
     del analista en ning\'un lugar del texto del informe, a diferencia
     del caso de \technique{T1620} anterior. Editar la verdad de
-    referencia solo con la evidencia propia de la tuber\'ia, sin
+    referencia solo con la evidencia propia del pipeline, sin
     confirmaci\'on textual independiente, ser\'ia circular. Ambos
     permanecen como hallazgos abiertos en lugar de resolverse en un
     sentido u otro.
@@ -217,7 +217,7 @@ El resultado de esta auditor\'ia, por causa:
 Esta asimetr\'ia, un hueco de verdad de referencia corregido y dos
 discrepancias de aspecto similar dejadas abiertas, es deliberada: el
 factor distintivo es si existe confirmaci\'on independiente en el
-documento fuente, no si la evidencia propia de la tuber\'ia parece
+documento fuente, no si la evidencia propia del pipeline parece
 convincente. El resultado pr\'actico de ejecutar esta auditor\'ia se
 aprecia en la columna de corregidos: 12 de las 15 discrepancias se
 tradujeron en mejoras concretas y verificables al conjunto de reglas

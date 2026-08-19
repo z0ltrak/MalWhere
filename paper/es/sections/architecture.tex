@@ -1,17 +1,17 @@
 \section{Arquitectura del sistema}
 \label{sec:architecture}
 
-\subsection{Visi\'on general de la tuber\'ia}
+\subsection{Visi\'on general del pipeline}
 
-La Figura~\ref{fig:pipeline} muestra las cinco etapas de la
-tuber\'ia. Una muestra se analiza est\'atica y din\'amicamente en
+La Figura~\ref{fig:pipeline} muestra las cinco etapas del
+pipeline. Una muestra se analiza est\'atica y din\'amicamente en
 paralelo; ambas salidas alimentan un \emph{normalizador} que
 deduplica IOCs y agrupa las observaciones ATT\&CK por t\'ecnica; un
 \emph{mapeador} reconcilia la confianza entre fuentes y produce la
 lista final de t\'ecnicas; un \emph{exportador} convierte esa lista en
 un paquete STIX~2.1 y/o un evento MISP en vivo. Cada etapa es una
 herramienta de l\'inea de comandos independiente que opera sobre un
-esquema JSON bien definido, de modo que la tuber\'ia puede ejecutarse
+esquema JSON bien definido, de modo que el pipeline puede ejecutarse
 de principio a fin o volver a ejecutar cualquier etapa de forma
 aislada, propiedad utilizada extensamente durante la validaci\'on: un
 solo cambio en una regla de detecci\'on a menudo solo requiere volver a
@@ -29,7 +29,7 @@ $\downarrow$ \\
 $\downarrow$ \\
 \texttt{Exportador} $\rightarrow$ \texttt{paquete STIX 2.1} / \texttt{evento MISP}
 \end{tabular}
-\captionof{figure}{Etapas de la tuber\'ia y artefactos intermedios.}
+\captionof{figure}{Etapas del pipeline y artefactos intermedios.}
 \label{fig:pipeline}
 \end{center}
 
@@ -229,7 +229,7 @@ demuestra que el cargador padre presente ese comportamiento.
 
 El bucle de reenv\'io, en cambio, hace pasar a cada componente
 soltado/extra\'ido por su propia ejecuci\'on completamente
-independiente a trav\'es de la misma tuber\'ia de an\'alisis
+independiente a trav\'es del mismo pipeline de an\'alisis
 est\'atico $\rightarrow$ normalizaci\'on $\rightarrow$ mapeo, etiquetada
 con linaje expl\'icito (hash del padre, mecanismo de descubrimiento,
 marca de tiempo de descubrimiento) hacia la muestra que la produjo.
@@ -250,9 +250,9 @@ Tres componentes, divididos por dependencia y no por conveniencia:
     ligero se consider\'o y se descart\'o por ser superficie de
     mantenimiento innecesaria sin beneficio de aislamiento.
   \item \textbf{Procesador de fusi\'on} (se ejecuta dentro del
-    contenedor de la tuber\'ia, solo con biblioteca est\'andar):
+    contenedor del pipeline, solo con biblioteca est\'andar):
     localiza cada informe etiquetado con linaje que a\'un no se haya
-    normalizado ni mapeado, y lo hace pasar por la misma tuber\'ia de
+    normalizado ni mapeado, y lo hace pasar por el mismo pipeline de
     reconciliaci\'on de confianza que una muestra de nivel superior,
     escribiendo en una ruta de salida espec\'ifica del componente,
     nunca en el propio \code{attck\_mapping.json} de la muestra padre,
@@ -272,7 +272,7 @@ configuraci\'on extra\'idos sin verdad de referencia propia redactada
 individualmente. La Secci\'on~\ref{sec:evaluation} punt\'ua los tres
 componentes nombrados frente a su verdad de referencia por componente,
 ya que puntuar solo el componente padre subestima estructuralmente lo
-que encuentra la tuber\'ia completa, incluyendo el bucle de reenv\'io;
+que encuentra el pipeline completo, incluyendo el bucle de reenv\'io;
 los 23 restantes son superficie de evaluaci\'on real adicional en un
 sentido distinto (\S\ref{sec:limitations}, punto~\ref{lim:n3}), cada uno
 confirmado como productor de un resultado sensato, sin ca\'idas y
@@ -335,10 +335,10 @@ mayor cambiar\'ia.
 \label{sec:deployment}
 
 El prototipo y cada entorno de an\'alisis del que depende, no solo el
-c\'odigo propio de la tuber\'ia, est\'a definido en un \'unico
+c\'odigo propio del pipeline, est\'a definido en un \'unico
 \code{docker-compose.yml}, dividido en dos perfiles activables de forma
 independiente. El perfil \code{core} (motor de an\'alisis est\'atico,
-tuber\'ia, ATT\&CK Navigator) no necesita configuraci\'on a nivel de
+pipeline, ATT\&CK Navigator) no necesita configuraci\'on a nivel de
 host m\'as all\'a de Docker en s\'i, y es el que produjo todos los
 resultados solo-est\'aticos de esta tesis. El perfil \code{sandbox}
 (CAPE, MISP y sus servicios de apoyo: MySQL, Redis, INetSim) necesita
@@ -392,7 +392,7 @@ configuraci\'on de CAPE puedan recogerlos sin reconstruir la imagen.
 Dos decisiones de dise\~no m\'as en el fichero de composici\'on se derivan
 directamente de la postura de contenci\'on prioritaria descrita en
 \S\ref{sec:dynamic}. Primero, los servicios de backend (an\'alisis
-est\'atico, tuber\'ia, MySQL, Redis) se sit\'uan en una red Docker con
+est\'atico, pipeline, MySQL, Redis) se sit\'uan en una red Docker con
 \code{internal: true} y sin ninguna ruta hacia el host ni hacia
 internet; solo MISP y el ATT\&CK Navigator, los dos servicios que un
 humano necesita alcanzar desde un navegador, se sit\'uan en una segunda
