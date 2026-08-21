@@ -46,13 +46,6 @@ either already mitigated concretely or scoped as a precise next step
   will require repeating that same effort, since nothing in the current
   design automates it.
 
-\item \label{lim:gt-table} \textbf{Ground-truth extraction depends on
-  table completeness.}
-  A markdown-table-based extractor is only as complete as the table
-  itself, even when a report's prose says more.
-  \S\ref{sec:case-wsnake} is a concrete instance, fixed at the source
-  document rather than worked around in the extractor.
-
 \item \label{lim:containment} \textbf{Containment-first sandboxing
   limits network/C2 observation.} CAPE detonates against INetSim's simulated network with
   no real egress, by design. Several missed techniques across all three
