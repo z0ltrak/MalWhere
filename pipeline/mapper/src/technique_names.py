@@ -59,11 +59,7 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1555": "Credentials from Password Stores",
     "T1560": "Archive Collected Data",
     "T1560.001": "Archive Collected Data: Archive via Utility",
-    # T1562 "Impair Defenses" was retired in ATT&CK v19; T1562.001
-    # "Disable or Modify Tools" was promoted to become the new parent
-    # technique T1685 in its own right. Migrated 2026-08 (v14 -> v19),
-    # see static/scripts/src/detectors/attck_mapper.py's own migration
-    # comment for the full reasoning.
+    # T1562 retired in ATT&CK v19; T1562.001 promoted to standalone T1685.
     "T1685": "Disable or Modify Tools",
     "T1564": "Hide Artifacts",
     "T1564.003": "Hide Artifacts: Hidden Window",
@@ -140,6 +136,14 @@ _attck_bundle_cache = None
 
 
 def _load_bundle_names(bundle_path: Path) -> Optional[dict]:
+    """Load and cache technique_id -> name from a local ATT&CK STIX bundle.
+
+    Args:
+        bundle_path: Path to an enterprise-attack.json STIX bundle.
+
+    Returns:
+        Dict mapping technique_id -> name, or None if the bundle couldn't be loaded/parsed.
+    """
     global _attck_bundle_cache
     if _attck_bundle_cache is not None:
         return _attck_bundle_cache
@@ -159,6 +163,16 @@ def _load_bundle_names(bundle_path: Path) -> Optional[dict]:
 
 
 def resolve_technique_name(technique_id: str, attck_bundle: Optional[str] = None, verbose: bool = False) -> str:
+    """Resolve a technique ID to its name, via the 3-tier fallback described in this module's docstring.
+
+    Args:
+        technique_id: MITRE technique ID, e.g. 'T1055'.
+        attck_bundle: Optional path to a local enterprise-attack.json STIX bundle for authoritative names.
+        verbose: Log a warning when falling back to the generic placeholder.
+
+    Returns:
+        The technique's name, or 'Unknown ATT&CK technique (<id>)' if not found anywhere.
+    """
     if attck_bundle:
         bundle_path = Path(attck_bundle)
         if bundle_path.exists():

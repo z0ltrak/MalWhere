@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 End-to-end orchestrator for the MalWhere pipeline.
-TFM 2025-2026 - Universidad Complutense de Madrid
 
 Single entry point chaining every stage that, until now, had to be run by
 hand as separate commands (see README.md's "Resubmitting dropped files"
@@ -56,7 +55,15 @@ def banner(msg: str) -> None:
 def run(cmd, **kw) -> subprocess.CompletedProcess:
     """subprocess.run with echo + non-zero-exit abort, since a half-run
     pipeline with no clear indication of which stage broke is worse than
-    stopping immediately."""
+    stopping immediately.
+
+    Args:
+        cmd: Command and arguments to run.
+        **kw: Passed through to subprocess.run.
+
+    Returns:
+        The completed process.
+    """
     log("+ " + " ".join(str(c) for c in cmd))
     result = subprocess.run(cmd, **kw)
     if result.returncode != 0:
@@ -66,19 +73,54 @@ def run(cmd, **kw) -> subprocess.CompletedProcess:
 
 
 def run_capture(cmd, **kw) -> str:
+    """Run a command via run() and return its stdout.
+
+    Args:
+        cmd: Command and arguments to run.
+        **kw: Passed through to run().
+
+    Returns:
+        The command's stdout.
+    """
     result = run(cmd, capture_output=True, text=True, **kw)
     return result.stdout
 
 
 def compose(*args, **kw):
+    """Run `docker compose -f COMPOSE_FILE <args>` via run().
+
+    Args:
+        *args: Arguments to pass to `docker compose`.
+        **kw: Passed through to run().
+
+    Returns:
+        The completed process.
+    """
     return run(["docker", "compose", "-f", str(COMPOSE_FILE)] + list(args), cwd=DOCKER_DIR, **kw)
 
 
 def compose_capture(*args, **kw) -> str:
+    """Run `docker compose -f COMPOSE_FILE <args>` via run_capture().
+
+    Args:
+        *args: Arguments to pass to `docker compose`.
+        **kw: Passed through to run_capture().
+
+    Returns:
+        The command's stdout.
+    """
     return run_capture(["docker", "compose", "-f", str(COMPOSE_FILE)] + list(args), cwd=DOCKER_DIR, **kw)
 
 
 def load_env_file(path: Path) -> dict:
+    """Parse a simple KEY=VALUE .env file.
+
+    Args:
+        path: Path to the .env file; missing file returns an empty dict.
+
+    Returns:
+        Dict of parsed key/value pairs.
+    """
     env = {}
     if not path.exists():
         return env
@@ -92,6 +134,14 @@ def load_env_file(path: Path) -> dict:
 
 
 def container_running(name: str) -> bool:
+    """Check if a docker-compose service is currently running.
+
+    Args:
+        name: Service name.
+
+    Returns:
+        True if the service appears in the running-services list.
+    """
     out = run_capture(
         ["docker", "compose", "-f", str(COMPOSE_FILE), "ps", "--status", "running", "--format", "{{.Service}}"],
         cwd=DOCKER_DIR,
@@ -100,6 +150,11 @@ def container_running(name: str) -> bool:
 
 
 def ensure_containers(need_dynamic: bool) -> None:
+    """Start (if not already running) the static container, and the sandbox containers if needed.
+
+    Args:
+        need_dynamic: Also ensure inetsim/cape are up and wait for cape.service to become active.
+    """
     banner("Ensuring required containers are up")
     if not container_running("static"):
         compose("--profile", "core", "up", "-d", "static")
@@ -129,6 +184,12 @@ def ensure_containers(need_dynamic: bool) -> None:
 
 
 def run_static_analysis(exe_container_path: str, family: str) -> None:
+    """Run static analysis on the sample inside the `static` container.
+
+    Args:
+        exe_container_path: Sample path as seen inside the container (/samples/...).
+        family: Family label, used as the output subdirectory under /reports.
+    """
     banner(f"Static analysis: {exe_container_path}")
     compose("exec", "static", "python3", "/scripts/analyze.py",
             "--sample", exe_container_path, "--output", f"/reports/{family}", "--verbose")
@@ -138,7 +199,15 @@ def find_static_report(family: str, sha256: str) -> Path:
     """analyze.py names its output after the input file's stem, not a
     fixed name -- our samples are always named by hash already, so this
     just locates whichever *_static.json landed in the family's report
-    dir, rather than assuming one specific filename."""
+    dir, rather than assuming one specific filename.
+
+    Args:
+        family: Family label, used to locate static/reports/<family>/.
+        sha256: Expected sample hash, used to disambiguate multiple reports.
+
+    Returns:
+        Path to the matching static report. Exits the process if none is found.
+    """
     reports_dir = REPO_ROOT / "static" / "reports" / family
     candidates = sorted(reports_dir.glob("*_static.json"))
     for c in candidates:
@@ -154,6 +223,12 @@ def find_static_report(family: str, sha256: str) -> Path:
 
 
 def get_env_for_cape() -> dict:
+    """Load docker/.env and verify the CAPE-required libvirt/guest-VM variables are set.
+
+    Returns:
+        Dict with at least LIBVIRT_GATEWAY, LIBVIRT_BRIDGE, and GUEST_VM_IP.
+        Exits the process if any are missing.
+    """
     env = load_env_file(DOCKER_DIR / ".env")
     required = ("LIBVIRT_GATEWAY", "LIBVIRT_BRIDGE", "GUEST_VM_IP")
     missing = [k for k in required if not env.get(k)]
@@ -165,6 +240,16 @@ def get_env_for_cape() -> dict:
 
 
 def submit_to_cape(exe_container_path: str, analysis_timeout: int, env: dict) -> int:
+    """Submit the sample to CAPE for detonation via submit.py, run as the cape user.
+
+    Args:
+        exe_container_path: Sample path as seen inside the cape container (/samples/...).
+        analysis_timeout: CAPE detonation window in seconds.
+        env: Dict with LIBVIRT_GATEWAY, LIBVIRT_BRIDGE, GUEST_VM_IP (from get_env_for_cape).
+
+    Returns:
+        The new CAPE task ID. Exits the process if the ID can't be parsed from submit.py's output.
+    """
     banner(f"Submitting to CAPE: {exe_container_path}")
     whitelist = ",".join(("LIBVIRT_GATEWAY", "LIBVIRT_BRIDGE", "GUEST_VM_IP"))
     # `su - cape` drops the container's own environment (where these three
@@ -194,6 +279,14 @@ def submit_to_cape(exe_container_path: str, analysis_timeout: int, env: dict) ->
 
 
 def cape_task_status(task_id: int) -> str:
+    """Query CAPE's REST API for a task's current status.
+
+    Args:
+        task_id: CAPE task ID.
+
+    Returns:
+        The task's status string, or '' if the API response wasn't valid JSON.
+    """
     out = run_capture(["curl", "-s", f"{CAPE_API}/tasks/status/{task_id}/"])
     try:
         return json.loads(out).get("data", "")
@@ -202,6 +295,13 @@ def cape_task_status(task_id: int) -> str:
 
 
 def wait_for_cape_task(task_id: int, timeout_min: int, poll_sec: int) -> None:
+    """Poll a CAPE task's status until it reaches a terminal state or times out.
+
+    Args:
+        task_id: CAPE task ID to poll.
+        timeout_min: Maximum minutes to wait before giving up.
+        poll_sec: Seconds between status checks.
+    """
     banner(f"Waiting for CAPE task #{task_id} (timeout {timeout_min}m, polling every {poll_sec}s)")
     deadline = time.time() + timeout_min * 60
     last_status = None
@@ -221,6 +321,16 @@ def wait_for_cape_task(task_id: int, timeout_min: int, poll_sec: int) -> None:
 
 
 def parse_dynamic_report(task_id: int, family: str, skip_resubmit: bool) -> Path:
+    """Parse a completed CAPE task into dynamic_report.json, optionally queuing dropped files for resubmission.
+
+    Args:
+        task_id: Completed CAPE task ID to parse.
+        family: Family label, used as the output subdirectory under dynamic/reports.
+        skip_resubmit: If True, don't pass --resubmit-dir (skip queuing dropped files).
+
+    Returns:
+        Path to the written dynamic_report.json.
+    """
     banner(f"Parsing CAPE task #{task_id} into dynamic_report.json")
     out_dir = REPO_ROOT / "dynamic" / "reports" / family
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -235,16 +345,28 @@ def parse_dynamic_report(task_id: int, family: str, skip_resubmit: bool) -> Path
 
 
 def process_resubmissions_static() -> None:
+    """Run the resubmission loop's static half: analyze every queued dropped file inside the `static` container."""
     banner("Resubmission loop, static half (malwhere-static)")
     compose("exec", "static", "python3", "/scripts/process_resubmissions.py", "--verbose")
 
 
 def process_resubmissions_merge() -> None:
+    """Run the resubmission loop's merge half: normalize + map each dropped file's static report on the host."""
     banner("Resubmission loop, merge half (normalize + map each dropped file)")
     run([sys.executable, str(REPO_ROOT / "pipeline" / "process_resubmissions.py"), "--verbose"])
 
 
 def normalize_and_map(family: str, static_report: Path, dynamic_report: Path | None) -> Path:
+    """Normalize the primary sample's static+dynamic reports and map them to ATT&CK techniques.
+
+    Args:
+        family: Family label, used for the output directories.
+        static_report: Path to the sample's static analysis report.
+        dynamic_report: Path to the sample's dynamic_report.json, or None if dynamic analysis was skipped.
+
+    Returns:
+        Path to the written attck_mapping.json.
+    """
     banner(f"Normalizing + mapping the primary sample ({family})")
     iocs_dir = REPO_ROOT / "results" / family / "iocs"
     attck_dir = REPO_ROOT / "results" / family / "attck"
@@ -263,6 +385,11 @@ def normalize_and_map(family: str, static_report: Path, dynamic_report: Path | N
 
 
 def find_venv_python() -> str:
+    """Find the repo's .venv Python, for STIX/MISP export (needs stix2/pymisp).
+
+    Returns:
+        Path to .venv/bin/python3 if it exists, else the current interpreter (with a warning logged).
+    """
     venv_python = REPO_ROOT / ".venv" / "bin" / "python3"
     if venv_python.exists():
         return str(venv_python)
@@ -273,6 +400,15 @@ def find_venv_python() -> str:
 
 
 def export_stix(family: str, mapping_path: Path) -> Path:
+    """Export the reconciled ATT&CK mapping as a STIX 2.1 bundle.
+
+    Args:
+        family: Family label, used for the output directory.
+        mapping_path: Path to the family's attck_mapping.json.
+
+    Returns:
+        Path to the written bundle.stix2.
+    """
     banner(f"Exporting STIX 2.1 bundle ({family})")
     stix_dir = REPO_ROOT / "results" / family / "stix"
     run([
@@ -283,6 +419,13 @@ def export_stix(family: str, mapping_path: Path) -> Path:
 
 
 def export_misp(family: str, mapping_path: Path, publish: bool) -> None:
+    """Push the reconciled ATT&CK mapping into MISP as an event.
+
+    Args:
+        family: Family label, used in the MISP event's title.
+        mapping_path: Path to the family's attck_mapping.json.
+        publish: Publish the event rather than leaving it as a draft.
+    """
     banner(f"Pushing to MISP ({family})")
     cmd = [
         find_venv_python(), str(REPO_ROOT / "pipeline" / "exporter" / "export_misp.py"),
@@ -294,6 +437,11 @@ def export_misp(family: str, mapping_path: Path, publish: bool) -> None:
 
 
 def main() -> int:
+    """Run the full MalWhere pipeline end-to-end for one sample: static -> dynamic -> resubmission -> ATT&CK mapping -> STIX/MISP export.
+
+    Returns:
+        Process exit code (0 on success, 1 on a handled error; unhandled failures exit via sys.exit in helpers).
+    """
     parser = argparse.ArgumentParser(
         description="Run the full MalWhere pipeline end-to-end: static -> dynamic -> "
                     "resubmission -> ATT&CK mapping -> STIX/MISP export.",

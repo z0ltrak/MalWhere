@@ -20,16 +20,13 @@ _FILENAME_EXTENSIONS = (
 
 # Real domains that show up as normal Windows/sandbox housekeeping rather
 # than anything the sample itself chose to contact: NCSI connectivity
-# checks, certificate revocation/OCSP lookups, time sync (dynamic
-# detonation), and Authenticode certificate-chain infrastructure (CRL/OCSP/
-# repository endpoints embedded in any code-signed PE's certificate table --
-# static extraction). Reporting these as IOCs is misleading -- a STIX/MISP
-# consumer has no way to tell them apart from an actual C2 domain
-# otherwise. Kept deliberately small and exact/suffix-matched (not a
-# general reputation allowlist): only entries confirmed to be OS/sandbox/
-# PKI-generated, not "probably benign" guesses about the sample's own
-# behavior. The CA entries were found auditing RoningLoader's 26 resubmitted
-# components -- every code-signed one carried its signer's CRL/OCSP chain.
+# checks, certificate revocation/OCSP lookups, time sync, and Authenticode
+# certificate-chain infrastructure (CRL/OCSP endpoints embedded in any
+# code-signed PE's certificate table). Reporting these as IOCs is
+# misleading -- a STIX/MISP consumer can't tell them apart from a real C2
+# domain otherwise. Kept small and exact/suffix-matched (not a general
+# reputation allowlist): only entries confirmed to be OS/sandbox/PKI-
+# generated, not guesses about the sample's own behavior.
 _BENIGN_INFRASTRUCTURE = (
     "www.msftconnecttest.com",
     "msftconnecttest.com",
@@ -60,22 +57,16 @@ _BENIGN_INFRASTRUCTURE = (
 
 
 # IPs with no attached hostname (so the domain-based check above can't
-# catch them) that showed up identically across all three unrelated
-# families' detonations -- confirmed via ipinfo.io ASN lookup, not
-# guessed: every one resolves to Microsoft Corporation (AS8075/AS8068,
-# the Azure AD / Windows telemetry range) or Akamai (AS20940, which
-# fronts Windows Update/Defender cloud traffic), always on port 443, never
-# tied to a domain the sample itself looked up. A ransomware family, an
-# infostealer, and a loader do not coincidentally share C2 infrastructure
-# -- this is the sandbox VM's own background OS traffic leaking into
-# CAPE's whole-VM PCAP capture (CAPE has no per-process network
-# attribution), not anything the malware chose to contact. Deliberately
-# does NOT include the Azure Front Door IPs behind
-# 90f364fdc014e0961d460c2d63103332.afd.footprintdns.com (also Microsoft
-# ASN) -- that hostname is unexplained and domain fronting through a
-# major CDN is a real technique, so ASN alone isn't enough evidence there;
-# only entries with zero ambiguity (no hostname, cross-sample repeat) are
-# listed here.
+# catch them) that showed up identically across multiple unrelated
+# families' detonations -- confirmed via ASN lookup, always on port 443,
+# never tied to a domain the sample itself looked up. Independent
+# malware families do not coincidentally share C2 infrastructure; this
+# is the sandbox VM's own background OS traffic leaking into CAPE's
+# whole-VM PCAP capture (CAPE has no per-process network attribution).
+# Excludes IPs behind an unexplained/unresolvable hostname on the same
+# ASN, since domain fronting through a major CDN is a real technique --
+# only entries with zero ambiguity (no hostname, or a self-identifying
+# reverse-DNS name, plus cross-sample repeat) are listed here.
 _BENIGN_INFRASTRUCTURE_IPS = frozenset({
     # Microsoft Corporation (AS8075/AS8068) -- Azure AD / Teams telemetry
     "108.140.32.194", "52.113.196.254",
@@ -85,48 +76,65 @@ _BENIGN_INFRASTRUCTURE_IPS = frozenset({
     # Akamai International B.V. (AS20940) -- Windows Update/Defender CDN
     "96.16.86.160", "96.16.86.208", "96.16.86.210", "96.16.86.212",
     "96.16.86.214", "96.16.86.215", "96.16.86.219",
-    # Microsoft Corporation (AS8075) -- Azure Front Door / msedge.net, found
-    # auditing WhiteSnakeStealer post-migration (2026-08). Unlike the
-    # unexplained-hostname Azure Front Door case deliberately excluded
-    # above, these resolve to self-identifying msedge.net names (confirmed
-    # via reverse DNS, not guessed), removing the domain-fronting ambiguity
-    # that exclusion was about.
+    # Microsoft Corporation (AS8075) -- Azure Front Door, resolves to
+    # self-identifying msedge.net names (confirmed via reverse DNS).
     "104.212.67.104",  # chi26r9c.msedge.net
     "104.212.67.66",   # bna30r9a.msedge.net
-    # Cloudflare, Inc. (AS13335), no hostname -- the two remaining cases
-    # from the same 2026-08 audit, resolved with stronger evidence than
-    # ASN+repetition alone: cross-referenced CAPE's raw per-process API
-    # call trace (behavior.processes[].calls), not just the summarized
-    # network.hosts capture. Neither IP appears in the sample process's own
-    # connect() calls (38 checked, all 29 genuine C2 addresses, zero
-    # matches), nor in any other monitored process's calls at all -- only
-    # in the whole-VM packet capture, meaning no hooked process is
-    # responsible for either connection, the same "sandbox VM's own
-    # traffic" signature as the Microsoft/Akamai entries above. Neither IP
-    # appears as a string in either binary (wsnake, roning) or either
-    # manual RE report, ruling out an embedded/hardcoded destination the
-    # config-recovery module simply hasn't decoded yet. 172.64.154.167
-    # additionally repeats identically across RoningLoader and
-    # WhiteSnakeStealer, the same cross-family test used above.
+    # Cloudflare, Inc. (AS13335), no hostname -- confirmed absent from
+    # every monitored process's own API call trace (only present in the
+    # whole-VM capture) and absent as a string in either sample binary
+    # or manual RE report, ruling out an embedded destination.
     "172.64.154.167",
     "104.18.33.89",
 })
 
 
 def _looks_like_filename(value: str) -> bool:
+    """Check if a value looks like a filename rather than a domain.
+
+    Args:
+        value: Candidate domain string.
+
+    Returns:
+        True if value ends with a known non-domain extension.
+    """
     return value.lower().endswith(_FILENAME_EXTENSIONS)
 
 
 def _is_benign_infrastructure(value: str) -> bool:
+    """Check if a domain is known OS/sandbox/PKI housekeeping rather than a real IOC.
+
+    Args:
+        value: Candidate domain string.
+
+    Returns:
+        True if value exactly matches or is a subdomain of a known benign entry.
+    """
     value_lower = value.lower()
     return any(value_lower == b or value_lower.endswith("." + b) for b in _BENIGN_INFRASTRUCTURE)
 
 
 def _is_benign_infrastructure_ip(value: str) -> bool:
+    """Check if an IP is known sandbox-VM background traffic rather than a real IOC.
+
+    Args:
+        value: Candidate IP string.
+
+    Returns:
+        True if value is in the confirmed-benign IP set.
+    """
     return value in _BENIGN_INFRASTRUCTURE_IPS
 
 
 def _is_valid_ip(value: str) -> bool:
+    """Check if a string is a valid IP address.
+
+    Args:
+        value: Candidate IP string.
+
+    Returns:
+        True if value parses as an IPv4/IPv6 address.
+    """
     try:
         ipaddress.ip_address(value)
         return True
@@ -137,6 +145,16 @@ def _is_valid_ip(value: str) -> bool:
 def merge_hashes(
     static_report: Dict[str, Any], dynamic_report: Optional[Dict[str, Any]]
 ) -> List[HashEntry]:
+    """Merge the primary sample's static/dynamic hashes with any dynamically dropped files.
+
+    Args:
+        static_report: Static analysis report dict.
+        dynamic_report: Curated dynamic_report.json dict, or None if dynamic analysis was skipped.
+
+    Returns:
+        One HashEntry per hash: the primary sample (static, and dynamic if
+        available) plus every dynamically dropped/CAPE-payload file.
+    """
     entries: List[HashEntry] = []
 
     entries.append(
@@ -190,6 +208,15 @@ def merge_hashes(
 def merge_network_iocs(
     static_config: Dict[str, Any], dynamic_report: Optional[Dict[str, Any]]
 ) -> Tuple[Dict[str, List[TaggedValue]], List[DiscardedEntry]]:
+    """Merge static/dynamic network IOCs, tagging each by source and filtering known benign infrastructure.
+
+    Args:
+        static_config: Static analysis config dict (from ConfigExtractor).
+        dynamic_report: Curated dynamic_report.json dict, or None if dynamic analysis was skipped.
+
+    Returns:
+        A tuple of (deduplicated IOCs by category, discarded entries with reasons).
+    """
     discarded: List[DiscardedEntry] = []
 
     domains: Dict[str, TaggedValue] = {}
@@ -198,6 +225,13 @@ def merge_network_iocs(
     emails: Dict[str, TaggedValue] = {}
 
     def add(bucket: Dict[str, TaggedValue], value: str, source: str) -> None:
+        """Add value to bucket (keyed lowercase, deduplicated), tagging it with source.
+
+        Args:
+            bucket: Dict of lowercase value -> TaggedValue, mutated in place.
+            value: Raw IOC value to add.
+            source: 'static' or 'dynamic', appended to the entry's sources.
+        """
         value = value.strip()
         if not value:
             return
@@ -277,12 +311,10 @@ def merge_network_iocs(
         for entry in net.get("hosts", []) or []:
             ip = entry.get("ip", "")
             hostname = entry.get("hostname", "")
-            # CAPE's network.hosts list is a whole-VM connection dump with
-            # no per-process attribution, so the same benign-infrastructure
-            # domain can show up here again under a *different* resolved IP
-            # than the one already caught in the domains loop above (e.g. a
-            # CDN-backed host resolving to several edge IPs) -- check the
-            # hostname here too, not just the domains loop.
+            # CAPE's network.hosts is a whole-VM dump with no per-process
+            # attribution, so the same benign domain can resolve to a
+            # different IP here than in the domains loop above -- check
+            # the hostname here too.
             if hostname and _is_benign_infrastructure(hostname):
                 discarded.append(
                     DiscardedEntry(
@@ -324,6 +356,15 @@ def merge_network_iocs(
 def merge_host_iocs(
     static_config: Dict[str, Any], dynamic_report: Optional[Dict[str, Any]]
 ) -> Dict[str, List[Dict[str, Any]]]:
+    """Merge static/dynamic host IOCs (registry paths, file paths, mutexes, keys, patterns), tagged by source.
+
+    Args:
+        static_config: Static analysis config dict (from ConfigExtractor).
+        dynamic_report: Curated dynamic_report.json dict, or None if dynamic analysis was skipped.
+
+    Returns:
+        Dict with registry_paths, file_paths, mutexes, encryption_keys, and patterns lists.
+    """
     registry_paths: Dict[str, TaggedValue] = {}
     file_paths: Dict[str, TaggedValue] = {}
     mutexes: Dict[str, TaggedValue] = {}
@@ -331,6 +372,13 @@ def merge_host_iocs(
     patterns: Dict[str, TaggedValue] = {}
 
     def add(bucket: Dict[str, TaggedValue], value: str, source: str) -> None:
+        """Add value to bucket (keyed lowercase, deduplicated), tagging it with source.
+
+        Args:
+            bucket: Dict of lowercase value -> TaggedValue, mutated in place.
+            value: Raw IOC value to add.
+            source: 'static' or 'dynamic', appended to the entry's sources.
+        """
         value = str(value).strip()
         if not value:
             return

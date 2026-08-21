@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Ground Truth Extractor for the MalWhere Evaluation
-TFM 2025-2026 - Universidad Complutense de Madrid
 
 Extracts the manually-validated ATT&CK technique table from a
 manual_*_report.md report into structured ground_truth/<family>.json,
@@ -18,6 +17,11 @@ from src.ground_truth_parser import extract_ground_truth
 
 
 def main():
+    """Parse a manual analysis report's ATT&CK table into ground_truth/<family>.json.
+
+    Returns:
+        Process exit code (always 0; failures exit early via sys.exit).
+    """
     parser = argparse.ArgumentParser(
         description="Ground Truth Extractor for the MalWhere Evaluation"
     )

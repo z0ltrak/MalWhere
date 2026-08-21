@@ -15,10 +15,17 @@ _TIER_SCORE = {"high": 100, "medium": 60, "low": 30}
 
 
 def base_technique(technique_id: str) -> str:
-    """Strips the sub-technique suffix: T1547.001 -> T1547. Same definition
-    evaluation/scripts/src/matcher.py already uses for family-level
-    matching -- apply_cross_level_corroboration below extends that same
-    principle into the confidence model itself, not just evaluation.
+    """Strips the sub-technique suffix: T1547.001 -> T1547.
+
+    Same definition evaluation/scripts/src/matcher.py uses for family-
+    level matching; apply_cross_level_corroboration below extends that
+    principle into the confidence model itself.
+
+    Args:
+        technique_id: A technique ID, with or without a sub-technique suffix.
+
+    Returns:
+        The base (parent) technique ID.
     """
     return technique_id.split(".")[0]
 
@@ -32,6 +39,15 @@ CONFIDENCE_MODEL_RULE = (
 
 
 def _best(observations: List[Dict[str, Any]], source: str) -> Optional[str]:
+    """Get the highest confidence tier among one source's observations.
+
+    Args:
+        observations: Per-finding observations, each with 'source' and 'confidence'.
+        source: Source to filter to ('static' or 'dynamic').
+
+    Returns:
+        The best tier ('high'/'medium'/'low'), or None if source has no observations.
+    """
     tiers = [o["confidence"] for o in observations if o["source"] == source]
     if not tiers:
         return None
@@ -39,7 +55,14 @@ def _best(observations: List[Dict[str, Any]], source: str) -> Optional[str]:
 
 
 def reconcile(observations: List[Dict[str, Any]]) -> Tuple[str, int, Optional[str], Optional[str], List[str]]:
-    """Returns (final_confidence, confidence_score, static_best, dynamic_best, sources)."""
+    """Reconcile one technique's static+dynamic observations into a final confidence tier.
+
+    Args:
+        observations: Per-finding observations, each with 'source' and 'confidence'.
+
+    Returns:
+        (final_confidence, confidence_score, static_best, dynamic_best, sources).
+    """
     static_best = _best(observations, "static")
     dynamic_best = _best(observations, "dynamic")
     sources = sorted({o["source"] for o in observations})
@@ -55,6 +78,14 @@ def reconcile(observations: List[Dict[str, Any]]) -> Tuple[str, int, Optional[st
 
 
 def _group_best_tier(tiers: List[Optional[str]]) -> Optional[str]:
+    """Get the highest confidence tier among a sibling group's per-member tiers.
+
+    Args:
+        tiers: Each sibling's static_best_confidence or dynamic_best_confidence (may include None).
+
+    Returns:
+        The best non-None tier, or None if all are None.
+    """
     present = [t for t in tiers if t is not None]
     if not present:
         return None
@@ -62,30 +93,23 @@ def _group_best_tier(tiers: List[Optional[str]]) -> Optional[str]:
 
 
 def apply_cross_level_corroboration(mapped: List[Any]) -> None:
-    """Mutates `mapped` (a list of MappedTechnique) in place.
+    """Mutate `mapped` (a list of MappedTechnique) in place, promoting siblings that jointly cover both sources.
 
-    reconcile() above only ever sees observations tagged with ONE exact
-    technique_id -- a dynamic signature reporting the parent T1547 and a
-    static import rule reporting the specific T1547.001 for what is
-    clearly the same real persistence mechanism never corroborate each
-    other, because they're grouped into two entirely separate
-    TechniqueObservations upstream (technique_grouper.py groups by exact
-    ID string). evaluation/scripts/src/matcher.py already treats T1547
-    and T1547.001 as equivalent for scoring against ground truth (its own
-    base_technique() helper) -- this brings the confidence model itself
-    into line with that same principle, rather than leaving an
-    inconsistency between how a technique is scored and how it's
-    evaluated.
+    reconcile() above only sees observations tagged with one exact
+    technique_id, so a dynamic signature reporting parent T1547 and a
+    static rule reporting sub-technique T1547.001 for the same real
+    mechanism never corroborate each other (technique_grouper.py groups
+    by exact ID string upstream). matcher.py already treats T1547 and
+    T1547.001 as equivalent for scoring against ground truth; this brings
+    the confidence model itself into line with that same principle.
 
     For each base-technique group (siblings under the same parent ID)
-    where the group's own static_best/dynamic_best cover BOTH sources
-    somewhere among its members, any individual member missing one side
-    gets that side's group-best borrowed in and final_confidence
-    recomputed with the same "high unless both low" rule reconcile() uses
-    -- never invented, always traceable to a real sibling technique's own
-    observations, and only ever applied when it actually changes the
-    verdict (an entry already independently high stays as it was, not
-    re-labeled as cross-level-corroborated when it didn't need to be).
+    where static_best/dynamic_best jointly cover both sources somewhere
+    among its members, any individual member missing one side borrows
+    that side's group-best and recomputes final_confidence with
+    reconcile()'s "high unless both low" rule -- never invented, always
+    traceable to a real sibling's own observations, and only applied
+    when it actually changes the verdict.
     """
     groups: Dict[str, List[Any]] = {}
     for t in mapped:

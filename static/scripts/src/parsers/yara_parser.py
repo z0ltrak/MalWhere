@@ -137,7 +137,12 @@ class YaraParser:
             self.rules = None
 
     def scan(self) -> Dict[str, Any]:
-        """Scan the file with YARA rules."""
+        """Scan the file with YARA rules.
+
+        Returns:
+            Dict with matches, matched_rules, packer_detected, packers,
+            and attck_mapping (added for rules with a technique mapping).
+        """
         result = {
             'matches': [],
             'matched_rules': [],
@@ -161,7 +166,6 @@ class YaraParser:
                 })
                 result['matched_rules'].append(rule_name)
 
-                # Check for packer detection
                 if 'packed' in rule_name.lower():
                     result['packer_detected'] = True
                     result['packers'].append({

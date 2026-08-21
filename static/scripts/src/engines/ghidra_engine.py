@@ -1,4 +1,4 @@
-# src/engines/ghidra_engine.py
+"""Ghidra headless analysis engine for native PE/ELF files."""
 
 import subprocess
 import json
@@ -16,6 +16,12 @@ class GhidraEngine(AnalysisEngine):
     SUPPORTED_TYPES = ['pe_native', 'pe_file', 'elf_file']
 
     def __init__(self, verbose: bool = False, timeout: int = 600):
+        """Initialize the engine and locate the ghidra-headless binary, if installed.
+
+        Args:
+            verbose: Enable verbose progress logging.
+            timeout: Timeout in seconds for the ghidra-headless subprocess.
+        """
         self.verbose = verbose
         self.timeout = timeout
         self.ghidra_bin = shutil.which('ghidra-headless')
@@ -23,13 +29,30 @@ class GhidraEngine(AnalysisEngine):
         self.script_dir = Path(__file__).parent.parent / 'ghidra_scripts'
 
     def supports_file(self, file_type: str) -> bool:
+        """Check if this engine supports the given file type.
+
+        Args:
+            file_type: Detected file type string.
+
+        Returns:
+            True if file_type is supported and ghidra-headless is installed.
+        """
         return file_type in self.SUPPORTED_TYPES and self.ghidra_bin is not None
 
     def get_name(self) -> str:
         return "Ghidra Headless"
 
     def analyze(self, file_path: Path, depth: int = 0) -> StaticReport:
-        """Run Ghidra analysis."""
+        """Run Ghidra headless analysis on a native PE/ELF file.
+
+        Args:
+            file_path: Path to the file to analyze.
+            depth: Current recursion depth, used only for logging.
+
+        Returns:
+            The completed StaticReport, or an empty report tagged with an
+            error if Ghidra isn't available, times out, or fails.
+        """
         self._log(f"Running Ghidra analysis on {file_path.name} (depth {depth})")
 
         if not self.ghidra_bin:
@@ -66,7 +89,6 @@ class GhidraEngine(AnalysisEngine):
                     self.errors.append(f"Ghidra failed: {proc.stderr[:200]}")
                     return self._create_empty_report(file_path, "Ghidra analysis failed")
 
-                # Read results
                 output_file = Path('/workspace/ghidra_results.json')
                 if output_file.exists():
                     with open(output_file) as f:
@@ -258,14 +280,20 @@ if __name__ == '__main__':
         script_file.write_text(script_content)
 
     def _build_report_from_ghidra(self, file_path: Path, data: Dict[str, Any]) -> StaticReport:
-        """Build StaticReport from Ghidra results."""
+        """Build a StaticReport from the Ghidra post-script's JSON results.
+
+        Args:
+            file_path: Path to the analyzed file, for basic file info.
+            data: Parsed ghidra_results.json content.
+
+        Returns:
+            A StaticReport with strings, exports, config IOCs, and discovered keys.
+        """
         from ..models.report import StaticReport, StringInfo, PackerInfo, IndicatorInfo, YaraResult, EntropyAnalysis
 
-        # Extract strings
         strings = data.get('strings', [])
         standard_strings = [s['string'] for s in strings if len(s.get('string', '')) >= 4]
 
-        # Extract keys
         discovered_keys = []
         for item in data.get('xor_decrypted', []):
             discovered_keys.append({
@@ -286,7 +314,6 @@ if __name__ == '__main__':
                 'confidence': 'high'
             })
 
-        # Extract C2
         config = {
             'ips': [],
             'domains': [],
@@ -298,7 +325,6 @@ if __name__ == '__main__':
             elif item['type'] == 'domain':
                 config['domains'].append(item['value'])
 
-        # Build exports
         exports = []
         for exp in data.get('exports', []):
             exports.append({
@@ -324,6 +350,15 @@ if __name__ == '__main__':
         )
 
     def _create_empty_report(self, file_path: Path, error: str) -> StaticReport:
+        """Build a minimal StaticReport carrying only basic file info and an error.
+
+        Args:
+            file_path: Path to the file, for basic file info.
+            error: Error message to record.
+
+        Returns:
+            A StaticReport with file_type='unknown' and no analysis content.
+        """
         from ..models.report import StaticReport
         return StaticReport(
             filename=file_path.name,

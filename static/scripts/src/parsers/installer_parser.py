@@ -13,6 +13,12 @@ class InstallerParser:
     """Parse and extract various installer formats."""
 
     def __init__(self, file_path: Path, timeout: int = 120):
+        """Initialize the installer parser.
+
+        Args:
+            file_path: Path to the installer file.
+            timeout: Timeout in seconds for extraction subprocesses.
+        """
         self.file_path = file_path
         self.timeout = timeout
         self.errors: List[str] = []
@@ -24,12 +30,10 @@ class InstallerParser:
         """Parse installer and return metadata."""
         try:
             with open(self.file_path, 'rb') as f:
-                # Read more data for better detection
                 self.data = f.read(1048576)  # 1MB
         except Exception:
             self.errors.append("Failed to read file")
 
-        # Detect installer type
         installer_type = self._detect_type()
         self.installer_type = installer_type
 
@@ -40,8 +44,12 @@ class InstallerParser:
         }
 
     def extract_all(self) -> List[Dict[str, Any]]:
-        """Extract all files from the installer."""
-        # Force detection by reading the file directly
+        """Extract all files from the installer.
+
+        Returns:
+            One dict per extracted file (name, path, size, type), or
+            empty if the installer type couldn't be detected or extraction failed.
+        """
         self.installer_type = self._detect_type()
 
         if not self.installer_type:
@@ -59,19 +67,20 @@ class InstallerParser:
             return []
 
     def _detect_type(self) -> Optional[str]:
-        """Detect installer type with more thorough reading."""
+        """Detect installer type with more thorough reading.
+
+        Returns:
+            'nsis_installer', 'inno_installer', or 'msi_installer', or None if undetected.
+        """
         try:
-            # Read directly from file - this is more reliable
             with open(self.file_path, 'rb') as f:
                 file_data = f.read(1048576)  # 1MB
         except Exception as e:
             self.errors.append(f"Failed to read file for detection: {e}")
             return None
 
-        # Convert to string for searching
         data_str = file_data.decode('utf-8', errors='ignore')
 
-        # NSIS - check for signatures that might be far into the file
         nsis_signatures = [
             'Nullsoft.NSIS.exehead',
             'NullsoftInst',
@@ -83,29 +92,29 @@ class InstallerParser:
                 self.errors.append(f"Detected NSIS installer: {sig}")
                 return 'nsis_installer'
 
-        # Also check for the NSIS manifest XML pattern
         if '<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">' in data_str:
             if 'Nullsoft.NSIS' in data_str or 'Nullsoft Install System' in data_str:
                 self.errors.append("Detected NSIS installer via manifest")
                 return 'nsis_installer'
 
-        # Inno Setup
         if 'Inno Setup' in data_str:
             return 'inno_installer'
 
-        # MSI
         if self.file_path.suffix.lower() == '.msi':
             return 'msi_installer'
 
         return None
 
     def _extract_nsis(self) -> List[Dict[str, Any]]:
-        """Extract NSIS installer."""
+        """Extract an NSIS installer via 7z, 7za, or manual extraction as fallbacks.
+
+        Returns:
+            One dict per extracted file.
+        """
         from .nsis_parser import NSISParser
 
         nsis_parser = NSISParser(self.file_path, self.timeout)
 
-        # Check if 7z is available
         if shutil.which('7z'):
             self.errors.append("Using 7z for NSIS extraction")
             files = nsis_parser.extract_all()
@@ -114,7 +123,6 @@ class InstallerParser:
                 self.extracted_files = files
                 return files
 
-        # Try 7za
         if shutil.which('7za'):
             self.errors.append("Using 7za for NSIS extraction")
             files = nsis_parser._extract_with_7za()
@@ -123,7 +131,6 @@ class InstallerParser:
                 self.extracted_files = files
                 return files
 
-        # Try manual extraction as fallback
         self.errors.append("7z not found, using manual extraction")
         files = nsis_parser._extract_nsis_manually()
         self.errors.extend(nsis_parser.get_errors())
@@ -131,7 +138,11 @@ class InstallerParser:
         return files
 
     def _extract_inno(self) -> List[Dict[str, Any]]:
-        """Extract Inno Setup installer."""
+        """Extract an Inno Setup installer via innoextract.
+
+        Returns:
+            One dict per extracted file, or empty if innoextract is unavailable or fails.
+        """
         self.errors.append("Extracting Inno Setup installer...")
 
         if shutil.which('innoextract'):
@@ -151,7 +162,6 @@ class InstallerParser:
                     shutil.rmtree(temp_dir, ignore_errors=True)
                     return []
 
-                # Collect extracted files
                 files = []
                 for file_path in temp_dir.rglob('*'):
                     if file_path.is_file():
@@ -175,14 +185,17 @@ class InstallerParser:
         return []
 
     def _extract_msi(self) -> List[Dict[str, Any]]:
-        """Extract MSI installer."""
+        """Extract an MSI installer via msiexec's administrative install.
+
+        Returns:
+            One dict per extracted file, or empty if msiexec is unavailable or fails.
+        """
         self.errors.append("Extracting MSI installer...")
 
         if shutil.which('msiexec'):
             temp_dir = Path(tempfile.mkdtemp(prefix='msi_extract_'))
 
             try:
-                # Use msiexec to extract
                 cmd = [
                     'msiexec',
                     '/a',
@@ -198,7 +211,6 @@ class InstallerParser:
                     timeout=self.timeout
                 )
 
-                # Collect extracted files
                 files = []
                 for file_path in temp_dir.rglob('*'):
                     if file_path.is_file():
@@ -222,7 +234,14 @@ class InstallerParser:
         return []
 
     def _get_file_type(self, file_path: Path) -> str:
-        """Get file type from file content."""
+        """Get file type from file content.
+
+        Args:
+            file_path: Path to the file to check.
+
+        Returns:
+            A file type string, or 'unknown' if unrecognized.
+        """
         try:
             with open(file_path, 'rb') as f:
                 data = f.read(256)

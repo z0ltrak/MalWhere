@@ -17,44 +17,28 @@ class ATTACKMapper:
         'Process32Next': 'T1057',
         'GetComputerNameW': 'T1082',
         'GetComputerNameA': 'T1082',
-        # Moved from T1082 to T1033 (System Owner/User Discovery): MITRE's
-        # own T1033 page describes exactly this -- "identify the primary
-        # user... by retrieving account usernames." T1082 is specifically
-        # OS/hardware version, patches, architecture; a username isn't
-        # that. Found while extending Discovery coverage and checking this
-        # pairing against MITRE's real definitions rather than assuming
-        # the two belonged together just because they're both "identity"
-        # APIs. Confirmed safe: none of the 3 validated samples currently
-        # import either function, so this changes nothing live -- but all
-        # 3 samples' ground truth expects T1033 for this exact behavior
-        # (and none expect T1082 from it), so a future sample using this
-        # API will now score correctly instead of contributing to the
-        # wrong technique.
+        # T1033 (System Owner/User Discovery), not T1082: T1082 covers
+        # OS/hardware info, not usernames.
         'GetUserNameW': 'T1033',
         'GetUserNameA': 'T1033',
         # Peripheral Device Discovery (T1120): enumerates attached
-        # hardware via the Setup API -- MITRE's page cites exactly this
-        # class of device-enumeration call.
+        # hardware via the Setup API.
         'SetupDiGetClassDevsW': 'T1120',
         'SetupDiGetClassDevsA': 'T1120',
-        # System Language Discovery (T1614.001): MITRE's page describes
-        # geofencing malware inferring victim location this way -- these
-        # are the specific APIs for reading the system/UI language.
+        # System Language Discovery (T1614.001): reads the system/UI
+        # language, used for geofencing.
         'GetSystemDefaultLangID': 'T1614.001',
         'GetUserDefaultUILanguage': 'T1614.001',
-        # System Network Connections Discovery (T1049): MITRE's page
-        # describes enumerating active network connections -- these are
-        # the real IP Helper API for it, distinct from the network-
-        # interface-configuration APIs already covering T1016.
+        # System Network Connections Discovery (T1049), distinct from the
+        # interface-config APIs already covering T1016.
         'GetTcpTable': 'T1049',
         'GetExtendedTcpTable': 'T1049',
         'GetUdpTable': 'T1049',
-        # Local Account Discovery (T1087.001): MITRE's page names net user
-        # directly; NetUserEnum is the underlying Win32 API that command
-        # implements.
+        # Local Account Discovery (T1087.001): underlying Win32 API for
+        # `net user`.
         'NetUserEnum': 'T1087.001',
-        # Remote System Discovery (T1018): the Win32 API behind net view,
-        # enumerating other hosts on the network by name.
+        # Remote System Discovery (T1018): underlying Win32 API for
+        # `net view`.
         'NetServerEnum': 'T1018',
 
         # Collection
@@ -70,14 +54,8 @@ class ATTACKMapper:
         'CallNextHookEx': 'T1056.001',
         'ToUnicodeEx': 'T1056.001',
         'GetAsyncKeyState': 'T1056.001',
-        # mciSendString(A/W) is the classic simple-audio-recording API
-        # ("open new type waveaudio ... record" MCI command strings) --
-        # essentially no common non-multimedia legitimate use, same
-        # single-import-sufficient precedent as WH_KEYBOARD_LL for
-        # keylogging. Found auditing WhiteSnake's missing T1123: its
-        # report documents exactly this (class `dt`, command "open new
-        # type waveaudio alias recorder"), and the API was only just made
-        # visible by fixing dotnet_parser.py's P/Invoke extraction.
+        # Simple audio-recording API (T1123); essentially no legitimate
+        # non-multimedia use.
         'mciSendStringA': 'T1123',
         'mciSendStringW': 'T1123',
 
@@ -86,22 +64,16 @@ class ATTACKMapper:
         'CredEnumerateA': 'T1555',
         'CredReadW': 'T1555',
         'CredReadA': 'T1555',
-        # MiniDumpWriteDump targeting lsass.exe is the textbook LSASS
-        # memory-dump technique (T1003.001) -- also legitimately used by
-        # crash-reporting tools, which is why the corroborating 'lsass.exe'
-        # string pattern below matters (see string_attck_mapper.py):
-        # medium alone, the combination is what makes this a strong signal.
+        # LSASS memory dump (T1003.001); also used by legitimate crash
+        # reporters, so treated as corroborated rather than conclusive
+        # alone (see the 'lsass.exe' string pattern in string_attck_mapper.py).
         'MiniDumpWriteDump': 'T1003.001',
-        # Windows Credential Manager (T1555.004): VaultOpenVault is the
-        # vault-API entry point MITRE's own page names, narrower than the
-        # generic Cred* APIs above (those cover the older, separate
-        # Credential Manager store, not Vaults specifically).
+        # Windows Credential Manager Vaults (T1555.004), narrower than
+        # the generic Cred* APIs above (a separate, older store).
         'VaultOpenVault': 'T1555.004',
 
-        # Collection (Network Shared Drive, T1039): all three together is
-        # the actual share-enumeration sequence MITRE's page describes --
-        # generic 2+-import promotion already applies since all three map
-        # to the same technique.
+        # Data from Network Shared Drive (T1039): the real
+        # share-enumeration sequence, all mapped to the same technique.
         'WNetOpenEnumW': 'T1039',
         'WNetOpenEnumA': 'T1039',
         'WNetEnumResourceW': 'T1039',
@@ -131,20 +103,12 @@ class ATTACKMapper:
         'LookupPrivilegeValueW': 'T1134',
         'LookupPrivilegeValueA': 'T1134',
         'OpenProcessToken': 'T1134',
-        # Create Process with Token (T1134.002): MITRE's page names
-        # CreateProcessWithTokenW directly as the API for this -- fairly
-        # specific alone, real non-injection uses (e.g. `runas`-style
-        # tools) exist but are rare in this project's malware corpus.
         'CreateProcessWithTokenW': 'T1134.002',
-        # Token Impersonation/Theft and Make and Impersonate Token
-        # (T1134.001/.003) need combination checks below (ImpersonateLoggedOnUser
-        # alone is too generic -- legitimate service/IIS-style impersonation
-        # code uses it too; paired with DuplicateTokenEx or LogonUserW it
-        # becomes the specific technique MITRE's pages describe).
+        # Token Impersonation/Theft (T1134.001) and Make and Impersonate
+        # Token (T1134.003) need the combination checks below --
+        # ImpersonateLoggedOnUser alone is too generic.
 
         # Exfiltration Over Unencrypted Non-C2 Protocol (T1048.003):
-        # MITRE's page describes exfiltrating over a protocol separate
-        # from the C2 channel -- FtpPutFile is the WinINet API for a
         # direct FTP upload, distinct from and narrower than the generic
         # WebClient::UploadData already covering T1041's C2-channel case.
         'FtpPutFileW': 'T1048.003',
@@ -158,15 +122,9 @@ class ATTACKMapper:
         'QueryPerformanceFrequency': 'T1497',
         'Sleep': 'T1497',
         'NtDelayExecution': 'T1497',
-        # Was mapped to T1082 (System Information Discovery) -- wrong
-        # verb. GetSystemInfo returns CPU architecture/core count/page
-        # size, not host-identifying recon data the way GetComputerNameW/
-        # GetUserNameW are; its dominant real-world use is checking
-        # dwNumberOfProcessors for anti-VM purposes (VMs commonly report
-        # fewer cores). Found auditing a real false positive on Akira,
-        # where this import's only use context is CPU-feature/anti-VM
-        # checking already correctly captured under T1497 -- the manual
-        # report has zero mention of hostname/system-info harvesting.
+        # T1497 (anti-VM check via CPU core count), not T1082
+        # (host-identifying recon) -- GetSystemInfo returns CPU
+        # architecture/core count, not identity data.
         'GetSystemInfo': 'T1497',
         'SetUnhandledExceptionFilter': 'T1622',
         'UnhandledExceptionFilter': 'T1622',
@@ -184,51 +142,28 @@ class ATTACKMapper:
         'QueueUserAPC': 'T1055',
 
         # Impact
-        # Rm*/TerminateProcess -> T1489 "Service Stop" removed: same fix as
-        # string_attck_mapper.py's STRING_MAPPING (duplicated bug, two
-        # independent mapping tables had the identical wrong entries).
-        # Restart Manager APIs are about file-lock handling, not stopping a
-        # Windows service; TerminateProcess is too generic to safely
-        # auto-map to any single technique from import presence alone. See
-        # string_attck_mapper.py's comment at the same fix for the full
-        # reasoning.
+        # Rm*/TerminateProcess -> T1489 "Service Stop" removed: Restart
+        # Manager APIs are about file-lock handling, not stopping a
+        # service, and TerminateProcess alone is too generic to map to
+        # any one technique.
         #
-        # System Shutdown/Reboot (T1529): MITRE's page describes exactly
-        # this -- shutting down/rebooting to interrupt access or aid
-        # destruction (the classic post-ransomware-encryption reboot).
-        # ExitWindowsEx is the real Win32 API behind it; essentially no
-        # legitimate malware-adjacent use outside actual power-state
-        # changes.
+        # System Shutdown/Reboot (T1529): ExitWindowsEx is the real
+        # Win32 API for it (the classic post-ransomware-encryption reboot).
         'ExitWindowsEx': 'T1529',
-        # Account Access Removal (T1531): MITRE's page names changed
-        # credentials as one of the concrete mechanisms -- NetUserChangePassword
-        # is the Win32 API for it. Has legitimate password-management-tool
-        # uses, kept at medium rather than high for that reason.
+        # Account Access Removal (T1531); also used by legitimate
+        # password-management tools, kept at medium for that reason.
         'NetUserChangePassword': 'T1531',
 
         # Discovery (Network)
-        # WNetGetConnectionW/A removed from here: it resolves the remote
-        # UNC path for an ALREADY-KNOWN local device/drive letter -- not
-        # an enumeration API, so its presence isn't evidence the malware
-        # discovers shares. NetShareEnum (below, Network Share section)
-        # is the real T1135 API. Found auditing a real false positive on
-        # Akira: its manual report shows share *targets* come from an
-        # operator-supplied --share_file argument, not discovery.
+        # WNetGetConnectionW/A removed: resolves the UNC path for an
+        # already-known local drive letter, not an enumeration API.
+        # NetShareEnum (below) is the real T1135 signal.
 
-        # Network -- WSAStartup/WSACleanup/socket/connect/send/recv removed:
-        # 'S0105' is a MITRE Software ID (a specific tool/malware family),
-        # not a Technique ID, so this table was emitting a value the
-        # normalizer's ID-format check correctly rejects (invalid_technique_
-        # id_format), meaning these six imports have never actually
-        # produced a technique in any report. Not just a wrong ID either --
-        # raw Winsock init/send/recv is present in essentially any
-        # networked Windows program and, like TerminateProcess above, is
-        # too generic to safely auto-map to one specific technique from
-        # import presence alone (could underlie T1071, T1095, T1041,
-        # T1105...). Real network-C2 evidence (onion URLs, config IPs) is
-        # already captured with a specific technique in map_config()'s
-        # T1071 rule below -- that's the trustworthy signal, not bare
-        # socket-API presence.
+        # Network -- WSAStartup/WSACleanup/socket/connect/send/recv
+        # removed: raw Winsock usage is present in essentially any
+        # networked program and too generic to map to one technique.
+        # Real C2 evidence (onion URLs, config IPs) is captured
+        # separately by map_config()'s T1071 rule below.
 
         # File System
         'FindFirstFileW': 'T1083',
@@ -252,20 +187,11 @@ class ATTACKMapper:
 
     # Fully-qualified .NET BCL API calls -> technique. The managed-code
     # equivalent of IMPORT_MAPPING above, fed by dotnet_parser.py's
-    # _extract_bcl_calls() (scans method bodies for call/callvirt/newobj
-    # targets, since import-table-based mapping has nothing to work with
-    # for .NET samples -- a .NET executable's native import table is
-    # typically just the CLR bootstrap stub, confirmed on WhiteSnake: one
-    # entry, mscoree.dll _CorExeMain, regardless of what the managed code
-    # actually does). Each entry chosen for being specific enough that a
-    # single occurrence is real signal, not incidental to virtually all
-    # software (deliberately excludes System.IO.File/System.Convert/
-    # System.DateTime-style BCL calls used by any .NET program for
-    # mundane reasons) -- same selectivity bar as IMPORT_MAPPING's own
-    # entries. Registry/WMI reads (GetValue, OpenSubKey, GetSubKeyNames)
-    # are deliberately excluded too: too common in legitimate .NET
-    # software to be diagnostic alone, unlike the write/enumerate-instance
-    # actions kept here.
+    # _extract_bcl_calls() (native import tables are typically just the
+    # CLR bootstrap stub for .NET binaries). Entries are chosen to be
+    # specific enough that a single occurrence is real signal, excluding
+    # common BCL calls (File I/O, Convert, DateTime) and registry/WMI
+    # reads that are too common in legitimate .NET software alone.
     DOTNET_API_MAPPING = {
         'Microsoft.Win32.RegistryKey::SetValue': 'T1112',
         'Microsoft.Win32.RegistryKey::CreateSubKey': 'T1112',
@@ -282,17 +208,10 @@ class ATTACKMapper:
         'System.Net.HttpListener::GetContext': 'T1090',
         'System.Management.ManagementObjectSearcher::Get': 'T1047',
         'System.Management.ManagementClass::GetInstances': 'T1047',
-        # Found auditing WhiteSnake's missing T1132/T1140: its manual
-        # report documents "Base64 + XOR for C2" (T1132) and "XOR, RC4,
-        # RSA, Base64" more broadly (T1140) but nothing in either the
-        # native import table (near-empty -- just the CLR bootstrap stub)
-        # or plaintext strings (every command/config string is obfuscated,
-        # confirmed absent even after an exhaustive single-byte XOR
-        # brute-force pass) evidenced it. The .NET BCL calls that
-        # actually perform the encode/decode do, though, and split
-        # naturally by direction: ToBase64String encodes outbound data
-        # (T1132, Data Encoding), FromBase64String decodes inbound/stored
-        # data (T1140, Deobfuscate/Decode Files or Information).
+        # Base64 encode/decode, split by direction: ToBase64String
+        # encodes outbound data (T1132, Data Encoding), FromBase64String
+        # decodes inbound/stored data (T1140, Deobfuscate/Decode Files
+        # or Information).
         'System.Convert::ToBase64String': 'T1132',
         'System.Convert::FromBase64String': 'T1140',
     }
@@ -320,10 +239,9 @@ class ATTACKMapper:
         'T1071': 'Application Layer Protocol',
         'T1105': 'Ingress Tool Transfer',
         'T1016': 'System Network Configuration Discovery',
-        # T1022 "Data Encrypted" was revoked in ATT&CK v19 -- MITRE folded
-        # "encrypt data before exfil" into T1560's own definition, which
-        # now explicitly covers compression AND encryption prior to
-        # exfiltration. Migrated 2026-08 (ATT&CK v14 -> v19).
+        # T1022 "Data Encrypted" was revoked in ATT&CK v19, folded into
+        # T1560's definition (compression AND encryption prior to
+        # exfiltration). Migrated 2026-08 (v14 -> v19).
         'T1560': 'Archive Collected Data',
         'T1047': 'Windows Management Instrumentation',
         'T1090': 'Proxy',
@@ -342,9 +260,8 @@ class ATTACKMapper:
         'T1555': 'Credentials from Password Stores',
         'T1140': 'Deobfuscate/Decode Files or Information',
         # T1562 "Impair Defenses" was retired in ATT&CK v19; its
-        # "Disable or Modify Tools" sub-technique (T1562.001) was promoted
-        # to become the new parent technique T1685 in its own right, not a
-        # sub-technique of anything. Migrated 2026-08 (ATT&CK v14 -> v19).
+        # "Disable or Modify Tools" sub-technique was promoted to become
+        # standalone parent technique T1685. Migrated 2026-08 (v14 -> v19).
         'T1685': 'Disable or Modify Tools',
         # Persistence / Defense Evasion coverage extension -- see
         # string_attck_mapper.py's STRING_MAPPING for the evidence tables.
@@ -355,10 +272,9 @@ class ATTACKMapper:
         'T1546.012': 'Event Triggered Execution: Image File Execution Options Injection',
         'T1546.003': 'Event Triggered Execution: Windows Management Instrumentation Event Subscription',
         'T1197': 'BITS Jobs',
-        # Moved out of the Indicator Removal (T1070) family entirely in
-        # ATT&CK v19, now a sub-technique of the new T1685 "Disable or
-        # Modify Tools" parent instead. Same real-world behavior, new
-        # catalog position. Migrated 2026-08 (ATT&CK v14 -> v19).
+        # Moved out of the Indicator Removal (T1070) family in ATT&CK
+        # v19, now a sub-technique of the new T1685 parent instead.
+        # Migrated 2026-08 (v14 -> v19).
         'T1685.005': 'Disable or Modify Tools: Clear Windows Event Logs',
         'T1218.010': 'System Binary Proxy Execution: Regsvr32',
         'T1218.005': 'System Binary Proxy Execution: Mshta',
@@ -412,100 +328,60 @@ class ATTACKMapper:
         'T1048.003': 'Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol',
     }
 
-    # Chrome Web Store assigns each extension a permanent, unique ID at
-    # publish time -- these are public, stable, and verifiable directly
-    # against the store (chrome.google.com/webstore/detail/<name>/<id>).
-    # Kept intentionally short: only extensions confirmed here, not a
-    # broad scrape, since a wrong ID would create a false T1555 finding.
+    # Chrome Web Store extension IDs are permanent and publicly
+    # verifiable. Kept intentionally short, confirmed entries only --
+    # a wrong ID here would create a false T1555 finding.
     KNOWN_WALLET_EXTENSION_IDS = {
         'nkbihfbeogaeaoehlefnkodbefgpgknn': 'MetaMask',
     }
 
-    # T1055's imports aren't equally diagnostic. OpenProcess is ubiquitous
-    # (termination, enumeration, memory reads, injection — dozens of
-    # legitimate reasons) and QueueUserAPC operates on a THREAD handle, not
-    # the process handle OpenProcess supplies, so "OpenProcess +
-    # QueueUserAPC" doesn't actually compose into one coherent injection
-    # primitive despite both appearing in the same import table. Found
-    # auditing a real regression this pairing caused: promoted to high
-    # confidence in Akira, a sample whose manual RE report found no process
-    # injection at all. These 4 each take a *foreign* process handle by
-    # their own signature (VirtualAllocEx/WriteProcessMemory) or are only
-    # meaningful as part of an injection chain (CreateRemoteThread/
-    # NtCreateThread) — any one of them plus a second corroborating import
-    # is a coherent signal. The read-primitive trio below is the alternate
-    # qualifying combination, matching WhiteSnake's validated genuine
-    # finding (reading another process's memory, all 3 co-present).
+    # T1055's imports aren't equally diagnostic: OpenProcess is
+    # ubiquitous, and QueueUserAPC operates on a thread handle rather
+    # than the process handle OpenProcess supplies, so that pair alone
+    # isn't a coherent injection primitive. These 4 each take a foreign
+    # process handle directly (VirtualAllocEx/WriteProcessMemory) or are
+    # only meaningful as part of an injection chain
+    # (CreateRemoteThread/NtCreateThread); any one of them plus a second
+    # corroborating import is a coherent signal. The read-primitive trio
+    # below is the alternate qualifying combination.
     _T1055_STRONG_IMPORTS = {'WriteProcessMemory', 'VirtualAllocEx', 'CreateRemoteThread', 'NtCreateThread'}
     _T1055_READ_TRIO = {'OpenProcess', 'VirtualQueryEx', 'ReadProcessMemory'}
 
-    # TerminateProcess alone is too generic to map to any one technique --
-    # an AV process, a locked-file holder, its own child process are all
-    # plausible targets with nothing to tell them apart (see
-    # string_attck_mapper.py's comment on the same API, where it was
-    # dropped rather than reassigned). But TerminateProcess corroborated by
-    # BOTH a process-listing API (deliberately searching the process list,
-    # not just killing a handle you already have) AND OpenProcess (opening
-    # a handle to something found in that list) is a coherent
-    # enumerate-then-kill primitive, specific enough for Disable or Modify
-    # Tools (T1685; was T1562.001 under the now-retired T1562 "Impair
-    # Defenses" parent -- migrated 2026-08, ATT&CK v14 -> v19) even without
-    # the decrypted target name. Found auditing Akira's missing T1562 (as
-    # it was called then): its manual report documents exactly this
-    # combination (WTSEnumerateProcessesW + OpenProcess + TerminateProcess)
-    # as decrypt-and-terminate-a-hardcoded-process, mapped by the analyst
-    # to T1562 alongside T1057 for the same code -- not instead of it.
+    # TerminateProcess alone is too generic to map to any one technique
+    # (an AV process, a locked-file holder, its own child process are
+    # all plausible targets). Corroborated by both a process-listing API
+    # and OpenProcess, it's a coherent enumerate-then-kill primitive,
+    # specific enough for Disable or Modify Tools (T1685; was T1562.001
+    # under the retired T1562 parent -- migrated 2026-08, v14 -> v19).
     _T1685_KILL_COMBO = {'WTSEnumerateProcessesW', 'OpenProcess', 'TerminateProcess'}
 
-    # Process Hollowing (T1055.012), a specific sub-technique of the
-    # already-covered parent T1055. MITRE's own page describes the
-    # textbook sequence: create a process suspended, unmap/hollow its
-    # memory, write the replacement payload in, then resume it. All 5
-    # steps together have no legitimate non-hollowing purpose; any one
-    # alone (e.g. WriteProcessMemory) is already covered, less
-    # specifically, by the parent T1055 combo logic below. Either native
-    # unmap API name is accepted (Nt*/Zw* are the same call, both real
-    # exported names). Caveat worth keeping in mind: sophisticated
-    # hollowing resolves NtUnmapViewOfSection dynamically via
-    # GetProcAddress specifically to stay off the static import table
-    # (the same reason roning's own SetWindowsHookExW usage was invisible
-    # to this kind of check) -- this catches the unsophisticated case,
-    # not an evasive one.
+    # Process Hollowing (T1055.012): create a process suspended,
+    # unmap/hollow its memory, write the replacement payload in, then
+    # resume it. All 5 steps together have no legitimate non-hollowing
+    # purpose. Either native unmap API name is accepted (Nt*/Zw* are the
+    # same call). Sophisticated hollowing resolves NtUnmapViewOfSection
+    # dynamically via GetProcAddress to stay off the import table -- this
+    # only catches the unsophisticated case.
     _T1055_HOLLOW_COMBO = {'CreateProcessW', 'WriteProcessMemory', 'SetThreadContext', 'ResumeThread'}
     _T1055_HOLLOW_UNMAP = {'NtUnmapViewOfSection', 'ZwUnmapViewOfSection'}
 
-    # CreateFileW/A is IMPORT_MAPPING's own "Low confidence (generic)" entry
-    # for T1070 -- opening a file is what every file-touching program does,
-    # so pairing it with DeleteFileW isn't corroboration of deletion intent,
-    # just confirms the binary does file I/O at all. The blind "2+ imports
-    # for one technique = high" rule below doesn't know that and was
-    # promoting DeleteFileW+CreateFileW to 'high' regardless. Found auditing
-    # a real false positive on Akira, exposed only after the ATT&CK v19
-    # migration moved the genuine ground-truth match (Clear Windows Event
-    # Logs) from T1070.001 to T1685.005 -- family-level matching had been
-    # masking this via coincidental ID-prefix overlap with the old T1070.001
-    # entry. Excluded from corroboration in both directions: it doesn't
-    # count toward promoting other T1070 evidence, and other evidence
-    # doesn't promote it either.
+    # CreateFileW/A is IMPORT_MAPPING's "low confidence (generic)" entry
+    # for T1070 -- opening a file is universal, so it doesn't corroborate
+    # deletion intent. Excluded from corroboration in both directions:
+    # it doesn't promote other T1070 evidence, and other evidence
+    # doesn't promote it.
     _T1070_GENERIC_IMPORTS = {'CreateFileW', 'CreateFileA'}
 
-    # Application Window Discovery (T1010). GetWindowTextW alone is
-    # ubiquitous -- any GUI app reads its OWN window's title. EnumWindows
-    # enumerating EVERY top-level window on the desktop, combined with
-    # reading each one's title, is what turns this into actual recon of
-    # what's running on the system (MITRE's own example: identifying
-    # security tooling by window title) rather than a program managing
-    # its own UI.
+    # Application Window Discovery (T1010): GetWindowTextW alone just
+    # reads a program's own window title. Combined with EnumWindows
+    # (every top-level window on the desktop), it's active recon of
+    # what's running on the system.
     _T1010_WINDOW_COMBO = {'EnumWindows', 'GetWindowTextW'}
 
     # Token Impersonation/Theft (T1134.001) and Make and Impersonate
-    # Token (T1134.003). ImpersonateLoggedOnUser alone is too generic --
-    # legitimate service/IIS-style impersonation code calls it too.
-    # MITRE's own pages describe each as a specific pairing: duplicate an
-    # existing token then impersonate it (.001), or create a brand new
-    # logon session via LogonUserW then impersonate that (.003) -- the
-    # second API in each pair is what makes it one of these two specific
-    # techniques rather than ordinary impersonation.
+    # Token (T1134.003): ImpersonateLoggedOnUser alone is too generic
+    # (legitimate service/IIS-style code uses it too). Paired with
+    # DuplicateToken(Ex) or LogonUserW, it becomes the specific technique.
     _T1134_IMPERSONATE = 'ImpersonateLoggedOnUser'
     _T1134_DUPLICATE_TOKEN = {'DuplicateToken', 'DuplicateTokenEx'}
     _T1134_LOGON_USER = {'LogonUserW', 'LogonUserA'}
@@ -517,17 +393,14 @@ class ATTACKMapper:
     def map_strings(self, strings: List[str]) -> List[ATTACKMapping]:
         """Map strings to ATT&CK techniques.
 
-        Each matched pattern keeps its own evidence entry (unlike
-        map_imports, which now aggregates into one entry per technique) —
-        string patterns are typically specific enough on their own
-        (a ChaCha20 constant, a decryption key) that per-evidence detail is
-        worth preserving. But confidence per-pattern was still scored in
-        isolation, same root problem as map_imports before its fix: found
-        auditing WhiteSnake's T1055, whose static evidence was 3 distinct
-        patterns (OpenProcess, VirtualQueryEx, ReadProcessMemory) each
-        individually scored 'medium' with no awareness that all 3
-        corroborate each other. Patterns matching techniques with 2+
-        distinct corroborating patterns present get promoted to 'high'.
+        Args:
+            strings: Extracted strings from the sample.
+
+        Returns:
+            One ATTACKMapping per matched pattern, plus derived Data
+            Staged / Exfiltration Over Webhook mappings where the same
+            evidence supports both. Confidence is promoted to 'high'
+            when 2+ distinct patterns corroborate the same technique.
         """
         from .string_attck_mapper import StringATTACKMapper
         string_mapper = StringATTACKMapper()
@@ -536,10 +409,9 @@ class ATTACKMapper:
         pattern_count_by_technique: Dict[str, int] = {}
         for item in string_results:
             technique = item['technique']
-            # CreateFile is STRING_MAPPING's own 'low'/generic entry for
-            # T1070 -- excluded from corroboration for the same reason
-            # map_imports excludes CreateFileW/A from T1070's combo bump
-            # (see _T1070_GENERIC_IMPORTS above).
+            # CreateFile is STRING_MAPPING's own generic entry for
+            # T1070, excluded from corroboration for the same reason as
+            # _T1070_GENERIC_IMPORTS above.
             if technique == 'T1070' and item.get('pattern') == 'CreateFile':
                 continue
             pattern_count_by_technique[technique] = pattern_count_by_technique.get(technique, 0) + 1
@@ -566,17 +438,10 @@ class ATTACKMapper:
                 )
             ))
 
-        # An archive-utility engine (T1560.001) built to bundle collected
-        # data before it moves is, by the same evidence, staging that data
-        # (T1074) -- the two techniques describe different facets (how vs.
-        # what) of one action, not two independent claims from one weak
-        # signal (unlike the CAPE signature overreaches fixed elsewhere in
-        # this pipeline). Found auditing WhiteSnake's T1074: real, strong
-        # ground-truth support (a custom ZIP engine building XML reports
-        # before exfil) but no detection source anywhere -- a genuine
-        # capability gap, not a mis-mapping. Requires the same 2+
-        # corroborating pattern threshold as the confidence promotion
-        # above, on the same evidence.
+        # An archive-utility engine (T1560.001) bundling collected data
+        # is, by the same evidence, staging that data (T1074) -- how vs.
+        # what of one action. Requires the same 2+ corroborating-pattern
+        # threshold as the promotion above.
         archive_patterns = [i for i in string_results if i['technique'] == 'T1560.001']
         if len(archive_patterns) >= 2:
             evidence = ', '.join(p.get('pattern', p.get('string', '')) for p in archive_patterns)
@@ -594,14 +459,9 @@ class ATTACKMapper:
                 )
             ))
 
-        # A Discord webhook is a push endpoint with no read/download
-        # side -- data only ever flows TO it. The same evidence that
-        # shows a webhook URL is present therefore supports both C2
-        # command delivery (T1102.002, if the malware polls responses)
-        # and Exfiltration Over Webhook (T1567.004, MITRE's own page
-        # names Discord webhooks specifically) -- two facets of one
-        # webhook-based channel, not two independent claims from one
-        # weak signal.
+        # A Discord webhook is push-only, so the same evidence that
+        # shows a webhook URL is present supports both C2 command
+        # delivery (T1102.002) and Exfiltration Over Webhook (T1567.004).
         webhook_patterns = [i for i in string_results if i['technique'] == 'T1102.002' and 'webhooks' in i.get('pattern', '')]
         if webhook_patterns:
             evidence = ', '.join(p.get('pattern', p.get('string', '')) for p in webhook_patterns)
@@ -625,21 +485,18 @@ class ATTACKMapper:
     def map_imports(self, imports: List) -> List[ATTACKMapping]:
         """Map imports to ATT&CK techniques.
 
-        Confidence is combination-aware, not single-import-triggered: this
-        directly implements the README's own stated 3-tier methodology
-        ("VirtualAllocEx + WriteProcessMemory + CreateRemoteThread -> T1055"
-        as the worked HIGH-confidence example — multiple corroborating
-        artifacts, not any one import alone). Previously this method took
-        confidence from a single hardcoded list per import AND discarded
-        all but the FIRST matching import per technique via a `seen` set —
-        so even when e.g. OpenProcess, VirtualQueryEx, and ReadProcessMemory
-        were ALL present together, only one of them was ever recorded and
-        the co-occurrence itself, the actual corroborating signal, was
-        silently thrown away before confidence was even computed. Found
-        auditing a real false positive (Akira's T1055, sourced from a lone
-        OpenProcess) and a real missed finding (WhiteSnake's genuine T1055,
-        where three imports co-occurring was the strongest static evidence
-        available and the old code never surfaced it as such).
+        Aggregates all imports per technique so that combination-aware
+        confidence (multiple corroborating APIs, not any one import
+        alone) can be computed rather than taken from a single import
+        in isolation.
+
+        Args:
+            imports: Parsed import-table entries.
+
+        Returns:
+            One ATTACKMapping per technique, plus derived mappings for
+            recognized multi-import combinations (kill-process,
+            process-hollowing, window-discovery, token-impersonation).
         """
         by_technique: Dict[str, List[str]] = {}
         for imp in imports:
@@ -661,30 +518,15 @@ class ATTACKMapper:
                 if qualifying_combo:
                     confidence = 'high'
                 elif func_set & self._T1055_STRONG_IMPORTS:
-                    # One of the 4 specific injection primitives, alone
-                    # or alongside non-corroborating imports -- these 4
-                    # have essentially no legitimate non-injection use,
-                    # so still real signal even uncorroborated, just not
-                    # 'high'.
+                    # One of the 4 injection primitives alone still
+                    # counts as real signal, just not 'high'.
                     confidence = 'medium'
                 else:
-                    # Every other T1055-tagged import (OpenProcess,
-                    # VirtualQueryEx, ReadProcessMemory, QueueUserAPC) has
-                    # dozens of legitimate non-injection uses and isn't
-                    # specific enough to report on its own OR in a
-                    # combination that isn't one of the two recognized
-                    # coherent patterns above -- merely having 2+ of them
-                    # present isn't corroboration. Found auditing a real
-                    # false positive on Akira: OpenProcess+QueueUserAPC
-                    # got reported at 'medium' purely because 2+
-                    # T1055-tagged imports were present, despite
-                    # QueueUserAPC operating on a THREAD handle
-                    # OpenProcess never supplies -- not a coherent
-                    # injection primitive. Akira's manual report maps
-                    # this exact code (WTSEnumerateProcessesW + OpenProcess
-                    # + WaitForSingleObject + CloseHandle, a plain
-                    # enumerate-and-terminate loop) to T1057/T1685, never
-                    # T1055.
+                    # The remaining T1055-tagged imports (OpenProcess,
+                    # VirtualQueryEx, ReadProcessMemory, QueueUserAPC)
+                    # have legitimate non-injection uses and aren't
+                    # corroboration outside the two recognized
+                    # combinations above.
                     continue
             elif technique == 'T1070':
                 corroborating = func_set - self._T1070_GENERIC_IMPORTS
@@ -693,7 +535,7 @@ class ATTACKMapper:
                 elif corroborating:
                     confidence = self._determine_import_confidence(next(iter(corroborating)))
                 else:
-                    # Only the generic CreateFileW/A present, nothing else.
+                    # Only the generic CreateFileW/A present.
                     confidence = 'low'
             elif len(functions) >= 2:
                 confidence = 'high'
@@ -810,14 +652,12 @@ class ATTACKMapper:
     def map_bcl_calls(self, bcl_calls: List[str]) -> List[ATTACKMapping]:
         """Map fully-qualified .NET BCL API calls to ATT&CK techniques.
 
-        Same combination-aware confidence rule as map_imports: a
-        technique corroborated by 2+ distinct BCL calls is high
-        confidence, a single call gets 'medium' (each DOTNET_API_MAPPING
-        entry was already picked for being specific enough that one
-        occurrence is real signal, not the generic-vs-specific split
-        map_imports' _determine_import_confidence makes for native
-        imports -- there's no equivalent "generic .NET call" in this
-        table to begin with, since those were excluded when building it).
+        Args:
+            bcl_calls: Resolved call/callvirt/newobj targets from method bodies.
+
+        Returns:
+            One ATTACKMapping per technique; confidence is 'high' when
+            2+ distinct calls corroborate it, else 'medium'.
         """
         by_technique: Dict[str, List[str]] = {}
         for call in bcl_calls:
@@ -850,7 +690,14 @@ class ATTACKMapper:
         return mappings
 
     def map_yara(self, yara_data: Dict[str, Any]) -> List[ATTACKMapping]:
-        """Map YARA rule matches to ATT&CK techniques."""
+        """Map YARA rule matches to ATT&CK techniques.
+
+        Args:
+            yara_data: YaraParser.scan() output, read for its attck_mapping list.
+
+        Returns:
+            One high-confidence ATTACKMapping per YARA rule's own technique mapping.
+        """
         mappings = []
 
         for item in yara_data.get('attck_mapping', []):
@@ -871,7 +718,14 @@ class ATTACKMapper:
         return mappings
 
     def map_entropy(self, entropy_findings: List) -> List[ATTACKMapping]:
-        """Map entropy findings to ATT&CK techniques."""
+        """Map entropy findings to ATT&CK techniques.
+
+        Args:
+            entropy_findings: EntropyFinding objects to check for a high-confidence, high-entropy match.
+
+        Returns:
+            At most one T1486 mapping (only the first qualifying finding is used).
+        """
         mappings = []
 
         for finding in entropy_findings:
@@ -889,7 +743,14 @@ class ATTACKMapper:
         return mappings
 
     def map_config(self, config: Dict[str, Any]) -> List[ATTACKMapping]:
-        """Map configuration artifacts to ATT&CK techniques."""
+        """Map configuration artifacts (URLs, IPs, registry paths, mutexes, wallet paths, XOR-recovered IOCs) to ATT&CK techniques.
+
+        Args:
+            config: ConfigExtractor.extract() output.
+
+        Returns:
+            One ATTACKMapping per matched configuration category.
+        """
         mappings = []
 
         # .onion URLs → T1071 (Application Layer Protocol)
@@ -944,18 +805,10 @@ class ATTACKMapper:
                     justification=f"Found {len(mutexes)} mutex names in the configuration. Mutexes are often used to check for a running instance (single-instance enforcement) and for sandbox detection (T1497)."
                 ))
 
-        # Cryptocurrency wallet browser extension IDs -> T1555 (Credentials
-        # from Password Stores). MITRE names browser-extension wallet
-        # targeting explicitly under T1555; a reference to one of these
-        # fixed, public extension IDs in an extracted file path is a
-        # reliable, low-noise signal (these IDs are assigned once by the
-        # extension store and never legitimately appear in an unrelated
-        # binary's file paths). Found auditing RoningLoader's diamondage.exe:
-        # config_extractor already captured the file path referencing
-        # MetaMask's extension ID, but nothing mapped it to a technique.
-        # Deliberately a short, high-confidence-only list, not a scrape of
-        # every wallet extension that exists -- wrong IDs here would be
-        # worse than no rule at all.
+        # Wallet browser-extension IDs are fixed, public, and
+        # verifiable -- a reference in an extracted file path is
+        # high-confidence T1555 evidence. Kept short and confirmed-only;
+        # a wrong ID would be worse than no rule at all.
         if config.get('file_paths'):
             wallet_hits = [
                 (path, name)
@@ -982,11 +835,8 @@ class ATTACKMapper:
                 ))
 
         # An IP/domain only recoverable by brute-forcing every possible
-        # single-byte XOR key is, by construction, evidence the malware
-        # itself reverses that same obfuscation at runtime to use the
-        # value it needs -- a direct, first-party observation of
-        # Deobfuscate/Decode Files or Information (T1140), not a fragile
-        # string-pattern guess.
+        # single-byte XOR key is itself evidence the malware reverses
+        # the same obfuscation at runtime to use the value (T1140).
         if config.get('xor_recovered_iocs'):
             hits = config['xor_recovered_iocs']
             evidence = ', '.join(f"{h['ip']} (XOR key {h['xor_key']})" for h in hits)
@@ -1010,7 +860,19 @@ class ATTACKMapper:
     def map_all(self, strings: List[str], imports: List[Dict[str, str]],
                 yara_data: Dict[str, Any], entropy_findings: List,
                 config: Dict[str, Any], bcl_calls: Optional[List[str]] = None) -> List[ATTACKMapping]:
-        """Run all mapping methods and combine results."""
+        """Run all mapping methods and combine results.
+
+        Args:
+            strings: Extracted strings from the sample.
+            imports: Parsed import-table entries.
+            yara_data: YaraParser.scan() output.
+            entropy_findings: EntropyFinding objects.
+            config: ConfigExtractor.extract() output.
+            bcl_calls: Resolved .NET BCL API calls, if any.
+
+        Returns:
+            All mappings from every source, deduplicated by (technique, evidence).
+        """
         all_mappings = []
         all_mappings.extend(self.map_strings(strings))
         all_mappings.extend(self.map_imports(imports))
@@ -1031,7 +893,15 @@ class ATTACKMapper:
         return unique_mappings
 
     def _determine_import_confidence(self, function: str) -> str:
-        """Determine confidence level for an import."""
+        """Determine confidence level for an import.
+
+        Args:
+            function: Imported function name.
+
+        Returns:
+            'low' for known-generic functions, 'high' for known-specific
+            malware functions, 'medium' otherwise.
+        """
         # Generic functions that are used by many legitimate apps
         generic = ['WriteFile', 'CreateFile', 'ReadFile', 'Sleep', 'GetSystemInfo']
         if function in generic:
@@ -1045,13 +915,31 @@ class ATTACKMapper:
         return 'medium'
 
     def _get_technique_name(self, technique_id: str) -> str:
-        """Get the full name of an ATT&CK technique."""
+        """Get the full name of an ATT&CK technique.
+
+        Args:
+            technique_id: MITRE technique ID, e.g. 'T1055'.
+
+        Returns:
+            The technique's name, or 'Unknown (<id>)' if not in TECHNIQUE_NAMES.
+        """
         return self.TECHNIQUE_NAMES.get(technique_id, f'Unknown ({technique_id})')
 
     def _generate_justification(self, technique: str, source: str,
                                 evidence: str, confidence: str,
                                 count: int = 1) -> str:
-        """Generate human-readable justification for an ATT&CK mapping."""
+        """Generate a human-readable justification for an ATT&CK mapping.
+
+        Args:
+            technique: MITRE technique ID.
+            source: Evidence source ('string_pattern', 'import', 'dotnet_api', 'yara', 'entropy', 'config').
+            evidence: The specific evidence string (a pattern, API name, rule name, etc.).
+            confidence: Confidence tier assigned to this mapping.
+            count: Number of corroborating findings for this technique from this source.
+
+        Returns:
+            A one-paragraph justification tailored to the evidence source.
+        """
         technique_name = self._get_technique_name(technique)
 
         if source == 'string_pattern':

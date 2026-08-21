@@ -1,10 +1,4 @@
-"""
-Python Fallback Analysis Engine
-TFM 2025-2026 - Universidad Complutense de Madrid
-
-This is the fallback engine that uses Python-based analysis when
-Ghidra or other specialized engines are not available or applicable.
-"""
+"""Fallback engine that uses Python-based analysis when Ghidra or other specialized engines aren't available."""
 
 from __future__ import annotations
 
@@ -42,13 +36,7 @@ from ..utils.hashes import HashCalculator
 
 
 class PythonEngine(AnalysisEngine):
-    """
-    Fallback Python-based analysis engine.
-
-    This engine implements the original static analysis pipeline using
-    Python libraries (pefile, strings, YARA, etc.) when specialized
-    engines like Ghidra are not available.
-    """
+    """Fallback static analysis engine using Python libraries (pefile, strings, YARA, etc.)."""
 
     SUPPORTED_TYPES = [
         'pe_native',
@@ -85,7 +73,6 @@ class PythonEngine(AnalysisEngine):
         self.errors: List[str] = []
         self._analyzed_files: set = set()
 
-        # Initialize parsers and detectors
         self.hash_calculator = HashCalculator()
         self.indicator_detector = IndicatorDetector()
         self.entropy_detector = None  # Will be initialized per file
@@ -93,8 +80,12 @@ class PythonEngine(AnalysisEngine):
         self.crypto_detector = CryptoDetector()
 
     def supports_file(self, file_type: str) -> bool:
-        """Check if this engine supports the given file type."""
-        return True  # Python engine is the fallback, supports everything
+        """Check if this engine supports the given file type.
+
+        Returns:
+            Always True -- the Python engine is the fallback, supports everything.
+        """
+        return True
 
     def get_name(self) -> str:
         """Get engine name."""
@@ -123,32 +114,18 @@ class PythonEngine(AnalysisEngine):
         # Initialize per-file detectors
         self.entropy_detector = EntropyDetector(file_path)
 
-        # ===================================================================
-        # STEP 1: Get basic file information
-        # ===================================================================
         file_info = self._get_file_info(file_path)
         self._log(f"File size: {file_info['size_mb']:.2f} MB")
 
-        # ===================================================================
-        # STEP 2: Calculate hashes
-        # ===================================================================
         hashes = self.hash_calculator.calculate_all(file_path)
         self._log(f"SHA-256: {hashes.get('sha256', 'N/A')}")
 
-        # ===================================================================
-        # STEP 3: Detect file type (from the detector that was already run)
-        # ===================================================================
-        # The file_type should already be detected by the main analyzer
-        # We'll try to detect again for consistency
         from ..detectors.file_type_detector import FileTypeDetector
         detector = FileTypeDetector(file_path)
         file_type_info = detector.detect()
         file_type = file_type_info.get('type', 'unknown')
         is_dotnet = file_type == 'pe_dotnet'
 
-        # ===================================================================
-        # STEP 4: Parse based on file type
-        # ===================================================================
         pe_data = {}
         elf_data = {}
         imphash = None
@@ -162,7 +139,6 @@ class PythonEngine(AnalysisEngine):
             if pe_parser.pe:
                 imphash = self.hash_calculator.calculate_imphash(pe_parser.pe)
 
-            # Check if it's actually .NET (pe_parser has better detection)
             if pe_data.get('is_dotnet', False):
                 is_dotnet = True
                 file_type = 'pe_dotnet'
@@ -173,9 +149,6 @@ class PythonEngine(AnalysisEngine):
             elf_data = elf_parser.parse()
             self.errors.extend(elf_parser.get_errors())
 
-        # ===================================================================
-        # STEP 5: Extract strings
-        # ===================================================================
         self._log("Extracting strings...")
         strings_parser = StringsParser(file_path)
         strings = strings_parser.extract(include_floss=not self.no_floss)
@@ -185,15 +158,11 @@ class PythonEngine(AnalysisEngine):
         self._log(f"Found {len(strings.get('standard', []))} standard strings, "
                   f"{len(strings.get('floss', []))} FLOSS strings")
 
-        # ===================================================================
-        # STEP 6: Detect packers
-        # ===================================================================
         self._log("Detecting packers...")
         packer_detector = PackerDetector(file_path)
         packer_data = packer_detector.detect()
         self.errors.extend(packer_detector.get_errors())
 
-        # Use section info for better packer detection
         sections = pe_data.get('sections', [])
         if sections and not packer_data.get('detected', False):
             section_packer = packer_detector.detect_with_sections(sections)
@@ -201,26 +170,18 @@ class PythonEngine(AnalysisEngine):
                 packer_data = section_packer
                 self._log(f"Packer detected via sections: {packer_data.get('packers', [])}")
 
-        # ===================================================================
-        # STEP 7: Detect indicators
-        # ===================================================================
         self._log("Detecting indicators...")
         imports = pe_data.get('imports', [])
         indicators = self.indicator_detector.analyze(imports, sections, all_strings)
 
-        # Find suspicious strings
         suspicious_strings = strings_parser.find_suspicious(all_strings)
         self._log(f"Found {len(suspicious_strings)} suspicious strings")
 
-        # Find crypto patterns
         crypto_algorithms = strings_parser.find_crypto_patterns(all_strings)
         potential_keys = strings_parser.find_potential_keys(all_strings)
         self._log(f"Found {len(crypto_algorithms)} crypto algorithms, "
                   f"{len(potential_keys)} potential keys")
 
-        # ===================================================================
-        # STEP 8: Extract configuration (IPs, domains, URLs, etc.)
-        # ===================================================================
         self._log("Extracting configuration...")
         config_extractor = ConfigExtractor(file_path)
         config_data = config_extractor.extract()
@@ -229,9 +190,6 @@ class PythonEngine(AnalysisEngine):
         self._log(f"Found {len(config_data.get('ips', []))} IPs, "
                   f"{len(config_data.get('domains', []))} domains")
 
-        # ===================================================================
-        # STEP 9: YARA scan
-        # ===================================================================
         self._log("Running YARA scan...")
         yara_parser = YaraParser(file_path)
         yara_data = yara_parser.scan()
@@ -239,18 +197,12 @@ class PythonEngine(AnalysisEngine):
 
         self._log(f"YARA matched {len(yara_data.get('matched_rules', []))} rules")
 
-        # ===================================================================
-        # STEP 10: Key discovery
-        # ===================================================================
         self._log("Discovering encryption keys...")
         key_reconstructor = KeyReconstructor(file_path)
         discovered_keys = key_reconstructor.find_keys()
         self.errors.extend(key_reconstructor.get_errors())
         self._log(f"Discovered {len(discovered_keys)} potential keys")
 
-        # ===================================================================
-        # STEP 11: Magic carving
-        # ===================================================================
         self._log("Carving embedded files...")
         magic_carver = MagicCarver(file_path, use_binwalk=self.use_binwalk, verbose=self.verbose)
         carved_data = magic_carver.carve()
@@ -259,17 +211,11 @@ class PythonEngine(AnalysisEngine):
         embedded_files_count = len(carved_data.get('embedded_files', []))
         self._log(f"Found {embedded_files_count} embedded files")
 
-        # ===================================================================
-        # STEP 12: Entropy analysis
-        # ===================================================================
         self._log("Analyzing entropy...")
         entropy_analysis = self.entropy_detector.analyze(sections, all_strings)
         self._log(f"Entropy: {len(entropy_analysis.high_entropy_sections)} high entropy sections, "
                   f"overall: {entropy_analysis.overall_entropy:.2f}")
 
-        # ===================================================================
-        # STEP 13: ATT&CK mapping
-        # ===================================================================
         self._log("Mapping to ATT&CK techniques...")
         attck_mappings = self.attck_mapper.map_all(
             strings=all_strings,
@@ -280,9 +226,6 @@ class PythonEngine(AnalysisEngine):
         )
         self._log(f"Generated {len(attck_mappings)} ATT&CK mappings")
 
-        # ===================================================================
-        # STEP 14: Build report
-        # ===================================================================
         report = StaticReport(
             filename=file_path.name,
             size_bytes=file_info['size_bytes'],
@@ -335,7 +278,14 @@ class PythonEngine(AnalysisEngine):
         return report
 
     def _get_file_info(self, file_path: Path) -> Dict[str, Any]:
-        """Get basic file information."""
+        """Get basic file information.
+
+        Args:
+            file_path: Path to stat.
+
+        Returns:
+            Dict with size_bytes and size_mb.
+        """
         stats = file_path.stat()
         return {
             'size_bytes': stats.st_size,
@@ -343,7 +293,15 @@ class PythonEngine(AnalysisEngine):
         }
 
     def _create_empty_report(self, file_path: Path, error: str = "") -> StaticReport:
-        """Create an empty report for skipped files."""
+        """Create an empty report for a skipped or already-analyzed file.
+
+        Args:
+            file_path: Path to the file, for basic file info.
+            error: Error message to record, if any.
+
+        Returns:
+            A minimal StaticReport with no analysis content.
+        """
         return StaticReport(
             filename=file_path.name,
             size_bytes=0,

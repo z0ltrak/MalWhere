@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-"""
-STIX 2.1 Exporter for the MalWhere Pipeline
-TFM 2025-2026 - Universidad Complutense de Madrid
-
-Builds a connected STIX 2.1 bundle (Identity, Malware, File/DomainName/
-IPv4Address/URL observables, Indicators, AttackPatterns, and the
-relationships between them) from a reconciled attck_mapping.json.
-"""
+"""Builds a connected STIX 2.1 bundle (Identity, Malware, observables, Indicators, AttackPatterns) from attck_mapping.json."""
 
 import sys
 import json
@@ -18,6 +11,11 @@ from src.stix_builder import StixBundleBuilder
 
 
 def main():
+    """Build a STIX 2.1 bundle from a reconciled attck_mapping.json and write it to disk.
+
+    Returns:
+        Process exit code (always 0; failures exit early via sys.exit).
+    """
     parser = argparse.ArgumentParser(
         description="STIX 2.1 Exporter for the MalWhere Pipeline"
     )

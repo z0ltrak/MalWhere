@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 IOC Normalizer for the MalWhere Pipeline
-TFM 2025-2026 - Universidad Complutense de Madrid
 
 Merges a static analysis report and a (curated) dynamic analysis report
 into a single normalized_iocs.json: deduplicated hashes/network/host IOCs
@@ -22,6 +21,11 @@ from src.technique_grouper import group_technique_observations
 
 
 def main():
+    """Merge a static (and optional dynamic) report into normalized_iocs.json.
+
+    Returns:
+        Process exit code (always 0; failures exit early via sys.exit).
+    """
     parser = argparse.ArgumentParser(
         description="IOC Normalizer for the MalWhere Pipeline"
     )

@@ -1,18 +1,11 @@
 #!/bin/sh
 # Aligns this container's "libvirt" group GID with the host's actual one.
-# The host's /var/run/libvirt/libvirt-sock is bind-mounted in (see
-# docker-compose.yml), but its numeric GID is whatever the HOST's package
-# manager happened to assign when it created that system group — there's
-# no guarantee it matches this image's baked-in libvirt GID (confirmed to
-# differ in practice: 122 in this image vs 126 on the machine this was
-# first deployed on). AF_UNIX socket permission checks are purely
-# numeric, so a name match ("libvirt" == "libvirt") means nothing if the
-# numbers disagree — cape/cape-web/cape-processor get a silent Permission
-# Denied connecting to libvirt otherwise, with no hint that a GID
-# mismatch is the cause.
-#
-# Runs via `ExecStartPre=+` (root, regardless of the unit's own User=cape)
-# since groupmod needs privileges the cape user doesn't have.
+# The bind-mounted libvirt-sock's GID is whatever the host assigned, with
+# no guarantee it matches this image's baked-in GID; AF_UNIX permission
+# checks are purely numeric, so a name match means nothing if the numbers
+# disagree -- cape/cape-web/cape-processor get a silent Permission Denied
+# otherwise. Runs via `ExecStartPre=+` (root) since groupmod needs
+# privileges the cape user doesn't have.
 set -e
 
 SOCK=/var/run/libvirt/libvirt-sock

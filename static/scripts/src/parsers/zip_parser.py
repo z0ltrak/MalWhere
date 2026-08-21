@@ -15,7 +15,11 @@ class ZIPParser:
         self.zip_data = {}
 
     def parse(self) -> Dict[str, Any]:
-        """Parse ZIP file and extract metadata."""
+        """Parse ZIP file and extract metadata.
+
+        Returns:
+            Dict with is_zip, file_count, files, and metadata, or {'error': ...} on failure.
+        """
         try:
             with zipfile.ZipFile(self.file_path, 'r') as zip_ref:
                 file_list = zip_ref.namelist()
@@ -37,7 +41,14 @@ class ZIPParser:
             return {'error': str(e)}
 
     def _get_metadata(self, zip_ref: zipfile.ZipFile) -> Dict[str, Any]:
-        """Get ZIP file metadata."""
+        """Get ZIP file metadata.
+
+        Args:
+            zip_ref: Open ZipFile to read metadata from.
+
+        Returns:
+            Dict with comment, compressed_size, uncompressed_size, and up to 100 per-file entries.
+        """
         metadata = {
             'comment': None,
             'compressed_size': 0,
@@ -56,7 +67,6 @@ class ZIPParser:
                 metadata['compressed_size'] += info.compress_size
                 metadata['uncompressed_size'] += info.file_size
 
-                # Check for suspicious files
                 is_suspicious = self._is_suspicious_filename(info.filename)
 
                 metadata['files'].append({
@@ -75,7 +85,14 @@ class ZIPParser:
         return metadata
 
     def _is_suspicious_filename(self, filename: str) -> bool:
-        """Check if a filename is suspicious."""
+        """Check if a filename is suspicious.
+
+        Args:
+            filename: Filename to check.
+
+        Returns:
+            True if the filename matches a suspicious keyword/extension or has a double extension.
+        """
         suspicious_patterns = [
             '.exe', '.dll', '.sys', '.com', '.scr', '.pif',
             'install', 'setup', 'update', 'patch', 'crack',
@@ -95,7 +112,14 @@ class ZIPParser:
         return False
 
     def extract_all(self, extract_dir: Optional[Path] = None) -> List[Dict[str, Any]]:
-        """Extract all files from ZIP archive."""
+        """Extract all files from ZIP archive.
+
+        Args:
+            extract_dir: Directory to extract into; a temp directory is created if not given.
+
+        Returns:
+            One dict per extracted file (name, path, size, type).
+        """
         extracted = []
 
         try:
@@ -123,7 +147,14 @@ class ZIPParser:
         return extracted
 
     def _get_file_type(self, file_path: Path) -> str:
-        """Get file type from file content."""
+        """Get file type from file content.
+
+        Args:
+            file_path: Path to the file to check.
+
+        Returns:
+            A file type string, or 'unknown' if unrecognized.
+        """
         try:
             with open(file_path, 'rb') as f:
                 data = f.read(256)

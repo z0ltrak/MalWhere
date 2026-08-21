@@ -1,3 +1,5 @@
+"""Detect cryptographic algorithms, constants, and potential keys in extracted strings."""
+
 import re
 from typing import List, Dict, Any
 
@@ -54,7 +56,14 @@ class CryptoDetector:
     ]
 
     def detect_in_strings(self, strings: List[str]) -> List[Dict[str, str]]:
-        """Detect crypto patterns in strings."""
+        """Detect crypto algorithm/constant patterns in strings.
+
+        Args:
+            strings: Extracted strings from the sample.
+
+        Returns:
+            One high-confidence match per string with a matched pattern.
+        """
         found = []
         for s in strings:
             for pattern, description in self.CRYPTO_PATTERNS:
@@ -69,7 +78,14 @@ class CryptoDetector:
         return found
 
     def detect_keys(self, strings: List[str]) -> List[Dict[str, str]]:
-        """Detect potential keys in strings."""
+        """Detect potential keys (hex-shaped hash/key-length runs) in strings.
+
+        Args:
+            strings: Extracted strings from the sample.
+
+        Returns:
+            Up to 20 candidate keys.
+        """
         found = []
         for s in strings:
             for pattern, description in self.KEY_PATTERNS:
@@ -84,7 +100,14 @@ class CryptoDetector:
         return found[:20]
 
     def detect_all(self, strings: List[str]) -> Dict[str, List[Dict]]:
-        """Run all crypto detection."""
+        """Run all crypto detection.
+
+        Args:
+            strings: Extracted strings from the sample.
+
+        Returns:
+            Dict with crypto_algorithms and potential_keys lists.
+        """
         return {
             'crypto_algorithms': self.detect_in_strings(strings),
             'potential_keys': self.detect_keys(strings),

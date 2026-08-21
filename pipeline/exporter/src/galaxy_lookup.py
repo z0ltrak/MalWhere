@@ -16,10 +16,24 @@ ATTACK_PATTERN_GALAXY_TYPE = "mitre-attack-pattern"
 
 class AttckGalaxyLookup:
     def __init__(self, misp_client):
+        """Initialize the lookup.
+
+        Args:
+            misp_client: A connected pymisp.PyMISP client.
+        """
         self._misp = misp_client
         self._technique_to_tag: Optional[Dict[str, str]] = None
 
     def _load(self) -> Dict[str, str]:
+        """Fetch and index the MITRE ATT&CK galaxy's clusters by technique ID.
+
+        Returns:
+            Dict mapping technique_id -> the cluster's tag_name.
+
+        Raises:
+            RuntimeError: If the galaxy listing is malformed, the ATT&CK
+                galaxy isn't installed, or it has no clusters.
+        """
         galaxies = self._misp.galaxies(pythonify=False)
         if not isinstance(galaxies, list):
             raise RuntimeError(f"Unexpected response listing galaxies: {galaxies}")
@@ -52,6 +66,14 @@ class AttckGalaxyLookup:
         return mapping
 
     def tag_for(self, technique_id: str) -> Optional[str]:
+        """Get the MISP galaxy tag for a technique ID, loading the galaxy on first call.
+
+        Args:
+            technique_id: MITRE technique ID, e.g. 'T1055'.
+
+        Returns:
+            The cluster's tag_name, or None if the technique isn't in the galaxy.
+        """
         if self._technique_to_tag is None:
             self._technique_to_tag = self._load()
         return self._technique_to_tag.get(technique_id)

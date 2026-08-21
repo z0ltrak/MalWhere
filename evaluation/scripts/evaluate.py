@@ -1,18 +1,13 @@
 #!/usr/bin/env python3
-"""
-Pipeline Evaluation for the MalWhere TFM
-TFM 2025-2026 - Universidad Complutense de Madrid
+"""Compares the pipeline's automated ATT&CK mappings against manually-validated ground truth.
 
-Compares the pipeline's automated ATT&CK mappings against manually-
-validated ground truth: strict + family-level precision/recall, and a
-confidence/source-stratified breakdown that directly tests whether
-pipeline/mapper/src/reconcile.py's cross-source confidence reconciliation
-actually correlates with correctness.
+Reports strict + family-level precision/recall, and a confidence/source-
+stratified breakdown that tests whether reconcile.py's cross-source
+confidence reconciliation actually correlates with correctness.
 
-Manual analysis is the BEST AVAILABLE ground truth here, not a perfect
+Manual analysis is the best available ground truth here, not a perfect
 oracle: an automated finding absent from a manual report may be a genuine
-false positive, or something the manual analyst simply didn't write up.
-Treat "false positive" counts with that caveat, not as proven errors.
+false positive, or something the manual analyst didn't write up.
 """
 
 import sys
@@ -26,28 +21,40 @@ from src.matcher import evaluate_sample
 
 
 def load_json(path: Path) -> dict:
+    """Load and parse a JSON file.
+
+    Args:
+        path: Path to the JSON file.
+
+    Returns:
+        The parsed JSON content.
+    """
     with open(path) as f:
         return json.load(f)
 
 
 def load_family_total_techniques(results_dir: Path, family: str, parent_techniques: list) -> list:
-    """Parent techniques plus every resubmitted (dropped/extracted) file's
-    own techniques, pooled together.
+    """Parent techniques plus every resubmitted (dropped/extracted) file's own techniques, pooled together.
 
-    Ground truth is built from a manual RE report that covers the WHOLE
-    sample -- every dropped component, not just the outermost binary --
-    so parent-only recall structurally can't reach it for multi-stage
-    malware: a dropped payload's own capabilities (e.g. RoningLoader's
-    diamondage.exe, its C2 client) are real findings but deliberately kept
-    out of the parent's OWN scored attck_mapping.json (see
-    pipeline/mapper/src/reconcile.py's cross-source confidence model --
-    blending them in would misattribute confidence to the wrong binary).
-    That separation is correct for the threat-intel export (STIX/MISP
-    should never claim a dropped payload's behavior is the parent's own),
-    but it means parent-only recall understates what the pipeline, as a
-    whole system including the resubmission loop, actually found. This
-    pools everything for evaluation purposes only -- it never touches
+    Ground truth is built from a manual RE report covering the whole
+    sample, every dropped component, not just the outermost binary -- so
+    parent-only recall structurally understates what the pipeline as a
+    whole (including the resubmission loop) actually found. A dropped
+    payload's own findings are deliberately kept out of the parent's own
+    scored attck_mapping.json (blending them in would misattribute
+    confidence to the wrong binary, and STIX/MISP should never claim a
+    dropped payload's behavior is the parent's own) -- this pools
+    everything for evaluation purposes only, never touching
     results/<family>/attck/attck_mapping.json itself.
+
+    Args:
+        results_dir: Base results directory to look for resubmitted/ under.
+        family: Family label to pool resubmitted techniques for.
+        parent_techniques: The parent sample's own reconciled technique list.
+
+    Returns:
+        parent_techniques plus every resubmitted file's techniques,
+        deduplicated by technique_id keeping the highest-confidence occurrence.
     """
     pooled = list(parent_techniques)
     resubmitted_dir = results_dir / family / "resubmitted"
@@ -58,15 +65,11 @@ def load_family_total_techniques(results_dir: Path, family: str, parent_techniqu
                 child_mapping = load_json(mapping_file)
                 pooled.extend(child_mapping.get("techniques", []))
 
-    # _match_mode counts false_positive/matched by INSTANCE, not unique
-    # technique_id -- true for a single attck_mapping.json (map_attck.py
-    # already groups by technique before scoring, one entry per ID) but
-    # not for this pool, where e.g. T1497 legitimately shows up in most
-    # of two dozen resubmitted files independently. Left undeduplicated,
-    # every one of those inflates both tp and fp by instance count,
-    # distorting precision/recall away from what "does the family, as a
-    # whole, cover this technique" actually means. Collapse to one entry
-    # per technique_id, keeping the highest-confidence occurrence.
+    # Collapse to one entry per technique_id, keeping the highest-
+    # confidence occurrence: matching counts by instance, not unique ID,
+    # and a technique can legitimately show up in most of two dozen
+    # resubmitted files independently, which would otherwise inflate
+    # both tp and fp by instance count.
     _TIER_RANK = {"high": 2, "medium": 1, "low": 0}
     best_by_id: Dict[str, Any] = {}
     for t in pooled:
@@ -79,6 +82,14 @@ def load_family_total_techniques(results_dir: Path, family: str, parent_techniqu
 
 
 def render_summary_md(all_results: dict) -> str:
+    """Render the per-family evaluation results as a Markdown summary report.
+
+    Args:
+        all_results: Per-family evaluation dicts, as produced by evaluate_sample.
+
+    Returns:
+        The rendered summary.md content.
+    """
     lines = [
         "# MalWhere Pipeline Evaluation",
         "",
@@ -160,6 +171,11 @@ def render_summary_md(all_results: dict) -> str:
 
 
 def main():
+    """Evaluate every family with a ground truth file against its automated ATT&CK mapping, writing per-sample JSON and a summary.md.
+
+    Returns:
+        Process exit code (always 0; failures exit early via sys.exit).
+    """
     parser = argparse.ArgumentParser(
         description="Pipeline Evaluation for the MalWhere TFM"
     )

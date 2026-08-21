@@ -8,11 +8,28 @@ from typing import Any, Dict, List, Tuple
 
 
 def base_technique(technique_id: str) -> str:
-    """Strips the sub-technique suffix: T1071.001 -> T1071."""
+    """Strips the sub-technique suffix: T1071.001 -> T1071.
+
+    Args:
+        technique_id: A technique ID, with or without a sub-technique suffix.
+
+    Returns:
+        The base (parent) technique ID.
+    """
     return technique_id.split(".")[0]
 
 
 def _prf1(tp: int, fp: int, fn: int) -> Dict[str, float]:
+    """Compute precision, recall, and F1 from true/false positive/negative counts.
+
+    Args:
+        tp: True positive count.
+        fp: False positive count.
+        fn: False negative count.
+
+    Returns:
+        Dict with precision, recall, and f1, each rounded to 4 decimals.
+    """
     precision = tp / (tp + fp) if (tp + fp) else 0.0
     recall = tp / (tp + fn) if (tp + fn) else 0.0
     f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
@@ -20,6 +37,17 @@ def _prf1(tp: int, fp: int, fn: int) -> Dict[str, float]:
 
 
 def _match_mode(auto: List[Dict[str, Any]], gt: List[Dict[str, Any]], strict: bool) -> Dict[str, Any]:
+    """Match automated techniques against ground truth in either strict (exact ID) or family-level (base ID) mode.
+
+    Args:
+        auto: The pipeline's own reconciled technique list.
+        gt: Manually-validated ground truth technique list.
+        strict: If True, match on exact technique_id; if False, match on base_technique.
+
+    Returns:
+        Dict with tp/fp/fn counts, gt_matched_count, precision/recall/f1,
+        and the matched/false_positive/missed technique ID lists.
+    """
     if strict:
         auto_key = lambda t: t["technique_id"]  # noqa: E731
         gt_key = lambda t: t["technique_id"]  # noqa: E731
@@ -62,12 +90,29 @@ def _match_mode(auto: List[Dict[str, Any]], gt: List[Dict[str, Any]], strict: bo
 
 
 def evaluate_sample(auto_techniques: List[Dict[str, Any]], gt_techniques: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Score one sample's automated techniques against its ground truth.
+
+    Args:
+        auto_techniques: The pipeline's own reconciled technique list.
+        gt_techniques: Manually-validated ground truth technique list.
+
+    Returns:
+        Dict with strict/family-level precision-recall-F1 plus precision stratified by confidence tier and source.
+    """
     strict = _match_mode(auto_techniques, gt_techniques, strict=True)
     family = _match_mode(auto_techniques, gt_techniques, strict=False)
 
     gt_base_keys = {base_technique(t["technique_id"]) for t in gt_techniques}
 
     def stratify(group_fn) -> Dict[str, Dict[str, Any]]:
+        """Group auto_techniques by group_fn and compute per-group precision against gt_base_keys.
+
+        Args:
+            group_fn: Maps a technique dict to its grouping key (e.g. confidence tier, source combo).
+
+        Returns:
+            Dict keyed by group, each with count/tp/fp/precision.
+        """
         groups: Dict[str, List[Dict[str, Any]]] = {}
         for t in auto_techniques:
             key = group_fn(t)

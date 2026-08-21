@@ -19,6 +19,12 @@ class STIXExporter:
     """Export analysis results to STIX 2.1 format."""
 
     def __init__(self, report_data: Dict[str, Any], sample_hash: str):
+        """Initialize the exporter.
+
+        Args:
+            report_data: Static analysis report dict to export.
+            sample_hash: The sample's SHA-256 hash, used to name the STIX Indicator.
+        """
         self.report = report_data
         self.sample_hash = sample_hash
         self.objects = []
@@ -28,7 +34,12 @@ class STIXExporter:
             self.errors.append("STIX2 library not installed. Run: pip install stix2")
 
     def export(self) -> Dict[str, Any]:
-        """Export the report to STIX 2.1 bundle."""
+        """Export the report to a STIX 2.1 bundle.
+
+        Returns:
+            Dict with 'bundle' (serialized STIX), 'objects', and 'errors',
+            or {'error': ...} if the stix2 library is unavailable or export failed.
+        """
         if not stix2:
             return {'error': 'STIX2 library not available'}
 
@@ -152,7 +163,14 @@ class STIXExporter:
             self.objects.append(rel)
 
     def save_to_file(self, output_path: Path) -> bool:
-        """Save the STIX bundle to a file."""
+        """Save the STIX bundle to a file.
+
+        Args:
+            output_path: Destination path for the serialized bundle.
+
+        Returns:
+            True if the bundle was exported and written successfully.
+        """
         try:
             result = self.export()
             if 'bundle' in result:
@@ -168,7 +186,12 @@ class STIXExporter:
 
 
 def export_report_to_stix(report_file: Path, output_file: Path) -> None:
-    """Convenience function to export a report to STIX."""
+    """Convenience function to export a static analysis report JSON file to STIX.
+
+    Args:
+        report_file: Path to the static analysis report JSON.
+        output_file: Destination path for the serialized STIX bundle.
+    """
     with open(report_file, 'r') as f:
         report_data = json.load(f)
 

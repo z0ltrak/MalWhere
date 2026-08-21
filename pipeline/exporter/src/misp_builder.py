@@ -20,16 +20,17 @@ _CONFIDENCE_TAG = {
 
 
 class MISPEventBuilder:
-    # Same reasoning as StixBundleBuilder.MAX_DESCRIPTION_LENGTH: MISP
-    # comment attributes have no meaningful length limit in practice, this
-    # is a defensive cap against a pathological case, not a realistic one.
-    # Previously hard-truncated at 2000 with no indicator -- see that
-    # class's comment for why that's no longer a safe assumption now that
-    # combination-aware evidence routinely produces several justification
-    # entries per technique.
+    # Same reasoning as StixBundleBuilder.MAX_DESCRIPTION_LENGTH: a
+    # defensive cap against a pathological case, not a realistic one.
     MAX_COMMENT_LENGTH = 10000
 
     def __init__(self, galaxy_lookup: AttckGalaxyLookup, distribution: int = 0):
+        """Initialize the event builder.
+
+        Args:
+            galaxy_lookup: Lookup for MISP's own ATT&CK galaxy tags.
+            distribution: MISP distribution level for the built event.
+        """
         self.galaxy_lookup = galaxy_lookup
         self.distribution = distribution
         self.unmapped_techniques: List[str] = []
@@ -38,6 +39,14 @@ class MISPEventBuilder:
         self.truncation_notes: List[str] = []
 
     def build(self, attck_mapping: Dict[str, Any]) -> MISPEvent:
+        """Build a MISPEvent from a reconciled attck_mapping.json.
+
+        Args:
+            attck_mapping: Reconciled ATT&CK mapping dict.
+
+        Returns:
+            A MISPEvent with file objects, network attributes, and per-technique tagged comments.
+        """
         sample = attck_mapping.get("sample", {})
         iocs = attck_mapping.get("iocs", {})
         family = sample.get("family", "unknown")
@@ -53,7 +62,25 @@ class MISPEventBuilder:
         return event
 
     def _add_file_objects(self, event: MISPEvent, sample: Dict[str, Any], iocs: Dict[str, Any]) -> None:
+        """Add MISP file objects for the primary sample and every hash IOC, deduplicated by sha256.
+
+        Args:
+            event: MISPEvent to add objects to, mutated in place.
+            sample: attck_mapping's sample dict (static/dynamic hashes and filenames).
+            iocs: attck_mapping's iocs dict, read for its hashes list.
+        """
         def make_file_object(sha256: str, md5: str = "", sha1: str = "", filename: Optional[str] = None) -> Optional[MISPObject]:
+            """Build a MISP 'file' object from hash/filename fields.
+
+            Args:
+                sha256: File's SHA-256 hash; required.
+                md5: File's MD5 hash, if known.
+                sha1: File's SHA-1 hash, if known.
+                filename: File's name, if known.
+
+            Returns:
+                A MISPObject, or None if sha256 wasn't given.
+            """
             if not sha256:
                 return None
             obj = MISPObject("file")
@@ -93,6 +120,12 @@ class MISPEventBuilder:
                 seen_sha256.add(sha256)
 
     def _add_network_attributes(self, event: MISPEvent, network_iocs: Dict[str, Any]) -> None:
+        """Add typed network-activity attributes (domain, ip-dst, url) to the event.
+
+        Args:
+            event: MISPEvent to add attributes to, mutated in place.
+            network_iocs: attck_mapping's iocs.network_iocs dict.
+        """
         for d in network_iocs.get("domains", []):
             if d.get("value"):
                 event.add_attribute("domain", d["value"], category="Network activity")
@@ -104,6 +137,12 @@ class MISPEventBuilder:
                 event.add_attribute("url", url["value"], category="Network activity")
 
     def _add_technique_attributes(self, event: MISPEvent, techniques: List[Dict[str, Any]]) -> None:
+        """Add one evidence-carrying comment attribute per technique, tagged with its ATT&CK galaxy and confidence.
+
+        Args:
+            event: MISPEvent to add attributes to, mutated in place.
+            techniques: Reconciled technique list from attck_mapping.json.
+        """
         for t in techniques:
             technique_id = t.get("technique_id", "")
             evidence = t.get("evidence", [])

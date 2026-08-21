@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
-"""
-Static Analysis CLI for MalWhere Pipeline
-TFM 2025-2026 - Universidad Complutense de Madrid
-"""
+"""Static analysis CLI for the MalWhere pipeline."""
 
 import sys
 import json
 import argparse
 from pathlib import Path
 
-# Add the parent directory so we can import from src
 sys.path.insert(0, str(Path(__file__).parent))
 from src.analyzer import StaticAnalyzer
 
 
 def main():
+    """Parse CLI args, run StaticAnalyzer on the sample, and write the JSON report.
+
+    Returns:
+        Process exit code (always 0; failures exit early via sys.exit).
+    """
     parser = argparse.ArgumentParser(
         description='Static Analysis for MalWhere Pipeline'
     )
@@ -78,7 +79,6 @@ def main():
     with open(output_file, 'w') as f:
         json.dump(report.to_dict(), f, indent=2, default=str)
 
-    # Export to STIX if requested
     if args.export_stix:
         try:
             from src.exporters.stix_exporter import export_report_to_stix

@@ -15,12 +15,18 @@ class ZlibParser:
         self.errors: List[str] = []
 
     def decompress(self, data: bytes) -> Optional[bytes]:
-        """Decompress zlib-compressed data with multiple format support."""
+        """Decompress zlib-compressed data with multiple format support.
+
+        Args:
+            data: Data to decompress.
+
+        Returns:
+            Decompressed bytes, or None if every method failed.
+        """
         if len(data) < 10:
             self.errors.append("Data too small for decompression")
             return None
 
-        # Try different decompression methods
         methods = [
             self._decompress_zlib,
             self._decompress_zlib_no_header,
@@ -39,7 +45,6 @@ class ZlibParser:
                 self.errors.append(f"{method.__name__} failed: {str(e)[:50]}")
                 continue
 
-        # If all methods fail, try to find zlib data within the blob
         result = self._find_and_decompress(data)
         if result:
             return result
@@ -48,9 +53,15 @@ class ZlibParser:
         return None
 
     def _decompress_zlib(self, data: bytes) -> Optional[bytes]:
-        """Standard zlib decompression (with header)."""
+        """Standard zlib decompression (with header).
+
+        Args:
+            data: Data to decompress.
+
+        Returns:
+            Decompressed bytes, or None if no valid header/decompression succeeded.
+        """
         try:
-            # Check for zlib header (0x78 0x9C, 0x78 0xDA, 0x78 0x01)
             for header in [b'\x78\x9C', b'\x78\xDA', b'\x78\x01']:
                 offset = data.find(header)
                 if offset != -1:
@@ -62,9 +73,15 @@ class ZlibParser:
         return None
 
     def _decompress_zlib_no_header(self, data: bytes) -> Optional[bytes]:
-        """Raw deflate decompression (no zlib header)."""
+        """Raw deflate decompression (no zlib header).
+
+        Args:
+            data: Data to decompress.
+
+        Returns:
+            Decompressed bytes, or None if no candidate offset decompressed successfully.
+        """
         try:
-            # Try raw deflate with negative wbits
             for offset in self._find_deflate_headers(data):
                 try:
                     decompressed = zlib.decompress(data[offset:], -15)
@@ -77,15 +94,20 @@ class ZlibParser:
         return None
 
     def _decompress_gzip(self, data: bytes) -> Optional[bytes]:
-        """GZip decompression."""
+        """GZip decompression.
+
+        Args:
+            data: Data to decompress.
+
+        Returns:
+            Decompressed bytes, or None if no GZip header/decompression succeeded.
+        """
         try:
-            # Check for GZip header (0x1F 0x8B)
             offset = data.find(b'\x1F\x8B')
             if offset != -1:
                 import gzip
                 from io import BytesIO
 
-                # Try to decompress the GZip data
                 with BytesIO(data[offset:]) as f:
                     with gzip.GzipFile(fileobj=f) as gz:
                         decompressed = gz.read()
@@ -96,8 +118,14 @@ class ZlibParser:
         return None
 
     def _decompress_zlib_offset(self, data: bytes) -> Optional[bytes]:
-        """Try decompressing from various offsets (zlib data may not start at offset 0)."""
-        # Look for zlib headers at various offsets
+        """Try decompressing from various offsets (zlib data may not start at offset 0).
+
+        Args:
+            data: Data to decompress.
+
+        Returns:
+            Decompressed bytes, or None if no offset decompressed successfully.
+        """
         for offset in range(0, min(256, len(data) - 10)):
             chunk = data[offset:offset + 20]
             for header in [b'\x78\x9C', b'\x78\xDA', b'\x78\x01']:
@@ -111,12 +139,18 @@ class ZlibParser:
         return None
 
     def _decompress_zlib_multiple(self, data: bytes) -> Optional[bytes]:
-        """Try decompressing multiple zlib streams concatenated."""
+        """Try decompressing multiple zlib streams concatenated.
+
+        Args:
+            data: Data to decompress.
+
+        Returns:
+            Concatenated decompressed bytes, or None if nothing decompressed.
+        """
         try:
             decompressed = b''
             pos = 0
             while pos < len(data) - 10:
-                # Look for zlib header
                 found = False
                 for header in [b'\x78\x9C', b'\x78\xDA', b'\x78\x01']:
                     offset = data.find(header, pos)
@@ -141,8 +175,14 @@ class ZlibParser:
         return None
 
     def _find_and_decompress(self, data: bytes) -> Optional[bytes]:
-        """Find zlib data within a larger blob and decompress it."""
-        # Scan for zlib headers
+        """Find zlib data within a larger blob and decompress it, trying several chunk sizes.
+
+        Args:
+            data: Data to search and decompress.
+
+        Returns:
+            Decompressed bytes, or None if nothing decompressed.
+        """
         zlib_headers = [b'\x78\x9C', b'\x78\xDA', b'\x78\x01']
 
         for header in zlib_headers:
@@ -150,7 +190,6 @@ class ZlibParser:
             if offset != -1:
                 self.errors.append(f"Found zlib header at offset {offset}")
 
-                # Try different sizes (zlib data might be truncated)
                 for size in [1024, 2048, 4096, 8192, 16384, 32768, 65536]:
                     try:
                         chunk = data[offset:offset + size]
@@ -166,7 +205,14 @@ class ZlibParser:
         return None
 
     def _find_deflate_headers(self, data: bytes) -> List[int]:
-        """Find potential deflate headers."""
+        """Find potential deflate headers.
+
+        Args:
+            data: Data to scan.
+
+        Returns:
+            Up to 20 candidate offsets with a plausible BFINAL/BTYPE bit pattern.
+        """
         offsets = []
         for i in range(len(data) - 2):
             # BFINAL = 1, BTYPE = 0 (no compression), 1 (fixed), 2 (dynamic)
@@ -179,7 +225,15 @@ class ZlibParser:
         return offsets
 
     def extract_from_file(self, offset: int, size: int = 0) -> Optional[bytes]:
-        """Extract and decompress zlib data from file at specific offset."""
+        """Extract and decompress zlib data from file at specific offset.
+
+        Args:
+            offset: Byte offset to read from.
+            size: Number of bytes to read; defaults to 64KB if not given.
+
+        Returns:
+            Decompressed bytes, or None on read/decompression failure.
+        """
         try:
             with open(self.file_path, 'rb') as f:
                 f.seek(offset)

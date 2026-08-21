@@ -32,14 +32,10 @@ class IndicatorDetector:
         'RegSetValue': 'Registry modification (T1112)',
         'RegDeleteKey': 'Registry deletion (T1112)',
 
-        # Network -- 'S0105' was a MITRE Software ID (a specific
-        # tool/malware family), not a Technique ID; wrong citation, not a
-        # formatting nit (see the same fix in attck_mapper.py's
-        # IMPORT_MAPPING for the full reasoning). The raw Winsock
-        # primitives below are too generic to safely cite one technique
-        # from import presence alone, so they're left uncited here;
+        # Network -- raw Winsock primitives are too generic to cite one
+        # technique from import presence alone, so left uncited here;
         # InternetOpen is WinINet's HTTP-specific entry point, specific
-        # enough to defensibly cite T1071 (Application Layer Protocol).
+        # enough to defensibly cite T1071.
         'socket': 'Network socket',
         'connect': 'Network connection',
         'send': 'Network sending',
@@ -151,7 +147,14 @@ class IndicatorDetector:
         }
 
     def check_anti_vm_strings(self, strings: List[str]) -> List[Dict[str, str]]:
-        """Check for anti-VM indicators in strings."""
+        """Check for anti-VM indicators in strings.
+
+        Args:
+            strings: Extracted strings from the sample.
+
+        Returns:
+            Up to 50 matches against ANTI_VM_STRINGS.
+        """
         found = []
         for s in strings:
             s_lower = s.lower()
@@ -167,11 +170,17 @@ class IndicatorDetector:
         return found[:50]
 
     def check_anti_sandbox_strings(self, strings: List[str]) -> List[Dict[str, str]]:
+        """Check for exact matches against known anti-sandbox function names.
+
+        Args:
+            strings: Extracted strings from the sample.
+
+        Returns:
+            One match per string that exactly equals a known anti-sandbox function name.
+        """
         found = []
-        # Only match exact function names from the API list
-        api_set = set(self.ANTI_SANDBOX_STRINGS)  # For O(1) lookup
+        api_set = set(self.ANTI_SANDBOX_STRINGS)
         for s in strings:
-            # Check if the string is an exact match to an anti-sandbox function
             if s in api_set:
                 found.append({
                     'string': s,
@@ -182,7 +191,14 @@ class IndicatorDetector:
         return found
 
     def check_sleep_functions(self, imports: List[ImportInfo]) -> List[Dict[str, str]]:
-        """Check for sleep/delay functions used for anti-sandbox."""
+        """Check for sleep/delay functions used for anti-sandbox timing.
+
+        Args:
+            imports: Parsed import-table entries.
+
+        Returns:
+            One entry per imported function matching SLEEP_FUNCTIONS.
+        """
         found = []
         for imp in imports:
             if imp.function in self.SLEEP_FUNCTIONS:
@@ -194,7 +210,14 @@ class IndicatorDetector:
         return found
 
     def check_imports(self, imports: List[ImportInfo]) -> List[str]:
-        """Check imports for suspicious functions with ATT&CK mapping."""
+        """Check imports for suspicious functions with ATT&CK mapping.
+
+        Args:
+            imports: Parsed import-table entries.
+
+        Returns:
+            Sorted "function (mapping)" strings for each match against SUSPICIOUS_IMPORTS.
+        """
         found = set()
         for imp in imports:
             if imp.function in self.SUSPICIOUS_IMPORTS:
@@ -202,7 +225,14 @@ class IndicatorDetector:
         return sorted(list(found))
 
     def check_anti_debug(self, imports: List[ImportInfo]) -> List[Dict[str, str]]:
-        """Check for anti-debugging techniques."""
+        """Check for anti-debugging techniques.
+
+        Args:
+            imports: Parsed import-table entries.
+
+        Returns:
+            One entry per imported function matching ANTI_DEBUG_IMPORTS.
+        """
         found = []
         for imp in imports:
             if imp.function in self.ANTI_DEBUG_IMPORTS:
@@ -214,7 +244,14 @@ class IndicatorDetector:
         return found
 
     def check_anti_vm(self, imports: List[ImportInfo]) -> List[Dict[str, str]]:
-        """Check for anti-VM techniques."""
+        """Check for anti-VM techniques.
+
+        Args:
+            imports: Parsed import-table entries.
+
+        Returns:
+            One entry per imported function matching ANTI_VM_IMPORTS.
+        """
         found = []
         for imp in imports:
             if imp.function in self.ANTI_VM_IMPORTS:
@@ -226,12 +263,18 @@ class IndicatorDetector:
         return found
 
     def check_sections(self, sections: List[SectionInfo]) -> List[Dict[str, Any]]:
-        """Check sections for high entropy (packing/encryption)."""
+        """Check sections for high entropy (packing/encryption) and Write+Execute permissions.
+
+        Args:
+            sections: Parsed PE section info.
+
+        Returns:
+            High-entropy findings followed by W+X findings.
+        """
         high_entropy = []
         wx_sections = []
 
         for section in sections:
-            # High entropy sections (packed/encrypted)
             if section.entropy > 7.5:
                 high_entropy.append({
                     'name': section.name,
@@ -239,21 +282,26 @@ class IndicatorDetector:
                     'note': 'Likely packed or encrypted'
                 })
 
-            # W+X sections (Write + Execute) - injection indicator
             if section.is_executable and section.is_writable:
                 wx_sections.append({
                     'name': section.name,
                     'note': 'Writable + Executable section (potential injection indicator)'
                 })
 
-        # Add W+X findings to the result
         if wx_sections:
             high_entropy.extend(wx_sections)
 
         return high_entropy
 
     def check_ransomware_indicators(self, strings: List[str]) -> List[Dict[str, str]]:
-        """Check for ransomware-specific indicators in strings."""
+        """Check for ransomware-specific indicators in strings.
+
+        Args:
+            strings: Extracted strings from the sample.
+
+        Returns:
+            Up to 50 matches against RANSOMWARE_INDICATORS.
+        """
         found = []
         for s in strings:
             s_lower = s.lower()
@@ -270,7 +318,18 @@ class IndicatorDetector:
 
     def analyze(self, imports: List[ImportInfo], sections: List[SectionInfo],
                 strings: List[str] = None) -> Dict[str, Any]:
-        """Run all indicator checks."""
+        """Run all indicator checks.
+
+        Args:
+            imports: Parsed import-table entries.
+            sections: Parsed PE section info.
+            strings: Extracted strings from the sample, if available.
+
+        Returns:
+            Dict with suspicious_imports, high_entropy_sections, anti_debug,
+            anti_vm, ransomware_indicators, sleep_functions, and (if
+            strings was given) anti_vm_strings/anti_sandbox_strings.
+        """
         result = {
             'suspicious_imports': self.check_imports(imports),
             'high_entropy_sections': self.check_sections(sections),

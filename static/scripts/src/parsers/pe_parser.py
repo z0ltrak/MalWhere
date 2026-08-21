@@ -44,13 +44,25 @@ class PEParser:
     }
 
     def __init__(self, file_path: Path, verbose: bool = False):
+        """Initialize the PE parser.
+
+        Args:
+            file_path: Path to the PE file to parse.
+            verbose: Enable verbose progress logging.
+        """
         self.file_path = file_path
         self.verbose = verbose
         self.pe: Optional[pefile.PE] = None
         self.errors: List[str] = []
 
     def parse(self) -> Dict[str, Any]:
-        """Parse PE file and extract metadata."""
+        """Parse PE file and extract metadata.
+
+        Returns:
+            Dict with metadata, sections, imports, exports, resources,
+            is_dotnet, and (if .NET) net_imports/net_strings/net_types/
+            net_methods/net_bcl_calls. {'error': ...} if pefile couldn't open it.
+        """
         try:
             self.pe = pefile.PE(str(self.file_path))
         except pefile.PEFormatError as e:
@@ -60,7 +72,6 @@ class PEParser:
             self.errors.append(f"Error parsing PE: {e}")
             return {'error': str(e)}
 
-        # Check if .NET
         is_dotnet = self._is_dotnet()
         net_imports = []
         net_strings = []
@@ -68,7 +79,6 @@ class PEParser:
         net_methods = []
         net_bcl_calls = []
 
-        # If .NET, extract P/Invoke imports and strings
         if is_dotnet:
             self._log("Detected .NET assembly, extracting P/Invoke imports...")
             dotnet_parser = DotNetParser(self.file_path, verbose=self.verbose)
@@ -99,10 +109,14 @@ class PEParser:
         }
 
     def _is_dotnet(self) -> bool:
+        """Check if the PE is a .NET assembly, via the COR20 header or an mscoree.dll entry point import.
+
+        Returns:
+            True if the PE is a .NET assembly.
+        """
         if not self.pe:
             return False
 
-        # Method 1: Check COR20 header
         try:
             if hasattr(self.pe, 'OPTIONAL_HEADER') and hasattr(self.pe.OPTIONAL_HEADER, 'DataDirectory'):
                 if len(self.pe.OPTIONAL_HEADER.DataDirectory) > 14:
@@ -112,7 +126,6 @@ class PEParser:
         except Exception:
             pass
 
-        # Method 2: Check for mscoree.dll import
         try:
             if hasattr(self.pe, 'DIRECTORY_ENTRY_IMPORT'):
                 for entry in self.pe.DIRECTORY_ENTRY_IMPORT:
@@ -129,15 +142,17 @@ class PEParser:
         return False
 
     def _is_nsis_installer(self) -> bool:
-        """Check if the file is an NSIS installer."""
+        """Check if the file is an NSIS installer.
+
+        Returns:
+            True if an NSIS signature is found in the raw bytes or extracted strings.
+        """
         try:
-            # Method 1: Check binary data for NSIS signature
             with open(self.file_path, 'rb') as f:
-                data = f.read(65536)  # Read first 64KB
+                data = f.read(65536)
                 if b'Nullsoft.NSIS.exehead' in data or b'NullsoftInst' in data:
                     return True
 
-            # Method 2: Check extracted strings
             try:
                 from ..parsers.strings_parser import StringsParser
                 strings_parser = StringsParser(self.file_path)
@@ -153,7 +168,11 @@ class PEParser:
             return False
 
     def _get_metadata(self) -> Dict[str, Any]:
-        """Extract PE header metadata."""
+        """Extract PE header metadata.
+
+        Returns:
+            Dict of FILE_HEADER/OPTIONAL_HEADER fields, or {} if no PE is loaded.
+        """
         if not self.pe:
             return {}
 
@@ -192,7 +211,11 @@ class PEParser:
         }
 
     def _get_sections(self) -> List[SectionInfo]:
-        """Extract section information."""
+        """Extract section information.
+
+        Returns:
+            One SectionInfo per PE section.
+        """
         if not self.pe:
             return []
 
@@ -219,7 +242,11 @@ class PEParser:
         return sections
 
     def _get_imports(self) -> List[ImportInfo]:
-        """Extract imported functions."""
+        """Extract imported functions.
+
+        Returns:
+            One ImportInfo per named import.
+        """
         imports = []
         if not self.pe or not hasattr(self.pe, 'DIRECTORY_ENTRY_IMPORT'):
             return imports
@@ -241,7 +268,11 @@ class PEParser:
         return imports
 
     def _get_exports(self) -> List[ExportInfo]:
-        """Extract exported functions."""
+        """Extract exported functions.
+
+        Returns:
+            One ExportInfo per named export.
+        """
         exports = []
         if not self.pe or not hasattr(self.pe, 'DIRECTORY_ENTRY_EXPORT'):
             return exports
@@ -260,7 +291,11 @@ class PEParser:
         return exports
 
     def _get_resources(self) -> List[Dict[str, Any]]:
-        """Extract resource information."""
+        """Extract resource information.
+
+        Returns:
+            One dict (type, id, name) per resource entry.
+        """
         resources = []
         if not self.pe or not hasattr(self.pe, 'DIRECTORY_ENTRY_RESOURCE'):
             return resources
@@ -286,7 +321,14 @@ class PEParser:
         return resources
 
     def sections_to_dicts(self, sections: List[SectionInfo]) -> List[Dict[str, Any]]:
-        """Convert SectionInfo objects to dictionaries for compatibility."""
+        """Convert SectionInfo objects to dictionaries for compatibility.
+
+        Args:
+            sections: SectionInfo objects to convert.
+
+        Returns:
+            One dict per input SectionInfo.
+        """
         return [
             {
                 'name': s.name,
@@ -307,7 +349,14 @@ class PEParser:
 
     @staticmethod
     def _format_timestamp(timestamp: int) -> Optional[str]:
-        """Format Unix timestamp to ISO string."""
+        """Format Unix timestamp to ISO string.
+
+        Args:
+            timestamp: Unix timestamp (FILE_HEADER.TimeDateStamp).
+
+        Returns:
+            ISO 8601 string, or None if timestamp is falsy.
+        """
         if timestamp:
             from datetime import datetime
             return datetime.fromtimestamp(timestamp).isoformat()

@@ -1,15 +1,4 @@
-"""
-Universal File Type Detection Module
-TFM 2025-2026 - Universidad Complutense de Madrid
-
-Detects file types using:
-1. Magic bytes
-2. String signatures
-3. PE/ELF parsing
-4. Script detection
-5. Extension-based detection
-6. Heuristics
-"""
+"""Universal file type detection using magic bytes, string signatures, PE/ELF parsing, and heuristics."""
 
 import struct
 import re
@@ -162,46 +151,32 @@ class FileTypeDetector:
                 - error: str (if detection failed)
         """
         try:
-            # Read up to 1MB for detection (NSIS signatures can be far in)
             with open(self.file_path, 'rb') as f:
-                self.data = f.read(1048576)  # 1MB
+                self.data = f.read(1048576)  # 1MB, NSIS signatures can be far in
         except Exception as e:
             self.errors.append(f"Error reading file: {e}")
             return {'type': 'unknown', 'confidence': 'low', 'error': str(e)}
 
-        # If file is empty
         if not self.data or len(self.data) == 0:
             return {'type': 'unknown', 'confidence': 'low', 'reason': 'empty_file'}
 
-        # =================================================================
-        # METHOD 1: Installer detection (MUST run first)
-        # =================================================================
-
-        # NSIS installer
+        # Installer detection must run first (priority order in the class docstring).
         nsis_result = self._detect_nsis()
         if nsis_result:
             return nsis_result
 
-        # Inno Setup installer
         inno_result = self._detect_inno()
         if inno_result:
             return inno_result
 
-        # MSI installer
         msi_result = self._detect_msi()
         if msi_result:
             return msi_result
 
-        # =================================================================
-        # METHOD 2: Script detection
-        # =================================================================
         script_result = self._detect_script()
         if script_result:
             return script_result
 
-        # =================================================================
-        # METHOD 3: PE/ELF detection
-        # =================================================================
         pe_result = self._detect_pe()
         if pe_result:
             return pe_result
@@ -210,39 +185,29 @@ class FileTypeDetector:
         if elf_result:
             return elf_result
 
-        # =================================================================
-        # METHOD 4: Magic bytes (for archives, images, etc.)
-        # =================================================================
         magic_result = self._detect_by_magic()
         if magic_result:
             return magic_result
 
-        # =================================================================
-        # METHOD 5: Extension-based detection
-        # =================================================================
         ext_result = self._detect_by_extension()
         if ext_result:
             return ext_result
 
-        # =================================================================
-        # METHOD 6: Heuristics (plaintext, etc.)
-        # =================================================================
         heuristic_result = self._detect_by_heuristics()
         if heuristic_result:
             return heuristic_result
 
         return {'type': 'unknown', 'confidence': 'low'}
 
-    # ---------------------------------------------------------------------
-    # Installer Detection
-    # ---------------------------------------------------------------------
-
     def _detect_nsis(self) -> Optional[Dict[str, Any]]:
-        """Detect NSIS installer."""
+        """Detect NSIS installer.
+
+        Returns:
+            Detection result dict, or None if no NSIS signature/manifest matched.
+        """
         if not self.data:
             return None
 
-        # Convert to string for searching
         try:
             data_str = self.data.decode('utf-8', errors='ignore')
         except Exception:
@@ -257,7 +222,6 @@ class FileTypeDetector:
                     'matched_string': sig
                 }
 
-        # Check for NSIS manifest pattern
         if '<assembly' in data_str and 'Nullsoft.NSIS' in data_str:
             self._log("Found NSIS manifest")
             return {
@@ -269,7 +233,11 @@ class FileTypeDetector:
         return None
 
     def _detect_inno(self) -> Optional[Dict[str, Any]]:
-        """Detect Inno Setup installer."""
+        """Detect Inno Setup installer.
+
+        Returns:
+            Detection result dict, or None if no Inno Setup signature matched.
+        """
         if not self.data:
             return None
 
@@ -290,8 +258,11 @@ class FileTypeDetector:
         return None
 
     def _detect_msi(self) -> Optional[Dict[str, Any]]:
-        """Detect MSI installer."""
-        # Check extension first
+        """Detect MSI installer.
+
+        Returns:
+            Detection result dict, or None if neither the extension nor the OLE/MSI header matched.
+        """
         if self.file_path.suffix.lower() == '.msi':
             return {
                 'type': 'installer_msi',
@@ -299,10 +270,9 @@ class FileTypeDetector:
                 'matched_string': '.msi extension'
             }
 
-        # Check for MSI magic: D0 CF 11 E0 A1 B1 1A E1 (COM/OLE)
+        # MSI magic: D0 CF 11 E0 A1 B1 1A E1 (COM/OLE)
         if self.data and len(self.data) >= 8:
             if self.data[:8] == b'\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1':
-                # Check for MSI-specific strings
                 try:
                     data_str = self.data.decode('utf-16-le', errors='ignore')
                     if 'MSI' in data_str:
@@ -316,12 +286,12 @@ class FileTypeDetector:
 
         return None
 
-    # ---------------------------------------------------------------------
-    # Script Detection
-    # ---------------------------------------------------------------------
-
     def _detect_script(self) -> Optional[Dict[str, Any]]:
-        """Detect script files (PowerShell, Batch, VBS, JS, Python, PHP)."""
+        """Detect script files (PowerShell, Batch, VBS, JS, Python, PHP).
+
+        Returns:
+            Detection result dict, or None if no script type matched.
+        """
         if not self.data or len(self.data) < 10:
             return None
 
@@ -374,10 +344,6 @@ class FileTypeDetector:
 
         return None
 
-    # ---------------------------------------------------------------------
-    # PE/ELF Detection
-    # ---------------------------------------------------------------------
-
     def _detect_pe(self) -> Optional[Dict[str, Any]]:
         """
         Detect PE file and determine if it's .NET.
@@ -389,17 +355,14 @@ class FileTypeDetector:
             return None
 
         try:
-            # Read PE offset from DOS header
-            pe_offset = struct.unpack('<I', self.data[0x3C:0x40])[0]
+            pe_offset = struct.unpack('<I', self.data[0x3C:0x40])[0]  # DOS header
             if pe_offset + 4 > len(self.data):
                 return {'type': 'pe_file', 'confidence': 'medium'}
 
-            # Check PE magic
             pe_magic = self.data[pe_offset:pe_offset+4]
             if pe_magic != b'PE\x00\x00':
                 return None
 
-            # Check if .NET
             is_dotnet = self._is_dotnet_pe()
 
             if is_dotnet:
@@ -424,18 +387,21 @@ class FileTypeDetector:
             return {'type': 'pe_file', 'confidence': 'medium'}
 
     def _is_dotnet_pe(self) -> bool:
-        """Check if PE is a .NET assembly."""
+        """Check if PE is a .NET assembly.
+
+        Returns:
+            True if the COR20 header or string evidence indicates .NET.
+        """
         if not self.data:
             return False
 
         try:
-            # Method 1: Check COR20 header
+            # COR20 header: data directories start at PE offset + 0x60
+            # (PE32), COR20 is directory index 14.
             pe_offset = struct.unpack('<I', self.data[0x3C:0x40])[0]
             if pe_offset + 0x60 > len(self.data):
                 return False
 
-            # Data directories start at PE offset + 0x60 (for PE32)
-            # COR20 is at index 14 (0x0E)
             dir_offset = pe_offset + 0x60 + (14 * 8)
             if dir_offset + 8 > len(self.data):
                 return False
@@ -444,7 +410,8 @@ class FileTypeDetector:
             if rva != 0 and size != 0:
                 return True
 
-            # Method 2: Check for mscoree.dll import
+            # Fall back to string evidence: mscoree.dll import, .NET
+            # framework namespaces, or assembly attributes.
             try:
                 text = self.data.decode('utf-8', errors='ignore')
                 if 'mscoree.dll' in text.lower():
@@ -452,7 +419,6 @@ class FileTypeDetector:
             except Exception:
                 pass
 
-            # Method 3: Check for .NET strings
             try:
                 text = self.data.decode('utf-8', errors='ignore')
                 if any(s in text for s in ['.NET', 'System.', 'mscorlib', 'System.Collections']):
@@ -460,8 +426,6 @@ class FileTypeDetector:
             except Exception:
                 pass
 
-            # Method 4: Check for .NET assembly attributes
-            # These are often in the .text section
             try:
                 text = self.data.decode('utf-8', errors='ignore')
                 if any(s in text for s in ['AssemblyTitle', 'AssemblyDescription', 'AssemblyCompany']):
@@ -487,12 +451,12 @@ class FileTypeDetector:
 
         return None
 
-    # ---------------------------------------------------------------------
-    # Magic Byte Detection
-    # ---------------------------------------------------------------------
-
     def _detect_by_magic(self) -> Optional[Dict[str, Any]]:
-        """Detect file type by magic bytes."""
+        """Detect file type by magic bytes.
+
+        Returns:
+            Detection result dict, or None if no known signature matched.
+        """
         if not self.data or len(self.data) < 4:
             return None
 
@@ -505,7 +469,6 @@ class FileTypeDetector:
                     'matched_magic': magic.hex()
                 }
 
-        # Check for zlib (multiple possible headers)
         if len(self.data) >= 2 and self.data[:2] in [b'\x78\x9C', b'\x78\xDA', b'\x78\x01']:
             return {
                 'type': 'zlib_data',
@@ -515,12 +478,12 @@ class FileTypeDetector:
 
         return None
 
-    # ---------------------------------------------------------------------
-    # Extension-Based Detection
-    # ---------------------------------------------------------------------
-
     def _detect_by_extension(self) -> Optional[Dict[str, Any]]:
-        """Detect by file extension."""
+        """Detect by file extension.
+
+        Returns:
+            Detection result dict, or None if the extension isn't recognized.
+        """
         ext = self.file_path.suffix.lower()
 
         # Script extensions
@@ -549,27 +512,24 @@ class FileTypeDetector:
 
         # PE extensions (but already handled by PE detection)
         if ext in ['.exe', '.dll', '.sys', '.ocx', '.cpl']:
-            # Check if we have data and it looks like PE
             if self.data and self.data[:2] == b'MZ':
                 return {'type': 'pe_file', 'confidence': 'medium'}
 
         return None
 
-    # ---------------------------------------------------------------------
-    # Heuristic Detection
-    # ---------------------------------------------------------------------
-
     def _detect_by_heuristics(self) -> Optional[Dict[str, Any]]:
-        """Detect file type using heuristics."""
+        """Detect file type using printable-ratio and JSON/XML heuristics.
+
+        Returns:
+            Detection result dict ('data_json', 'data_xml', or 'plaintext'), or None if the data isn't mostly printable.
+        """
         if not self.data or len(self.data) < 32:
             return None
 
-        # Check if it's plaintext
         printable = sum(1 for b in self.data[:512] if 32 <= b <= 126 or b in [9, 10, 13])
         printable_ratio = printable / min(len(self.data), 512)
 
         if printable_ratio > 0.8:
-            # Try to determine if it's JSON or XML
             try:
                 text = self.data[:512].decode('utf-8', errors='ignore')
                 if text.lstrip().startswith('{') or text.lstrip().startswith('['):
@@ -583,10 +543,6 @@ class FileTypeDetector:
             return {'type': 'plaintext', 'confidence': 'medium'}
 
         return None
-
-    # ---------------------------------------------------------------------
-    # Utility Methods
-    # ---------------------------------------------------------------------
 
     def _log(self, message: str):
         """Log a message."""

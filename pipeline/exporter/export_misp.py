@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 MISP Live Export for the MalWhere Pipeline
-TFM 2025-2026 - Universidad Complutense de Madrid
 
 Pushes a reconciled attck_mapping.json into a running MISP instance as a
 real Event: file objects for hashes, typed attributes for network IOCs,
@@ -21,6 +20,11 @@ from src.misp_builder import MISPEventBuilder
 
 
 def main():
+    """Push a reconciled attck_mapping.json into a running MISP instance as an event.
+
+    Returns:
+        Process exit code (always 0; failures exit early via sys.exit).
+    """
     parser = argparse.ArgumentParser(
         description="MISP Live Export for the MalWhere Pipeline"
     )

@@ -8,6 +8,16 @@ _COLOR_BY_TIER = {"high": "#e60d0d", "medium": "#ffe766", "low": "#8ec843"}
 
 
 def build_navigator_layer(family: str, techniques: List["MappedTechnique"], attck_version: str = "14") -> Dict[str, Any]:  # noqa: F821
+    """Build a MITRE ATT&CK Navigator layer dict from a family's reconciled technique mappings.
+
+    Args:
+        family: Sample family label, used in the layer's name/description.
+        techniques: Reconciled MappedTechnique list to render.
+        attck_version: ATT&CK version to declare in the layer.
+
+    Returns:
+        A Navigator v4.5 layer dict, ready to serialize as JSON.
+    """
     layer_techniques = []
     for t in techniques:
         evidence_strs = sorted({e.get("evidence", "") for e in t.evidence if e.get("evidence")})

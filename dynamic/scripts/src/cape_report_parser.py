@@ -11,297 +11,70 @@ from .models import ATTACKMapping
 
 _INJECTION_CATEGORIES = {"injection", "process hollowing", "shellcode"}
 
-# Signature names whose CAPE-community ttps mapping is unreliable enough to
-# drop entirely, verified individually rather than via a blanket severity/
-# category rule. A blanket "exclude severity<=1" or "exclude category
-# 'generic'" filter was tried first and rejected: it would have also
-# dropped antivm_checks_available_memory -> T1082 and cmdline_terminate ->
-# T1059, both of which are genuinely correct matches against real ground
-# truth (roning, wsnake) despite sharing the same low severity/category as
-# the actually-bad signature below. accesses_public_folder's own evidence
-# ("a file was accessed within the Public folder") isn't diagnostic of
-# either technique it's mapped to, and mapping one vague trigger to two
-# techniques at once (T1548 Abuse Elevation Control, T1036 Masquerading)
-# is itself a sign of an overly broad community rule, not a specific
-# behavioral match.
-#
-# Three more, found auditing WhiteSnake's/Akira's false positives against
-# their manual reports directly (raw signature `data` field, not just
-# name/description):
-#   - unbacked_process_mitigation_alteration ("Manipulated process
-#     mitigation policies (CFG/DEP) from dynamically allocated (unbacked)
-#     memory") tags T1562. Its own raw evidence shows the "unbacked"
-#     caller addresses all sit in a single narrow high-memory range
-#     consistent with a system DLL (ntdll.dll commonly loads there on
-#     x64) — modern Windows applies several mitigation policies to a
-#     process automatically during its own startup, independent of
-#     anything the target binary does. WhiteSnake's report (built from
-#     .NET decompiled source, where an explicit P/Invoke to
-#     SetProcessMitigationPolicy would be plainly visible) has zero
-#     mention of mitigation-policy tampering. Same family of signature
-#     (unbacked_*) already had two other members' mis-mapped ttps fixed
-#     above (T1129->T1620, T1568 dropped) — this one's underlying
-#     caller-resolution heuristic misfiring on system-DLL addresses looks
-#     like the same root cause, just never individually reviewed before.
-#   - stealth_window ("A process created a hidden window") tags T1564 and
-#     T1564.003. Checked its raw `data` field directly for the specific
-#     process context that triggered it on WhiteSnake: `cmd.exe /c chcp
-#     65001 && netsh wlan show networks ... | findstr ...` — the WiFi
-#     credential stealer WhiteSnake's own report already documents and
-#     ground truth already credits elsewhere. A hidden console window
-#     from ordinary silent subprocess invocation (CREATE_NO_WINDOW / a
-#     redirected Process.Start) isn't the malware concealing its own UI,
-#     which is what T1564.003 actually means.
-#   - anomalous_deletefile ("Anomalous file deletion behavior detected
-#     (10+)") tags T1485 on Akira with a 122-call match count. Akira's
-#     manual report traces the encryption routine's terminal step in
-#     Ghidra as a file RENAME (file.txt -> file.txt.akira), not a
-#     separate delete-then-recreate, and documents no other bulk-deletion
-#     behavior at anything close to that scale. Less certain than the two
-#     above (no equally direct explanation for the 122 calls was found,
-#     just an absence of one in the documented workflow) but dropped on
-#     the same standard the rest of this table uses: no static or manual
-#     corroboration for the technique as mapped.
+# Signature names whose CAPE-community ttps mapping is unreliable enough
+# to drop entirely, verified individually against each signature's raw
+# evidence and the matching manual report rather than by a blanket
+# severity/category rule.
 _UNRELIABLE_SIGNATURES = {
-    "accesses_public_folder",
-    "unbacked_process_mitigation_alteration",
-    "stealth_window",
-    "anomalous_deletefile",
+    "accesses_public_folder",                   # vague trigger mapped to two unrelated techniques
+    "unbacked_process_mitigation_alteration",    # caller addresses resolve to a system DLL, not the sample
+    "stealth_window",                            # hidden console window from ordinary silent subprocess use
+    "anomalous_deletefile",                      # Akira's own encryption routine renames files, doesn't delete them
 }
 
-# Per-technique corrections applied within an otherwise-kept signature's
-# ttps list (unlike _UNRELIABLE_SIGNATURES, these signatures' OTHER
-# technique tags are fine — only these two specific IDs are wrong).
-#
-# T1129 "Shared Modules" requires the module be backed by an on-disk file
-# (MITRE's own T1620 description literally contrasts itself with T1129:
-# "vice creating a thread or process backed by a file path on disk (e.g.,
-# Shared Modules [T1129])"). CAPE's unbacked_api_resolution/
-# unbacked_library_load signatures are — per their own names — about
-# exactly the opposite: API/library resolution from memory NOT backed by a
-# file. That's T1620's textbook definition, not T1129's.
+# Per-technique corrections within an otherwise-kept signature's ttps
+# list -- only these specific IDs are wrong, not the whole signature.
 _TECHNIQUE_REMAP = {
+    # T1129 requires a file-backed module; unbacked_* signatures are, by
+    # their own name, about memory NOT backed by a file -- T1620's
+    # definition, not T1129's.
     "T1129": "T1620",
-    # CAPE's own community signatures still tag whatever ATT&CK IDs they
-    # were last written against, not necessarily current -- these four
-    # are ATT&CK v14 IDs since revoked/restructured in v19 (this
-    # project's own migration, 2026-08; see attck_mapper.py's TECHNIQUE_NAMES
-    # for the full reasoning on each). Remapped here so a raw CAPE tag of
-    # the old ID doesn't silently reintroduce a retired technique into our
-    # own output regardless of which signature produced it.
-    "T1022": "T1560",        # Data Encrypted -> Archive Collected Data
-    "T1562": "T1685",        # Impair Defenses -> Disable or Modify Tools
-    "T1562.001": "T1685",    # (was a sub-technique; T1685 is now the parent itself)
-    "T1070.001": "T1685.005",  # Indicator Removal: Clear Windows Event Logs -> Disable or Modify Tools: Clear Windows Event Logs
+    # ATT&CK v14 IDs retired/restructured in v19 (migrated 2026-08); see
+    # attck_mapper.py's TECHNIQUE_NAMES for the full mapping rationale.
+    "T1022": "T1560",
+    "T1562": "T1685",
+    "T1562.001": "T1685",
+    "T1070.001": "T1685.005",
 }
 
-# T1568 "Dynamic Resolution" is specifically about C2 infrastructure using
-# an algorithm to calculate addressing (DGA-style), per MITRE's own
-# description. unbacked_dns_resolution's evidence ("resolved a domain name
-# from dynamically allocated (unbacked) memory") is about WHERE the DNS
-# call originates from (a fileless-execution signal), not about the C2
-# domain being algorithmically calculated — a different concept entirely.
-# No clean replacement technique for "DNS call made from unbacked memory"
-# specifically, and the same signature already separately maps to the
-# correct T1071 for the network/C2 angle — dropped rather than force-fit,
-# same precedent as accesses_public_folder and the WhiteSnake Kill Process
-# ground-truth finding.
+# T1568 is specifically DGA-style algorithmic C2 addressing;
+# unbacked_dns_resolution's evidence is about WHERE the DNS call
+# originates from, not how the domain was chosen. No clean replacement
+# technique, so dropped rather than force-fit.
 _TECHNIQUE_DROP = {"T1568"}
 
-# Like _TECHNIQUE_DROP, but scoped to one specific signature rather than
-# every signature that happens to tag this technique — other signatures
-# legitimately mapping to T1055 (e.g. creates_suspended_process, a real,
-# specific process-hollowing precursor) must stay untouched.
-#
-# pe_tls_callbacks tags both T1027 and T1055. The T1027 half is solid (TLS
-# callbacks executing before the entry point/before a debugger attaches is
-# a real packer/anti-analysis signal). T1055 is a stretch: TLS callbacks
-# run within the SAME process/module before main(), they're not a
-# cross-process injection mechanism — nothing about "this PE has TLS
-# callbacks" is evidence of injecting into ANOTHER process. No mention of
-# injection anywhere in Akira's own manual report either.
-#
-# The next three follow the same pattern: each signature's OWN description
-# (checked directly against the raw CAPE report.json, not assumed) hedges
-# its secondary technique with "possibly" while its primary technique is
-# solidly evidenced — same shape as pe_tls_callbacks above.
-#   - unbacked_process_creation ("spawned a new child process from
-#     dynamically allocated (unbacked) memory") supports T1055
-#     (injection/loader behavior) but not T1106 Native API: the evidence
-#     is about WHERE the code lives, not whether it called the OS via
-#     native (Nt*/Zw*) vs Win32 APIs — CAPE never actually observes that.
-#   - unbacked_crypto_operations ("possible encryption/decryption of
-#     payloads, c2, files or data") supports T1027 (decrypting a packed
-#     payload) but the signature itself lists 4 possible purposes, only
-#     one of which (c2) would justify T1573 Encrypted Channel — mapping
-#     to T1573 picks the least-supported of the 4 without evidence which
-#     one actually applies.
-#   - registers_vectored_exception_handler ("possibly to hijack execution
-#     flow") supports T1055 (VEH is a known injection/execution primitive)
-#     but not T1574 Hijack Execution Flow, which specifically means DLL
-#     search-order hijacking, side-loading, PATH interception, etc. — a
-#     persistence/execution-redirection concept VEH registration has
-#     nothing to do with.
-#
-# infostealer_ftp/infostealer_mail ("harvests credentials from local FTP
-# client software(s)" / "...installed mail clients") tag T1003 OS
-# Credential Dumping alongside T1552/T1552.001 Unsecured Credentials —
-# reading a saved password out of an FTP or mail client's own config file
-# is exactly T1552.001's textbook case, not T1003 (which specifically
-# means dumping credentials from OS-level stores like LSASS/SAM). T1552.001
-# is already correctly present in the same signature's ttps list, so
-# dropping T1003 loses no coverage.
-#
-# Four more, found auditing roning's remaining FPs and checked the same way
-# (raw signature description + roning's own manual report, not assumed):
-#   - antiav_servicestop ("Attempts to stop active services") tags T1489
-#     Service Stop (exact match), T1562/T1562.001 Impair Defenses (plausible
-#     — category is literally 'anti-av'), but ALSO T1543/T1543.003 Create or
-#     Modify System Process — backwards: stopping a service is neither
-#     creating nor modifying one, those are opposite actions.
-#   - unbacked_file_dropping ("writes data to the filesystem from
-#     dynamically allocated (unbacked) memory") tags T1105 Ingress Tool
-#     Transfer, well supported by roning's report (multiple embedded/
-#     dropped payloads, a "Download & Execute" C2 command) and T1074 Data
-#     Staged, unsupported — nothing in the evidence or the report indicates
-#     the written data is being collected/staged FOR exfiltration rather
-#     than simply a dropped secondary payload.
-#   - unbacked_bind_shell ("bound a network socket to listen for inbound
-#     connections... fileless TCP bind shell or P2P") tags T1090 Proxy,
-#     which is about relaying OTHER systems' traffic to obscure its
-#     direction/origin — not what a bind shell is (direct inbound remote
-#     access). roning's actual C2 is outbound (connect_to_server() to a
-#     hardcoded C2 IP), not an inbound listener, so this signature doesn't
-#     even match roning's documented C2 architecture. No clean replacement
-#     technique for "fileless bind shell" specifically — dropped rather
-#     than force-fit, same precedent as T1568.
-#   - suspicious_iocontrol_codes ("indicative of disk enumeration OR a
-#     bootkit/wiper" — the signature's own description hedges between two
-#     very different things) tags T1542.003 Pre-OS Boot: Bootkit. roning's
-#     actual verified IOCTL behavior (manual report's "IOCTL Commands"
-#     section) is a MiniFilter driver's ADD_PATH/REMOVE_PATH/QUERY_PATH
-#     file-hiding commands — real rootkit behavior, but nothing about the
-#     boot sector/MBR. Can't confirm this dynamic signature instance even
-#     corresponds to that specific driver's IOCTLs vs. some unrelated disk
-#     IOCTL, so dropped rather than force-fit to a different technique.
-#
-# Two more, found auditing Akira's dynamic+static agreement bucket (the
-# weakest-performing category — 0.33 precision on 3 findings — worth
-# checking directly since it's the bucket the reconciliation methodology
-# itself claims should be the strongest):
-#   - privilege_elevation_check ("Queries process token information to
-#     check for Administrator privileges or UAC elevation status") tags
-#     T1033 System Owner/User Discovery (correct — it's the exact, verbatim
-#     match for Akira's own ground truth line "Checks own process token for
-#     Administrator/UAC elevation status") AND T1082 System Information
-#     Discovery. Checking your OWN token's admin/UAC status isn't "system
-#     information" in T1082's sense (OS version, hardware, hostname) — it's
-#     T1033's textbook case, already correctly tagged on the same signature.
-#   - query_fips_reconnaissance ("Queried the FIPS cryptography policy, can
-#     be used to adapt C2 network encryption or by legitimate encryption
-#     software" — hedged in its own description between a C2 config check
-#     and ordinary crypto library behavior) tags only T1082. A narrow crypto
-#     policy check isn't system fingerprinting either, and the hedge itself
-#     means CAPE can't tell which (if either) purpose applies — no clean
-#     replacement technique, dropped rather than force-fit.
-#
-# One more, found continuing the roning FP sweep: persistence_autorun_tasks
-# ("Installs itself for autorun at Windows startup", category
-# 'persistence') tags T1053 Scheduled Task/Job. "Autorun at startup" is
-# T1547's textbook definition (Registry Run Keys/Startup Folder etc.) —
-# T1053 specifically means Task Scheduler (schtasks/ITaskService), a
-# distinct persistence mechanism this signature's own wording doesn't
-# describe at all. roning already has solid, independent T1547/T1547.001
-# evidence (unbacked_registry_modification, persistence_autorun, plus
-# static RegCreateKeyExW/RegSetValueExW/RegOpenKeyExW imports), so dropping
-# T1053 here loses no coverage.
+# Corrections scoped to one specific signature, not every signature that
+# tags the technique -- other signatures legitimately mapping to the same
+# technique elsewhere are untouched. Each pair verified against the
+# signature's own raw description/data and the matching manual report.
 _SIGNATURE_TECHNIQUE_DROP = {
-    ("pe_tls_callbacks", "T1055"),
-    ("unbacked_process_creation", "T1106"),
-    ("unbacked_crypto_operations", "T1573"),
-    ("registers_vectored_exception_handler", "T1574"),
-    ("privilege_elevation_check", "T1082"),
-    ("query_fips_reconnaissance", "T1082"),
-    ("infostealer_ftp", "T1003"),
-    ("infostealer_mail", "T1003"),
+    ("pe_tls_callbacks", "T1055"),                      # TLS callbacks run in the same process, not injection
+    ("unbacked_process_creation", "T1106"),             # evidence is about memory location, not Nt*/Zw* API usage
+    ("unbacked_crypto_operations", "T1573"),            # signature hedges 4 possible purposes; only 1 supports T1573
+    ("registers_vectored_exception_handler", "T1574"),  # VEH is an injection primitive, not DLL-hijack persistence
+    ("privilege_elevation_check", "T1082"),             # checking own token's admin status is T1033, not system info
+    ("query_fips_reconnaissance", "T1082"),             # narrow crypto policy check; signature hedges its own purpose
+    ("infostealer_ftp", "T1003"),                       # reading a saved password from a config file is T1552.001
+    ("infostealer_mail", "T1003"),                      # same as above
     ("antiav_servicestop", "T1543"),
-    ("antiav_servicestop", "T1543.003"),
-    ("unbacked_file_dropping", "T1074"),
-    ("unbacked_bind_shell", "T1090"),
-    ("suspicious_iocontrol_codes", "T1542.003"),
-    ("persistence_autorun_tasks", "T1053"),
-    # suspicious_command_tools ("Uses suspicious command line tools or
-    # Windows utilities") and uses_windows_utilities ("Uses Windows
-    # utilities for basic functionality") both tag T1202 Indirect Command
-    # Execution -- but T1202 specifically means using a utility (forfiles,
-    # pcalua, mshta, etc.) to execute a command in a way that bypasses
-    # normal process-monitoring/parent-child tracking. Both signatures'
-    # own descriptions are generic ("suspicious tools", "basic
-    # functionality") and never describe an actual indirection/bypass
-    # mechanism -- just that some command-line tool ran, which is already
-    # T1059's territory. No clean replacement for either; dropped.
-    ("suspicious_command_tools", "T1202"),
-    ("uses_windows_utilities", "T1202"),
-
-    # Three more, found auditing roning's remaining false positives against
-    # its manual report and each signature's own raw `data` field:
-    #   - antiav_servicestop ("Attempts to stop active services") tags
-    #     T1489 Service Stop -- but its own raw data field for THIS sample
-    #     names the specific service: {"service": "vally3dka"}, which is
-    #     roning's own kernel driver (the one this project's own
-    #     resubmission analysis already identified and mapped). Stopping/
-    #     restarting your own driver service as part of normal install
-    #     lifecycle isn't "Service Stop" in T1489's sense (rendering a
-    #     legitimate service unavailable) -- the signature's generic
-    #     anti-av name doesn't hold once the actual target is checked.
-    #     T1543/T1543.003 already dropped above for the same signature.
-    #   - per_file_acl_token_check ("Performs high-volume
-    #     NtQueryInformationToken calls for TokenUser and TokenGroups,
-    #     indicative of wiper/ransomware checking whether it has write
-    #     permission to each file") tags both T1485 Data Destruction and
-    #     T1069 Permission Groups Discovery. Its own raw data shows
-    #     token_query_count: 230 -- close to roning's own 37 dropped
-    #     files times ~6 token queries each, consistent with a dropper
-    #     checking its OWN write permission before writing each file, not
-    #     a wiper checking before destroying data (no deletion evidence
-    #     anywhere) or a recon actor discovering group memberships
-    #     (TokenGroups here is being read on the process's OWN token, not
-    #     enumerated for other accounts/domains). The signature's own
-    #     "wiper/ransomware" category is a mismatch for a loader/RAT.
-    ("antiav_servicestop", "T1489"),
-    ("per_file_acl_token_check", "T1485"),
-    ("per_file_acl_token_check", "T1069"),
-    # unbacked_delay_execution ("Paused execution (sleep/delay) in a
-    # thread executing in dynamically allocated (unbacked) memory,
-    # indicative of sandbox evasion or C2 sleeping between callbacks")
-    # tags both T1497 and T1027. The T1497 half fits (delay-based sandbox
-    # evasion, corroborated by two other, more specific dynamic signatures
-    # -- mouse_movement_detect, antisandbox_windows_activation). T1027
-    # (Obfuscated Files or Information) doesn't: pausing execution isn't
-    # about obfuscating a file or its contents. roning's real T1027
-    # evidence (pe_section_vsize_rsize_anomaly's 84x virtual/raw size
-    # ratio, allocated_memory_protection_noaccess) stands on its own
-    # without this signature's contribution.
-    ("unbacked_delay_execution", "T1027"),
+    ("antiav_servicestop", "T1543.003"),                # stopping a service is the opposite of creating/modifying one
+    ("unbacked_file_dropping", "T1074"),                # a dropped payload isn't evidence of staging for exfiltration
+    ("unbacked_bind_shell", "T1090"),                   # a bind shell is inbound access, not traffic relaying
+    ("suspicious_iocontrol_codes", "T1542.003"),        # roning's IOCTLs are file-hiding, not boot-sector tampering
+    ("persistence_autorun_tasks", "T1053"),             # "autorun at startup" is T1547's definition, not Task Scheduler
+    ("suspicious_command_tools", "T1202"),              # generic "ran a command-line tool", no indirection/bypass shown
+    ("uses_windows_utilities", "T1202"),                # same as above
+    ("antiav_servicestop", "T1489"),                    # roning's own driver restart during install, not disabling a service
+    ("per_file_acl_token_check", "T1485"),              # token-query volume matches a write-permission check, not deletion
+    ("per_file_acl_token_check", "T1069"),              # token is read on the process's own account, not enumerated for others
+    ("unbacked_delay_execution", "T1027"),              # pausing execution isn't obfuscating a file
 }
 
 
 # Known LOLBin/recon command patterns, checked against CAPE's own
-# behavior.summary.executed_commands (already parsed into
-# host_activity.commands_executed) -- a real evidence source no rule here
-# used before, since every existing dynamic finding is signature-based
-# and CAPE has no community signature for "ran netsh wlan show". A
-# generic capability, not a per-sample patch: any future sample using
-# one of these well-known command patterns gets picked up the same way.
-# Found auditing WhiteSnake's missing T1201: its manual report documents
-# "WiFi password extraction" via `netsh wlan show profile <name> key=clear`,
-# and CAPE's own executed_commands for this exact run shows both
-# reconnaissance steps that precede it (`netsh wlan show profiles`,
-# `netsh wlan show networks mode=bssid`) -- string-based static detection
-# can't reach this at all here (every one of WhiteSnake's command/config
-# strings is obfuscated; confirmed absent even after an exhaustive
-# single-byte XOR brute-force pass, so the obfuscation isn't single-byte
-# XOR), but CAPE observed the plaintext command directly at runtime.
+# executed_commands -- a generic capability, not a per-sample patch: any
+# sample using one of these well-known command patterns is picked up the
+# same way, independent of static string detection.
 _COMMAND_PATTERN_MAPPING = [
     # (substring to match, case-insensitive, technique, confidence)
     ("netsh wlan show", "T1201", "medium"),
@@ -315,18 +88,42 @@ _COMMAND_PATTERN_MAPPING = [
 
 class CapeReportParser:
     def __init__(self, report: Dict[str, Any], source_report_path: str, max_list_items: int = 200):
+        """Initialize the parser.
+
+        Args:
+            report: Raw parsed CAPE report.json.
+            source_report_path: Path the report was read from, recorded in the output for provenance.
+            max_list_items: Cap on list-valued fields before truncation notes are recorded.
+        """
         self.report = report
         self.source_report_path = source_report_path
         self.max_list_items = max_list_items
         self.truncation_notes: List[str] = []
 
     def _cap(self, items: List[Any], label: str) -> List[Any]:
+        """Truncate a list to max_list_items, recording a truncation note if it was cut.
+
+        Args:
+            items: List to cap.
+            label: Field name to record in the truncation note.
+
+        Returns:
+            items, truncated to max_list_items if longer.
+        """
         if len(items) > self.max_list_items:
             self.truncation_notes.append(f"{label}: {len(items)} total, {self.max_list_items} shown")
             return items[: self.max_list_items]
         return items
 
     def parse(self) -> Dict[str, Any]:
+        """Distill the raw CAPE report into a curated dynamic_report.json.
+
+        Returns:
+            Dict with schema_version, source, target, analysis, signatures,
+            attck_mappings, network, dropped_files, host_activity,
+            process_tree, process_injection_signatures, and (if any list
+            was truncated) truncation_notes.
+        """
         r = self.report
         target = r.get("target", {}).get("file", {}) or {}
         info = r.get("info", {}) or {}
@@ -352,6 +149,14 @@ class CapeReportParser:
         return result
 
     def _parse_target(self, target: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract the detonated sample's basic identity.
+
+        Args:
+            target: The report's target.file dict.
+
+        Returns:
+            Dict with filename, md5, sha1, sha256, size_bytes, file_type.
+        """
         return {
             "filename": target.get("name", ""),
             "md5": target.get("md5", ""),
@@ -362,6 +167,16 @@ class CapeReportParser:
         }
 
     def _parse_analysis(self, r: Dict[str, Any], info: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract analysis-run metadata and any AV/signature family detections.
+
+        Args:
+            r: Raw CAPE report.
+            info: The report's own info dict, for timing/version fields.
+
+        Returns:
+            Dict with malscore, malstatus, duration_seconds, started,
+            ended, cape_version, and family_detections.
+        """
         detections = r.get("detections") or []
         family_detections = []
         for det in detections:
@@ -382,6 +197,15 @@ class CapeReportParser:
         }
 
     def _parse_signatures(self, r: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Extract every fired CAPE signature with its own technique list attached.
+
+        Args:
+            r: Raw CAPE report.
+
+        Returns:
+            One dict per signature (name, description, severity,
+            confidence, categories, ttps, match_count).
+        """
         # ttps is keyed by signature name; build a lookup so each signature
         # carries its own technique list alongside description/severity.
         ttps_by_signature: Dict[str, List[str]] = {}
@@ -407,6 +231,15 @@ class CapeReportParser:
         return out
 
     def _parse_attck_mappings(self, r: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Map CAPE signatures and executed commands to ATT&CK techniques, applying the curation tables above.
+
+        Args:
+            r: Raw CAPE report.
+
+        Returns:
+            One mapping dict per (technique, signature/command) pair, after
+            dropping unreliable signatures/techniques and applying remaps.
+        """
         sig_by_name = {s.get("name"): s for s in (r.get("signatures") or [])}
         mappings: List[ATTACKMapping] = []
 
@@ -445,6 +278,12 @@ class CapeReportParser:
     def _map_commands_to_attck(self, r: Dict[str, Any]) -> List[ATTACKMapping]:
         """Check CAPE's raw executed_commands against known LOLBin/recon
         patterns -- see _COMMAND_PATTERN_MAPPING for why this exists.
+
+        Args:
+            r: Raw CAPE report.
+
+        Returns:
+            One mapping per distinct (technique, command) match.
         """
         commands = r.get("behavior", {}).get("summary", {}).get("executed_commands", []) or []
         mappings: List[ATTACKMapping] = []
@@ -473,6 +312,15 @@ class CapeReportParser:
         return mappings
 
     def _parse_network(self, r: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract network activity (domains, hosts, DNS/HTTP requests, TCP/UDP counts).
+
+        Args:
+            r: Raw CAPE report.
+
+        Returns:
+            Dict with domains, hosts, dns_requests, http_requests (each
+            capped), and tcp_count/udp_count.
+        """
         net = r.get("network", {}) or {}
         return {
             "domains": self._cap(net.get("domains", []) or [], "network.domains"),
@@ -484,21 +332,27 @@ class CapeReportParser:
         }
 
     def _parse_dropped_files(self, r: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Merge CAPE's dropped-file and CAPE-payload lists, deduplicated by sha256 with roles pooled.
+
+        Args:
+            r: Raw CAPE report.
+
+        Returns:
+            One dict per distinct dropped file (name, hashes, size, type, roles), capped.
+        """
         by_sha256: Dict[str, Dict[str, Any]] = {}
 
         def add(entry: Dict[str, Any], role: str) -> None:
+            """Add or merge one dropped/payload entry into by_sha256, tracking its role(s)."""
             sha256 = entry.get("sha256", "")
             if sha256 in by_sha256:
                 if role not in by_sha256[sha256]["roles"]:
                     by_sha256[sha256]["roles"].append(role)
                 return
             by_sha256[sha256] = {
-                # CAPE's own "name" field is a list, not a string, when the
-                # same dropped file was observed written under more than one
-                # name/path — confirmed in real data (dropped[].name ==
-                # ["report.lock"]). Flatten rather than pass a list through:
-                # every downstream consumer (normalizer, STIX/MISP export)
-                # expects a scalar string here.
+                # CAPE's "name" field is a list, not a string, when the
+                # same dropped file was observed under more than one
+                # name/path -- flatten to a scalar for downstream consumers.
                 "name": "; ".join(entry["name"]) if isinstance(entry.get("name"), list) else entry.get("name", ""),
                 "sha256": sha256,
                 "md5": entry.get("md5", ""),
@@ -518,6 +372,16 @@ class CapeReportParser:
         return self._cap(list(by_sha256.values()), "dropped_files")
 
     def _parse_host_activity(self, r: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract host-level behavior (mutexes, services, commands, registry writes).
+
+        Args:
+            r: Raw CAPE report.
+
+        Returns:
+            Dict with mutexes, created_services, started_services,
+            commands_executed (each capped), and registry_keys_written
+            (items capped, plus total_count/truncated).
+        """
         summary = r.get("behavior", {}).get("summary", {}) or {}
         write_keys = summary.get("write_keys", []) or []
         return {
@@ -533,7 +397,16 @@ class CapeReportParser:
         }
 
     def _parse_process_tree(self, r: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Extract the process tree, pruned to name/pid/parent_id/module_path/children.
+
+        Args:
+            r: Raw CAPE report.
+
+        Returns:
+            The pruned process tree, same shape as CAPE's own but with unused fields dropped.
+        """
         def prune(node: Dict[str, Any]) -> Dict[str, Any]:
+            """Recursively strip a process-tree node down to the fields this pipeline uses."""
             return {
                 "name": node.get("name", ""),
                 "pid": node.get("pid"),
@@ -546,6 +419,14 @@ class CapeReportParser:
         return [prune(n) for n in tree]
 
     def _parse_injection_signatures(self, r: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Extract signatures categorized (or named) as injection/hollowing/shellcode.
+
+        Args:
+            r: Raw CAPE report.
+
+        Returns:
+            One dict per matching signature (name, description, severity, categories).
+        """
         out = []
         for sig in r.get("signatures") or []:
             categories = {c.lower() for c in sig.get("categories", []) or []}

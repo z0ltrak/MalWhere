@@ -51,6 +51,17 @@ class StaticAnalyzer:
                  max_recursion_depth: int = 5, use_binwalk: bool = True,
                  parent_context: Optional[Dict[str, Any]] = None,
                  extract_installers: bool = True):
+        """Initialize the analyzer and its parser/detector sub-components.
+
+        Args:
+            file_path: Path to the sample to analyze.
+            verbose: Enable verbose progress logging.
+            no_floss: Skip FLOSS string extraction (faster).
+            max_recursion_depth: Maximum depth for recursive embedded-file analysis.
+            use_binwalk: Use binwalk for embedded-file carving.
+            parent_context: Metadata about the parent analysis, if this is a recursive/sub-analysis.
+            extract_installers: Extract and analyze installer contents (NSIS/Inno/MSI).
+        """
         self.file_path = file_path
         self.verbose = verbose
         self.no_floss = no_floss
@@ -62,13 +73,9 @@ class StaticAnalyzer:
         self._analyzed_files: set = set()
         self._extracted_installer_files: List[Dict[str, Any]] = []
 
-        # Initialize hash calculator FIRST
         self.hash_calculator = HashCalculator()
-
-        # Universal file type detector
         self.file_type_detector = FileTypeDetector(file_path)
 
-        # Initialize parsers
         self.pe_parser = PEParser(file_path)
         self.elf_parser = ELFParser(file_path)
         self.zip_parser = ZIPParser(file_path)
@@ -87,7 +94,6 @@ class StaticAnalyzer:
         self.filesystem_extractor = FilesystemExtractor()
         self.indicator_detector = IndicatorDetector()
 
-        # Track discovered keys and extracted files
         self.discovered_keys: List[Dict[str, Any]] = []
         self.extracted_files: List[Dict[str, Any]] = []
         self.file_type_info: Dict[str, Any] = {}
@@ -95,7 +101,14 @@ class StaticAnalyzer:
         self._is_pass1_analysis = parent_context.get('pass') == 1 if parent_context else False
 
     def analyze(self, depth: int = 0) -> StaticReport:
-        """Run complete static analysis with context-aware entropy decisions."""
+        """Run complete static analysis with context-aware entropy decisions.
+
+        Args:
+            depth: Current recursion depth (0 for the top-level sample).
+
+        Returns:
+            The completed StaticReport.
+        """
         self._log(f"Starting static analysis of {self.file_path.name} (depth {depth})")
 
         if self._already_analyzed():
@@ -113,14 +126,9 @@ class StaticAnalyzer:
         hashes = self.hash_calculator.calculate_all(self.file_path)
         imphash = self.hash_calculator.calculate_imphash(self.pe_parser.pe) if self.pe_parser.pe else None
 
-        # Key discovery moved ahead of string extraction (was after it) so
-        # discovered_keys can actually reach the string deobfuscator this
-        # analysis pass -- previously always ran second, so
-        # StringsParser.extract()'s discovered_keys argument was always
-        # omitted (defaulting to None) and _try_xor_with_key's real,
-        # already-discovered keys never got tried against any string.
-        # KeyReconstructor.find_keys() reads the file directly and has no
-        # dependency on string extraction, so this reordering is safe.
+        # Runs before string extraction so discovered_keys can reach the
+        # string deobfuscator this pass; KeyReconstructor reads the file
+        # directly and has no dependency on string extraction.
         self.discovered_keys = self.key_reconstructor.find_keys()
         self.errors.extend(self.key_reconstructor.get_errors())
         if self.discovered_keys:
@@ -226,6 +234,9 @@ class StaticAnalyzer:
         Order matters: the carving decision needs the file type and overall
         entropy, both computed here, so this must run before anything else
         that depends on self.use_binwalk (magic carving, later).
+
+        Returns:
+            (file_type_info dict, file_type string).
         """
         file_type_info = self.file_type_detector.detect()
         self.file_type_info = file_type_info
@@ -244,10 +255,16 @@ class StaticAnalyzer:
         return file_type_info, file_type
 
     def _maybe_redirect_to_installer_analysis(self, depth: int, file_type: str) -> Optional[StaticReport]:
-        """If this is an installer (NSIS, forced-detected, or Inno/MSI by type), hand off
-        to _analyze_installer() and return its report. Returns None if this file isn't
-        an installer, or installer extraction is disabled/at max depth -- analyze()
-        should continue its own normal parsing in that case.
+        """Hand off to _analyze_installer() if this is an installer (NSIS, forced-detected, or Inno/MSI by type).
+
+        Args:
+            depth: Current recursion depth.
+            file_type: Detected file type string.
+
+        Returns:
+            The installer's StaticReport, or None if this file isn't an
+            installer, or installer extraction is disabled/at max depth
+            -- analyze() should continue its own normal parsing in that case.
         """
         if self._force_nsis_detection():
             self._log("*** DETECTED NSIS INSTALLER ***")
@@ -269,10 +286,15 @@ class StaticAnalyzer:
     def _parse_by_file_type(self, file_type: str) -> tuple:
         """Parse the file according to its detected type.
 
-        Returns (pe_data, elf_data, zip_data, net_strings, net_imports).
         .NET P/Invoke imports (if any) get folded into pe_data['imports']
         as ImportInfo objects here, since downstream steps (indicator
         detection, ATT&CK mapping) only look at pe_data['imports'].
+
+        Args:
+            file_type: Detected file type string.
+
+        Returns:
+            (pe_data, elf_data, zip_data, net_strings, net_imports).
         """
         pe_data: Dict[str, Any] = {}
         elf_data: Dict[str, Any] = {}
@@ -322,7 +344,11 @@ class StaticAnalyzer:
     def _extract_all_strings(self, net_strings: List[str]) -> tuple:
         """Extract strings (standard + FLOSS + .NET), merged into one list for detection.
 
-        Returns (strings_dict_for_report, all_strings_for_detection).
+        Args:
+            net_strings: .NET user strings already extracted from PE parsing, if any.
+
+        Returns:
+            (strings_dict_for_report, all_strings_for_detection).
         """
         strings = self.strings_parser.extract(include_floss=not self.no_floss, discovered_keys=self.discovered_keys)
         self.errors.extend(self.strings_parser.get_errors())
@@ -335,9 +361,13 @@ class StaticAnalyzer:
         return strings, all_strings
 
     def _detect_packer(self, pe_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Detect packing, falling back to section-based detection if the
-        primary (signature-based) detector found nothing but PE sections
-        are available.
+        """Detect packing, falling back to section-based detection if the primary detector found nothing.
+
+        Args:
+            pe_data: Parsed PE data, used for its 'sections' field in the fallback.
+
+        Returns:
+            Packer detection result dict (see PackerDetector.detect()).
         """
         packer_data = self.packer_detector.detect()
         self.errors.extend(self.packer_detector.get_errors())
@@ -350,41 +380,31 @@ class StaticAnalyzer:
         return packer_data
 
     def _should_skip_carving(self, file_type: str, entropy: float) -> bool:
-        """
-        Context-aware decision on whether to skip carving.
+        """Context-aware decision on whether to skip carving.
 
-        Strategy:
-        - Known installers (NSIS, Inno, MSI): NEVER skip (they contain embedded files)
-        - Known archives (ZIP, GZip): NEVER skip (they contain files)
-        - PE files: NEVER skip (may contain resources, overlay data)
-        - Known encrypted extensions (.3w, .enc): ALWAYS skip (try decryption)
-        - Unknown files with very high entropy (>7.8): Skip (likely encrypted)
-        - Unknown files with moderate entropy: Allow carving
+        Installers, archives, and PE files never skip (they legitimately
+        contain embedded files/resources); unknown files only skip at
+        very high entropy (likely encrypted).
+
+        Args:
+            file_type: Detected file type string.
+            entropy: Overall file entropy.
+
+        Returns:
+            True if carving should be skipped.
         """
-        # ============================================================
-        # NEVER skip for installers - they contain embedded files
-        # ============================================================
         if file_type in ['nsis_installer', 'inno_installer', 'msi_installer']:
             self._log(f"  Installer type '{file_type}' - enabling carving")
             return False
 
-        # ============================================================
-        # NEVER skip for archives
-        # ============================================================
         if file_type in ['zip_file', 'gzip_file', 'archive_zip', 'archive_gzip']:
             self._log(f"  Archive type '{file_type}' - enabling carving")
             return False
 
-        # ============================================================
-        # NEVER skip for PE files (even with high entropy - may be packed)
-        # ============================================================
         if file_type in ['pe_file', 'pe_native', 'pe_dotnet']:
             self._log(f"  PE file with entropy {entropy:.2f} - enabling carving for resources")
             return False
 
-        # ============================================================
-        # Check if it has a known compression header (don't skip)
-        # ============================================================
         if self.magic_carver.data and len(self.magic_carver.data) > 10:
             compression_headers = [
                 b'\x78\x9C', b'\x78\xDA', b'\x78\x01',  # zlib
@@ -398,27 +418,24 @@ class StaticAnalyzer:
                     self._log(f"  Found compression header - enabling carving")
                     return False
 
-        # ============================================================
-        # For unknown files, only skip if very high entropy
-        # ============================================================
         if file_type == 'unknown' and entropy > 7.8:
             self._log(f"  Unknown file with very high entropy {entropy:.2f} - skipping carving")
             return True
 
-        # ============================================================
-        # For all other cases, allow carving
-        # ============================================================
         return False
 
     def _force_nsis_detection(self) -> bool:
-        """Force NSIS detection by scanning the file content."""
+        """Force NSIS detection by scanning the file content.
+
+        Returns:
+            True if an NSIS signature or manifest is found.
+        """
         try:
             with open(self.file_path, 'rb') as f:
                 data = f.read(1048576)  # 1MB
 
             data_str = data.decode('utf-8', errors='ignore')
 
-            # Check for NSIS signatures
             nsis_signatures = [
                 'Nullsoft.NSIS.exehead',
                 'NullsoftInst',
@@ -431,7 +448,6 @@ class StaticAnalyzer:
                     self._log(f"  Found NSIS signature: {sig}")
                     return True
 
-            # Check for NSIS manifest
             if '<assembly xmlns="urn:schemas-microsoft-com:asm.v1"' in data_str:
                 if 'Nullsoft.NSIS' in data_str:
                     self._log("  Found NSIS manifest")
@@ -443,25 +459,26 @@ class StaticAnalyzer:
         return False
 
     def _analyze_installer(self, depth: int, installer_type: str) -> StaticReport:
-        """
-        Analyze an installer with a three-pass approach:
-        Pass 1: Extract all files, discover keys from all extracted files
-        Pass 2: Use discovered keys to decrypt encrypted payloads
-        Pass 3: Fully analyze the remaining (non-payload) extracted files
+        """Analyze an installer with a three-pass approach.
 
-        The returned report is the installer's OWN identity (its own
-        hash/filename -- what dynamic analysis will also report as the
-        sample, so normalize.py's hash_match stays meaningful) with
-        ATT&CK evidence, discovered keys, and config/IOCs aggregated
-        from every extracted child. Previously this substituted one
-        arbitrarily-picked child (_select_main_payload: first .dll,
-        by extraction order) as if IT were the whole analysis, silently
-        discarding every other child's findings and the installer's own
-        identity. Caught on RoningLoader: the "sample" report ended up
-        being D3D11InstallHelper.dll's own report (a side-loaded helper
-        DLL), not the NSIS installer actually detonated -- dynamic
-        analysis's hash never matched it, and 66VOAk0O.exe/uninstall.exe/
-        the bundled NSIS plugins' findings never reached attck_mappings.
+        Pass 1: extract all files, discover keys from all extracted
+        files. Pass 2: use discovered keys to decrypt encrypted
+        payloads. Pass 3: fully analyze the remaining (non-payload)
+        extracted files.
+
+        The returned report keeps the installer's OWN identity (its own
+        hash/filename, so normalize.py's hash_match against dynamic
+        analysis stays meaningful) with ATT&CK evidence, discovered
+        keys, and config/IOCs aggregated from every extracted child,
+        rather than substituting one arbitrarily-picked child as if it
+        were the whole analysis.
+
+        Args:
+            depth: Current recursion depth.
+            installer_type: 'nsis_installer', 'inno_installer', or 'msi_installer'.
+
+        Returns:
+            The installer's own aggregated StaticReport.
         """
         self._log(f"*** EXTRACTING {installer_type.upper()} INSTALLER ***")
 
@@ -501,10 +518,18 @@ class StaticAnalyzer:
 
     def _build_installer_report(self, installer_type: str, embedded_analyses: List[Dict[str, Any]],
                                  all_collected_keys: List[Dict[str, Any]]) -> StaticReport:
-        """Build the installer's own report, aggregating ATT&CK mappings,
-        discovered keys, and config/IOCs from every extracted child in
-        embedded_analyses. See _analyze_installer for why this replaced
-        picking a single "main payload" child.
+        """Build the installer's own report, aggregating ATT&CK mappings, discovered keys, and config/IOCs from every extracted child.
+
+        See _analyze_installer for why this replaced picking a single
+        "main payload" child.
+
+        Args:
+            installer_type: 'nsis_installer', 'inno_installer', or 'msi_installer'.
+            embedded_analyses: Per-child analysis results from _analyze_extracted_files.
+            all_collected_keys: Keys collected in Pass 1, seeded into the aggregate before dedup.
+
+        Returns:
+            The installer's own aggregated StaticReport.
         """
         from .models.report import ATTACKMapping
 
@@ -598,7 +623,13 @@ class StaticAnalyzer:
         likely-encrypted payloads aside for PASS 2 rather than key-scanning
         them (their content is ciphertext, not a source of plaintext keys).
 
-        Returns (unique_keys, file_analyses_needing_full_analysis, encrypted_payloads).
+        Args:
+            extracted_files: Files extracted from the installer.
+            depth: Current recursion depth, passed to each sub-analyzer's parent_context.
+            installer_type: 'nsis_installer', 'inno_installer', or 'msi_installer'.
+
+        Returns:
+            (unique_keys, file_analyses_needing_full_analysis, encrypted_payloads).
         """
         self._log(f"PASS 1: Collecting keys from all {len(extracted_files)} extracted files")
 
@@ -692,8 +723,14 @@ class StaticAnalyzer:
         this pass -- now actually tries all 4 algorithms with proper
         per-algorithm validation, not just RC4.
 
-        Returns a StaticReport for the first successfully decrypted (and
-        recursively analyzed) payload, or None if nothing decrypted.
+        Args:
+            encrypted_payloads: Payloads identified as likely-encrypted in Pass 1.
+            all_collected_keys: Candidate keys collected across all extracted files in Pass 1.
+            depth: Current recursion depth.
+
+        Returns:
+            A StaticReport for the first successfully decrypted (and
+            recursively analyzed) payload, or None if nothing decrypted.
         """
         if not (encrypted_payloads and all_collected_keys):
             return None
@@ -769,6 +806,15 @@ class StaticAnalyzer:
                                  depth: int, installer_type: str) -> List[Dict[str, Any]]:
         """PASS 3: fully analyze every extracted file that wasn't identified
         as an encrypted payload (or was, but nothing decrypted it in PASS 2).
+
+        Args:
+            file_analyses: Per-file records from Pass 1 needing full analysis.
+            all_collected_keys: Candidate keys collected across all extracted files.
+            depth: Current recursion depth.
+            installer_type: 'nsis_installer', 'inno_installer', or 'msi_installer'.
+
+        Returns:
+            One dict per analyzed file with its name, type, full report, and pluginsdir flag.
         """
         self._log(f"PASS 3: Analyzing {len(file_analyses)} remaining extracted files")
 
@@ -828,6 +874,14 @@ class StaticAnalyzer:
         Verified this generic check alone still identifies roning's real
         payload (9ZUPMq.3w: type=unknown, size=2.86MB, entropy=7.999 --
         comfortably clears both thresholds below).
+
+        Args:
+            file_name: Name of the extracted file, used only for logging.
+            file_type: Detected file type string.
+            file_path: Path to the extracted file's bytes.
+
+        Returns:
+            True if the file looks like an encrypted payload.
         """
         if file_type != 'unknown':
             return False
@@ -846,7 +900,14 @@ class StaticAnalyzer:
             return False
 
     def _analyze_as_binary(self, depth: int) -> StaticReport:
-        """Fall back to binary analysis when file type is unknown or extraction fails."""
+        """Fall back to binary analysis when file type is unknown or extraction fails.
+
+        Args:
+            depth: Current recursion depth (unused beyond being accepted for a consistent call signature).
+
+        Returns:
+            A StaticReport with file_type='binary_blob'.
+        """
         self._log("Falling back to binary analysis")
 
         file_info = self._get_file_info()
@@ -879,7 +940,14 @@ class StaticAnalyzer:
         )
 
     def _extract_and_analyze_embedded_files(self, depth: int) -> List[Dict[str, Any]]:
-        """Extract embedded files and analyze them recursively."""
+        """Extract embedded files carved by magic_carver and analyze each one recursively.
+
+        Args:
+            depth: Recursion depth for the embedded files (checked against max_recursion_depth).
+
+        Returns:
+            One result dict per successfully analyzed embedded file (see _analyze_embedded_data).
+        """
         if depth > self.max_recursion_depth:
             self._log(f"Reached maximum recursion depth ({self.max_recursion_depth})")
             return []
@@ -954,7 +1022,15 @@ class StaticAnalyzer:
         return embedded_results
 
     def _decompress_zlib_data(self, data: bytes, offset: int) -> Optional[bytes]:
-        """Decompress zlib data with multiple approaches."""
+        """Decompress zlib data with multiple approaches.
+
+        Args:
+            data: The carved chunk to decompress.
+            offset: The chunk's offset in the original file, used to re-read a larger window if needed.
+
+        Returns:
+            Decompressed bytes, or None if every approach failed.
+        """
         decompressed = self.zlib_parser.decompress(data)
         if decompressed and len(decompressed) > 1024:
             return decompressed
@@ -976,7 +1052,14 @@ class StaticAnalyzer:
         return None
 
     def _prioritize_embedded_files(self, files: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Prioritize embedded files by type and size."""
+        """Prioritize embedded files by type and size.
+
+        Args:
+            files: Carved embedded-file entries.
+
+        Returns:
+            The same entries sorted by (type priority, size), highest first.
+        """
         priority_map = {
             'pe_file': 100,
             'elf_file': 90,
@@ -1000,7 +1083,18 @@ class StaticAnalyzer:
 
     def _analyze_embedded_data(self, data: bytes, file_type: str, offset: int,
                                depth: int, original_type: Optional[str] = None) -> Optional[Dict[str, Any]]:
-        """Analyze embedded data using a temporary file and StaticAnalyzer."""
+        """Analyze embedded data by writing it to a temp file and running a sub-analysis.
+
+        Args:
+            data: The embedded file's raw bytes.
+            file_type: Detected file type, used to pick a temp-file extension.
+            offset: The embedded file's offset in the parent, carried through into the result.
+            depth: Recursion depth to analyze the temp file at.
+            original_type: Provenance label (e.g. 'zlib_extracted_<name>', 'binwalk_extracted').
+
+        Returns:
+            A summary dict (offset, type, hashes, notable findings, full_report), or None on failure.
+        """
         try:
             ext = self._get_extension_for_type(file_type)
 
@@ -1048,7 +1142,14 @@ class StaticAnalyzer:
             return None
 
     def _get_extension_for_type(self, file_type: str) -> str:
-        """Get appropriate file extension for a file type."""
+        """Get the appropriate file extension for a file type.
+
+        Args:
+            file_type: Detected file type string.
+
+        Returns:
+            A file extension including the leading dot, e.g. '.exe'.
+        """
         ext_map = {
             'pe_file': '.exe',
             'elf_file': '.elf',
@@ -1067,7 +1168,11 @@ class StaticAnalyzer:
         return ext_map.get(file_type, '.bin')
 
     def _create_empty_report(self) -> StaticReport:
-        """Create an empty report for skipped files."""
+        """Create an empty report for a file already analyzed in this recursion.
+
+        Returns:
+            A minimal StaticReport flagging the skip.
+        """
         return StaticReport(
             filename=self.file_path.name,
             size_bytes=0,
@@ -1082,7 +1187,11 @@ class StaticAnalyzer:
         )
 
     def _get_file_info(self) -> Dict[str, Any]:
-        """Get basic file information from the filesystem."""
+        """Get basic file information from the filesystem.
+
+        Returns:
+            Dict with size_bytes and size_mb.
+        """
         stats = self.file_path.stat()
         return {
             'size_bytes': stats.st_size,
@@ -1090,19 +1199,24 @@ class StaticAnalyzer:
         }
 
     def _combine_reports(self, analyses: List[Dict[str, Any]]) -> StaticReport:
-        """Combine multiple analysis reports."""
+        """Combine multiple analysis reports, deduplicating discovered keys.
+
+        Args:
+            analyses: A list of {'report': dict} entries to combine.
+
+        Returns:
+            A StaticReport built from the first analysis's report dict, with pooled/deduplicated keys.
+        """
         if not analyses:
             return self._create_empty_report()
 
         first = analyses[0]
         report_dict = first.get('report', {})
 
-        # Collect all keys
         all_keys = []
         for analysis in analyses:
             all_keys.extend(analysis.get('report', {}).get('discovered_keys', []))
 
-        # Deduplicate keys
         seen = set()
         unique_keys = []
         for key in all_keys:

@@ -13,6 +13,12 @@ class NSISParser:
     """Parse NSIS installer files."""
 
     def __init__(self, file_path: Path, timeout: int = 120):
+        """Initialize the NSIS parser.
+
+        Args:
+            file_path: Path to the NSIS installer.
+            timeout: Timeout in seconds for extraction subprocesses.
+        """
         self.file_path = file_path
         self.data = None
         self.errors: List[str] = []
@@ -21,7 +27,11 @@ class NSISParser:
         self.extracted_files: List[Dict[str, Any]] = []
 
     def parse(self) -> Dict[str, Any]:
-        """Parse NSIS installer structure."""
+        """Parse NSIS installer structure.
+
+        Returns:
+            Dict with is_nsis, version, files/data_blocks/extracted_files counts, or {} if not NSIS.
+        """
         try:
             with open(self.file_path, 'rb') as f:
                 self.data = f.read()
@@ -29,12 +39,10 @@ class NSISParser:
             self.errors.append(f"Error reading NSIS file: {e}")
             return {}
 
-        # Check if it's NSIS
         if not self._is_nsis():
             self.errors.append("Not an NSIS installer")
             return {}
 
-        # Parse NSIS data
         self.nsis_data = self._parse_nsis()
 
         return {
@@ -50,22 +58,23 @@ class NSISParser:
         if not self.data:
             return False
 
-        # Check for NSIS signature
         if b'Nullsoft.NSIS.exehead' in self.data:
             return True
 
-        # Check for NSIS manifest
         if b'Nullsoft.NSIS' in self.data:
             return True
 
-        # Check for NSIS installer pattern
         if b'NullsoftInst' in self.data:
             return True
 
         return False
 
     def _parse_nsis(self) -> Dict[str, Any]:
-        """Parse NSIS installer structure."""
+        """Parse the NSIS installer's embedded version string.
+
+        Returns:
+            Dict with version, files, data_blocks, and strings.
+        """
         result = {
             'version': 'unknown',
             'files': [],
@@ -73,7 +82,6 @@ class NSISParser:
             'strings': []
         }
 
-        # Extract version
         version_pattern = b'Nullsoft.NSIS.exeheadv'
         pos = self.data.find(version_pattern)
         if pos != -1:
@@ -85,10 +93,13 @@ class NSISParser:
         return result
 
     def extract_all(self) -> List[Dict[str, Any]]:
-        """Extract all files from NSIS installer."""
+        """Extract all files from the NSIS installer, trying 7z, 7za, then manual extraction.
+
+        Returns:
+            One dict per extracted file.
+        """
         self.extracted_files = []
 
-        # Try 7z first (most reliable)
         if shutil.which('7z'):
             self.errors.append("Using 7z for NSIS extraction")
             result = self._extract_with_7z()
@@ -99,7 +110,6 @@ class NSISParser:
             else:
                 self.errors.append("7z extraction returned no files")
 
-        # Try 7za
         if shutil.which('7za'):
             self.errors.append("Using 7za for NSIS extraction")
             result = self._extract_with_7za()
@@ -110,7 +120,6 @@ class NSISParser:
             else:
                 self.errors.append("7za extraction returned no files")
 
-        # Try manual extraction as fallback
         self.errors.append("7z not found, trying manual extraction...")
         result = self._extract_nsis_manually()
         if result:
@@ -122,11 +131,14 @@ class NSISParser:
         return []
 
     def _extract_with_7z(self) -> List[Dict[str, Any]]:
-        """Extract using 7z."""
+        """Extract using 7z.
+
+        Returns:
+            One dict per extracted file, or empty on failure.
+        """
         temp_dir = Path(tempfile.mkdtemp(prefix='nsis_extract_'))
 
         try:
-            # 7z command to extract NSIS installer
             cmd = ['7z', 'x', '-y', str(self.file_path), f'-o{temp_dir}']
 
             self.errors.append(f"Running: {' '.join(cmd)}")
@@ -150,7 +162,6 @@ class NSISParser:
                 shutil.rmtree(temp_dir, ignore_errors=True)
                 return []
 
-            # Collect extracted files
             files = []
             for file_path in temp_dir.rglob('*'):
                 if file_path.is_file():
@@ -176,15 +187,25 @@ class NSISParser:
         return []
 
     def _extract_with_7za(self) -> List[Dict[str, Any]]:
-        """Extract using 7za."""
+        """Extract using 7za.
+
+        Returns:
+            One dict per extracted file, or empty on failure.
+        """
         return self._extract_with_tool('7za')
 
     def _extract_with_tool(self, tool: str) -> List[Dict[str, Any]]:
-        """Extract using a specified tool."""
+        """Extract using the given 7z-compatible CLI tool.
+
+        Args:
+            tool: Extraction tool binary name (e.g. '7z', '7za').
+
+        Returns:
+            One dict per extracted file, or empty on failure.
+        """
         temp_dir = Path(tempfile.mkdtemp(prefix='nsis_extract_'))
 
         try:
-            # 7z command to extract NSIS installer
             cmd = [tool, 'x', '-y', str(self.file_path), f'-o{temp_dir}']
 
             self.errors.append(f"Running: {' '.join(cmd)}")
@@ -201,7 +222,6 @@ class NSISParser:
                 shutil.rmtree(temp_dir, ignore_errors=True)
                 return []
 
-            # Collect extracted files
             files = []
             for file_path in temp_dir.rglob('*'):
                 if file_path.is_file():
@@ -226,28 +246,28 @@ class NSISParser:
         return []
 
     def _extract_nsis_manually(self) -> List[Dict[str, Any]]:
-        """Manual extraction of NSIS installer."""
+        """Manually extract an NSIS installer by locating and decompressing its embedded zlib blocks.
+
+        Returns:
+            One dict per successfully decompressed block written to a temp file.
+        """
         self.errors.append("Performing manual NSIS extraction...")
 
         try:
             with open(self.file_path, 'rb') as f:
                 data = f.read()
 
-            # Look for zlib compressed data blocks
             zlib_blocks = self._find_zlib_blocks(data)
 
             files = []
             for i, (offset, size) in enumerate(zlib_blocks):
                 compressed = data[offset:offset+size]
 
-                # Try to decompress
                 try:
                     decompressed = zlib.decompress(compressed)
                     if len(decompressed) > 1024:
-                        # Identify file type
                         file_type = self._identify_file_type(decompressed)
 
-                        # Create temporary file
                         ext = self._get_extension(file_type)
                         tmp_path = Path(tempfile.mktemp(suffix=ext))
                         tmp_path.write_bytes(decompressed)
@@ -270,7 +290,14 @@ class NSISParser:
             return []
 
     def _find_zlib_blocks(self, data: bytes) -> List[Tuple[int, int]]:
-        """Find zlib compressed blocks in data."""
+        """Find zlib compressed blocks in data.
+
+        Args:
+            data: Data to scan.
+
+        Returns:
+            (offset, size) pairs for each block found.
+        """
         blocks = []
         zlib_headers = [b'\x78\x9C', b'\x78\xDA', b'\x78\x01']
 
@@ -280,7 +307,6 @@ class NSISParser:
             for header in zlib_headers:
                 pos = data.find(header, offset)
                 if pos != -1:
-                    # Try to find the end of zlib data
                     size = self._find_zlib_end(data, pos)
                     if size > 1024:
                         blocks.append((pos, size))
@@ -293,8 +319,15 @@ class NSISParser:
         return blocks
 
     def _find_zlib_end(self, data: bytes, start: int) -> int:
-        """Find the end of zlib compressed data."""
-        # Try to decompress and see how far it goes
+        """Find the end of zlib compressed data by probing increasing chunk sizes.
+
+        Args:
+            data: Data containing the compressed block.
+            start: Offset the block starts at.
+
+        Returns:
+            Estimated size of the compressed block in bytes.
+        """
         for size in [1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144]:
             try:
                 if start + size > len(data):
@@ -308,7 +341,14 @@ class NSISParser:
         return 65536  # Default
 
     def _identify_file_type(self, data: bytes) -> str:
-        """Identify file type from data."""
+        """Identify file type from data.
+
+        Args:
+            data: Data to check.
+
+        Returns:
+            A file type string, or 'unknown' if no signature matched.
+        """
         if data[:2] == b'MZ':
             return 'pe_file'
         if data[:4] == b'\x7fELF':
@@ -328,7 +368,14 @@ class NSISParser:
         return 'unknown'
 
     def _get_extension(self, file_type: str) -> str:
-        """Get file extension for file type."""
+        """Get the file extension for a file type.
+
+        Args:
+            file_type: Detected file type string.
+
+        Returns:
+            A file extension including the leading dot, e.g. '.exe'.
+        """
         ext_map = {
             'pe_file': '.exe',
             'elf_file': '.elf',
@@ -343,7 +390,14 @@ class NSISParser:
         return ext_map.get(file_type, '.bin')
 
     def _get_file_type(self, file_path: Path) -> str:
-        """Get file type from file content."""
+        """Get file type from file content.
+
+        Args:
+            file_path: Path to the file to check.
+
+        Returns:
+            A file type string, or 'unknown' if unrecognized.
+        """
         try:
             with open(file_path, 'rb') as f:
                 data = f.read(256)

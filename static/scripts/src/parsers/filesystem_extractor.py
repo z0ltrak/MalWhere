@@ -21,13 +21,9 @@ class FilesystemExtractor:
         (b'<?xml', 'xml_data', 65536),       # XML
     ]
 
-    # NSIS specific signatures -- generic NSIS/installer boilerplate only.
-    # Previously included 'Starlabs'/'DiamondAge'/'goldendays'/'diamondage':
-    # all RoningLoader-specific product/dropped-file names, not signatures
-    # of NSIS itself. _is_nsis_file_system() below already has 2 independent
-    # structural fallbacks (file-path scanning, file-table pattern matching)
-    # that don't depend on any sample's specific strings -- verified those
-    # alone still detect roning's real NSIS payload.
+    # Generic NSIS/installer boilerplate only, no sample-specific strings.
+    # _is_nsis_file_system() below also has 2 independent structural
+    # fallbacks (file-path scanning, file-table pattern matching).
     NSIS_SIGNATURES = [
         b'Nullsoft.NSIS',
         b'NSIS',
@@ -39,7 +35,15 @@ class FilesystemExtractor:
         self.extracted_files: List[Dict[str, Any]] = []
 
     def extract_files_from_data(self, data: bytes, base_offset: int = 0) -> List[Dict[str, Any]]:
-        """Extract multiple files from decompressed data."""
+        """Extract multiple files from decompressed data.
+
+        Args:
+            data: Decompressed data to extract files from.
+            base_offset: Offset of `data` within the original file, added to each extracted file's reported offset.
+
+        Returns:
+            One dict per extracted file (filename, data, size, offset, type).
+        """
         self.extracted_files = []
         self.errors = []
 
@@ -47,57 +51,62 @@ class FilesystemExtractor:
             self.errors.append("Data too small to extract files")
             return []
 
-        # Check if this is an NSIS file system
         if self._is_nsis_file_system(data):
             self.errors.append("Detected NSIS file system structure")
             nsis_files = self._extract_nsis_files(data, base_offset)
             if nsis_files:
                 return nsis_files
 
-        # Check if it's a single file (PE, DLL, etc.)
         if self._is_single_file(data):
             self.errors.append("Detected single file")
             return self._extract_single_file(data, base_offset)
 
-        # Try to find multiple files by scanning for signatures
         files = self._scan_for_files(data, base_offset)
         if len(files) > 1:
             self.errors.append(f"Found {len(files)} files by signature scanning")
             return files
 
-        # If we can't find multiple files, treat as single file
         self.errors.append("Treating as single file")
         return self._extract_single_file(data, base_offset)
 
     def _is_nsis_file_system(self, data: bytes) -> bool:
-        """Check if data contains an NSIS file system structure."""
+        """Check if data contains an NSIS file system structure.
+
+        Args:
+            data: Data to check.
+
+        Returns:
+            True if an NSIS signature, 3+ file paths, or a file table pattern is found.
+        """
         if len(data) < 1024:
             return False
 
-        # Look for NSIS signatures in the first 8KB
         search_data = data[:8192]
 
-        # Check for NSIS signatures
         for sig in self.NSIS_SIGNATURES:
             if sig in search_data:
                 return True
 
-        # Check for multiple file paths with common extensions
         file_paths = self._find_file_paths(search_data)
         if len(file_paths) >= 3:
             return True
 
-        # Check for file table patterns
         if self._find_nsis_file_table(search_data) != -1:
             return True
 
         return False
 
     def _find_file_paths(self, data: bytes) -> List[str]:
-        """Find potential file paths in data."""
+        """Find potential file paths in data.
+
+        Args:
+            data: Data to search.
+
+        Returns:
+            Up to 50 candidate file paths.
+        """
         paths = set()
 
-        # Look for Windows paths with extensions
         path_patterns = [
             rb'[A-Za-z]:\\[^\\]+\\[^\\]+\.(?:exe|dll|sys|dat|bin|tmp|bat|cmd|ps1)',
             rb'[A-Za-z0-9_\-\. ]+\.(?:exe|dll|sys|dat|bin|tmp|bat|cmd|ps1)',
@@ -109,7 +118,6 @@ class FilesystemExtractor:
             for match in matches:
                 try:
                     path = match.decode('utf-8', errors='ignore')
-                    # Clean up the path
                     path = path.strip()
                     if len(path) > 5 and len(path) < 260:
                         paths.add(path)
@@ -119,8 +127,14 @@ class FilesystemExtractor:
         return list(paths)[:50]
 
     def _find_nsis_file_table(self, data: bytes) -> int:
-        """Find NSIS file table offset."""
-        # Look for file table patterns
+        """Find the NSIS file table offset.
+
+        Args:
+            data: Data to search.
+
+        Returns:
+            The offset of a chunk matching 3+ file-table patterns, or -1 if none found.
+        """
         patterns = [
             rb'Files:',
             rb'File:',
@@ -141,8 +155,14 @@ class FilesystemExtractor:
         return -1
 
     def _is_single_file(self, data: bytes) -> bool:
-        """Check if data is a single file."""
-        # Check for PE
+        """Check if data is a single file (PE, ZIP, or script).
+
+        Args:
+            data: Data to check.
+
+        Returns:
+            True if data looks like exactly one file rather than a container.
+        """
         if data[:2] == b'MZ':
             try:
                 pe_offset = int.from_bytes(data[0x3C:0x40], 'little')
@@ -151,25 +171,29 @@ class FilesystemExtractor:
             except Exception:
                 pass
 
-        # Check for DLL
         if data[:2] == b'MZ' and b'.dll' in data[:4096].lower():
             return True
 
-        # Check for ZIP
         if data[:4] == b'PK\x03\x04':
             return True
 
-        # Check if it's a script (batch, PowerShell)
         if data[:10].lower() in [b'@echo off', b'powershell', b'#!', b'::']:
             return True
 
         return False
 
     def _extract_nsis_files(self, data: bytes, base_offset: int) -> List[Dict[str, Any]]:
-        """Extract files from NSIS file system."""
+        """Extract files from an NSIS file system, falling back to signature scanning/pattern matching.
+
+        Args:
+            data: NSIS file system data.
+            base_offset: Offset of `data` within the original file.
+
+        Returns:
+            One dict per extracted file.
+        """
         files = []
 
-        # Try to find the file table
         file_table_offset = self._find_nsis_file_table(data)
         if file_table_offset != -1:
             self.errors.append(f"Found file table at offset {file_table_offset}")
@@ -187,37 +211,39 @@ class FilesystemExtractor:
                         })
                         self.errors.append(f"Extracted {entry.get('name', 'unknown')} ({len(file_data)} bytes)")
 
-        # If we didn't find NSIS file table, scan for files
         if not files:
             self.errors.append("No NSIS file table found, scanning for signatures")
             files = self._scan_for_files(data, base_offset)
 
-        # If still no files, try to extract based on common NSIS patterns
         if not files:
             files = self._extract_nsis_by_pattern(data, base_offset)
 
         return files
 
     def _parse_nsis_file_table(self, data: bytes, offset: int) -> List[Dict[str, Any]]:
-        """Parse NSIS file table entries."""
+        """Parse NSIS file table entries.
+
+        Args:
+            data: NSIS file system data.
+            offset: Offset of the file table within `data`.
+
+        Returns:
+            One dict per parsed entry (name, size, offset).
+        """
         entries = []
         current_offset = offset
 
-        # Parse until we hit the end of the table or find a pattern
         while current_offset < offset + 8192 and current_offset < len(data) - 100:
             chunk = data[current_offset:current_offset+200]
 
-            # Look for file name with extension
             name_match = re.search(rb'([A-Za-z0-9_\-\. ]+\.(?:exe|dll|sys|dat|bin|tmp|bat|cmd|ps1))', chunk)
             if name_match:
                 name = name_match.group(1).decode('utf-8', errors='ignore').strip()
 
-                # Look for size
                 size_match = re.search(rb'(\d+)\s*(?:bytes|Bytes|size|Size)', chunk)
                 if size_match:
                     try:
                         size = int(size_match.group(1))
-                        # Estimate offset (after the name and size fields)
                         file_offset = current_offset + len(name_match.group(0)) + len(size_match.group(0)) + 20
                         if file_offset < len(data):
                             entries.append({
@@ -235,10 +261,17 @@ class FilesystemExtractor:
         return entries
 
     def _extract_nsis_by_pattern(self, data: bytes, base_offset: int) -> List[Dict[str, Any]]:
-        """Extract files from NSIS data using pattern matching."""
+        """Extract files from NSIS data using filename pattern matching, as a last-resort fallback.
+
+        Args:
+            data: NSIS file system data.
+            base_offset: Offset of `data` within the original file.
+
+        Returns:
+            One dict per matched filename with recoverable file data.
+        """
         files = []
 
-        # Look for common file patterns in NSIS installers
         patterns = [
             (rb'[A-Za-z0-9_\-\. ]+\.dll', 'dll'),
             (rb'[A-Za-z0-9_\-\. ]+\.exe', 'exe'),
@@ -254,10 +287,7 @@ class FilesystemExtractor:
                 try:
                     filename = match.group().decode('utf-8', errors='ignore').strip()
                     if len(filename) > 5:
-                        # Try to find the actual file data
-                        # Look for the file content after the filename
                         file_offset = match.end()
-                        # Try to find the file data by looking for signatures
                         file_data = self._find_file_data_at_offset(data, file_offset)
                         if file_data and len(file_data) > 1024:
                             files.append({
@@ -273,41 +303,51 @@ class FilesystemExtractor:
         return files
 
     def _find_file_data_at_offset(self, data: bytes, offset: int) -> Optional[bytes]:
-        """Find file data starting at offset."""
+        """Find file data starting near an offset, preferring a recognized signature within the next 1000 bytes.
+
+        Args:
+            data: Data to search.
+            offset: Starting offset to search from.
+
+        Returns:
+            A chunk of file data, or None if offset is past the end of data.
+        """
         if offset >= len(data):
             return None
 
-        # Look for file signatures within the next 1000 bytes
         for i in range(offset, min(offset + 1000, len(data))):
             for sig, file_type, max_size in self.FILE_SIGNATURES:
                 if data[i:i+len(sig)] == sig:
-                    # Found a signature, extract from there
                     size = min(max_size, len(data) - i)
                     return data[i:i+size]
 
-        # If no signature found, take a chunk
         size = min(8192, len(data) - offset)
         return data[offset:offset+size]
 
     def _scan_for_files(self, data: bytes, base_offset: int) -> List[Dict[str, Any]]:
-        """Scan for files by looking for file signatures."""
+        """Scan for files by looking for known magic-byte signatures.
+
+        Args:
+            data: Data to scan.
+            base_offset: Offset of `data` within the original file.
+
+        Returns:
+            One dict per matched signature with recognizable file data.
+        """
         files = []
         seen_offsets = set()
 
         for signature, file_type, max_size in self.FILE_SIGNATURES:
             offset = data.find(signature)
             while offset != -1:
-                # Skip if we've seen this offset
                 if offset in seen_offsets:
                     offset = data.find(signature, offset + 1)
                     continue
                 seen_offsets.add(offset)
 
-                # Extract the data
                 size = min(max_size, len(data) - offset)
                 file_data = data[offset:offset+size]
 
-                # Only add if it's significant
                 if len(file_data) > 1024:
                     file_type_detected = self._detect_file_type(file_data)
                     if file_type_detected != 'unknown':
@@ -325,11 +365,17 @@ class FilesystemExtractor:
         return files
 
     def _detect_file_type(self, data: bytes) -> str:
-        """Detect file type from magic bytes."""
+        """Detect file type from magic bytes.
+
+        Args:
+            data: Data to check.
+
+        Returns:
+            A file type string, or 'unknown' if no signature matched.
+        """
         if len(data) < 4:
             return 'unknown'
 
-        # Check for PE
         if data[:2] == b'MZ':
             try:
                 pe_offset = int.from_bytes(data[0x3C:0x40], 'little')
@@ -342,19 +388,15 @@ class FilesystemExtractor:
         if data[:2] == b'MZ' and b'.dll' in data[:4096].lower():
             return 'pe_file'
 
-        # Check for ZIP
         if data[:4] == b'PK\x03\x04':
             return 'zip_file'
 
-        # Check for GZip
         if data[:2] == b'\x1F\x8B':
             return 'gzip_file'
 
-        # Check for zlib
         if data[:2] in [b'\x78\x9C', b'\x78\xDA', b'\x78\x01']:
             return 'zlib_data'
 
-        # Check for JSON
         if data[:1] == b'{' or data[:1] == b'[':
             try:
                 import json
@@ -363,28 +405,31 @@ class FilesystemExtractor:
             except Exception:
                 pass
 
-        # Check for XML
         if data[:5] == b'<?xml':
             return 'xml_data'
 
-        # Check for batch script
         if data[:10].lower() == b'@echo off' or data[:2] == b'::':
             return 'batch_script'
 
-        # Check for PowerShell script
         if data[:10].lower() == b'powershell' or data[:2] == b'#!':
             return 'powershell_script'
 
         return 'unknown'
 
     def _extract_single_file(self, data: bytes, base_offset: int) -> List[Dict[str, Any]]:
-        """Extract as a single file."""
+        """Extract data as a single file.
+
+        Args:
+            data: File data.
+            base_offset: Offset of `data` within the original file.
+
+        Returns:
+            A single-element list with the file's filename, data, size, offset, and type.
+        """
         file_type = self._detect_file_type(data)
         filename = f'extracted_{file_type}.bin'
 
-        # Try to find a better filename from the data
         if file_type == 'pe_file':
-            # Look for DLL name in the data
             dll_match = re.search(rb'([A-Za-z0-9_\-\.]+\.dll)', data[:4096])
             if dll_match:
                 try:

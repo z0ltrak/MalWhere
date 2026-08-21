@@ -15,10 +15,25 @@ _TECHNIQUE_ID_RE = re.compile(r"^T\d{4}(\.\d{3})?$")
 def group_technique_observations(
     static_report: Dict[str, Any], dynamic_report: Dict[str, Any]
 ) -> Tuple[List[TechniqueObservations], List[DiscardedEntry]]:
+    """Group static + dynamic ATT&CK mappings by technique ID.
+
+    Args:
+        static_report: Static analysis report dict, read for its attck_mappings list.
+        dynamic_report: Curated dynamic_report.json dict, read for its attck_mappings list.
+
+    Returns:
+        A tuple of (technique observations sorted by ID, discarded entries with invalid IDs).
+    """
     by_technique: Dict[str, TechniqueObservations] = {}
     discarded: List[DiscardedEntry] = []
 
     def ingest(mappings: List[Dict[str, Any]], origin: str) -> None:
+        """Validate and add each mapping's technique ID to by_technique, or record it as discarded.
+
+        Args:
+            mappings: attck_mappings list from a static or dynamic report.
+            origin: 'static' or 'dynamic', recorded on each observation/discarded entry.
+        """
         for m in mappings:
             technique = m.get("technique", "")
             if not _TECHNIQUE_ID_RE.match(technique):

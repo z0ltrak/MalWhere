@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Resubmission Static Analyzer for the MalWhere Pipeline
-TFM 2025-2026 - Universidad Complutense de Madrid
 
 Consumes the resubmission queue written by dynamic/scripts/parse_cape.py
 (dynamic/scripts/src/resubmit_writer.py) -- dropped/extracted files CAPE
@@ -45,10 +44,31 @@ from src.analyzer import StaticAnalyzer
 
 
 def already_processed(reports_dir: Path, family: str, sha256: str) -> bool:
+    """Check whether a static report already exists for this artifact.
+
+    Args:
+        reports_dir: Base static reports directory.
+        family: Parent sample's family label.
+        sha256: Artifact's hash.
+
+    Returns:
+        True if {reports_dir}/{family}/{sha256}_static.json already exists.
+    """
     return (reports_dir / family / f"{sha256}_static.json").exists()
 
 
 def process_one(manifest: dict, artifact_path: Path, reports_dir: Path, verbose: bool) -> bool:
+    """Run static analysis on one resubmitted artifact and write its lineage-tagged report.
+
+    Args:
+        manifest: Resubmission queue manifest entry for this artifact.
+        artifact_path: Path to the artifact's raw bytes.
+        reports_dir: Base static reports directory to write the tagged report under.
+        verbose: Enable verbose StaticAnalyzer logging.
+
+    Returns:
+        True if analysis succeeded and the report was written, False on failure.
+    """
     sha256 = manifest["sha256"]
     family = manifest.get("parent_family", "unknown")
     family_dir = reports_dir / family
@@ -85,6 +105,11 @@ def process_one(manifest: dict, artifact_path: Path, reports_dir: Path, verbose:
 
 
 def main():
+    """Process every queued resubmission manifest through static analysis, within a time budget.
+
+    Returns:
+        Process exit code (always 0; failures exit early via sys.exit).
+    """
     parser = argparse.ArgumentParser(
         description="Resubmission Static Analyzer for the MalWhere Pipeline"
     )

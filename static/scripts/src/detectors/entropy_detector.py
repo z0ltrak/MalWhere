@@ -39,20 +39,25 @@ class EntropyDetector:
         self.data = None
 
     def analyze(self, sections: List, strings: List[str]) -> EntropyAnalysis:
-        """Analyze entropy of sections and data."""
+        """Analyze entropy of PE sections, the overall file, and crypto-related strings.
+
+        Args:
+            sections: SectionInfo objects to check for packed/high-entropy names.
+            strings: Extracted strings from the sample, checked for crypto keywords.
+
+        Returns:
+            An EntropyAnalysis with high-entropy/suspicious/packed/encrypted findings and justifications.
+        """
 
         high_entropy = []
         suspicious = []
         packed = []
         encrypted = []
 
-        # 1. Analyze sections (treat as objects, not dicts)
         for section in sections:
-
             entropy = section.entropy
             name = section.name
 
-            # Check for packed section names
             if any(p in name for p in self.PACKED_SECTION_NAMES):
                 packed.append(EntropyFinding(
                     name=name,
@@ -63,7 +68,6 @@ class EntropyDetector:
                     justification=self._generate_packer_justification(name)
                 ))
 
-            # Check entropy levels
             if entropy > self.HIGH_ENTROPY_THRESHOLD:
                 high_entropy.append(EntropyFinding(
                     name=name,
@@ -83,18 +87,12 @@ class EntropyDetector:
                     justification=self._generate_suspicious_entropy_justification(name, entropy)
                 ))
 
-        # 2. Calculate overall entropy
         overall_entropy = self._calculate_overall_entropy()
-
-        # 3. Find crypto indicators in strings
         crypto_indicators = self._find_crypto_indicators(strings)
-
-        # 4. Generate overall justification
         overall_justification = self._generate_overall_entropy_justification(
             overall_entropy, high_entropy, suspicious
         )
 
-        # 5. Check if data is encrypted (if overall entropy > 7.5)
         if overall_entropy and overall_entropy > self.HIGH_ENTROPY_THRESHOLD:
             encrypted.append(EntropyFinding(
                 name='OVERALL_FILE',
@@ -125,7 +123,14 @@ class EntropyDetector:
             return None
 
     def _calculate_entropy(self, data: bytes) -> float:
-        """Calculate Shannon entropy of data."""
+        """Calculate Shannon entropy of data.
+
+        Args:
+            data: Bytes to measure.
+
+        Returns:
+            Entropy in bits/byte (0.0 to 8.0).
+        """
         if not data:
             return 0.0
 
@@ -141,7 +146,14 @@ class EntropyDetector:
         return entropy
 
     def _find_crypto_indicators(self, strings: List[str]) -> List[Dict[str, str]]:
-        """Find strings indicating crypto operations."""
+        """Find strings indicating crypto operations.
+
+        Args:
+            strings: Extracted strings from the sample.
+
+        Returns:
+            Up to 20 matches, one per distinct (keyword, string prefix) pair.
+        """
         indicators = []
         seen = set()
 
@@ -164,21 +176,53 @@ class EntropyDetector:
         return indicators[:20]  # Limit output
 
     def _generate_packer_justification(self, name: str) -> str:
-        """Generate justification for packer detection."""
+        """Generate justification for packer detection.
+
+        Args:
+            name: Section name that matched a known packer signature.
+
+        Returns:
+            A one-sentence justification string.
+        """
         return f"Section name '{name}' matches known packer signatures. This strongly indicates the binary has been packed to evade detection and hinder analysis."
 
     def _generate_high_entropy_justification(self, name: str, entropy: float) -> str:
-        """Generate justification for high entropy section."""
+        """Generate justification for a high-entropy section.
+
+        Args:
+            name: Section name.
+            entropy: Section's measured entropy.
+
+        Returns:
+            A justification string.
+        """
         return f"Section '{name}' has entropy {entropy:.2f} (>7.5). This is characteristic of encrypted or packed data. Typical compiled code sections have entropy between 5.5-6.5. Values above 7.5 are uncommon for standard executables and strongly suggest the presence of encrypted content or packing."
 
     def _generate_suspicious_entropy_justification(self, name: str, entropy: float) -> str:
-        """Generate justification for suspicious entropy section."""
+        """Generate justification for a suspicious-entropy section.
+
+        Args:
+            name: Section name.
+            entropy: Section's measured entropy.
+
+        Returns:
+            A justification string.
+        """
         return f"Section '{name}' has entropy {entropy:.2f} (6.0-7.5). This is moderately high and may indicate obfuscated or compressed data. While this could be legitimate (e.g., resource data), in the context of malware it often suggests packing or string obfuscation."
 
     def _generate_overall_entropy_justification(self, overall_entropy: Optional[float],
                                                high_entropy: List,
                                                suspicious: List) -> str:
-        """Generate justification for overall entropy."""
+        """Generate justification for the file's overall entropy.
+
+        Args:
+            overall_entropy: Measured entropy of the whole file, or None if it couldn't be calculated.
+            high_entropy: High-entropy section findings, for the count in the message.
+            suspicious: Suspicious-entropy section findings, for the count in the message.
+
+        Returns:
+            A justification string.
+        """
         if overall_entropy is None:
             return "Unable to calculate overall file entropy."
 

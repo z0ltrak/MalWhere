@@ -1,13 +1,9 @@
 """Shared thresholds used across the static pipeline.
 
-Previously HIGH_ENTROPY_THRESHOLD and SKIP_CARVING_THRESHOLD were each
-independently defined (same names, same values) in decryption_engine.py,
-magic_carver.py, and entropy_detector.py -- three separate places that
-could silently drift out of sync if only one got tuned. Consolidated here
-as the single source of truth for those three; call sites that use the
-raw literals inline (indicators.py, packer_parser.py, attck_mapper.py,
-analyzer.py) were left as-is rather than touched wholesale in the same
-pass, to keep this a targeted fix rather than a repo-wide rewrite.
+Single source of truth for decryption_engine.py, magic_carver.py, and
+entropy_detector.py, which otherwise each independently defined the same
+names/values. Some call sites (indicators.py, packer_parser.py,
+attck_mapper.py, analyzer.py) still use the raw literals inline.
 """
 
 # Shannon entropy (bits/byte, max 8.0) above which data is considered

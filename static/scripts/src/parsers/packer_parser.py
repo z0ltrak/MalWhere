@@ -32,6 +32,12 @@ class PackerDetector:
     }
 
     def __init__(self, file_path: Path, timeout: int = 60):
+        """Initialize the packer detector.
+
+        Args:
+            file_path: Path to the file to check for packing.
+            timeout: Timeout in seconds for the DIE subprocess.
+        """
         self.file_path = file_path
         self.timeout = timeout
         self.errors: List[str] = []
@@ -70,14 +76,11 @@ class PackerDetector:
             return
 
         try:
-            # Set environment to use offscreen rendering
             env = os.environ.copy()
             env['QT_QPA_PLATFORM'] = 'offscreen'
 
-            # Build command - use text output instead of JSON for reliability
             cmd = [self._die_binary, str(self.file_path)]
 
-            # If using 'die' (GUI version), add headless flag
             if self._die_binary == 'die':
                 cmd.insert(1, '-h')
 
@@ -87,7 +90,6 @@ class PackerDetector:
                 env=env
             )
 
-            # Parse text output directly (more reliable)
             if result.stdout:
                 self._parse_die_text_output(result.stdout)
             elif result.stderr:
@@ -104,12 +106,9 @@ class PackerDetector:
         packers = []
 
         for line in lines:
-            # Look for packer or compiler information
             line_lower = line.lower()
             if 'packer' in line_lower or 'compiler' in line_lower:
-                # Try to extract meaningful info
                 clean_line = line.strip()
-                # Remove common prefixes
                 for prefix in ['[', '(', '{']:
                     if clean_line.startswith(prefix):
                         clean_line = clean_line[1:]
@@ -117,10 +116,8 @@ class PackerDetector:
                     if clean_line.endswith(suffix):
                         clean_line = clean_line[:-1]
 
-                # Only add if it's not a generic or low-confidence detection
                 if clean_line.strip() and len(clean_line) > 3:
                     packer_name = clean_line.strip()
-                    # Skip if it's just "Compiler" or "Packer" without details
                     if packer_name.lower() not in ['compiler', 'packer', 'unknown']:
                         packers.append({
                             'name': packer_name,
@@ -135,7 +132,14 @@ class PackerDetector:
             self.result['confidence'] = 'medium'
 
     def _parse_die_output(self, die_data: Dict[str, Any]) -> List[Dict[str, str]]:
-        """Parse DIE JSON output for packer detection."""
+        """Parse DIE JSON output for packer detection.
+
+        Args:
+            die_data: Parsed DIE JSON output.
+
+        Returns:
+            Detected packer/compiler entries, excluding generic/unknown names.
+        """
         packers = []
 
         if 'detects' in die_data:
@@ -143,7 +147,6 @@ class PackerDetector:
                 detect_type = detect.get('type', '').lower()
                 if 'packer' in detect_type or 'compiler' in detect_type:
                     name = detect.get('name', 'Unknown')
-                    # Skip generic names
                     if name.lower() not in ['compiler', 'packer', 'unknown']:
                         packers.append({
                             'name': name,
@@ -190,43 +193,32 @@ class PackerDetector:
         return packers
 
     def _detect_heuristic(self) -> None:
-        """
-        Fallback heuristic-based packer detection.
-        FIXED: Only flag if there's actual evidence, not every file.
-        """
+        """Fallback heuristic-based packer detection: only flags on actual evidence, never every file."""
         indicators = []
-
-        # Try to read sections if available (from earlier parsing)
-        # This is a fallback - it won't run if we don't have section data
-        # The main detection should come from DIE or the section-based detection
-
-        # Only add heuristic indicators if there's actual suspicious evidence
-        # Don't flag every file as packed
 
         if indicators:
             self.result['detected'] = True
             self.result['packers'] = indicators
             self.result['confidence'] = 'low'
-        # else: keep result['detected'] = False (default)
 
     def detect_with_sections(self, sections: List) -> Dict[str, Any]:
-        """
-        Detect packers using section information.
-        Handles both dict and SectionInfo objects.
+        """Detect packers using section information (dict or SectionInfo objects).
+
+        Args:
+            sections: PE sections to check for known packer names or high-entropy/low-count heuristics.
+
+        Returns:
+            Dict with detected, packers, and confidence, same shape as detect().
         """
         indicators = []
 
-        # Check for known packer section names
         for section in sections:
-            # Handle both dict and SectionInfo objects
             if hasattr(section, 'name'):
-                # SectionInfo object
                 name = section.name
                 entropy = getattr(section, 'entropy', 0)
                 is_executable = getattr(section, 'is_executable', False)
                 is_writable = getattr(section, 'is_writable', False)
             elif isinstance(section, dict):
-                # Dict
                 name = section.get('name', '')
                 entropy = section.get('entropy', 0)
                 is_executable = section.get('is_executable', False)
@@ -234,7 +226,6 @@ class PackerDetector:
             else:
                 continue
 
-            # Check for known packer section names
             if name in self.PACKER_SECTIONS:
                 indicators.append({
                     'name': self.PACKER_SECTIONS[name],
@@ -242,7 +233,6 @@ class PackerDetector:
                     'confidence': 'high'
                 })
 
-        # Check for high entropy sections (potential packing)
         high_entropy_sections = []
         for section in sections:
             if hasattr(section, 'entropy'):
@@ -268,9 +258,7 @@ class PackerDetector:
                 'confidence': 'low'
             })
 
-        # Check for very few sections (common with packers)
         if len(sections) <= 3 and len(sections) > 0:
-            # Only flag if there are also other indicators
             if indicators:
                 indicators.append({
                     'name': 'Possible Packer',

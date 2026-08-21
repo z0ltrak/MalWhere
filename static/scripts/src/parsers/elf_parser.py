@@ -44,7 +44,11 @@ class ELFParser:
         self.elf_data = {}
 
     def parse(self) -> Dict[str, Any]:
-        """Parse ELF file and extract metadata."""
+        """Parse ELF file and extract metadata.
+
+        Returns:
+            Dict of ELF header fields (and 'sections' if present), or {'error': ...} on failure.
+        """
         try:
             with open(self.file_path, 'rb') as f:
                 self.data = f.read()
@@ -52,15 +56,12 @@ class ELFParser:
             self.errors.append(f"Error reading ELF file: {e}")
             return {'error': str(e)}
 
-        # Check ELF magic
         if not self.data.startswith(self.ELF_MAGIC):
             self.errors.append("Not an ELF file")
             return {'error': 'Not an ELF file'}
 
-        # Parse ELF header
         self.elf_data = self._parse_elf_header()
 
-        # Parse sections if possible
         if self.elf_data.get('e_shnum', 0) > 0:
             sections = self._parse_sections()
             self.elf_data['sections'] = sections
@@ -68,11 +69,15 @@ class ELFParser:
         return self.elf_data
 
     def _parse_elf_header(self) -> Dict[str, Any]:
-        """Parse ELF header."""
+        """Parse the ELF header.
+
+        Returns:
+            Dict of header fields (class, endianness, type, machine,
+            entry point, program/section header offsets and counts).
+        """
         header = {}
 
         try:
-            # Read class (32-bit or 64-bit)
             ei_class = self.data[4]
             if ei_class not in self.EI_CLASS:
                 self.errors.append(f"Unknown ELF class: {ei_class}")
@@ -82,24 +87,20 @@ class ELFParser:
             header['class'] = self.EI_CLASS.get(ei_class, 'Unknown')
             header['is_64bit'] = is_64bit
 
-            # Endianness
             ei_data = self.data[5]
             header['endianness'] = self.EI_DATA.get(ei_data, 'Unknown')
             header['is_little_endian'] = ei_data == 1
 
-            # Type
             e_type_offset = 16 if is_64bit else 16
             e_type = struct.unpack('<H' if header['is_little_endian'] else '>H',
                                   self.data[e_type_offset:e_type_offset+2])[0]
             header['type'] = self.ETYPES.get(e_type, f'Unknown (0x{e_type:x})')
 
-            # Machine
             e_machine_offset = 18 if is_64bit else 18
             e_machine = struct.unpack('<H' if header['is_little_endian'] else '>H',
                                      self.data[e_machine_offset:e_machine_offset+2])[0]
             header['machine'] = self.EMACHINES.get(e_machine, f'Unknown (0x{e_machine:x})')
 
-            # Entry point
             e_entry_offset = 24 if is_64bit else 24
             e_entry = struct.unpack('<Q' if header['is_little_endian'] and is_64bit else
                                    '>Q' if not header['is_little_endian'] and is_64bit else
@@ -108,7 +109,6 @@ class ELFParser:
                                            (8 if is_64bit else 4)])[0]
             header['entry_point'] = hex(e_entry)
 
-            # Program header offset
             e_phoff_offset = 32 if is_64bit else 28
             e_phoff = struct.unpack('<Q' if header['is_little_endian'] and is_64bit else
                                    '>Q' if not header['is_little_endian'] and is_64bit else
@@ -117,7 +117,6 @@ class ELFParser:
                                            (8 if is_64bit else 4)])[0]
             header['program_header_offset'] = hex(e_phoff)
 
-            # Section header offset
             e_shoff_offset = 40 if is_64bit else 32
             e_shoff = struct.unpack('<Q' if header['is_little_endian'] and is_64bit else
                                    '>Q' if not header['is_little_endian'] and is_64bit else
@@ -126,19 +125,16 @@ class ELFParser:
                                            (8 if is_64bit else 4)])[0]
             header['section_header_offset'] = hex(e_shoff)
 
-            # Section header count
             e_shnum_offset = 60 if is_64bit else 48
             e_shnum = struct.unpack('<H' if header['is_little_endian'] else '>H',
                                    self.data[e_shnum_offset:e_shnum_offset+2])[0]
             header['section_count'] = e_shnum
 
-            # Entry size
             e_shentsize_offset = 58 if is_64bit else 46
             e_shentsize = struct.unpack('<H' if header['is_little_endian'] else '>H',
                                        self.data[e_shentsize_offset:e_shentsize_offset+2])[0]
             header['section_header_entry_size'] = e_shentsize
 
-            # Check for section header table
             if e_shoff > 0 and e_shnum > 0:
                 header['has_section_headers'] = True
             else:
@@ -150,7 +146,11 @@ class ELFParser:
         return header
 
     def _parse_sections(self) -> List[Dict[str, Any]]:
-        """Parse ELF sections."""
+        """Parse ELF sections using the header offsets already parsed into self.elf_data.
+
+        Returns:
+            One dict per parsed section header.
+        """
         sections = []
 
         if not self.elf_data.get('has_section_headers', False):
@@ -163,7 +163,6 @@ class ELFParser:
             e_shnum = self.elf_data['section_count']
             e_shentsize = self.elf_data['section_header_entry_size']
 
-            # Section header size
             sh_size = 64 if is_64bit else 40
 
             for i in range(e_shnum):
@@ -171,7 +170,6 @@ class ELFParser:
                 if offset + sh_size > len(self.data):
                     break
 
-                # Parse section header
                 section = self._parse_section_header(offset, is_64bit, is_little_endian)
                 if section:
                     sections.append(section)
@@ -182,26 +180,30 @@ class ELFParser:
         return sections
 
     def _parse_section_header(self, offset: int, is_64bit: bool, is_little_endian: bool) -> Optional[Dict[str, Any]]:
-        """Parse a single section header."""
+        """Parse a single section header.
+
+        Args:
+            offset: Byte offset of the section header in the file.
+            is_64bit: Whether the ELF is 64-bit (changes field widths).
+            is_little_endian: Byte order to unpack fields with.
+
+        Returns:
+            Dict with name, type, address, size, and flags, or None on parse error.
+        """
         try:
-            # Section name offset (sh_name)
             sh_name = struct.unpack('<I' if is_little_endian else '>I',
                                    self.data[offset:offset+4])[0]
 
-            # Section type (sh_type)
             sh_type = struct.unpack('<I' if is_little_endian else '>I',
                                    self.data[offset+4:offset+8])[0]
 
-            # Section flags (sh_flags)
             sh_flags = struct.unpack('<Q' if is_64bit else '<I' if is_little_endian else '>I',
                                     self.data[offset+8:offset+8 + (8 if is_64bit else 4)])[0]
 
-            # Section address (sh_addr)
             sh_addr = struct.unpack('<Q' if is_64bit else '<I' if is_little_endian else '>I',
                                    self.data[offset + (16 if is_64bit else 12):
                                            offset + (16 if is_64bit else 12) + (8 if is_64bit else 4)])[0]
 
-            # Section size (sh_size)
             sh_size = struct.unpack('<Q' if is_64bit else '<I' if is_little_endian else '>I',
                                    self.data[offset + (32 if is_64bit else 20):
                                            offset + (32 if is_64bit else 20) + (8 if is_64bit else 4)])[0]
@@ -210,7 +212,6 @@ class ELFParser:
             # This is simplified - in a real implementation we'd need to parse the string table
             section_name = f".section_{sh_type}"
 
-            # Section type names
             type_names = {
                 0: 'NULL',
                 1: 'PROGBITS',

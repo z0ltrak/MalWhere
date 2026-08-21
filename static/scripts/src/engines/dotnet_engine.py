@@ -1,4 +1,4 @@
-# src/engines/dotnet_engine.py
+"""Fallback .NET analysis engine using ILSpy, with a pure-Python fallback."""
 
 import subprocess
 import json
@@ -16,46 +16,70 @@ class DotNetEngine(AnalysisEngine):
     SUPPORTED_TYPES = ['pe_dotnet']
 
     def __init__(self, verbose: bool = False, timeout: int = 300):
+        """Initialize the engine and locate the ilspycmd binary, if installed.
+
+        Args:
+            verbose: Enable verbose progress logging.
+            timeout: Timeout in seconds for the ilspycmd subprocess.
+        """
         self.verbose = verbose
         self.timeout = timeout
         self.errors: List[str] = []
         self.ilspy_bin = shutil.which('ilspycmd')
 
     def supports_file(self, file_type: str) -> bool:
+        """Check if this engine supports the given file type.
+
+        Args:
+            file_type: Detected file type string.
+
+        Returns:
+            True if file_type is in SUPPORTED_TYPES.
+        """
         return file_type in self.SUPPORTED_TYPES
 
     def get_name(self) -> str:
         return ".NET (ILSpy)"
 
     def analyze(self, file_path: Path, depth: int = 0) -> StaticReport:
-        """Run ILSpy analysis on .NET assembly."""
+        """Run ILSpy analysis on a .NET assembly, falling back to pure-Python analysis if ILSpy isn't installed.
+
+        Args:
+            file_path: Path to the .NET assembly to analyze.
+            depth: Current recursion depth (unused; accepted for AnalysisEngine interface consistency).
+
+        Returns:
+            The completed StaticReport, tagged is_dotnet=True.
+        """
         self._log(f"Analyzing .NET assembly: {file_path.name}")
 
         report = self._create_empty_report(file_path)
 
-        # Try ILSpy
         if self.ilspy_bin:
             report = self._analyze_with_ilspy(file_path)
         else:
             self.errors.append("ILSpy not installed, using fallback")
             report = self._analyze_with_fallback(file_path)
 
-        # Mark as .NET
         report.is_dotnet = True
         report.file_type = 'pe_dotnet'
 
         return report
 
     def _analyze_with_ilspy(self, file_path: Path) -> StaticReport:
-        """Analyze with ILSpy."""
+        """Run the ilspycmd subprocess and build a report from its output.
+
+        Args:
+            file_path: Path to the .NET assembly to analyze.
+
+        Returns:
+            A StaticReport built from ILSpy's JSON (or text, as fallback) output,
+            or an empty report tagged with an error if ILSpy failed.
+        """
         try:
-            # ILSpy can output JSON or text
             cmd = [
                 self.ilspy_bin,
-                '-p',  # Show parameters
-                '-t',  # Show types
-                '-h',  # Show hidden members
-                '-j',  # JSON output
+                '-p', '-t', '-h', '-j',  # parameters, types, hidden members, JSON output
                 str(file_path)
             ]
 
@@ -71,7 +95,6 @@ class DotNetEngine(AnalysisEngine):
                     data = json.loads(proc.stdout)
                     return self._build_report_from_ilspy(file_path, data)
                 except json.JSONDecodeError:
-                    # Fallback to text parsing
                     return self._parse_ilspy_text(file_path, proc.stdout)
 
         except Exception as e:
@@ -80,32 +103,34 @@ class DotNetEngine(AnalysisEngine):
         return self._create_empty_report(file_path, "ILSpy analysis failed")
 
     def _build_report_from_ilspy(self, file_path: Path, data: Dict) -> StaticReport:
-        """Build report from ILSpy JSON output."""
+        """Build a StaticReport from ILSpy's parsed JSON output.
+
+        Args:
+            file_path: Path to the analyzed assembly, for basic file info.
+            data: Parsed ILSpy JSON output.
+
+        Returns:
+            A StaticReport with type/method-derived strings and a suspicious-pattern subset.
+        """
         from ..models.report import StaticReport, StringInfo
 
         strings = []
         types = data.get('types', [])
 
-        # Extract strings from types
         for t in types:
-            # Type name
             strings.append(t.get('name', ''))
 
-            # Methods
             for method in t.get('methods', []):
                 strings.append(method.get('name', ''))
 
-                # Method body strings (ILSpy may include them)
                 body = method.get('body', '')
                 if body:
-                    # Extract string literals
                     import re
                     for match in re.finditer(r'"([^"]+)"', body):
                         s = match.group(1)
                         if len(s) >= 4:
                             strings.append(s)
 
-        # Look for suspicious strings
         suspicious_patterns = [
             'ransom', 'encrypt', 'decrypt', 'xor', 'base64',
             'http', 'https', 'socket', 'connect',
@@ -127,12 +152,19 @@ class DotNetEngine(AnalysisEngine):
         )
 
     def _parse_ilspy_text(self, file_path: Path, text: str) -> StaticReport:
-        """Parse ILSpy text output."""
+        """Parse ILSpy's plain-text output as a fallback when JSON parsing fails.
+
+        Args:
+            file_path: Path to the analyzed assembly, for basic file info.
+            text: Raw ILSpy stdout.
+
+        Returns:
+            A StaticReport with string literals extracted from the text output.
+        """
         strings = []
         lines = text.split('\n')
 
         for line in lines:
-            # Look for string literals
             import re
             matches = re.findall(r'"([^"]+)"', line)
             for s in matches:
@@ -150,7 +182,14 @@ class DotNetEngine(AnalysisEngine):
         )
 
     def _analyze_with_fallback(self, file_path: Path) -> StaticReport:
-        """Fallback: use existing Python analysis."""
+        """Fall back to the pure-Python PE/strings parsers when ILSpy isn't installed.
+
+        Args:
+            file_path: Path to the .NET assembly to analyze.
+
+        Returns:
+            A StaticReport built from PEParser + StringsParser output.
+        """
         from ..parsers.pe_parser import PEParser
         from ..parsers.strings_parser import StringsParser
 
@@ -173,6 +212,15 @@ class DotNetEngine(AnalysisEngine):
         )
 
     def _create_empty_report(self, file_path: Path, error: str = "") -> StaticReport:
+        """Build a minimal StaticReport carrying only basic file info and an optional error.
+
+        Args:
+            file_path: Path to the file, for basic file info.
+            error: Error message to record, if any.
+
+        Returns:
+            A StaticReport with file_type='pe_dotnet' and no analysis content.
+        """
         from ..models.report import StaticReport
         return StaticReport(
             filename=file_path.name,

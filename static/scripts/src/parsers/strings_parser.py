@@ -44,7 +44,13 @@ class StringsParser:
 
 
     def __init__(self, file_path: Path, timeout: int = 300, verbose: bool = False):
-        """Initialize the strings parser."""
+        """Initialize the strings parser.
+
+        Args:
+            file_path: Path to the file to extract strings from.
+            timeout: Timeout in seconds for the `strings` subprocess.
+            verbose: Enable verbose progress logging.
+        """
         self.file_path = file_path
         self.timeout = timeout
         self.verbose = verbose
@@ -53,12 +59,16 @@ class StringsParser:
         self.crypto_detector = CryptoDetector()
 
     def extract(self, include_floss: bool = True, discovered_keys: List[Dict[str, Any]] = None) -> Dict[str, List[str]]:
-        """Extract strings using strings command and optionally FLOSS.
+        """Extract strings using the strings command and optionally FLOSS.
 
-        discovered_keys (from KeyReconstructor, if the caller has already
-        run it) lets the deobfuscator try real, sample-specific keys via
-        _try_xor_with_key, not just the generic single-byte bruteforce.
-        Previously never passed here at all -- see StringDeobfuscator.
+        Args:
+            include_floss: Also run FLOSS for stack/decoded strings.
+            discovered_keys: Candidate keys from KeyReconstructor, letting
+                the deobfuscator try real, sample-specific keys via
+                _try_xor_with_key, not just the generic single-byte bruteforce.
+
+        Returns:
+            Dict with standard, floss, decoded, and deobfuscated string lists.
         """
         result = {
             'standard': self._extract_standard_strings(),
@@ -71,10 +81,6 @@ class StringsParser:
             result['floss'] = floss_result['stack_strings']
             result['decoded'] = floss_result['decoded_strings']
 
-        # Previously omitted 'pattern_decoded' (single-byte XOR bruteforce
-        # results) from this merge entirely -- its output was computed but
-        # then silently discarded before reaching the report or the ATT&CK
-        # mapper, making that whole code path dead weight.
         deobfuscated = self.deobfuscator.deobfuscate(result['standard'], discovered_keys=discovered_keys)
         result['deobfuscated'] = deobfuscated.get('xor_decoded', []) + \
                                 deobfuscated.get('pattern_decoded', []) + \
@@ -102,23 +108,13 @@ class StringsParser:
     def _extract_floss_strings(self) -> Dict[str, List[str]]:
         """Extract deobfuscated strings using FLOSS.
 
-        Previously used `--no-static`/`--json` as single hyphenated
-        tokens -- neither exists in the installed FLOSS version (3.1.1);
-        its real CLI takes `--no static` (a value-taking flag, needs a
-        `--` separator before the positional sample path or argparse
-        swallows the path as another value) and `-j`/`--json` (which
-        WAS valid, it just never got read because argument parsing
-        failed before that point). Every one of the 4 old fallback
-        attempts either hit this same broken `--no-static` token or (the
-        4th, flag-free one) silently became FLOSS's slowest possible
-        invocation -- full static+stack+tight+decoded analysis -- run as
-        a last resort on every single file, every single time, its
-        result then discarded because the surrounding retry logic still
-        logged "FLOSS all approaches failed" whenever text-mode parsing
-        didn't find anything (also just fixed by trusting JSON, which
-        now actually gets reached). FLOSS only supports PE for
-        string-decoding/stackstrings -- skip it entirely for non-PE data
-        instead of letting it fail on, say, a BMP resource.
+        `--no static` is a value-taking flag (needs a `--` separator
+        before the positional sample path, or argparse swallows it as
+        another value). FLOSS only supports PE for string-decoding/
+        stackstrings, so non-PE data is skipped entirely.
+
+        Returns:
+            Dict with stack_strings and decoded_strings, each capped at 1000 entries.
         """
         result = {'stack_strings': [], 'decoded_strings': []}
 
@@ -198,7 +194,12 @@ class StringsParser:
             print(f"[*] StringsParser: {message}")
 
     def _parse_floss_text_output(self, text_output: str, result: Dict[str, List[str]]) -> None:
-        """Parse FLOSS text output as fallback."""
+        """Parse FLOSS text output as fallback, mutating result in place.
+
+        Args:
+            text_output: Raw FLOSS stdout.
+            result: Dict with stack_strings/decoded_strings lists to append into.
+        """
         lines = text_output.split('\n')
         capture_stack = False
         capture_decoded = False
@@ -225,7 +226,14 @@ class StringsParser:
         result['decoded_strings'] = result['decoded_strings'][:1000]
 
     def find_suspicious(self, strings: List[str]) -> List[Dict[str, str]]:
-        """Find suspicious patterns in strings."""
+        """Find suspicious patterns in strings.
+
+        Args:
+            strings: Extracted strings from the sample.
+
+        Returns:
+            Up to 100 matches against SUSPICIOUS_PATTERNS.
+        """
         found = []
         for s in strings:
             for pattern, description in self.SUSPICIOUS_PATTERNS:
@@ -242,9 +250,23 @@ class StringsParser:
         return self.errors
 
     def find_crypto_patterns(self, strings: List[str]) -> List[Dict[str, str]]:
-        """Find cryptographic algorithm patterns in strings."""
+        """Find cryptographic algorithm patterns in strings.
+
+        Args:
+            strings: Extracted strings from the sample.
+
+        Returns:
+            Matches from CryptoDetector.detect_in_strings.
+        """
         return self.crypto_detector.detect_in_strings(strings)
 
     def find_potential_keys(self, strings: List[str]) -> List[Dict[str, str]]:
-        """Find potential encryption keys in strings."""
+        """Find potential encryption keys in strings.
+
+        Args:
+            strings: Extracted strings from the sample.
+
+        Returns:
+            Matches from CryptoDetector.detect_keys.
+        """
         return self.crypto_detector.detect_keys(strings)

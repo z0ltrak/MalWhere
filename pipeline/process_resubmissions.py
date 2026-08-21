@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Resubmission Merger for the MalWhere Pipeline
-TFM 2025-2026 - Universidad Complutense de Madrid
 
 Second half of the resubmission loop (see static/scripts/process_resubmissions.py
 for the first half and the full design rationale). The static service tags
@@ -34,6 +33,14 @@ from pathlib import Path
 
 
 def find_lineage_tagged_reports(static_reports_dir: Path):
+    """Find every static report tagged with resubmission_lineage (i.e. a resubmitted dropped file, not the parent sample).
+
+    Args:
+        static_reports_dir: Base static reports directory to scan (static/reports/{family}/*.json).
+
+    Yields:
+        (family, sha256, report_path) for each lineage-tagged report found.
+    """
     for family_dir in sorted(static_reports_dir.iterdir()):
         if not family_dir.is_dir():
             continue
@@ -50,10 +57,33 @@ def find_lineage_tagged_reports(static_reports_dir: Path):
 
 
 def already_processed(results_dir: Path, family: str, sha256: str) -> bool:
+    """Check whether a resubmitted file's attck_mapping.json already exists.
+
+    Args:
+        results_dir: Base results directory.
+        family: Parent sample's family label.
+        sha256: Resubmitted file's hash.
+
+    Returns:
+        True if results/{family}/resubmitted/{sha256}/attck/attck_mapping.json already exists.
+    """
     return (results_dir / family / "resubmitted" / sha256 / "attck" / "attck_mapping.json").exists()
 
 
 def process_one(static_file: Path, family: str, sha256: str, results_dir: Path, script_dir: Path, verbose: bool) -> bool:
+    """Run normalize.py + map_attck.py for one lineage-tagged resubmitted file.
+
+    Args:
+        static_file: Path to the resubmitted file's own static report.
+        family: Parent sample's family label.
+        sha256: Resubmitted file's hash.
+        results_dir: Base results directory to write iocs/attck output under.
+        script_dir: This script's own directory, used to locate normalize.py/map_attck.py.
+        verbose: Enable verbose output from the sub-scripts and stream their output live.
+
+    Returns:
+        True if both normalize.py and map_attck.py succeeded.
+    """
     sample_dir = results_dir / family / "resubmitted" / sha256
     iocs_dir = sample_dir / "iocs"
     attck_dir = sample_dir / "attck"
@@ -95,6 +125,11 @@ def process_one(static_file: Path, family: str, sha256: str, results_dir: Path, 
 
 
 def main():
+    """Process every lineage-tagged resubmitted static report through normalize+map_attck, within a time budget.
+
+    Returns:
+        Process exit code (always 0).
+    """
     parser = argparse.ArgumentParser(
         description="Resubmission Merger for the MalWhere Pipeline"
     )

@@ -1,17 +1,7 @@
-"""
-key_reconstructor.py — malwhere pipeline v3
+"""Generic encryption key discovery from binary samples.
 
-Generic encryption key discovery from binary samples.
-Designed to work on unknown malware without hardcoded assumptions.
-
-Performance fixes from v3.1:
-- Added _find_all_printable_strings() to catch plaintext keys at any offset
-- Scans .rdata/.data sections with step=1 but limited to first 1MB (fast)
-- Lower entropy threshold (2.5) for plaintext keys
-- Generic - works for any malware, no hardcoded keys
-
-Design principle: GENERIC first, specific never.
-No hardcoded offsets, key values, or family-specific logic.
+No hardcoded offsets, key values, or family-specific logic -- designed
+to work on unknown malware.
 """
 
 import math
@@ -65,6 +55,12 @@ class KeyReconstructor:
     """Generic encryption key discovery from binary data."""
 
     def __init__(self, file_path: Path, verbose: bool = False):
+        """Initialize the key reconstructor.
+
+        Args:
+            file_path: Path to the binary to scan for keys.
+            verbose: Enable verbose progress logging.
+        """
         self.file_path = file_path
         self.verbose = verbose
         self.data: Optional[bytes] = None
@@ -74,19 +70,18 @@ class KeyReconstructor:
         self._detected_algorithms: Set[str] = set()
         self._algorithm_key_sizes: Dict[str, List[int]] = {}
 
-    # ------------------------------------------------------------------ #
-    # Public entry point                                                   #
-    # ------------------------------------------------------------------ #
-
     def find_keys(self) -> List[Dict[str, Any]]:
-        """Run all key discovery techniques. Returns up to MAX_TOTAL_KEYS candidates."""
+        """Run all key discovery techniques.
+
+        Returns:
+            Up to MAX_TOTAL_KEYS candidates, deduplicated and sorted by confidence.
+        """
         try:
             self.data = self.file_path.read_bytes()
         except Exception as e:
             self.errors.append(f"Failed to read file: {e}")
             return []
 
-        # Skip tiny files
         if len(self.data) < 64:
             return []
 
@@ -96,42 +91,26 @@ class KeyReconstructor:
 
         candidates: List[Dict[str, Any]] = []
 
-        # 0. ALL PRINTABLE STRINGS (NEW - catches plaintext keys at any offset)
         plaintext_all = self._find_all_printable_strings()
         candidates.extend(plaintext_all[:MAX_CANDIDATES_PER_TECHNIQUE])
         if plaintext_all:
             self._log(f"Found {len(plaintext_all)} printable string candidates")
-            # Log first few to see if we caught anything interesting
             for i, key in enumerate(plaintext_all[:3]):
                 self._log(f"  Printable candidate: '{key.get('key', '')[:30]}' (len={key.get('length')})")
 
-        # 1. Single-byte XOR bruteforce (most important, most expensive — capped)
         xor_results = self._find_xor_single_byte_keys()
         candidates.extend(xor_results[:MAX_CANDIDATES_PER_TECHNIQUE])
 
-        # 2. Sub-key extraction from top XOR candidates only
         top_xor = [c for c in xor_results if c.get('confidence') == 'high'][:20]
         candidates.extend(self._extract_sub_keys(top_xor)[:MAX_CANDIDATES_PER_TECHNIQUE])
 
-        # 3. Plaintext keys (existing - step=4)
         candidates.extend(self._find_printable_keys()[:MAX_CANDIDATES_PER_TECHNIQUE])
-
-        # 4. Base64 keys
         candidates.extend(self._find_base64_keys()[:MAX_CANDIDATES_PER_TECHNIQUE])
-
-        # 5. Hex-encoded keys
         candidates.extend(self._find_hex_keys()[:MAX_CANDIDATES_PER_TECHNIQUE])
-
-        # 6. High-entropy binary regions (AES/ChaCha20)
         candidates.extend(self._find_high_entropy_regions()[:MAX_CANDIDATES_PER_TECHNIQUE])
-
-        # 7. ChaCha20/Salsa20 constants
         candidates.extend(self._find_chacha_constants())
-
-        # 8. RC4 KSA
         candidates.extend(self._find_rc4_ksa()[:MAX_CANDIDATES_PER_TECHNIQUE])
 
-        # Filter by detected algorithms, deduplicate, hard-cap
         candidates = self._filter_by_algorithm(candidates)
         self.keys = self._deduplicate(candidates)
         self._log(f"Total keys after filtering: {len(self.keys)}")
@@ -142,36 +121,25 @@ class KeyReconstructor:
 
         return self.keys
 
-    # ------------------------------------------------------------------ #
-    # NEW: All printable strings (catches plaintext keys at any offset)   #
-    # ------------------------------------------------------------------ #
-
     def _find_all_printable_strings(self) -> List[Dict[str, Any]]:
-        """
-        Find ALL printable strings of key-like lengths in .rdata/.data.
-        This catches plaintext keys that might be fragmented or at non-4-byte-aligned offsets.
-        Generic - works for any file, not malware-specific.
+        """Find all printable strings of key-like lengths in data sections.
 
-        Performance: Only scans first 1MB of each data section (keys are usually near start).
+        Catches plaintext keys that might be fragmented or at
+        non-4-byte-aligned offsets. Vectorized with numpy: the
+        printability pre-filter is one rolling-window cumsum over the
+        whole section, all positions and lengths at once, so only
+        positions that pass need the per-candidate checks below.
 
-        Vectorized with numpy: previously a step=1 scan (every byte
-        position) x 8 key lengths in pure Python -- up to 8M+ iterations
-        per section even with the 1MB cap. Same technique as
-        _find_xor_single_byte_keys: the printability pre-filter (the
-        cheapest, most-frequently-failed check) becomes one rolling-window
-        cumsum over the whole section, all positions and lengths at once;
-        only positions that pass get the original per-candidate checks.
+        Returns:
+            Up to 2x MAX_CANDIDATES_PER_TECHNIQUE candidates.
         """
         candidates = []
         seen = set()
 
-        # Key lengths to consider (common for crypto keys)
         key_lengths = [8, 10, 12, 15, 16, 20, 24, 32]
         min_printable = {kl: math.ceil(0.85 * kl) for kl in key_lengths}
 
-        # Only scan data sections
         for section in self._sections:
-            # Skip sections that are unlikely to contain keys
             skip_sections = ('.text', '.code', 'code', '.plt', '.pdata', '.reloc', '.fptable')
             if section['name'].lower() in skip_sections:
                 continue
@@ -179,8 +147,8 @@ class KeyReconstructor:
             data = section['data']
             base_offset = section['offset']
 
-            # Limit to first 1MB of each section (keys are usually near the beginning)
-            # This keeps performance reasonable even with step=1
+            # Limit to first 1MB per section: keeps step=1 fast, keys
+            # are usually near the beginning.
             scan_limit = min(len(data), 1024 * 1024)
             data = data[:scan_limit]
             if not data:
@@ -208,25 +176,16 @@ class KeyReconstructor:
                     chunk = data[i:i + key_len]
                     decoded_str = chunk.decode('ascii', errors='replace')
 
-                    # Skip if it's common text
                     if self._is_common_text(decoded_str):
                         continue
-
-                    # Skip if it's all the same character
-                    if len(set(decoded_str)) < 4:
+                    if len(set(decoded_str)) < 4:  # all the same character
                         continue
-
-                    # Check entropy - needs SOME randomness to be a key
                     entropy = self._entropy(chunk)
-                    if entropy < 2.5:  # Lower threshold for plaintext keys
+                    if entropy < 2.5:  # lower threshold for plaintext keys
                         continue
-
-                    # Skip strings that are just sequential characters (lookup tables)
-                    if self._is_sequential(decoded_str):
+                    if self._is_sequential(decoded_str):  # lookup tables
                         continue
-
-                    # Skip if it's just numbers (likely version info)
-                    if re.match(r'^[0-9\.]+$', decoded_str):
+                    if re.match(r'^[0-9\.]+$', decoded_str):  # version info
                         continue
 
                     key_id = f"plain_all_{decoded_str[:20]}"
@@ -234,11 +193,8 @@ class KeyReconstructor:
                         continue
                     seen.add(key_id)
 
-                    # Determine algorithm from length
                     algorithm = self._determine_algorithm_from_length(key_len)
-
-                    # Higher confidence for 15-byte keys (RC4 common length)
-                    confidence = 'high' if key_len == 15 else 'medium'
+                    confidence = 'high' if key_len == 15 else 'medium'  # 15 = common RC4 length
 
                     candidates.append({
                         'type': 'plaintext_all_strings',
@@ -255,10 +211,6 @@ class KeyReconstructor:
                     })
 
         return candidates
-
-    # ------------------------------------------------------------------ #
-    # Algorithm detection                                                  #
-    # ------------------------------------------------------------------ #
 
     def _detect_encryption_algorithms(self) -> None:
         """Quick string scan for algorithm indicators."""
@@ -301,10 +253,6 @@ class KeyReconstructor:
         for algo in self._detected_algorithms:
             self._algorithm_key_sizes[algo] = ALGORITHM_KEY_SIZES.get(algo, [16, 32])
 
-    # ------------------------------------------------------------------ #
-    # Section loading                                                      #
-    # ------------------------------------------------------------------ #
-
     def _load_sections(self) -> None:
         """Load PE sections. Falls back to whole file scan."""
         try:
@@ -325,48 +273,34 @@ class KeyReconstructor:
                 'offset': 0,
             })
 
-    # ------------------------------------------------------------------ #
-    # Technique 1 — Single-byte XOR bruteforce                            #
-    # ------------------------------------------------------------------ #
-
     def _find_xor_single_byte_keys(self) -> List[Dict[str, Any]]:
-        """
-        Bruteforce single-byte XOR on data sections with step=4.
-        Finds keys like RONINGLOADER's 0x5A-obfuscated RC4 key.
-        Capped at MAX_CANDIDATES_PER_TECHNIQUE.
+        """Bruteforce single-byte XOR on data sections with step=4.
 
-        Vectorized with numpy: the original scanned every (xor_byte,
-        key_len, position) combination in pure Python -- up to
-        255 x ~9 lengths x len(data)/4 iterations, each doing a per-byte
-        XOR via a Python generator expression. That's the single biggest
-        contributor to static analysis runs repeatedly taking 90-120s+ this
-        session. The printability pre-filter (the cheapest possible
-        rejection test, and the one nearly every position fails) is now a
+        Vectorized with numpy: the printability pre-filter (the
+        cheapest check, and the one nearly every position fails) is a
         single rolling-window count computed over the whole section at
-        once via cumsum, for all positions and all key lengths
-        simultaneously, per xor_byte. Only positions that PASS get the
-        original, unchanged, more expensive per-candidate checks (entropy,
-        common-text, distinct-char count) -- so the accept/reject logic
-        itself is untouched, just reached without a Python-level scan over
-        every byte position.
+        once via cumsum, for all positions and key lengths
+        simultaneously per xor_byte. Only positions that pass reach the
+        more expensive per-candidate checks (entropy, common-text,
+        distinct-char count).
+
+        Returns:
+            Up to 3x MAX_CANDIDATES_PER_TECHNIQUE candidates.
         """
         candidates = []
         seen = set()
 
-        # Only scan data sections — not executable sections
         data_sections = [
             s for s in self._sections
             if s['name'].lower() in XOR_SCAN_SECTIONS
         ]
 
-        # Use algorithm-aware key lengths
         valid_lengths = set()
         for algo in self._detected_algorithms:
             valid_lengths.update(self._algorithm_key_sizes.get(algo, []))
         if not valid_lengths:
             valid_lengths = set(XOR_KEY_LENGTHS)
-        # Always include 15 (common RC4 key length)
-        valid_lengths.add(15)
+        valid_lengths.add(15)  # common RC4 key length
         sorted_lengths = sorted(valid_lengths)
 
         min_printable = {kl: math.ceil(MIN_PRINTABLE_RATIO * kl) for kl in sorted_lengths}
@@ -446,14 +380,14 @@ class KeyReconstructor:
 
         return candidates
 
-    # ------------------------------------------------------------------ #
-    # Technique 1b — Sub-key extraction                                   #
-    # ------------------------------------------------------------------ #
-
     def _extract_sub_keys(self, candidates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """
-        Extract sub-keys from high-confidence XOR-decrypted strings.
-        Limited to top candidates to avoid explosion.
+        """Extract sub-keys (alphanumeric runs of key-like length) from high-confidence XOR-decrypted strings.
+
+        Args:
+            candidates: High-confidence XOR-decrypted candidates to mine for sub-keys.
+
+        Returns:
+            Up to MAX_CANDIDATES_PER_TECHNIQUE sub-key candidates.
         """
         sub_keys = []
         seen = set()
@@ -463,7 +397,6 @@ class KeyReconstructor:
             if not key_str or len(key_str) < 8:
                 continue
 
-            # Extract all alphanumeric sequences of key-like lengths
             for match in re.finditer(r'[a-zA-Z0-9]{10,32}', key_str):
                 sub = match.group()
                 key_id = f"sub_{sub[:20]}"
@@ -499,12 +432,12 @@ class KeyReconstructor:
 
         return sub_keys
 
-    # ------------------------------------------------------------------ #
-    # Technique 2 — Plaintext printable keys (step=4)                     #
-    # ------------------------------------------------------------------ #
-
     def _find_printable_keys(self) -> List[Dict[str, Any]]:
-        """Find unobfuscated printable ASCII key strings with step=4."""
+        """Find unobfuscated printable ASCII key strings with step=4.
+
+        Returns:
+            Up to MAX_CANDIDATES_PER_TECHNIQUE candidates.
+        """
         candidates = []
         seen = set()
 
@@ -563,12 +496,12 @@ class KeyReconstructor:
 
         return candidates
 
-    # ------------------------------------------------------------------ #
-    # Technique 3 — Base64 keys                                           #
-    # ------------------------------------------------------------------ #
-
     def _find_base64_keys(self) -> List[Dict[str, Any]]:
-        """Find Base64-encoded blobs decoding to key-sized data."""
+        """Find Base64-encoded blobs decoding to key-sized data.
+
+        Returns:
+            Up to MAX_CANDIDATES_PER_TECHNIQUE candidates.
+        """
         candidates = []
         seen = set()
 
@@ -615,12 +548,12 @@ class KeyReconstructor:
 
         return candidates
 
-    # ------------------------------------------------------------------ #
-    # Technique 4 — Hex-encoded keys                                      #
-    # ------------------------------------------------------------------ #
-
     def _find_hex_keys(self) -> List[Dict[str, Any]]:
-        """Find hex-encoded key strings (32/40/64 char)."""
+        """Find hex-encoded key strings (32/40/64 char).
+
+        Returns:
+            Up to MAX_CANDIDATES_PER_TECHNIQUE candidates.
+        """
         candidates = []
         seen = set()
 
@@ -671,12 +604,12 @@ class KeyReconstructor:
 
         return candidates
 
-    # ------------------------------------------------------------------ #
-    # Technique 5 — High-entropy binary regions                           #
-    # ------------------------------------------------------------------ #
-
     def _find_high_entropy_regions(self) -> List[Dict[str, Any]]:
-        """Scan for high-entropy binary regions (AES/ChaCha20 keys)."""
+        """Scan for high-entropy binary regions (AES/ChaCha20 keys).
+
+        Returns:
+            Up to MAX_CANDIDATES_PER_TECHNIQUE low-confidence candidates.
+        """
         candidates = []
         seen = set()
 
@@ -728,12 +661,12 @@ class KeyReconstructor:
 
         return candidates
 
-    # ------------------------------------------------------------------ #
-    # Technique 6 — ChaCha20/Salsa20 constants                           #
-    # ------------------------------------------------------------------ #
-
     def _find_chacha_constants(self) -> List[Dict[str, Any]]:
-        """Detect ChaCha20/Salsa20 sigma constants."""
+        """Detect ChaCha20/Salsa20 sigma constants and any nearby 32-byte key.
+
+        Returns:
+            High-confidence constant matches plus medium-confidence nearby-key candidates.
+        """
         candidates = []
         for constant, algo in [
             (CHACHA20_CONSTANT, 'ChaCha20'),
@@ -773,12 +706,12 @@ class KeyReconstructor:
                 pos += 1
         return candidates
 
-    # ------------------------------------------------------------------ #
-    # Technique 7 — RC4 KSA detection                                     #
-    # ------------------------------------------------------------------ #
-
     def _find_rc4_ksa(self) -> List[Dict[str, Any]]:
-        """Detect RC4 S-box arrays and nearby keys."""
+        """Detect RC4 S-box arrays and nearby keys.
+
+        Returns:
+            Up to MAX_CANDIDATES_PER_TECHNIQUE candidates.
+        """
         candidates = []
 
         for section in self._sections:
@@ -820,12 +753,17 @@ class KeyReconstructor:
 
         return candidates
 
-    # ------------------------------------------------------------------ #
-    # Algorithm-aware filtering                                            #
-    # ------------------------------------------------------------------ #
-
     def _filter_by_algorithm(self, candidates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Score and filter candidates based on detected algorithms."""
+        """Score and filter candidates based on detected algorithms.
+
+        Args:
+            candidates: Candidates from every discovery technique.
+
+        Returns:
+            Candidates whose algorithm/length matches a detected algorithm
+            (promoted to 'high' confidence), plus explicit-algorithm or
+            crypto-constant candidates kept as-is.
+        """
         if not candidates:
             return candidates
 
@@ -857,11 +795,15 @@ class KeyReconstructor:
 
         return filtered
 
-    # ------------------------------------------------------------------ #
-    # Helpers                                                              #
-    # ------------------------------------------------------------------ #
-
     def _determine_algorithm_from_length(self, length: int) -> str:
+        """Guess a likely algorithm from a key's byte length.
+
+        Args:
+            length: Candidate key length in bytes.
+
+        Returns:
+            'rc4', 'aes', 'xor', or 'unknown'.
+        """
         if length == 15:             return 'rc4'
         elif length in (16, 24, 32): return 'aes'
         elif length in (5, 8, 10, 12, 20): return 'rc4'
@@ -869,12 +811,29 @@ class KeyReconstructor:
         return 'unknown'
 
     def _is_printable_bytes(self, data: bytes, min_ratio: float) -> bool:
+        """Check if at least min_ratio of data's bytes are printable ASCII.
+
+        Args:
+            data: Bytes to check.
+            min_ratio: Minimum fraction of printable bytes required.
+
+        Returns:
+            True if the printable ratio meets min_ratio.
+        """
         if not data:
             return False
         printable = sum(1 for b in data if 0x20 <= b <= 0x7E)
         return (printable / len(data)) >= min_ratio
 
     def _is_common_text(self, s: str) -> bool:
+        """Check if a string looks like common English text or a degenerate repeat, not a key.
+
+        Args:
+            s: Candidate string.
+
+        Returns:
+            True if s matches a known non-key pattern or is dominated by one repeated character.
+        """
         for pattern in COMMON_NON_KEY_PATTERNS:
             if pattern.search(s):
                 return True
@@ -883,10 +842,16 @@ class KeyReconstructor:
         return False
 
     def _is_sequential(self, s: str) -> bool:
-        """Check if a string is sequential characters (like lookup tables)."""
+        """Check if a string is sequential characters (like lookup tables).
+
+        Args:
+            s: Candidate string.
+
+        Returns:
+            True if s contains a run of 4+ consecutive ascending ASCII characters.
+        """
         if len(s) < 5:
             return False
-        # Check for sequential ASCII pattern
         sequential_count = 0
         for i in range(len(s) - 1):
             if ord(s[i+1]) - ord(s[i]) == 1:
@@ -898,6 +863,14 @@ class KeyReconstructor:
         return False
 
     def _entropy(self, data) -> float:
+        """Calculate Shannon entropy.
+
+        Args:
+            data: Bytes or str to measure.
+
+        Returns:
+            Entropy in bits/byte (0.0 to 8.0).
+        """
         if isinstance(data, str):
             data = data.encode('ascii', errors='replace')
         if len(data) < 2:
@@ -909,7 +882,14 @@ class KeyReconstructor:
         return -sum((c / n) * math.log2(c / n) for c in freq.values())
 
     def _deduplicate(self, candidates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """Deduplicate and sort by confidence. Hard cap at MAX_TOTAL_KEYS."""
+        """Deduplicate candidates and sort by confidence, then entropy.
+
+        Args:
+            candidates: Candidates pooled from every discovery technique.
+
+        Returns:
+            Up to MAX_TOTAL_KEYS deduplicated candidates.
+        """
         conf_order = {'high': 0, 'medium': 1, 'low': 2}
         seen = set()
         unique = []

@@ -1,4 +1,5 @@
-# src/engines/base_engine.py
+"""Base interface for all static analysis engines."""
+
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Dict, Any, List, Optional
@@ -10,7 +11,15 @@ class AnalysisEngine(ABC):
 
     @abstractmethod
     def analyze(self, file_path: Path, depth: int = 0) -> StaticReport:
-        """Analyze a file and return a report."""
+        """Analyze a file and return a report.
+
+        Args:
+            file_path: Path to the file to analyze.
+            depth: Current recursion depth.
+
+        Returns:
+            The completed StaticReport.
+        """
         pass
 
     @abstractmethod

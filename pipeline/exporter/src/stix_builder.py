@@ -32,19 +32,18 @@ from stix2.v21 import (
 
 
 class StixBundleBuilder:
-    # AttackPattern.description has no real STIX 2.1 length limit -- this
-    # is a defensive cap against a genuinely pathological case, not a
-    # realistic one. Previously hard-truncated at 2000 with no indicator
-    # at all: with combination-aware evidence (imports, BCL calls, string
-    # patterns) now routinely producing several justification entries per
-    # technique, real analyst-facing content could silently vanish
-    # mid-sentence. None of the 3 validated samples' techniques currently
-    # exceed even the old 2000-char cap, but that was luck, not a
-    # guarantee -- raised the ceiling and, if it's ever actually hit, say
-    # so instead of staying silent.
+    # AttackPattern.description has no real STIX 2.1 length limit; this is
+    # a defensive cap against a pathological case, not a realistic one.
+    # Truncation is recorded in truncation_notes rather than happening silently.
     MAX_DESCRIPTION_LENGTH = 10000
 
     def __init__(self, attck_mapping: Dict[str, Any], max_iocs: int = 100):
+        """Initialize the bundle builder.
+
+        Args:
+            attck_mapping: Reconciled ATT&CK mapping dict to build a STIX bundle from.
+            max_iocs: Cap on hash/network IOCs converted to STIX objects.
+        """
         self.mapping = attck_mapping
         self.max_iocs = max_iocs
         self.objects: List[Any] = []
@@ -60,6 +59,12 @@ class StixBundleBuilder:
         return self.identity.id
 
     def build(self) -> Bundle:
+        """Build the full connected STIX 2.1 bundle from the reconciled ATT&CK mapping.
+
+        Returns:
+            A Bundle containing Identity, Malware, observables, ObservedData,
+            Indicators, AttackPatterns, and the relationships between them.
+        """
         sample = self.mapping.get("sample", {})
         iocs = self.mapping.get("iocs", {})
         techniques = self.mapping.get("techniques", [])
@@ -102,6 +107,15 @@ class StixBundleBuilder:
         return Bundle(objects=self.objects, allow_custom=True)
 
     def _build_malware(self, sample: Dict[str, Any]) -> Malware:
+        """Build the graph's central Malware SDO.
+
+        Args:
+            sample: attck_mapping's sample dict.
+
+        Returns:
+            A Malware object named after the family, with any other
+            detected family names attached as aliases.
+        """
         family = sample.get("family", "unknown")
         aliases = [d.get("family") for d in sample.get("family_detections", []) if d.get("family")]
         aliases = sorted(set(a for a in aliases if a.lower() != family.lower()))
@@ -116,9 +130,26 @@ class StixBundleBuilder:
         return malware
 
     def _build_files(self, sample: Dict[str, Any], iocs: Dict[str, Any]) -> Dict[str, File]:
+        """Build STIX File objects for the primary sample and every hash IOC, deduplicated by sha256.
+
+        Args:
+            sample: attck_mapping's sample dict (static/dynamic hashes and filenames).
+            iocs: attck_mapping's iocs dict, read for its hashes list (capped at max_iocs).
+
+        Returns:
+            Dict mapping sha256 -> File object.
+        """
         files: Dict[str, File] = {}
 
         def add_file(sha256: str, md5: str = "", sha1: str = "", name: Optional[str] = None) -> None:
+            """Add one File object to `files`, keyed by sha256, skipping duplicates/missing hashes.
+
+            Args:
+                sha256: File's SHA-256 hash; required, skipped if empty or already added.
+                md5: File's MD5 hash, if known.
+                sha1: File's SHA-1 hash, if known.
+                name: File's name, if known.
+            """
             if not sha256 or sha256 in files:
                 return
             hashes = {"SHA-256": sha256}
@@ -147,6 +178,14 @@ class StixBundleBuilder:
         return files
 
     def _build_network_scos(self, network_iocs: Dict[str, Any]) -> List[Any]:
+        """Build STIX Cyber Observable Objects (DomainName/IPv4Address/URL) for network IOCs.
+
+        Args:
+            network_iocs: attck_mapping's iocs.network_iocs dict.
+
+        Returns:
+            One SCO per valid IOC value, each category capped at max_iocs.
+        """
         scos: List[Any] = []
 
         for label, key, sco_cls in (
@@ -171,6 +210,15 @@ class StixBundleBuilder:
         return scos
 
     def _build_indicators(self, file_scos: Dict[str, File], network_scos: List[Any]) -> List[Indicator]:
+        """Build a STIX pattern Indicator for each file hash and network observable, up to max_iocs total.
+
+        Args:
+            file_scos: File SCOs from _build_files, keyed by sha256.
+            network_scos: Network SCOs from _build_network_scos.
+
+        Returns:
+            One Indicator per observable, capped at max_iocs combined.
+        """
         indicators: List[Indicator] = []
         count = 0
 
@@ -212,6 +260,14 @@ class StixBundleBuilder:
         return indicators
 
     def _build_attack_patterns(self, techniques: List[Dict[str, Any]]) -> List[AttackPattern]:
+        """Build a STIX AttackPattern per reconciled technique, with evidence in its description.
+
+        Args:
+            techniques: Reconciled technique list from attck_mapping.json.
+
+        Returns:
+            One AttackPattern per technique, description truncated at MAX_DESCRIPTION_LENGTH if needed.
+        """
         patterns = []
         for t in techniques:
             technique_id = t.get("technique_id", "")

@@ -17,7 +17,12 @@ class ConfigExtractor:
         self.DOMAIN_PATTERN = r'\b[a-zA-Z0-9][-a-zA-Z0-9]*\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?\b'
 
     def extract(self) -> Dict[str, Any]:
-        """Extract configuration data from the file."""
+        """Extract configuration data (IPs, domains, URLs, emails, registry/file paths, mutexes, keys) from the file.
+
+        Returns:
+            Dict with ips, domains, urls, emails, registry_paths, file_paths,
+            mutexes, encryption_keys, patterns, and xor_recovered_iocs lists.
+        """
         result = {
             'ips': [],
             'domains': [],
@@ -35,44 +40,23 @@ class ConfigExtractor:
             with open(self.file_path, 'rb') as f:
                 self.data = f.read()
 
-            # Extract strings (ASCII)
             ascii_strings = self._extract_ascii_strings()
-
-            # Find IP addresses
             result['ips'] = self._find_ips(ascii_strings)
 
-            # Find IPs hidden behind single-byte XOR obfuscation -- a
-            # generic recovery technique (256 keys is exhaustive, no
-            # sample-specific key needed), not something scoped to any
-            # one family. Found auditing RoningLoader's diamondage.exe:
-            # its C2 address is 202.95.11.173, single-byte XOR'd with
-            # 0x61, invisible to plain ASCII string extraction but
-            # trivially recoverable this way.
+            # Single-byte XOR is exhaustive (256 keys, no sample-specific
+            # key needed) and generic across families, not scoped to one.
             xor_ips = self._find_xor_obfuscated_ips()
             for hit in xor_ips:
                 if hit['ip'] not in result['ips']:
                     result['ips'].append(hit['ip'])
             result['xor_recovered_iocs'] = xor_ips
 
-            # Find domains
             result['domains'] = self._find_domains(ascii_strings)
-
-            # Find URLs
             result['urls'] = self._find_urls(ascii_strings)
-
-            # Find emails
             result['emails'] = self._find_emails(ascii_strings)
-
-            # Find registry paths
             result['registry_paths'] = self._find_registry(ascii_strings)
-
-            # Find file paths
             result['file_paths'] = self._find_file_paths(ascii_strings)
-
-            # Find mutexes/GUIDs
             result['mutexes'] = self._find_mutexes(ascii_strings)
-
-            # Find potential encryption keys (hex patterns)
             result['encryption_keys'] = self._find_hex_patterns()
 
         except Exception as e:
@@ -81,7 +65,11 @@ class ConfigExtractor:
         return result
 
     def _extract_ascii_strings(self) -> List[str]:
-        """Extract ASCII strings from binary data."""
+        """Extract ASCII strings from binary data.
+
+        Returns:
+            Printable-ASCII runs of at least 4 characters.
+        """
         strings = []
         current = []
 
@@ -98,28 +86,27 @@ class ConfigExtractor:
 
         return strings
 
-    # Certificate-attribute and certificate-extension OID arcs -- X.509's
-    # "2.5.4.*" (id-at-*: commonName, countryName, ...) and "2.5.29.*"
-    # (id-ce-*: subjectAltName, basicConstraints, ...) are complete,
-    # correctly-bounded 4-part dotted-decimal tokens in their own right
-    # (not a chain fragment the lookaround below would catch), and appear
-    # verbatim as strings in essentially any Authenticode-signed PE's
-    # embedded certificate. Found on RoningLoader's own resubmitted
-    # components (11a6cb1d..., 1668cc75...): a real C2 IP starting "2.5."
-    # is not impossible in principle, but these two exact arcs are among
-    # the most standardized OID prefixes there are.
+    # X.509 certificate-attribute/extension OID arcs ("2.5.4.*",
+    # "2.5.29.*") are complete, correctly-bounded dotted-decimal tokens
+    # that appear verbatim in almost any Authenticode-signed PE's
+    # embedded certificate -- among the most standardized OID prefixes
+    # there are, so treated as never a real C2 IP.
     _OID_IP_PREFIXES = ('2.5.4.', '2.5.29.')
 
     def _find_ips(self, strings: List[str]) -> List[str]:
-        # Negative lookaround excludes matches that are actually a 4-group
-        # window sliced out of a *longer* dotted-decimal chain -- found on
-        # the same RoningLoader components: "101.3.4.2" turned out to be
-        # a mid-string fragment of the real OID "2.16.840.1.101.3.4.2.4"
-        # (a NIST hash-algorithm identifier), which \b alone doesn't catch
-        # since \b only checks one adjacent character's word/non-word
-        # class, not whether more digits-and-dots continue past it. A
-        # real embedded IP is never itself a fragment of a longer
-        # dotted-decimal run.
+        """Find IPv4 addresses in strings, filtering out version numbers and OID fragments.
+
+        Args:
+            strings: Extracted ASCII strings.
+
+        Returns:
+            Up to 20 candidate IPs.
+        """
+        # Negative lookaround excludes matches that are a 4-group window
+        # sliced out of a longer dotted-decimal chain (e.g. an OID like
+        # "2.16.840.1.101.3.4.2.4"), which \b alone can't catch since it
+        # only checks one adjacent character, not whether more
+        # digits-and-dots continue past it.
         ip_pattern = r'(?<!\d\.)\b(?:\d{1,3}\.){3}\d{1,3}\b(?!\.\d)'
         ips = set()
         for s in strings:
@@ -134,51 +121,39 @@ class ConfigExtractor:
                         continue
                     if ip.startswith(self._OID_IP_PREFIXES):
                         continue
-                    # General case of the same problem: PE/.NET assembly
-                    # version numbers (MAJOR.MINOR.BUILD.REVISION, e.g.
-                    # "3.2.0.0", "6.0.0.0") are dotted-quads too, and the
+                    # PE/.NET assembly version numbers (MAJOR.MINOR.
+                    # BUILD.REVISION) are dotted-quads too, and their
                     # trailing fields are conventionally 0 far more often
-                    # than a real embedded C2 IP's octets are (verified
-                    # against all 30 known-real C2 IPs across the two
-                    # validated families with numeric IOCs: zero of them
-                    # have 2+ zero octets outside the first position).
+                    # than a real C2 IP's octets are.
                     if sum(1 for p in parts[1:] if p == '0') >= 2:
                         continue
                     ips.add(ip)
         return list(ips)[:20]
 
     # Cap the exhaustive 256-key scan to files where it stays fast --
-    # bytes.translate() is C-speed so even a few MB is well under a
-    # second per key, but there's no reason to run it against a 50MB+
-    # binary when the C2-config region it's meant to catch is always tiny.
+    # there's no reason to run it against a 50MB+ binary when the
+    # C2-config region it's meant to catch is always tiny.
     _XOR_SCAN_MAX_SIZE = 10_000_000
 
     # A key whose decode produces more than this many dotted-quad-shaped
-    # regex matches gets discarded outright, not just filtered hit-by-hit.
-    # Verified this is necessary, not just extra caution: on a real sample,
-    # key 0x2e (0x00 XORs to '.', i.e. this key turns any run of null
-    # padding into literal dots) decoded a repeating table of small
-    # integers into an unbroken chain of 8 "IPs" -- 9.8.6.8, 4.7.5.7,
-    # 2.7.3.7, ... -- every single one individually passing the boundary
-    # check below, because the null bytes that make it a "clean boundary"
-    # are exactly what's generating the fake dots in the first place. A
-    # real embedded C2 string is isolated; a cascade of matches from one
-    # key is structural noise. The true positive this method is built
-    # for (RoningLoader's C2 address) produced exactly 1 match for its key.
+    # matches is discarded outright: a repeating null-padding or
+    # structural-table region routinely decodes into a cascade of
+    # coincidental "IPs" under the wrong key, while a real embedded C2
+    # string is isolated (typically exactly 1 match for its true key).
     _XOR_MAX_MATCHES_PER_KEY = 2
 
     def _find_xor_obfuscated_ips(self) -> List[Dict[str, Any]]:
-        """Brute-force all 256 single-byte XOR keys looking for an IPv4
-        address that decodes cleanly -- i.e. immediately bounded by bytes
-        that are either 0x00 or equal to the XOR key itself (both are what
-        zero-padding around the string looks like once XOR'd: 0x00 stays
-        0x00 if it's outside the XOR'd region, or becomes the key's own
-        byte value if it's zero-padding *inside* the XOR'd region), AND
-        that key doesn't also decode a run of other dotted-quad-shaped
-        matches nearby (see _XOR_MAX_MATCHES_PER_KEY) -- packed/compiled
-        code XOR'd with the "wrong" key routinely decodes into
-        coincidental-looking dotted-quads, and without both filters this
-        produces constant false-positive noise.
+        """Brute-force all 256 single-byte XOR keys for an IPv4 address
+        that decodes cleanly: immediately bounded by bytes that are
+        either 0x00 or equal to the XOR key itself (both are what
+        zero-padding looks like once XOR'd), and whose key doesn't also
+        decode a cascade of other dotted-quad matches nearby (see
+        _XOR_MAX_MATCHES_PER_KEY) -- without both filters, packed/
+        compiled code XOR'd with the "wrong" key produces constant
+        false-positive noise.
+
+        Returns:
+            One dict per recovered IP with its XOR key, deduplicated.
         """
         if not self.data or len(self.data) > self._XOR_SCAN_MAX_SIZE:
             return []
@@ -203,32 +178,21 @@ class ConfigExtractor:
                     continue
                 if ip.startswith('17.9.') or ip.startswith('1.1.') or ip.startswith('0.'):
                     continue
-                # Stricter than _find_ips's plaintext-scan threshold
-                # (2+ zero octets): a brute-force XOR decode is a much
-                # higher false-positive-risk source than a direct string
-                # match to begin with -- 256 candidate keys tried against
-                # arbitrary binary, not one targeted regex pass -- so even
-                # a single zero octet here is treated as the same
-                # null-padding signature this method is already known to
-                # be vulnerable to (see _XOR_MAX_MATCHES_PER_KEY's comment
-                # above). Found on a resubmitted AsyncRAT payload: key
-                # 0x2e -- the exact key already documented as the false-
-                # positive-cascade culprit -- decoded a single match,
-                # "3.2.0.2", that a real .NET assembly version tuple
-                # shape explains far better than a real C2 address does.
+                # Stricter than _find_ips's plaintext threshold (2+ zero
+                # octets): brute-forcing 256 keys against arbitrary binary
+                # is a much higher false-positive-risk source than one
+                # targeted regex pass, so even a single zero octet is
+                # treated as the same null-padding signature
+                # _XOR_MAX_MATCHES_PER_KEY guards against (a real .NET
+                # assembly version tuple like "3.2.0.2" explains this
+                # shape far better than a C2 address does).
                 if sum(1 for p in parts[1:] if p == '0') >= 1:
                     continue
-                # A second instance of the same root cause, one step more
-                # general: a repeating *non-zero* byte in a structural
-                # padding/alignment table (e.g. \x1c\x00\x00\x00 repeated)
-                # decodes to a repeating near-identical octet run just as
-                # readily as a null-padded one does -- found immediately
-                # after the fix above, on a *different* resubmitted
-                # AsyncRAT payload: key 0x32 decoded "222.222.222.232" from
-                # exactly such a table. A real routable IP essentially
-                # never has 3 of its 4 octets numerically identical; a
-                # decode artifact from repeating source bytes routinely
-                # does.
+                # A repeating non-zero byte in a structural padding/
+                # alignment table decodes to a near-identical octet run
+                # just as readily as null-padding does. A real routable
+                # IP essentially never has 3 of its 4 octets numerically
+                # identical.
                 if max(Counter(parts).values()) >= 3:
                     continue
 
@@ -242,13 +206,11 @@ class ConfigExtractor:
 
         return [{'ip': ip, 'xor_key': f'0x{key:02x}'} for ip, key in found.items()][:10]
 
-    # Curated allowlist of real TLDs. Not the full ~1500-entry IANA list --
-    # covers the gTLDs/ccTLDs actually seen in malware C2 infrastructure
-    # (abused cheap/free ccTLDs like .tk/.ml/.cf, common bulletproof-hosting
-    # gTLDs like .xyz/.top/.icu, plus the major country/region ccTLDs) so a
-    # dotted string with a fabricated "TLD" (.editors, .misc, .system,
-    # .dllfailed, .sample -- all seen misparsed from .NET/C++ identifiers)
-    # gets rejected outright rather than relying on a namespace denylist.
+    # Curated allowlist of real TLDs (not the full ~1500-entry IANA list):
+    # gTLDs/ccTLDs actually seen in malware C2 infrastructure plus major
+    # country/region ccTLDs, so a dotted string with a fabricated "TLD"
+    # (.editors, .misc, .system -- misparsed from .NET/C++ identifiers)
+    # is rejected outright rather than relying on a namespace denylist.
     _VALID_TLDS = frozenset({
         'com', 'net', 'org', 'info', 'biz', 'name', 'pro', 'mobi', 'asia',
         'tel', 'xxx', 'coop', 'museum', 'aero', 'jobs', 'travel',
@@ -288,48 +250,37 @@ class ConfigExtractor:
     def _find_domains(self, strings: List[str]) -> List[str]:
         """Find domain names in strings with noise filtering.
 
-        Three independent filters, each catching a distinct class of false
-        positive seen in practice (.NET/C++ identifiers mis-tokenized by the
-        dotted-string regex as domains):
-          1. Known non-domain extensions -- rejects source/debug file
-             references like d3d11install.pdb, wtf8.rs.
-          2. TLD allowlist -- rejects fabricated "TLDs" like .editors, .misc,
-             .system, .dllfailed, .sample (see _VALID_TLDS above).
-          3. Compound-identifier casing -- .NET/C++ namespaces and type
-             names are essentially always PascalCase/camelCase compounds
-             (MyApplication, SettingsDesigner); real embedded C2 domains are
-             not. A lowercase-then-uppercase transition inside the matched
-             substring (checked on the ORIGINAL case, before normalizing to
-             lowercase) is a strong signal of a code identifier rather than
-             a domain literal.
+        Three independent filters catch distinct classes of false
+        positive from .NET/C++ identifiers mis-tokenized as domains:
+        known non-domain extensions (source/debug file references like
+        wtf8.rs), a TLD allowlist (rejects fabricated "TLDs" like
+        .editors, .misc), and compound-identifier casing (a lowercase-
+        then-uppercase transition, checked pre-lowercase, flags a code
+        identifier like MyApplication rather than a real domain).
+
+        Args:
+            strings: Extracted strings from the sample.
+
+        Returns:
+            Up to 20 candidate domain names, lowercased.
         """
         domains = set()
 
-        # Legacy exact-prefix noise patterns (anchored: re.match, not
-        # re.search) -- kept as a cheap first pass, but the TLD allowlist
-        # and casing check below are what actually catch namespace noise
-        # that doesn't start at the string's first label (e.g.
-        # "KMicrosoft.VisualStudio.Editors" is rejected by the fabricated
-        # ".editors" TLD, not by this list). Kept anchored so a real domain
-        # that merely contains "microsoft." mid-string (crl.microsoft.com)
-        # isn't discarded here.
+        # Cheap first-pass exact-prefix noise patterns, anchored
+        # (re.match) so a real domain merely containing "microsoft."
+        # mid-string (crl.microsoft.com) isn't discarded. The TLD
+        # allowlist and casing check below catch namespace noise that
+        # doesn't start at the string's first label.
         NOISE_PATTERNS = [
             r'^[a-z]{1,3}\.[a-z]{1,3}$',      # 2-3 letter random domains (e.g., "tb.kf")
             r'^[0-9]+\.[0-9]+\.[0-9]+',        # Version strings (e.g., "1.1.2.2")
             r'^[a-z]+\.[a-z]{1,2}$',           # Short domain (e.g., "i.xo", "g.kx")
-            # A 1-2 char, possibly-numeric first label ("0.na", "9r.dk") is
-            # essentially never a real second-level domain -- it's noise
-            # that only started surviving once the TLD allowlist below grew
-            # to include the (very real) short ccTLDs these happened to
-            # collide with. Real domains overwhelmingly have a first label
-            # of 3+ chars, so this is a safe, targeted cut.
+            # 1-2 char first label ("0.na") is essentially never a real
+            # second-level domain; real domains overwhelmingly have 3+ chars.
             r'^[a-z0-9]{1,2}\.[a-z]{2,}$',
-            # A first label of 3 chars or fewer that mixes in a digit or
-            # hyphen ("w1d.gg", "s-.mz") is the same class of noise as the
-            # pattern above, just past the length-2 cutoff -- no real
-            # domain a malware author would hand-type looks like this. Pure
-            # 3-letter labels (a real brand TLD like "ibm.com") are left
-            # alone; only the digit/hyphen mix is targeted.
+            # A <=3-char first label mixing in a digit/hyphen ("w1d.gg")
+            # is the same noise class, past the length-2 cutoff. Pure
+            # 3-letter labels (a real brand like "ibm.com") are untouched.
             r'^(?=[a-z0-9-]{1,3}\.)[a-z0-9-]*[0-9-][a-z0-9-]*\.[a-z]{2,}$',
 
             r'(?i)system\.',                   # System.* namespaces
@@ -357,11 +308,6 @@ class ConfigExtractor:
                 if domain.startswith('www') or domain.startswith('http'):
                     continue
 
-                # Skip noise patterns. Anchored (re.match, not re.search) so
-                # a real domain that merely contains e.g. "microsoft." mid-
-                # string (crl.microsoft.com) isn't discarded here -- the TLD
-                # allowlist and casing check below are what catch namespace
-                # noise; this list only needs to catch the exact-prefix case.
                 is_noise = False
                 for pattern in NOISE_PATTERNS:
                     if re.match(pattern, domain_lower):
@@ -384,7 +330,14 @@ class ConfigExtractor:
         return list(domains)[:20]
 
     def _find_urls(self, strings: List[str]) -> List[str]:
-        """Find URLs in strings."""
+        """Find URLs in strings.
+
+        Args:
+            strings: Extracted ASCII strings.
+
+        Returns:
+            Up to 20 candidate URLs.
+        """
         url_pattern = r'https?://[^\s]+'
         urls = set()
         for s in strings:
@@ -393,7 +346,14 @@ class ConfigExtractor:
         return list(urls)[:20]
 
     def _find_emails(self, strings: List[str]) -> List[str]:
-        """Find email addresses in strings."""
+        """Find email addresses in strings.
+
+        Args:
+            strings: Extracted ASCII strings.
+
+        Returns:
+            Up to 10 candidate email addresses.
+        """
         email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
         emails = set()
         for s in strings:
@@ -402,7 +362,14 @@ class ConfigExtractor:
         return list(emails)[:10]
 
     def _find_registry(self, strings: List[str]) -> List[str]:
-        """Find registry paths in strings."""
+        """Find registry paths in strings.
+
+        Args:
+            strings: Extracted ASCII strings.
+
+        Returns:
+            Up to 20 candidate registry paths.
+        """
         registry_pattern = r'HKEY_[A-Z_]+\\[^\\]+(?:\\[^\\]+)*'
         paths = set()
         for s in strings:
@@ -411,7 +378,14 @@ class ConfigExtractor:
         return list(paths)[:20]
 
     def _find_file_paths(self, strings: List[str]) -> List[str]:
-        """Find file paths in strings."""
+        """Find Windows and UNC file paths in strings.
+
+        Args:
+            strings: Extracted ASCII strings.
+
+        Returns:
+            Up to 20 candidate file paths.
+        """
         path_pattern = r'[A-Za-z]:\\[^\\]+\\[^\\]+(?:\\[^\\]+)*'
         unc_pattern = r'\\\\[^\\]+\\[^\\]+(?:\\[^\\]+)*'
         paths = set()
@@ -423,7 +397,14 @@ class ConfigExtractor:
         return list(paths)[:20]
 
     def _find_mutexes(self, strings: List[str]) -> List[str]:
-        """Find mutexes/GUIDs in strings."""
+        """Find mutexes/GUIDs in strings.
+
+        Args:
+            strings: Extracted ASCII strings.
+
+        Returns:
+            Up to 20 candidate mutex/GUID strings.
+        """
         guid_pattern = r'[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}'
         mutexes = set()
         for s in strings:
@@ -432,9 +413,12 @@ class ConfigExtractor:
         return list(mutexes)[:20]
 
     def _find_hex_patterns(self) -> List[Dict[str, Any]]:
-        """Find potential encryption keys (hex patterns)."""
+        """Find potential encryption keys as hex-encoded patterns in the raw binary.
+
+        Returns:
+            Up to 20 candidate hex-encoded keys with their inferred type.
+        """
         patterns = []
-        # Look for 32, 64, and 128 character hex strings
         hex_patterns = [
             (r'\b[A-Fa-f0-9]{32}\b', 'MD5 key'),
             (r'\b[A-Fa-f0-9]{64}\b', 'SHA256 key'),

@@ -20,10 +20,28 @@ _TABLE_ROW_RE = re.compile(
 
 
 def _strip_markdown_bold(text: str) -> str:
+    """Remove Markdown bold markers and surrounding whitespace.
+
+    Args:
+        text: Text to clean.
+
+    Returns:
+        text with '**' removed and stripped.
+    """
     return text.replace("**", "").strip()
 
 
 def extract_ground_truth(markdown_text: str, family: str, source_report: str) -> Dict[str, Any]:
+    """Parse the ATT&CK Techniques table out of a manual analysis report.
+
+    Args:
+        markdown_text: Full text of the manual report.
+        family: Family label to attach to the result.
+        source_report: Path or name of the source report, for error messages and provenance.
+
+    Returns:
+        Dict with family, source_report, techniques[], and duplicate_rows_collapsed.
+    """
     heading_match = _SECTION_HEADING_RE.search(markdown_text)
     if not heading_match:
         raise ValueError(f"No ATT&CK techniques section found in {source_report}")

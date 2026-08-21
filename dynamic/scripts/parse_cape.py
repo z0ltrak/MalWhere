@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Dynamic (CAPE) Report Parser for the MalWhere Pipeline
-TFM 2025-2026 - Universidad Complutense de Madrid
 
 Distills a raw CAPE report.json into a curated dynamic_report.json, whose
 attck_mappings field mirrors static analysis's ATTACKMapping shape so the
@@ -20,6 +19,17 @@ from src.resubmit_writer import ResubmitWriter
 
 
 def resolve_report_path(args: argparse.Namespace) -> Path:
+    """Resolve the CAPE report.json path from --report or --task-id.
+
+    Args:
+        args: Parsed CLI arguments.
+
+    Returns:
+        Path to the report.json.
+
+    Raises:
+        SystemExit: If neither --report nor --task-id was given.
+    """
     if args.report:
         return Path(args.report)
     if args.task_id is None:
@@ -29,6 +39,11 @@ def resolve_report_path(args: argparse.Namespace) -> Path:
 
 
 def main():
+    """Parse a CAPE report into dynamic_report.json and optionally queue dropped files for resubmission.
+
+    Returns:
+        Process exit code (always 0; failures exit early via sys.exit).
+    """
     parser = argparse.ArgumentParser(
         description="Dynamic (CAPE) Report Parser for the MalWhere Pipeline"
     )

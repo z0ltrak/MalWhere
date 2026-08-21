@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 ATT&CK Mapper for the MalWhere Pipeline
-TFM 2025-2026 - Universidad Complutense de Madrid
 
 Reconciles static + dynamic ATT&CK evidence into a final confidence tier
 per technique (the project's core methodological contribution — see
@@ -23,6 +22,11 @@ from src.technique_names import resolve_technique_name
 
 
 def main():
+    """Reconcile static+dynamic technique observations into a final confidence tier and write the mapping + Navigator layer.
+
+    Returns:
+        Process exit code (always 0; failures exit early via sys.exit).
+    """
     parser = argparse.ArgumentParser(
         description="ATT&CK Mapper for the MalWhere Pipeline"
     )

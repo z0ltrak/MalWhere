@@ -53,6 +53,12 @@ _JUNK_TYPE_SUBSTRINGS = ("sqlite", "shortcut")
 
 class ResubmitWriter:
     def __init__(self, resubmit_dir: Path, cape_storage_dir: Path):
+        """Initialize the resubmission queue writer.
+
+        Args:
+            resubmit_dir: Root of the resubmission queue (manifest/ and artifacts/ subdirs).
+            cape_storage_dir: CAPE's own per-task storage directory, to copy artifact bytes from.
+        """
         self.resubmit_dir = resubmit_dir
         self.cape_storage_dir = cape_storage_dir
         self.manifest_dir = resubmit_dir / "manifest"
@@ -60,6 +66,15 @@ class ResubmitWriter:
         self.errors: List[str] = []
 
     def _looks_like_junk(self, name: str, file_type: str) -> bool:
+        """Check if a dropped-file entry is OS/sandbox telemetry rather than a real payload.
+
+        Args:
+            name: Reported filename.
+            file_type: Reported file type/magic description.
+
+        Returns:
+            True if the name suffix or type matches a known-junk pattern.
+        """
         name_lower = name.lower()
         type_lower = file_type.lower()
         if name_lower.endswith(_JUNK_NAME_SUFFIXES):
@@ -72,7 +87,15 @@ class ResubmitWriter:
         """CAPE stores raw dropped files under files/ and unpacked/decrypted
         payloads it recognizes itself under CAPE/ -- check both, files/ first
         since that's where a plain dropped file (not one CAPE also decoded)
-        will be."""
+        will be.
+
+        Args:
+            task_id: CAPE task ID the artifact was observed in.
+            sha256: Artifact's hash, used as the filename under each subdir.
+
+        Returns:
+            Path to the artifact's bytes, or None if not found in either location.
+        """
         for subdir in ("files", "CAPE"):
             candidate = self.cape_storage_dir / str(task_id) / subdir / sha256
             if candidate.is_file() and candidate.stat().st_size > 0:
@@ -88,7 +111,19 @@ class ResubmitWriter:
         max_artifacts: int = 25,
         depth: int = 1,
     ) -> Dict[str, Any]:
-        """Returns a summary: {written, skipped_existing, skipped_junk, skipped_missing_bytes}."""
+        """Write a resubmission manifest entry (and copy artifact bytes) for each qualifying dropped file.
+
+        Args:
+            dynamic_report: Curated dynamic_report.json, read for its dropped_files list.
+            cape_task_id: CAPE task ID these dropped files were observed in.
+            parent_hash: SHA-256 of the top-level sample, recorded as lineage.
+            parent_family: Family label of the top-level sample, recorded as lineage.
+            max_artifacts: Maximum number of new manifest entries to write.
+            depth: Recursion depth to record for these artifacts (relative to the parent).
+
+        Returns:
+            Summary dict: {written, skipped_existing, skipped_junk, skipped_missing_bytes}.
+        """
         self.manifest_dir.mkdir(parents=True, exist_ok=True)
         self.artifacts_dir.mkdir(parents=True, exist_ok=True)
 
@@ -99,6 +134,7 @@ class ResubmitWriter:
         # Executables and scripts first -- if max_artifacts cuts the list
         # short, the highest-value candidates are the ones actually written.
         def priority(f: Dict[str, Any]) -> int:
+            """Sort key: lower is higher priority (PE, then script, then everything else)."""
             t = (f.get("type") or "").lower()
             name = (f.get("name") or "").lower()
             if "pe32" in t:

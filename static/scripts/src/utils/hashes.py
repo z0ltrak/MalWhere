@@ -21,7 +21,15 @@ class HashCalculator:
     """Calculate various hashes for files."""
 
     def calculate_all(self, file_path: Path) -> Dict[str, str]:
-        """Calculate all hash types for a file."""
+        """Calculate all hash types for a file.
+
+        Args:
+            file_path: Path to the file to hash.
+
+        Returns:
+            Dict with md5, sha1, sha256, ssdeep, and tlsh (each 'N/A' if
+            the optional library isn't installed), or all 'ERROR' plus an 'error' key on failure.
+        """
         try:
             with open(file_path, 'rb') as f:
                 data = f.read()
@@ -32,7 +40,6 @@ class HashCalculator:
                     'sha256': hashlib.sha256(data).hexdigest(),
                 }
 
-                # SSDeep fuzzy hash
                 if SSDEEP_AVAILABLE:
                     try:
                         result['ssdeep'] = ssdeep.hash(data)
@@ -41,7 +48,6 @@ class HashCalculator:
                 else:
                     result['ssdeep'] = 'N/A'
 
-                # TLSH hash
                 if TLSH_AVAILABLE:
                     try:
                         result['tlsh'] = tlsh.hash(data)
@@ -63,7 +69,14 @@ class HashCalculator:
             }
 
     def calculate_imphash(self, pe) -> str:
-        """Calculate import hash (imphash) for a PE file."""
+        """Calculate import hash (imphash) for a PE file.
+
+        Args:
+            pe: A loaded pefile.PE object.
+
+        Returns:
+            The imphash, or 'N/A' if the PE has no import directory or hashing failed.
+        """
         try:
             if hasattr(pe, 'DIRECTORY_ENTRY_IMPORT'):
                 return pe.get_imphash()
@@ -72,7 +85,18 @@ class HashCalculator:
         return 'N/A'
 
     def calculate_section_hash(self, data: bytes, hash_type: str = 'md5') -> str:
-        """Calculate hash of section data."""
+        """Calculate hash of section data.
+
+        Args:
+            data: Bytes to hash.
+            hash_type: 'md5', 'sha1', or 'sha256'.
+
+        Returns:
+            The hex digest.
+
+        Raises:
+            ValueError: If hash_type isn't recognized.
+        """
         if hash_type == 'md5':
             return hashlib.md5(data).hexdigest()
         elif hash_type == 'sha1':
