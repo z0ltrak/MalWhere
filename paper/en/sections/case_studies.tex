@@ -144,83 +144,52 @@ are reported: fixing both left every sample's technique set, precision,
 and recall bit-for-bit unchanged.
 
 First, the static domain extractor's dotted-string regex was filtered
-only by a hand-written denylist of namespace prefixes anchored to the
-start of the match, so it mis-tokenized compiler metadata as domains:
-\code{kernel32.dllfailed}, \code{asio.misc}, and, across RoningLoader's
-26 resubmitted components (\S\ref{sec:resubmission}), an entire class of
-Authenticode certificate-chain endpoints (\code{crl.comodoca.com},
-\code{cacerts.digicert.com}) present in essentially any code-signed PE.
-None of these are adversary-chosen infrastructure, yet every STIX bundle
-exported before the fix promoted them to full \code{domain-name}
-indicators regardless. A TLD allowlist, a compound-identifier casing
-check (\code{MyApplication.app} is PascalCase in a way a human-typed C2
-domain essentially never is), and a small, exact-matched allowlist for
-the confirmed-benign PKI endpoints removed every instance across all
-three families and all 26 resubmitted components.
+only by a hand-written denylist, so it mis-tokenized compiler metadata
+as domains (\code{kernel32.dllfailed}) and, across RoningLoader's 26
+resubmitted components (\S\ref{sec:resubmission}), an entire class of
+Authenticode certificate-chain endpoints (\code{crl.comodoca.com})
+present in essentially any code-signed PE -- none of them
+adversary-chosen infrastructure. A TLD allowlist, a compound-identifier
+casing check, and a small, exact-matched allowlist for the
+confirmed-benign PKI endpoints removed every instance across all three
+families and all 26 resubmitted components.
 
 Second, and unrelated to the first, CAPE's dynamic network capture
 (\code{network.hosts}) is a whole-VM PCAP dump with no per-process
 attribution: it cannot distinguish the sample's own connections from the
 sandbox guest's background OS traffic. Cross-referencing every IP
-observed across all three families' detonations against ASN registration
-data found 18, none tied to any domain the sample itself resolved,
-resolving to Microsoft Corporation (Azure AD/Teams telemetry) or Akamai
-(the CDN fronting Windows Update and Defender cloud lookups), and
-repeating byte-for-byte across a ransomware family, an infostealer, and
-a loader, three samples with no plausible reason to share
+observed across all three families' detonations against ASN
+registration data found 18 resolving to Microsoft (Azure AD/Teams
+telemetry) or Akamai (the CDN fronting Windows Update/Defender) and
+repeating byte-for-byte across a ransomware, an infostealer, and a
+loader -- three samples with no plausible reason to share
 infrastructure. A narrowly-scoped allowlist of these specific,
-individually-confirmed IPs, deliberately not a blanket ASN or CIDR rule
-(an Azure-Front-Door-fronted hostname elsewhere in the same dataset was
-left untouched, since domain fronting through a major CDN is a real
-adversary technique and ASN alone is not evidence of innocence there),
-removed them from the reported IOCs.
+individually-confirmed IPs, not a blanket ASN/CIDR rule (which would
+also have discarded legitimate adversary domain fronting), removed them
+from the reported IOCs.
 
 The fix is independently checkable against WhiteSnakeStealer's own
-ground truth, which documents a 31-node, 29-unique-IP HTTP C2 list
-recovered by manual reverse engineering, the same protocol that
-produced Table~\ref{tab:validation}. After the sandbox-noise filter,
-the pipeline's dynamic-capture output recovers that list exactly: 29 of
-29, zero missed. CAPE's own \code{dead\_connect} signature (confidence
-100\%, ``31 unique'' unreachable attempts) independently corroborates
-why every one of these reads as unreachable in the sandbox trace:
-containment-first sandboxing (\S\ref{sec:limitations}, item~\ref{lim:containment}) means the
-sample's own connection attempts to its real C2 fail by design, not
-because the recovered addresses are fabricated. Contamination was not
-fully zero, though: re-auditing this exact claim during the migration
-to ATT\&CK v19 (2026-08) found 5 further IPs the two filters above did not
-catch, none affecting the technique-level scores above since IOC
-filtering and technique scoring are independent. Two, resolving to
-self-identifying \code{*.msedge.net} hostnames on Microsoft's own ASN,
-were confirmed and added to the allowlist the same way the existing
-entries were. The remaining two, Cloudflare-range addresses with no
-hostname, needed a stronger check than ASN and cross-sample repetition
-alone before joining a list this project deliberately keeps to
-zero-ambiguity entries: cross-referencing CAPE's raw per-process API
-call trace, not just the summarized capture, confirmed neither IP
-appears in the sample process's own 38 \code{connect()} calls (all 29
-genuine C2 addresses, zero matches) nor in any other monitored
-process's calls at all, only in the whole-VM packet capture -- no
-hooked process is responsible for either connection, the same
-sandbox-traffic signature the Microsoft entries were confirmed against.
-Neither is a string in either binary or either manual report, ruling
-out an as-yet-undecoded embedded destination. Both were then added. The
-fifth, resolving to \code{ip-api.com}, is not contamination at all: the
-same process-level trace shows \code{sample.exe} itself calling
-\code{WinHttpGetProxyForUrl} against
-\code{ip-api.com/line?fields=query,country}, a public IP-geolocation
-lookup with no corresponding literal string anywhere in the binary, the
-URL evidently built at runtime. This is a genuine, sample-initiated
-finding, not a pipeline claim to trust at face value: added to
-WhiteSnakeStealer's manual ground truth as
-\technique{T1016} (System Network Configuration Discovery, whose own
-MITRE page covers exactly this pattern, an online lookup for a
-compromised system's own public-facing IP), the same evidentiary bar as
-every other entry in that report, and the same way the \technique{T1055}
-row earlier in the same report was already confirmed dynamically rather
-than through static RE. Mapped to the conservative, literally-supported
-technique rather than folded into the existing ``12 VM indicators''
-anti-sandbox finding, since no conditional branch on the returned
-country was independently observed to justify that stronger claim.
+ground truth, which documents a 31-node, 29-unique-IP HTTP C2 list.
+After the sandbox-noise filter, the pipeline's dynamic-capture output
+recovers that list exactly: 29 of 29, zero missed, independently
+corroborated by CAPE's own \code{dead\_connect} signature.
+
+Contamination was not fully zero, though: re-auditing this exact claim
+during the migration to ATT\&CK v19 (2026-08) found 5 further IPs the
+two filters above did not catch -- none affecting the technique-level
+scores, since IOC filtering and technique scoring are independent. Four
+turned out to be the same class of sandbox noise as the 18 above (two
+self-identifying \code{*.msedge.net} hostnames on Microsoft's ASN, two
+Cloudflare-range addresses confirmed by cross-referencing CAPE's
+per-process \code{connect()} trace rather than just the summarized
+capture) and were added to the allowlist. The fifth, resolving to
+\code{ip-api.com}, turned out to be a genuine finding: the sample itself
+calls \code{WinHttpGetProxyForUrl} against a public IP-geolocation
+endpoint with no corresponding literal string anywhere in the binary,
+the URL built at runtime. It was added to WhiteSnakeStealer's manual
+ground truth as \technique{T1016} (System Network Configuration
+Discovery), the same evidentiary bar as every other entry in that
+report.
 
 The lesson generalizes the same way the other cases do: every exclusion
 is a specific, individually-justified, auditable entry, logged with its
@@ -234,10 +203,8 @@ discipline against a fourth, structurally unrelated family (a
 native-crypter-wrapped .NET RAT/backdoor, added specifically to test
 generalization past the three validated ones) surfaced two further
 instances of the same failure mode on that family's own resubmitted
-components, a XOR-recovered value shaped like a .NET version tuple and a
-second repeating-byte-padding cascade under a different key, plus a
-class never seen before: X.509 certificate OIDs (\code{2.5.4.*},
-\code{2.5.29.*}) mistaken for IPs on two of RoningLoader's own
-resubmitted components, found by the same sweep. Each was fixed the same
-way: a general, evidenced rule, verified against every known-real IP
-across both families before being trusted.
+components, plus a class never seen before: X.509 certificate OIDs
+(\code{2.5.4.*}, \code{2.5.29.*}) mistaken for IPs on two of
+RoningLoader's own resubmitted components. Each was fixed the same way:
+a general, evidenced rule, verified against every known-real IP across
+both families before being trusted.

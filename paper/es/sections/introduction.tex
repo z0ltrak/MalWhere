@@ -39,7 +39,7 @@ inteligencia de amenazas ya consumen.
 \subsection{Planteamiento del problema}
 
 Tres problemas concretos motivan este trabajo, cada uno identificado al
-construir y validar el pipeline descrito en esta tesis:
+construir y validar la pipeline descrito en esta tesis:
 
 \begin{enumerate}
   \item \textbf{Reconciliaci\'on de confianza entre fuentes.} Una
@@ -60,7 +60,7 @@ construir y validar el pipeline descrito en esta tesis:
     puntuaci\'on de confianza propia de la muestra padre atribuir\'ia
     err\'oneamente esa capacidad, ya que el comportamiento de la carga
     soltada no demuestra que el cargador realice ese comportamiento.
-  \item \textbf{Confiar en el resultado.} Un pipeline que reporta alta
+  \item \textbf{Confiar en el resultado.} Una pipeline que reporta alta
     confianza para un hallazgo equivocado es peor que uno que no
     reporta nada, porque enga\~na activamente a quien consume el
     resultado. Esto motiva tratar cada regla de detecci\'on como una
@@ -100,10 +100,10 @@ en detalle en secciones posteriores:
     confianza y por acuerdo entre fuentes para comprobar si las propias
     afirmaciones del modelo de reconciliaci\'on se sostienen, y una
     auditor\'ia sistem\'atica de falsos positivos en la que cada
-    discrepancia entre la salida del pipeline y la verdad de
-    referencia verificada manualmente se diagnostic\'o individualmente a
+    discrepancia entre la salida de la pipeline y los datos de
+    referencia verificados manualmente se diagnostic\'o individualmente a
     una causa concreta y verificable antes de corregirse, dejarse
-    abierta, o atribuirse a un hueco en la verdad de referencia.
+    abierta, o atribuirse a un hueco en los datos de referencia.
 \end{itemize}
 
 \subsection{Estructura del documento}
@@ -111,7 +111,7 @@ en detalle en secciones posteriores:
 La Secci\'on~\ref{sec:related-work} sit\'ua este trabajo respecto a las
 herramientas de sandboxing existentes, los enfoques de mapeo est\'atico
 a ATT\&CK, y agregadores de reputaci\'on como VirusTotal. La
-Secci\'on~\ref{sec:architecture} describe la arquitectura del
+Secci\'on~\ref{sec:architecture} describe la arquitectura de la
 pipeline de principio a fin. La Secci\'on~\ref{sec:evaluation}
 presenta la metodolog\'ia de evaluaci\'on y los resultados, incluida la
 auditor\'ia de falsos positivos. La Secci\'on~\ref{sec:case-studies}
@@ -120,12 +120,12 @@ encontrado y corregido a trav\'es del proceso de evaluaci\'on, que
 ilustran la disciplina de validaci\'on del proyecto con m\'as
 concreci\'on de lo que permiten las cifras agregadas. La
 Secci\'on~\ref{sec:limitations} enuncia con precisi\'on las
-limitaciones del pipeline, cada una ligada a una causa espec\'ifica
+limitaciones de la pipeline, cada una ligada a una causa espec\'ifica
 diagnosticada. La Secci\'on~\ref{sec:future-work} esboza extensiones
 concretas, incluyendo una, an\'alisis din\'amico Linux/ELF para
 familias de botnets IoT, evaluada y deliberadamente aplazada por
 razones expl\'icitas, no impl\'icitas. La Secci\'on~\ref{sec:conclusion}
 concluye. El Anexo~\ref{app:rules} tabula el conjunto de reglas de
 detecci\'on a\~nadidas durante la ampliaci\'on de cobertura. El
-c\'odigo fuente completo del pipeline se publica en el repositorio
+c\'odigo fuente completo de la pipeline se publica en el repositorio
 p\'ublico del proyecto en lugar de reproducirse aqu\'i.

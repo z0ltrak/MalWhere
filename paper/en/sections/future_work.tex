@@ -34,20 +34,6 @@
   analysis capability to exist first, not a rule set retrofitted onto
   static parsing alone.
 
-\item \textbf{Extending Initial Access and Lateral Movement coverage
-  where genuinely applicable.} The bulk of both tactics is a structural
-  poor fit for single-binary detonation analysis (\S\ref{sec:coverage}):
-  Lateral Movement in particular is, for the ransomware families this
-  pipeline targets, typically carried out by the human operator with
-  generic tooling (RDP, PsExec, Cobalt Strike) rather than encoded in
-  the ransomware binary's own capability, so most of the tactic is out
-  of reach regardless of sandbox scale. A small number of
-  sub-techniques observable from within one sample's own artifacts
-  remain uncovered, however:
-  \technique{T1091} (Replication Through Removable Media) and
-  \technique{T1570} (Lateral Tool Transfer) are the two concrete
-  candidates identified.
-
 \item \textbf{A statistically powered confidence-calibration study.}
   \S\ref{sec:confidence-calibration}'s finding that 14 of the 15
   audited discrepancies trace to single-source findings, with the one

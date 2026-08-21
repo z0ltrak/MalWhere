@@ -253,17 +253,29 @@ precision/recall data points.
 \subsection{Detection Rule Coverage Extension}
 \label{sec:coverage}
 
-Every static rule present at the start of the validation described in
-\S\ref{sec:evaluation} existed because specific evidence in one of the
-three validated samples justified it, a sound approach for avoiding
-overfitting, but one that leaves coverage narrow relative to the full
-MITRE ATT\&CK matrix, not just relative to what the three validated
-families individually need. To quantify this precisely rather than
-estimate it, the current official MITRE Enterprise ATT\&CK STIX
+At the start of the validation described in \S\ref{sec:evaluation},
+every static rule existed because specific evidence in one of the
+three samples justified it. That is a sound approach for avoiding
+overfitting, but it also, by construction, leaves out most of the
+full MITRE ATT\&CK matrix: it covers what the three validated
+families need, not the matrix as a whole. To quantify that coverage
+precisely rather than estimate it, the current official MITRE Enterprise ATT\&CK STIX
 bundle~\cite{mitre-attack-stix} was downloaded and counted directly:
 474 Windows-relevant techniques (including sub-techniques) in the
 present matrix, of which roughly 30 had a dedicated static rule before
 this extension.
+
+Those 474 techniques are already a filtered subset, not the full
+matrix: of the 697 current MITRE Enterprise ATT\&CK techniques
+(excluding revoked or deprecated ones), only 68\% are tagged by MITRE
+itself as Windows-relevant. Coverage is also not spread evenly across
+tactics: Privilege Escalation, Persistence, Discovery, Defense Evasion,
+Credential Access, and Execution account for roughly 74\% of the
+tactic-technique tags across the rule set, while Initial Access,
+Lateral Movement, Reconnaissance, and Resource Development, the
+tactics the scoping discussion further below in this section argues
+are a poor fit for single-binary detonation analysis, have no
+dedicated rules at all.
 
 Coverage was subsequently extended across six batches, one to two
 tactics at a time, adding approximately 55 further technique

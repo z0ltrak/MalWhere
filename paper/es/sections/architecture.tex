@@ -1,9 +1,9 @@
 \section{Arquitectura del sistema}
 \label{sec:architecture}
 
-\subsection{Visi\'on general del pipeline}
+\subsection{Visi\'on general de la pipeline}
 
-La Figura~\ref{fig:pipeline} muestra las cinco etapas del
+La Figura~\ref{fig:pipeline} muestra las cinco etapas de la
 pipeline. Una muestra se analiza est\'atica y din\'amicamente en
 paralelo; ambas salidas alimentan un \emph{normalizador} que
 deduplica IOCs y agrupa las observaciones ATT\&CK por t\'ecnica; un
@@ -11,7 +11,7 @@ deduplica IOCs y agrupa las observaciones ATT\&CK por t\'ecnica; un
 lista final de t\'ecnicas; un \emph{exportador} convierte esa lista en
 un paquete STIX~2.1 y/o un evento MISP en vivo. Cada etapa es una
 herramienta de l\'inea de comandos independiente que opera sobre un
-esquema JSON bien definido, de modo que el pipeline puede ejecutarse
+esquema JSON bien definido, de modo que la pipeline puede ejecutarse
 de principio a fin o volver a ejecutar cualquier etapa de forma
 aislada, propiedad utilizada extensamente durante la validaci\'on: un
 solo cambio en una regla de detecci\'on a menudo solo requiere volver a
@@ -29,7 +29,7 @@ $\downarrow$ \\
 $\downarrow$ \\
 \texttt{Exportador} $\rightarrow$ \texttt{paquete STIX 2.1} / \texttt{evento MISP}
 \end{tabular}
-\captionof{figure}{Etapas del pipeline y artefactos intermedios.}
+\captionof{figure}{Etapas de la pipeline y artefactos intermedios.}
 \label{fig:pipeline}
 \end{center}
 
@@ -114,7 +114,7 @@ firmas, ficheros soltados, actividad de red y una lista curada de
 mapeos ATT\&CK.
 
 Las firmas de la comunidad de CAPE llevan sus propias etiquetas de
-t\'ecnica, pero se trataron como una hip\'otesis, no como verdad de
+t\'ecnica, pero se trataron como una hip\'otesis, no como datos de
 referencia, durante toda la validaci\'on. La capa de curaci\'on
 mantiene tres tablas de correcci\'on, cada entrada justificada
 individualmente frente a la evidencia en bruto de la propia firma (su
@@ -229,7 +229,7 @@ demuestra que el cargador padre presente ese comportamiento.
 
 El bucle de reenv\'io, en cambio, hace pasar a cada componente
 soltado/extra\'ido por su propia ejecuci\'on completamente
-independiente a trav\'es del mismo pipeline de an\'alisis
+independiente a trav\'es de la misma pipeline de an\'alisis
 est\'atico $\rightarrow$ normalizaci\'on $\rightarrow$ mapeo, etiquetada
 con linaje expl\'icito (hash del padre, mecanismo de descubrimiento,
 marca de tiempo de descubrimiento) hacia la muestra que la produjo.
@@ -250,9 +250,9 @@ Tres componentes, divididos por dependencia y no por conveniencia:
     ligero se consider\'o y se descart\'o por ser superficie de
     mantenimiento innecesaria sin beneficio de aislamiento.
   \item \textbf{Procesador de fusi\'on} (se ejecuta dentro del
-    contenedor del pipeline, solo con biblioteca est\'andar):
+    contenedor de la pipeline, solo con biblioteca est\'andar):
     localiza cada informe etiquetado con linaje que a\'un no se haya
-    normalizado ni mapeado, y lo hace pasar por el mismo pipeline de
+    normalizado ni mapeado, y lo hace pasar por la misma pipeline de
     reconciliaci\'on de confianza que una muestra de nivel superior,
     escribiendo en una ruta de salida espec\'ifica del componente,
     nunca en el propio \code{attck\_mapping.json} de la muestra padre,
@@ -266,13 +266,13 @@ Tres componentes, divididos por dependencia y no por conveniencia:
 Para RoningLoader en concreto, el bucle de reenv\'io descubri\'o y
 analiz\'o de forma independiente 26 componentes m\'as all\'a del propio
 binario cargador padre: el driver rootkit, la DLL antiantivirus y el
-cliente RAT, cada uno con su propia entrada dedicada en la verdad de
-referencia manual, m\'as otros 23 artefactos adicionales de carga y
-configuraci\'on extra\'idos sin verdad de referencia propia redactada
+cliente RAT, cada uno con su propia entrada dedicada en los datos de
+referencia manuales, m\'as otros 23 artefactos adicionales de carga y
+configuraci\'on extra\'idos sin datos de referencia propios redactados
 individualmente. La Secci\'on~\ref{sec:evaluation} punt\'ua los tres
-componentes nombrados frente a su verdad de referencia por componente,
+componentes nombrados frente a sus datos de referencia por componente,
 ya que puntuar solo el componente padre subestima estructuralmente lo
-que encuentra el pipeline completo, incluyendo el bucle de reenv\'io;
+que encuentra la pipeline completa, incluyendo el bucle de reenv\'io;
 los 23 restantes son superficie de evaluaci\'on real adicional en un
 sentido distinto (\S\ref{sec:limitations}, punto~\ref{lim:n3}), cada uno
 confirmado como productor de un resultado sensato, sin ca\'idas y
@@ -282,18 +282,31 @@ precisi\'on/exhaustividad puntuados.
 \subsection{Ampliaci\'on de la cobertura de reglas de detecci\'on}
 \label{sec:coverage}
 
-Cada regla est\'atica presente al inicio de la validaci\'on descrita en
-\S\ref{sec:evaluation} exist\'ia porque evidencia espec\'ifica en una de
-las tres muestras validadas la justificaba, un enfoque s\'olido para
-evitar el sobreajuste, pero que deja una cobertura estrecha respecto a
-la matriz completa de MITRE ATT\&CK, no solo respecto a lo que
-necesitan individualmente las tres familias validadas. Para
-cuantificar esto con precisi\'on en lugar de estimarlo, se descarg\'o el
+Al inicio de la validaci\'on descrita en \S\ref{sec:evaluation}, cada
+regla est\'atica exist\'ia porque evidencia espec\'ifica en una de las
+tres muestras la justificaba. Es un enfoque s\'olido para evitar el
+sobreajuste, pero tambi\'en, por construcci\'on, deja fuera buena parte
+de la matriz completa de MITRE ATT\&CK: cubre lo que necesitan las
+tres familias validadas, no la matriz en su conjunto. Para
+cuantificar esa cobertura con precisi\'on en lugar de estimarla, se descarg\'o el
 paquete STIX oficial actual de MITRE Enterprise
 ATT\&CK~\cite{mitre-attack-stix} y se cont\'o directamente: 474
 t\'ecnicas relevantes para Windows (incluyendo subt\'ecnicas) en la
 matriz actual, de las cuales aproximadamente 30 ten\'ian una regla
 est\'atica dedicada antes de esta ampliaci\'on.
+
+Esas 474 t\'ecnicas ya son un subconjunto filtrado, no la matriz
+completa: de las 697 t\'ecnicas actuales de MITRE Enterprise ATT\&CK
+(excluyendo las revocadas u obsoletas), solo el 68\% est\'a etiquetado
+por la propia MITRE como relevante para Windows. Adem\'as, la cobertura
+a\~nadida no se reparte uniformemente entre t\'acticas: Privilege
+Escalation, Persistence, Discovery, Defense Evasion, Credential Access
+y Execution concentran cerca del 74\% de las etiquetas t\'actica-t\'ecnica
+del conjunto de reglas, mientras que Initial Access, Lateral Movement,
+Reconnaissance y Resource Development, las t\'acticas que la acotaci\'on
+m\'as abajo en esta misma secci\'on argumenta que encajan mal con un
+an\'alisis de detonaci\'on de un solo binario, no tienen ninguna regla
+dedicada.
 
 La cobertura se ampli\'o posteriormente a lo largo de seis lotes, de
 una a dos t\'acticas cada vez, a\~nadiendo aproximadamente 55
@@ -335,7 +348,7 @@ mayor cambiar\'ia.
 \label{sec:deployment}
 
 El prototipo y cada entorno de an\'alisis del que depende, no solo el
-c\'odigo propio del pipeline, est\'a definido en un \'unico
+c\'odigo propio de la pipeline, est\'a definido en un \'unico
 \code{docker-compose.yml}, dividido en dos perfiles activables de forma
 independiente. El perfil \code{core} (motor de an\'alisis est\'atico,
 pipeline, ATT\&CK Navigator) no necesita configuraci\'on a nivel de

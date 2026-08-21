@@ -1,7 +1,7 @@
 \section{Casos de estudio}
 \label{sec:case-studies}
 
-Las cifras agregadas (\S\ref{sec:evaluation}) muestran \emph{que} el
+Las cifras agregadas (\S\ref{sec:evaluation}) muestran \emph{que} la
 pipeline rinde bien; los cinco casos siguientes muestran \emph{por
 qu\'e}: instancias concretas de la disciplina de validaci\'on
 encontrando y resolviendo un problema real, cada una ilustrando una
@@ -24,7 +24,7 @@ disco \'unicamente en tiempo de ejecuci\'on.
 
 La Tabla~\ref{tab:results} ya muestra la consecuencia num\'erica:
 puntuar el cargador de forma aislada alcanza una exhaustividad de 0.68
-frente a una verdad de referencia escrita para la cadena completa,
+frente a unos datos de referencia escritos para la cadena completa,
 porque aproximadamente un tercio de las t\'ecnicas que un analista
 humano atribuye correctamente a la familia ``RoningLoader'' solo son
 observables analizando directamente los componentes soltados. El
@@ -62,7 +62,7 @@ evidencia faltante y mejor\'o directamente la exhaustividad en la
 muestra afectada tras volver a evaluarla.
 
 La lecci\'on se generaliz\'o m\'as all\'a de esta correcci\'on
-concreta: motiv\'o tratar cada nueva capacidad del pipeline, el
+concreta: motiv\'o tratar cada nueva capacidad de la pipeline, el
 bucle de reenv\'io en primer lugar, como necesitada de su propio paso
 expl\'icito de corroboraci\'on (manifiestos de linaje, comprobaciones
 cruzadas de hash) en lugar de confiar en que ``el c\'odigo se
@@ -70,15 +70,15 @@ ejecut\'o sin error'' implique ``el c\'odigo produjo el resultado
 correcto''. Encontrar y corregir esta clase de error antes de que
 pudiera subestimar en silencio la capacidad real de una muestra es en
 s\'i mismo una demostraci\'on concreta de para qu\'e sirve la
-disciplina de validaci\'on del pipeline.
+disciplina de validaci\'on de la pipeline.
 
-\subsection{El hueco de verdad de referencia de WhiteSnakeStealer}
+\subsection{El hueco de datos de referencia de WhiteSnakeStealer}
 \label{sec:case-wsnake}
 
 La \S\ref{sec:fp-audit} resume el resultado; el proceso merece
 detallarse una vez como ejemplo concreto de lo que significa en la
 pr\'actica ``auditado frente al texto completo del informe''. El
-resultado del pipeline para WhiteSnakeStealer inclu\'ia
+resultado de la pipeline para WhiteSnakeStealer inclu\'ia
 \technique{T1620} (Reflective Code Loading) con evidencia est\'atica,
 llamadas espec\'ificas a la BCL de .NET consistentes con la carga de
 ensamblados en memoria. La propia tabla de T\'ecnicas ATT\&CK de la
@@ -91,16 +91,16 @@ su tabla resumen, se encontr\'o un p\'arrafo expl\'icito que
 describ\'ia exactamente el mecanismo de carga reflexiva que hab\'ia
 detectado la regla est\'atica: exist\'ia confirmaci\'on independiente
 del analista, simplemente no se hab\'ia trasladado a la tabla que lee
-el extractor autom\'atico de verdad de referencia. Esto es un hueco de
-documentaci\'on en el informe fuente, no un error del pipeline, y se
+el extractor autom\'atico de datos de referencia. Esto es un hueco de
+documentaci\'on en el informe fuente, no un error de la pipeline, y se
 corrigi\'o a\~nadiendo la fila que faltaba al propio informe (y
-regenerando la verdad de referencia a partir de \'el), en lugar de
-ajustar la confianza del pipeline o suprimir el hallazgo. Se
+regenerando los datos de referencia a partir de \'el), en lugar de
+ajustar la confianza de la pipeline o suprimir el hallazgo. Se
 presenta aqu\'i espec\'ificamente porque dos casos estructuralmente
 similares en RoningLoader (\S\ref{sec:fp-audit}) se resolvieron en el
 sentido opuesto, dejados abiertos, precisamente porque les faltaba
 este tipo de confirmaci\'on textual independiente. Juntos, los dos
-desenlaces muestran que la evidencia propia del pipeline se trata
+desenlaces muestran que la evidencia propia de la pipeline se trata
 igual independientemente de si la discrepancia termin\'o
 favoreci\'endola.
 
@@ -147,7 +147,7 @@ concreta: es lo que motiv\'o la pol\'itica expl\'icita del proyecto
 recuperaci\'on basada en b\'usqueda exhaustiva debe validarse frente a
 una segunda muestra, no solo la que motiv\'o su construcci\'on, antes
 de confiar en ella. De haberse declarado esta capacidad lista para
-producci\'on solo con RoningLoader, el pipeline habr\'ia salido con un
+producci\'on solo con RoningLoader, la pipeline habr\'ia salido con un
 generador de falsos positivos que simplemente todav\'ia no se hab\'ia
 activado.
 
@@ -155,7 +155,7 @@ activado.
   tr\'afico de fondo del sandbox}
 \label{sec:case-ioc-noise}
 
-Auditar directamente la salida de IOC del pipeline orientada a
+Auditar directamente la salida de IOC de la pipeline orientada a
 STIX/MISP, en lugar de solo las puntuaciones de t\'ecnicas ATT\&CK que
 ya cubre \S\ref{sec:evaluation}, sac\'o a la luz dos fuentes de
 contaminaci\'on independientes que ninguna m\'etrica a nivel de
@@ -166,129 +166,76 @@ byte.
 
 Primero, la expresi\'on regular de cadenas punteadas del extractor
 est\'atico de dominios se filtraba solo con una lista de exclusi\'on
-escrita a mano de prefijos de espacio de nombres anclada al inicio de
-la coincidencia, por lo que tokenizaba err\'oneamente metadatos del
-compilador como dominios: \code{kernel32.dllfailed}, \code{asio.misc},
-y, a trav\'es de los 26 componentes reenviados de RoningLoader
+escrita a mano, por lo que tokenizaba err\'oneamente metadatos del
+compilador como dominios (\code{kernel32.dllfailed}) y, a trav\'es de
+los 26 componentes reenviados de RoningLoader
 (\S\ref{sec:resubmission}), toda una clase de endpoints de cadena de
-certificados Authenticode (\code{crl.comodoca.com},
-\code{cacerts.digicert.com}) presentes en pr\'acticamente cualquier PE
-firmado con c\'odigo. Ninguno de ellos es infraestructura elegida por
-el adversario, y sin embargo cada bundle STIX exportado antes de la
-correcci\'on los promov\'ia igualmente a indicadores
-\code{domain-name} completos. Una lista de permitidos de TLD, una
-comprobaci\'on de may\'usculas de identificador compuesto
-(\code{MyApplication.app} tiene un patr\'on PascalCase que un dominio
-C2 escrito a mano pr\'acticamente nunca tiene) y una peque\~na lista de
-permitidos de coincidencia exacta para los endpoints PKI confirmados
-como ben\'ignos eliminaron cada instancia en las tres familias y los
-26 componentes reenviados.
+certificados Authenticode (\code{crl.comodoca.com}) presentes en
+pr\'acticamente cualquier PE firmado con c\'odigo -- ninguno de ellos
+infraestructura elegida por el adversario. Una lista de permitidos de
+TLD, una comprobaci\'on de may\'usculas de identificador compuesto y
+una peque\~na lista de permitidos de coincidencia exacta para los
+endpoints PKI confirmados como ben\'ignos eliminaron cada instancia en
+las tres familias y los 26 componentes reenviados.
 
 Segundo, e independiente de lo anterior, la captura de red din\'amica
 de CAPE (\code{network.hosts}) es un volcado PCAP de toda la m\'aquina
 virtual sin atribuci\'on por proceso: no puede distinguir las
 conexiones propias de la muestra del tr\'afico de fondo del sistema
-operativo hu\'esped del sandbox. Cotejar cada IP observada en las
-detonaciones de las tres familias contra datos de registro de ASN
-encontr\'o 18, ninguna ligada a un dominio que la propia muestra
-hubiera resuelto, que resolv\'ian a Microsoft Corporation (telemetr\'ia
-de Azure AD/Teams) o a Akamai (la CDN que sirve las comprobaciones en
-la nube de Windows Update y Defender), y que se repet\'ian byte a byte
-en una familia de ransomware, un infostealer y un cargador, tres
-muestras sin raz\'on plausible para compartir infraestructura. Una
-lista de permitidos de alcance estrecho con estas IP espec\'ificas,
-confirmadas individualmente, deliberadamente no una regla de ASN o CIDR
-general (un nombre de host servido a trav\'es de Azure Front Door en el
-mismo conjunto de datos se dej\'o sin tocar, ya que el domain fronting
-a trav\'es de una CDN importante es una t\'ecnica real del adversario y
-el ASN por s\'i solo no es evidencia de inocencia ah\'i), las
+operativo hu\'esped. Cotejar cada IP observada en las detonaciones de
+las tres familias contra datos de registro de ASN encontr\'o 18 que
+resolv\'ian a Microsoft (telemetr\'ia de Azure AD/Teams) o a Akamai
+(CDN de Windows Update/Defender) y se repet\'ian byte a byte en un
+ransomware, un infostealer y un cargador -- tres muestras sin raz\'on
+plausible para compartir infraestructura. Una lista de permitidos de
+alcance estrecho con estas IP espec\'ificas, confirmadas
+individualmente, y no una regla general de ASN/CIDR (que habr\'ia
+descartado tambi\'en domain fronting leg\'itimo del adversario), las
 elimin\'o de los IOC reportados.
 
-La correcci\'on es verificable de forma independiente frente a la
-propia verdad de referencia de WhiteSnakeStealer, que documenta una
-lista C2 HTTP de 31 nodos y 29 IP \'unicas recuperada mediante
-ingenier\'ia inversa manual, con el mismo protocolo que produjo la
-Tabla~\ref{tab:validation}. Tras el filtro de ruido de sandbox, la
-salida de captura din\'amica del
-pipeline recupera exactamente esa lista: 29 de 29, cero
-omisiones. La propia firma
-\code{dead\_connect} de CAPE (confianza 100\%, ``31 unique'' intentos
-inalcanzables) corrobora de forma independiente por qu\'e cada una de
-ellas aparece como inalcanzable en la traza del sandbox: el sandboxing
-con contenci\'on prioritaria (\S\ref{sec:limitations}, punto~\ref{lim:containment})
-significa que los propios intentos de conexi\'on de la muestra a su C2
-real fallan por dise\~no, no porque las direcciones recuperadas sean
-ficticias. La contaminaci\'on no era del todo cero, sin embargo: al
-reauditar esta misma afirmaci\'on durante la migraci\'on a ATT\&CK v19
-(2026-08) se encontraron 5 IP adicionales que los dos filtros
-anteriores no capturaban, ninguna afecta a las puntuaciones a nivel de
-t\'ecnica anteriores, ya que el filtrado de IOC y la puntuaci\'on de
-t\'ecnicas son independientes. Dos, que resuelven a nombres de host
-\code{*.msedge.net} autoexplicativos en el propio ASN de Microsoft,
-se confirmaron y se a\~nadieron a la lista de permitidos del mismo modo
-que las entradas existentes. Las dos restantes, direcciones en rangos
-de Cloudflare sin nombre de host, necesitaban una comprobaci\'on m\'as
-fuerte que el ASN y la repetici\'on entre muestras por s\'i solos antes
-de sumarse a una lista que este proyecto mantiene deliberadamente
-limitada a entradas sin ambig\"uedad: cruzar la traza de llamadas a
-la API en bruto, por proceso, de CAPE, no solo la captura resumida,
-confirm\'o que ninguna de las dos IP aparece entre las 38 llamadas a
-\code{connect()} del propio proceso de la muestra (las 29 direcciones
-C2 gen\'uinas, cero coincidencias) ni entre las llamadas de ning\'un
-otro proceso monitorizado, solo en la captura de paquetes de toda la
-VM -- ning\'un proceso enganchado es responsable de ninguna de las dos
-conexiones, la misma firma de tr\'afico de sandbox frente a la que se
-confirmaron las entradas de Microsoft. Ninguna es una cadena presente
-en ninguno de los binarios ni en ninguno de los informes manuales, lo
-que descarta un destino incrustado a\'un no decodificado. Ambas se
-a\~nadieron entonces. La quinta, que resuelve a \code{ip-api.com}, no
-es contaminaci\'on en absoluto: la misma traza a nivel de proceso
-muestra al propio \code{sample.exe} llamando a
-\code{WinHttpGetProxyForUrl} contra
-\code{ip-api.com/line?fields=query,country}, una consulta p\'ublica de
+La correcci\'on es verificable de forma independiente frente a los
+propios datos de referencia de WhiteSnakeStealer, que documentan una
+lista C2 HTTP de 31 nodos y 29 IP \'unicas. Tras el filtro de ruido de
+sandbox, la salida de captura din\'amica de la pipeline recupera
+exactamente esa lista: 29 de 29, cero omisiones, corroborado de forma
+independiente por la propia firma \code{dead\_connect} de CAPE.
+
+La contaminaci\'on no era del todo cero, sin embargo: al reauditar
+esta misma afirmaci\'on durante la migraci\'on a ATT\&CK v19 (2026-08)
+se encontraron 5 IP adicionales que los dos filtros anteriores no
+capturaban -- ninguna afecta a las puntuaciones a nivel de t\'ecnica,
+ya que el filtrado de IOC y la puntuaci\'on de t\'ecnicas son
+independientes. Cuatro resultaron ser la misma clase de ruido de
+sandbox que las 18 anteriores (dos nombres de host \code{*.msedge.net}
+en el ASN de Microsoft, dos direcciones de Cloudflare sin nombre de
+host confirmadas cruzando la traza de llamadas a \code{connect()} por
+proceso, no solo la captura PCAP resumida) y se a\~nadieron a la lista
+de permitidos. La quinta, que resuelve a \code{ip-api.com}, result\'o
+ser un hallazgo gen\'uino: la propia muestra llama a
+\code{WinHttpGetProxyForUrl} contra un endpoint p\'ublico de
 geolocalizaci\'on por IP sin ninguna cadena literal correspondiente en
-el binario, la URL evidentemente construida en tiempo de ejecuci\'on.
-Se trata de un hallazgo gen\'uino, iniciado por la propia muestra, no
-una afirmaci\'on del pipeline que se acepta sin m\'as: a\~nadido a
-la verdad de referencia manual de WhiteSnakeStealer como
-\technique{T1016} (System Network Configuration Discovery, cuya propia
-p\'agina de MITRE cubre exactamente este patr\'on, una consulta en
-l\'inea para averiguar la IP p\'ublica de un sistema comprometido), con
-el mismo est\'andar de evidencia que cualquier otra entrada de ese
-informe, y del mismo modo en que la fila de \technique{T1055} anterior
-en el mismo informe ya se hab\'ia confirmado din\'amicamente en lugar
-de mediante ingenier\'ia inversa est\'atica. Mapeado a la t\'ecnica
-conservadora y literalmente respaldada por la evidencia, en lugar de
-incorporarlo al hallazgo ya existente de ``12 indicadores de VM''
-anti-sandbox, ya que no se observ\'o de forma independiente ninguna
-bifurcaci\'on condicional sobre el pa\'is devuelto que justificara esa
-afirmaci\'on m\'as fuerte.
+el binario, la URL construida en tiempo de ejecuci\'on. Se a\~nadi\'o a
+los datos de referencia manuales de WhiteSnakeStealer como
+\technique{T1016} (System Network Configuration Discovery), con el
+mismo est\'andar de evidencia que cualquier otra entrada de ese
+informe.
 
 La lecci\'on se generaliza igual que en los dem\'as casos: cada
 exclusi\'on es una entrada espec\'ifica, justificada individualmente y
 auditable, registrada con su propia raz\'on, no un filtro de
-reputaci\'on general, ya que la raz\'on de ser de este pipeline frente
+reputaci\'on general, ya que la raz\'on de ser de esta pipeline frente
 a un agregador de reputaci\'on (\S\ref{sec:related-work}) es
 precisamente que cada decisi\'on permanece trazable a una causa
 concreta en lugar de simplemente afirmarse.
 
-La generalidad de la propia correcci\'on se comprob\'o, no se asumi\'o.
-Ejecutar la misma disciplina frente a una cuarta familia
-estructuralmente distinta, un RAT/backdoor .NET envuelto en un crypter
-nativo, a\~nadida espec\'ificamente para comprobar si el pipeline
-generaliza m\'as all\'a de las tres familias validadas, sac\'o a la luz
-dos instancias m\'as del mismo fallo en los propios componentes
-reenviados de esa familia: un valor recuperado por XOR con la forma
-exacta de una tupla de versi\'on de ensamblado .NET, y una segunda
-tabla de relleno de bytes repetidos que decodificaba a una cascada de
-cuartetos punteados casi id\'entica bajo una clave distinta. El mismo
-ejercicio motiv\'o un barrido del conjunto de datos ya confirmado que
-encontr\'o una clase no vista hasta entonces en absoluto: OID de tipo
-de atributo y de extensi\'on de certificado X.509 (\code{2.5.4.*},
-\code{2.5.29.*}) en dos de los propios componentes reenviados de
-RoningLoader, confundidos con IP por el mismo extractor basado en
-expresiones regulares. Cada uno se corrigi\'o de la misma forma que el
-primero: una regla general y justificada por evidencia en lugar de una
-excepci\'on codificada a mano, verificada frente a cada IP gen\'uina
-conocida en las dos familias validadas con IOC num\'ericos antes de
-confiar en ella.
+La generalidad de la propia correcci\'on se comprob\'o, no se
+asumi\'o: ejecutar la misma disciplina frente a una cuarta familia
+estructuralmente distinta (un RAT/backdoor .NET envuelto en un crypter
+nativo, a\~nadida espec\'ificamente para comprobar si la pipeline
+generaliza m\'as all\'a de las tres familias validadas) sac\'o a la
+luz dos instancias m\'as del mismo fallo en sus propios componentes
+reenviados, m\'as una clase nueva no vista hasta entonces (OID de
+certificado X.509 confundidos con IP por el mismo extractor basado en
+expresiones regulares). Cada uno se corrigi\'o de la misma forma: una
+regla general y justificada por evidencia, verificada frente a cada IP
+gen\'uina conocida en las dos familias validadas con IOC num\'ericos.

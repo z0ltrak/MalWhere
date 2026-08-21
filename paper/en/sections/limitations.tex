@@ -14,15 +14,17 @@ either already mitigated concretely or scoped as a precise next step
 
 \item \label{lim:n3} \textbf{Small validation set (N=3).} Three families is too few
   for a statistically powered claim, and is the point most deserving of
-  scrutiny in this work. Three concrete mitigations: ground truth is
+  scrutiny in this work. The size is not just a time constraint: this
+  thesis's advisors explicitly recommended capping validation at three
+  families to keep the project within a manageable scope for a
+  master's thesis, prioritizing the depth of each validation over
+  spreading the effort across more samples. Three mitigations partly
+  compensate for that size: ground truth is
   function-level, Ghidra-verified manual reverse engineering per sample,
   a materially higher bar than a larger but shallower set would carry;
-  a full audit of \code{static/scripts/} specifically for
+  a full audit of \code{static/scripts/} for
   sample-specific hardcoding disguised as generic logic found and
-  removed four instances (a literal installer-helper filename, a
-  hardcoded encrypted-payload extension, product strings baked into
-  filesystem-detection logic, and a ``generic'' decoder that was
-  actually one sample's exact XOR key), each replaced with a
+  removed four instances, each replaced with a
   class-level equivalent and re-verified not to regress any validated
   sample; and RoningLoader's resubmission loop (\S\ref{sec:resubmission})
   independently scores 26 additional components against the same
@@ -30,17 +32,19 @@ either already mitigated concretely or scoped as a precise next step
   statistical trick. Extending to further families remains the
   highest-value follow-up (\S\ref{sec:future-work}).
 
-\item \label{lim:attck-version} \textbf{ATT\&CK version is pinned, and
-  CAPE's own signature tags are not.} All technique IDs in this pipeline, ground truth, and
-  Navigator layers target MITRE ATT\&CK v19.2. CAPE's community
-  signatures are frozen to whichever version they were last written
-  against, so signature-sourced tags are remapped to their current
-  identity at curation time (\S\ref{sec:dynamic}) rather than trusted
-  verbatim. Migrating ground truth from the previously-unpinned v14
-  identities to v19 is what surfaced the
+\item \label{lim:attck-version} \textbf{Pinned ATT\&CK version requires
+  periodic manual migration.} All technique IDs in this pipeline,
+  ground truth, and Navigator layers target MITRE ATT\&CK v19.2.
+  CAPE's community signatures, by contrast, are frozen to whichever
+  version they were last written against and are remapped to their
+  current identity only at curation time (\S\ref{sec:dynamic}), not
+  automatically at the source. This thesis migrated its own ground
+  truth from v14 to v19 during development, non-trivial manual work
+  that itself surfaced the
   \technique{T1070}/\technique{T1685.005} confidence-calibration bug
-  detailed in \S\ref{sec:fp-audit}, which a version left unpinned would
-  have masked indefinitely.
+  detailed in \S\ref{sec:fp-audit}. Every future MITRE ATT\&CK revision
+  will require repeating that same effort, since nothing in the current
+  design automates it.
 
 \item \label{lim:gt-table} \textbf{Ground-truth extraction depends on
   table completeness.}

@@ -16,42 +16,43 @@ como una advertencia abierta.
 
 \item \label{lim:n3} \textbf{Conjunto de validaci\'on peque\~no (N=3).} Tres familias
   son pocas para una afirmaci\'on con potencia estad\'istica, y es el
-  punto que m\'as merece escrutinio en este trabajo. Tres mitigaciones
-  concretas: la verdad de referencia es ingenier\'ia inversa manual a
-  nivel de funci\'on, verificada con Ghidra, para cada muestra, un
-  list\'on considerablemente m\'as alto que el que tendr\'ia un conjunto
-  m\'as grande pero superficial; una auditor\'ia completa de
-  \code{static/scripts/} centrada espec\'ificamente en hardcoding
-  espec\'ifico de muestra disfrazado de l\'ogica gen\'erica encontr\'o
-  y elimin\'o cuatro instancias (un nombre de fichero literal del
-  auxiliar del instalador, una extensi\'on de carga cifrada codificada
-  de forma fija, cadenas de producto incrustadas en la l\'ogica de
-  detecci\'on de sistema de ficheros, y un decodificador ``gen\'erico''
-  que en realidad era la clave XOR exacta de una muestra), cada una
-  sustituida por un equivalente a nivel de clase y reverificada para no
-  provocar regresi\'on en ninguna muestra validada; y el bucle de
-  reenv\'io de RoningLoader (\S\ref{sec:resubmission}) punt\'ua de
-  forma independiente 26 componentes adicionales frente a la misma
-  verdad de referencia, superficie de evaluaci\'on real adicional y no
-  un truco estad\'istico. Ampliar a m\'as familias sigue siendo el
-  siguiente paso de mayor valor (\S\ref{sec:future-work}).
+  punto que m\'as merece escrutinio en este trabajo. El tama\~no no es
+  solo una limitaci\'on de tiempo: los directores de esta tesis
+  recomendaron expl\'icitamente acotarlo a tres familias para mantener
+  el proyecto dentro de un alcance manejable como TFM, priorizando la
+  profundidad de cada validaci\'on frente a dispersar el esfuerzo entre
+  m\'as muestras. Tres mitigaciones compensan parcialmente ese tama\~no:
+  los datos de referencia son ingenier\'ia inversa manual a nivel de
+  funci\'on, verificada con Ghidra, para cada muestra, un list\'on
+  considerablemente m\'as alto que el que tendr\'ia un conjunto m\'as
+  grande pero superficial; una auditor\'ia completa de
+  \code{static/scripts/} centrada en hardcoding espec\'ifico de muestra
+  disfrazado de l\'ogica gen\'erica encontr\'o y elimin\'o cuatro
+  instancias, cada una sustituida por un equivalente a nivel de clase y
+  reverificada para no provocar regresi\'on en ninguna muestra
+  validada; y el bucle de reenv\'io de RoningLoader
+  (\S\ref{sec:resubmission}) punt\'ua de forma independiente 26
+  componentes adicionales frente a los mismos datos de referencia,
+  superficie de evaluaci\'on real adicional y no un truco estad\'istico.
+  Ampliar a m\'as familias sigue siendo el siguiente paso de mayor valor
+  (\S\ref{sec:future-work}).
 
-\item \label{lim:attck-version} \textbf{La versi\'on de ATT\&CK
-  est\'a fijada, y las propias
-  etiquetas de firma de CAPE no lo est\'an.} Todos los identificadores
-  de t\'ecnica en este pipeline, la verdad de referencia y las capas
-  de Navigator apuntan a MITRE ATT\&CK v19.2. Las firmas de la
-  comunidad de CAPE quedan fijadas a la versi\'on con la que se
-  escribieron por \'ultima vez, as\'i que las etiquetas provenientes de
-  firmas se reasignan a su identidad actual en el momento de la
-  curaci\'on (\S\ref{sec:dynamic}) en lugar de confiarse tal cual.
-  Migrar la verdad de referencia desde las identidades v14, antes sin
-  fijar, a v19 es lo que sac\'o a la luz el fallo de calibraci\'on de
+\item \label{lim:attck-version} \textbf{La versi\'on de ATT\&CK fijada
+  exige migraci\'on manual peri\'odica.} Todos los identificadores de
+  t\'ecnica en esta pipeline, los datos de referencia y las capas de
+  Navigator apuntan a MITRE ATT\&CK v19.2; las firmas de la comunidad
+  de CAPE, en cambio, quedan fijadas a la versi\'on con la que se
+  escribieron por \'ultima vez y se reasignan a su identidad actual
+  solo en el momento de la curaci\'on (\S\ref{sec:dynamic}), no de
+  forma autom\'atica en origen. Esta tesis migr\'o sus propios datos de
+  referencia de v14 a v19 durante su desarrollo, un trabajo manual no
+  trivial que a su vez sac\'o a la luz el fallo de calibraci\'on de
   confianza de \technique{T1070}/\technique{T1685.005} detallado en
-  \S\ref{sec:fp-audit}, que una versi\'on sin fijar habr\'ia
-  enmascarado indefinidamente.
+  \S\ref{sec:fp-audit}. Cada futura revisi\'on de MITRE ATT\&CK exigir\'a
+  repetir ese mismo esfuerzo, ya que nada en el dise\~no actual lo
+  automatiza.
 
-\item \label{lim:gt-table} \textbf{La extracci\'on de verdad de
+\item \label{lim:gt-table} \textbf{La extracci\'on de datos de
   referencia depende de la completitud de la tabla.} Un extractor basado en tablas markdown solo
   es tan completo como la propia tabla, incluso cuando la narrativa de
   un informe dice m\'as. \S\ref{sec:case-wsnake} es una instancia

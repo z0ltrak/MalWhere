@@ -9,24 +9,24 @@
   familias. Ya se realiz\'o una comprobaci\'on m\'as ligera e informal
   frente a una 4\textsuperscript{a} familia sin afinar (AsyncRAT): una
   detonaci\'on real en CAPE m\'as el reenv\'io autom\'atico de sus
-  cargas soltadas confirm\'o que el pipeline produce un resultado
-  sensato y sin ca\'idas de principio a fin. Esto carece de verdad de
-  referencia manual y no se trata como evidencia de validaci\'on, solo
-  como una comprobaci\'on interna de cordura de que el pipeline
+  cargas soltadas confirm\'o que la pipeline produce un resultado
+  sensato y sin ca\'idas de principio a fin. Esto carece de datos de
+  referencia manuales y no se trata como evidencia de validaci\'on, solo
+  como una comprobaci\'on interna de cordura de que la pipeline
   generaliza en absoluto (documentada en \code{README.md}); no
-  sustituye a la extensi\'on completa con verdad de referencia que
+  sustituye a la extensi\'on completa con datos de referencia que
   describe este punto.
 
 \item \textbf{An\'alisis din\'amico Linux/ELF para familias de botnets
   IoT.} Investigado de forma concreta y no descartado por suposici\'on,
   y aplazado deliberadamente por tres razones espec\'ificas, cada una
-  verificada de forma independiente: el analizador ELF actual del
+  verificada de forma independiente: el analizador ELF actual de la
   pipeline extrae solo metadatos estructurales b\'asicos, sin ninguna
   regla de detecci\'on ATT\&CK conectada, a diferencia de la v\'ia PE
   con sus aproximadamente 85 t\'ecnicas mapeadas; la propia
   documentaci\'on de CAPE describe su soporte de sandboxing Linux/ELF
   como una capacidad en desarrollo activo, no de nivel producci\'on; y
-  todav\'ia no existe ninguna muestra de familia ELF con verdad de
+  todav\'ia no existe ninguna muestra de familia ELF con datos de
   referencia frente a la que verificar cualquier nueva regla de
   detecci\'on espec\'ifica de Linux, sin lo cual construir reglas
   repetir\'ia exactamente el riesgo de sobreajuste que ya se\~nala
@@ -39,28 +39,12 @@
   real de an\'alisis din\'amico, no un conjunto de reglas reajustado
   sobre el an\'alisis est\'atico por s\'i solo.
 
-\item \textbf{Ampliar la cobertura de Initial Access y Lateral
-  Movement donde encaje realmente.} La mayor parte de ambas
-  t\'acticas encaja mal estructuralmente con el an\'alisis de
-  detonaci\'on de un solo binario (\S\ref{sec:coverage}): Lateral
-  Movement en concreto, para las familias de ransomware a las que
-  apunta este pipeline, lo suele ejecutar el operador humano con
-  herramientas gen\'ericas (RDP, PsExec, Cobalt Strike) en lugar de
-  estar codificada en la capacidad propia del binario de ransomware,
-  de modo que la mayor parte de la t\'actica queda fuera de alcance
-  sin importar la escala del sandbox. Sin embargo, queda un peque\~no
-  n\'umero de subt\'ecnicas observables desde los
-  propios artefactos de una muestra sin cubrir:
-  \technique{T1091} (Replication Through Removable Media) y
-  \technique{T1570} (Lateral Tool Transfer) son las dos candidatas
-  concretas identificadas.
-
 \item \textbf{Un estudio de calibraci\'on de confianza con potencia
   estad\'istica.} El hallazgo de \S\ref{sec:confidence-calibration} de
   que 14 de las 15 discrepancias auditadas provienen de hallazgos de
   una sola fuente, con la \'unica excepci\'on entre fuentes
   (\technique{T1497} de RoningLoader) atribuible a una cuesti\'on de
-  completitud de la verdad de referencia y no a un nivel de confianza
+  completitud de los datos de referencia y no a un nivel de confianza
   mal calibrado, es una se\~nal direccional de tres muestras, no una
   afirmaci\'on con potencia estad\'istica, y se beneficiar\'ia de un
   conjunto de validaci\'on m\'as grande y dise\~nado para ello.

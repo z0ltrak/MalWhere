@@ -3,25 +3,25 @@
 
 \subsection{Metodolog\'ia}
 
-La verdad de referencia de cada una de las tres familias se produjo
-mediante ingenier\'ia inversa manual, documentada como un informe de
-analista completo y nunca derivada del propio resultado del
-pipeline. Esta independencia es una salvaguarda metodol\'ogica
+Los datos de referencia de cada una de las tres familias se
+produjeron mediante ingenier\'ia inversa manual, documentados como un
+informe de analista completo y nunca derivados del propio resultado
+de la pipeline. Esta independencia es una salvaguarda metodol\'ogica
 deliberada, no un detalle incidental: ambos motores dependen de
 herramientas de terceros (YARA, FLOSS, firmas de la comunidad de CAPE)
-que pueden por s\'i mismas mapear mal una t\'ecnica, de modo que la
-verdad de referencia tuvo que establecerse sin consultar los propios
-artefactos extra\'idos por el pipeline, ya que de lo contrario validar
-el pipeline frente a ella ser\'ia circular. En concreto, el mismo
+que pueden por s\'i mismas mapear mal una t\'ecnica, de modo que los
+datos de referencia tuvieron que establecerse sin consultar los propios
+artefactos extra\'idos por la pipeline, ya que de lo contrario validar
+la pipeline frente a ella ser\'ia circular. En concreto, el mismo
 protocolo se aplic\'o a las tres familias, en este orden, y solo el
-\'ultimo paso llega a tocar el resultado propio del pipeline:
+\'ultimo paso llega a tocar el resultado propio de la pipeline:
 
 \begin{enumerate}
   \item \textbf{Desensamblado est\'atico independiente.} Cada muestra
     se carg\'o en Ghidra y se descompil\'o funci\'on por funci\'on, cada
     funci\'on de inter\'es renombrada para reflejar su prop\'osito
     establecido, sin consultar la propia extracci\'on de importaciones
-    o cadenas del pipeline.
+    o cadenas de la pipeline.
   \item \textbf{Observaci\'on din\'amica independiente.} La detonaci\'on
     en sandbox se observ\'o directamente (secuencia de llamadas a API,
     ficheros soltados, actividad de red), registrando el comportamiento
@@ -32,19 +32,19 @@ protocolo se aplic\'o a las tres familias, en este orden, y solo el
     claves.} Cuando una muestra cifraba u ofuscaba su configuraci\'on,
     la clave o el algoritmo se recuper\'o manualmente, completamente
     separado de los propios m\'odulos automatizados de fuerza bruta y
-    recuperaci\'on XOR del pipeline.
-  \item \textbf{Solo entonces, la comparaci\'on.} Se ejecut\'o el
+    recuperaci\'on XOR de la pipeline.
+  \item \textbf{Solo entonces, la comparaci\'on.} Se ejecut\'o la
     pipeline y se compar\'o su \code{attck\_mapping.json} con la tabla
     de T\'ecnicas ATT\&CK del informe terminado y producido de forma
     independiente (la auditor\'ia de falsos positivos,
     \S\ref{sec:fp-audit}). Por construcci\'on, cada discrepancia que
     encuentra es un desacuerdo entre dos artefactos producidos de forma
-    independiente, no el pipeline comprobado frente a sus propias
+    independiente, no la pipeline comprobada frente a sus propias
     suposiciones.
 \end{enumerate}
 
 La Tabla~\ref{tab:validation} da un ejemplo concreto por familia de
-evidencia que este protocolo recuper\'o y que el pipeline automatizado
+evidencia que este protocolo recuper\'o y que la pipeline automatizada
 nunca toca, que es lo que convierte cada informe en una comprobaci\'on
 independiente y no en una reformulaci\'on de lo que la herramienta ya
 asume.
@@ -54,7 +54,7 @@ asume.
 \small
 \begin{tabular}{@{}lp{9.5cm}@{}}
 \toprule
-\textbf{Muestra} & \textbf{Recuperado de forma independiente, el pipeline no lo toca} \\
+\textbf{Muestra} & \textbf{Recuperado de forma independiente, la pipeline no lo toca} \\
 \midrule
 Akira & Tabla ATT\&CK de 17 filas construida a partir de descompilaci\'on de Ghidra a nivel de funci\'on de los mecanismos internos de threading, logging y cifrado de la muestra. \\
 \rowline
@@ -64,22 +64,22 @@ WhiteSnakeStealer & Clave RC4 recuperada mediante an\'alisis de texto plano cono
 \bottomrule
 \end{tabular}
 \caption{Un ejemplo concreto por familia de evidencia recuperada de
-forma independiente para construir la verdad de referencia, aplicando
+forma independiente para construir los datos de referencia, aplicando
 el protocolo de cuatro pasos anterior.}
 \label{tab:validation}
 \end{table}
 
 La tabla de T\'ecnicas ATT\&CK de cada informe se analiza despu\'es para
-producir un fichero de verdad de referencia estructurado
+producir un fichero de datos de referencia estructurado
 (\code{extract\_ground\_truth.py}), que el arn\'es de evaluaci\'on
-compara con el propio \code{attck\_mapping.json} del pipeline.
+compara con el propio \code{attck\_mapping.json} de la pipeline.
 
 Se reportan dos modos de emparejamiento. El emparejamiento
 \emph{estricto} exige una coincidencia exacta de identificador de
 t\'ecnica. El emparejamiento a \emph{nivel de familia} trata una
 t\'ecnica padre y cualquiera de sus subt\'ecnicas como equivalentes (un
-hallazgo del pipeline de \technique{T1547.001} cuenta frente a una
-entrada de verdad de referencia de \technique{T1547} y viceversa), bajo
+hallazgo de la pipeline de \technique{T1547.001} cuenta frente a una
+entrada de datos de referencia de \technique{T1547} y viceversa), bajo
 la premisa de que un analista de seguridad que decide qu\'e hacer ante
 un mecanismo de persistencia se preocupa primero por \emph{qu\'e}
 familia de t\'actica y t\'ecnica est\'a presente, siendo la
@@ -115,10 +115,10 @@ validada.}
 
 Las dos filas de RoningLoader aislan exactamente lo que aporta el
 bucle de reenv\'io (\S\ref{sec:resubmission}): puntuar \'unicamente el
-binario cargador frente a una verdad de referencia escrita para
+binario cargador frente a unos datos de referencia escritos para
 \emph{toda} su cadena de infecci\'on subestima la exhaustividad por
 construcci\'on, ya que las t\'ecnicas propias del driver rootkit y del
-cliente RAT son hallazgos reales que la verdad de referencia espera
+cliente RAT son hallazgos reales que los datos de referencia esperan
 pero que el binario padre por s\'i solo no puede presentar. La
 exhaustividad sube 16 puntos en cuanto se analizan de forma
 independiente los tres componentes soltados y se cuentan sus
@@ -127,7 +127,7 @@ a\~nadida, una compensaci\'on que la mejora del F1 agregado
 (0.76~$\rightarrow$~0.84) demuestra que mereci\'o la pena.
 
 La precisi\'on es alta en las cuatro filas (0.84--1.00), es decir,
-el peque\~no n\'umero de hallazgos que reporta el pipeline rara vez son
+el peque\~no n\'umero de hallazgos que reporta la pipeline rara vez son
 err\'oneos. Esta es la consecuencia directa e intencionada de la
 filosof\'ia de combinaci\'on coherente de \S\ref{sec:static-rules} y la
 disciplina de curaci\'on de firmas de \S\ref{sec:dynamic}: ambas
@@ -138,11 +138,11 @@ positivos a continuaci\'on existe para comprobar, no para asumir.
 \subsection{La auditor\'ia de falsos positivos}
 \label{sec:fp-audit}
 
-La precisi\'on por s\'i sola no distingue ``el pipeline est\'a bien
-calibrado'' de ``la verdad de referencia resulta ser permisiva''. A
+La precisi\'on por s\'i sola no distingue ``la pipeline est\'a bien
+calibrada'' de ``los datos de referencia resultan ser permisivos''. A
 diferencia de un agregador de reputaci\'on que muestra la etiqueta de
 cada motor o sandbox tal cual, cada discrepancia entre el resultado
-del pipeline y la verdad de referencia encontrada en las tres muestras,
+de la pipeline y los datos de referencia encontrados en las tres muestras,
 15 en total (5 Akira, 4 WhiteSnakeStealer, 6 RoningLoader), se
 rastre\'o individualmente hasta una causa concreta y verificable en
 lugar de aceptarse o descartarse solo por la cifra agregada. Cada una
@@ -154,7 +154,7 @@ aparecer en su propia tabla ATT\&CK.
 El resultado de esta auditor\'ia, por causa:
 
 \begin{itemize}
-  \item \textbf{Diez errores gen\'uinos del pipeline}, cada uno
+  \item \textbf{Diez errores gen\'uinos de la pipeline}, cada uno
     corregido en su causa ra\'iz: tres mapeos de regla est\'atica que no
     correspond\'ian con la definici\'on real de MITRE para la t\'ecnica
     afirmada (p.\ ej.\ \code{GetSystemInfo} mapeada a Descubrimiento de
@@ -174,9 +174,9 @@ El resultado de esta auditor\'ia, por causa:
     \code{CreateFileW}/\code{CreateFile}, ya marcada como ``gen\'erica''
     en la tabla de mapeo, segu\'ia cont\'andose ciegamente como
     corroboraci\'on junto a \code{DeleteFileW}/\code{DeleteFile} y se
-    promov\'ia a confianza \emph{alta}. Migrar la verdad de referencia a
+    promov\'ia a confianza \emph{alta}. Migrar los datos de referencia a
     ATT\&CK v19 (\S\ref{sec:limitations}) es lo que lo sac\'o a la luz:
-    la antigua entrada de verdad de referencia \technique{T1070.001}
+    la antigua entrada de datos de referencia \technique{T1070.001}
     hab\'ia estado emparej\'andose con este hallazgo por pura
     coincidencia de prefijo de identificador bajo el emparejamiento a
     nivel de familia, no porque la evidencia tratara gen\'uinamente
@@ -195,29 +195,29 @@ El resultado de esta auditor\'ia, por causa:
     ilustraci\'on directa de la relaci\'on entre confianza y precisi\'on
     examinada en \S\ref{sec:confidence-calibration}, no un
     contraejemplo de ella.
-  \item \textbf{Un hueco de extracci\'on de verdad de referencia}, no un
-    error del pipeline: el propio informe manual de
+  \item \textbf{Un hueco de extracci\'on de datos de referencia}, no un
+    error de la pipeline: el propio informe manual de
     WhiteSnakeStealer discute la carga reflexiva de DLL en su texto
     narrativo, pero la fila correspondiente de \technique{T1620} faltaba
     en la tabla ATT\&CK del propio informe, de modo que la extracci\'on
-    autom\'atica de verdad de referencia nunca la captur\'o. El hallazgo
-    del pipeline era correcto; se corrigi\'o el documento fuente en
-    lugar del pipeline.
+    autom\'atica de datos de referencia nunca la captur\'o. El hallazgo
+    de la pipeline era correcto; se corrigi\'o el documento fuente en
+    lugar de la pipeline.
   \item \textbf{Dos dejados abiertos deliberadamente}, en RoningLoader
-    (\technique{T1027}, \technique{T1497}): la evidencia de apoyo del
+    (\technique{T1027}, \technique{T1497}): la evidencia de apoyo de la
     pipeline para ambos es real, pero no existe confirmaci\'on expl\'icita
     del analista en ning\'un lugar del texto del informe, a diferencia
-    del caso de \technique{T1620} anterior. Editar la verdad de
-    referencia solo con la evidencia propia del pipeline, sin
+    del caso de \technique{T1620} anterior. Editar los datos de
+    referencia solo con la evidencia propia de la pipeline, sin
     confirmaci\'on textual independiente, ser\'ia circular. Ambos
     permanecen como hallazgos abiertos en lugar de resolverse en un
     sentido u otro.
 \end{itemize}
 
-Esta asimetr\'ia, un hueco de verdad de referencia corregido y dos
+Esta asimetr\'ia, un hueco de datos de referencia corregido y dos
 discrepancias de aspecto similar dejadas abiertas, es deliberada: el
 factor distintivo es si existe confirmaci\'on independiente en el
-documento fuente, no si la evidencia propia del pipeline parece
+documento fuente, no si la evidencia propia de la pipeline parece
 convincente. El resultado pr\'actico de ejecutar esta auditor\'ia se
 aprecia en la columna de corregidos: 12 de las 15 discrepancias se
 tradujeron en mejoras concretas y verificables al conjunto de reglas
@@ -246,7 +246,7 @@ existe confirmaci\'on textual independiente en el informe manual, no
 porque la evidencia de ninguna de las dos fuentes sea d\'ebil. Le\'ido
 as\'i, esto no contradice el argumento de calibraci\'on: el modelo
 reconoci\'o correctamente una evidencia fuerte y corroborada; lo que es
-gen\'uinamente incierto es si la verdad de referencia est\'a completa,
+gen\'uinamente incierto es si los datos de referencia est\'an completos,
 la misma asimetr\'ia que establece el caso de \technique{T1620} en otro
 punto de esta auditor\'ia, no si el nivel de confianza asignado estaba
 justificado. Esto es consistente con que el modelo de
