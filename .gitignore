@@ -75,6 +75,10 @@ static/reports/*_retest/
 static/reports/*_retest[0-9]/
 static/reports/diamondage_exe_retest/
 
+# Thesis paper -- kept local-only pre-publication (source of truth is
+# Overleaf); revisit once the project/thesis is published.
+paper/
+
 # OS
 .DS_Store
 Thumbs.db
