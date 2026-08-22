@@ -81,15 +81,17 @@ This project uses **KVM** (Kernel-based Virtual Machine) for hardware-accelerate
 ### Build Steps
 
 ```bash
-# 1. Clone the cape-docker build repository (outside the MalWhere project)
+# 1. Clone our fixed fork of the cape-docker build repository (outside the MalWhere project)
 cd ~
-git clone https://github.com/celyrin/cape-docker.git
-cd cape-docker
+git clone git@github.com:z0ltrak/kvm-cape-docker.git
+cd kvm-cape-docker
 
 # 2. Switch to the KVM branch (CRITICAL for our setup!)
 git checkout kvm
 
 # 3. Build the image (takes 15-30 minutes on first run)
+# `make all` inits the CAPEv2 submodule for you -- see Troubleshooting below
+# if you're on the upstream repo instead and hit "CAPEv2/installer not found".
 make all
 
 # 4. Verify the image was created
@@ -97,17 +99,20 @@ docker images | grep cape
 # Expected: cape    kvm    <id>    <size ~5-6GB>
 ```
 
-> **Attribution:** This CAPE Docker setup is based on the excellent work by [celyrin](https://github.com/celyrin) in the [cape-docker](https://github.com/celyrin/cape-docker) repository. We use the `kvm` branch specifically for KVM compatibility with our architecture.
+> **Attribution:** This CAPE Docker setup is based on the excellent work by [celyrin](https://github.com/celyrin) in the [cape-docker](https://github.com/celyrin/cape-docker) repository. We use our own fork, [z0ltrak/kvm-cape-docker](https://github.com/z0ltrak/kvm-cape-docker) (`kvm` branch), which bakes in fixes for two build failures hit bringing this up on a second machine -- see Troubleshooting below for what they were, in case you're working from upstream instead.
 
 ### Troubleshooting the Build
 
-If you encounter build errors:
+Our fork above already fixes both of these. They're documented here in case
+you're building from upstream `celyrin/cape-docker` instead:
 
 **Error: "CAPEv2/installer not found"**
+
+CAPEv2 is a git submodule; a plain `git clone` leaves it empty. Either clone
+with `--recurse-submodules`, or:
 ```bash
-# Clone CAPEv2 source into the directory
 cd ~/cape-docker
-git clone https://github.com/kevoreilly/CAPEv2.git
+git submodule update --init --recursive
 make all
 ```
 
@@ -117,7 +122,7 @@ make all
 cd ~/cape-docker
 nano Dockerfile
 # Add this line before RUN poetry install:
-# RUN pip3 install poetry
+# RUN sudo pip3 install poetry
 # Then rebuild: make all
 ```
 
@@ -542,29 +547,14 @@ docker exec malwhere-static find / -name "tlsh*.so" 2>/dev/null
 ### Containers not stopping with `docker compose stop`
 Always include the same `--profile` flags used at startup. Without them, Docker Compose cannot resolve which containers belong to the current configuration.
 
-### CAPE build fails with "poetry: not found"
-The KVM branch of `celyrin/cape-docker` may have a missing Poetry installation step. Fix it by:
-```bash
-cd ~/cape-docker
-nano Dockerfile
-# Add this line before the "RUN poetry install" line:
-# RUN pip3 install poetry
-# Then rebuild: make all
-```
-
-### CAPE build fails with "CAPEv2/installer not found"
-The build expects the CAPEv2 source to be present:
-```bash
-cd ~/cape-docker
-git clone https://github.com/kevoreilly/CAPEv2.git
-make all
-```
+### CAPE build fails with "poetry: not found" or "CAPEv2/installer not found"
+Both fixed in our fork ([z0ltrak/kvm-cape-docker](https://github.com/z0ltrak/kvm-cape-docker), `kvm` branch) -- see [Building the CAPE Image](#building-the-cape-image-required-first-step) above. If you're building from upstream `celyrin/cape-docker` instead, see the Troubleshooting subsection there for the manual fixes.
 
 ---
 
 ## Acknowledgements
 
-This project uses the [cape-docker](https://github.com/celyrin/cape-docker) repository by [celyrin](https://github.com/celyrin) for CAPE sandbox containerization, with modifications to use the `kvm` branch for KVM compatibility. We are grateful for their work in making CAPE deployment easier.
+This project uses the [cape-docker](https://github.com/celyrin/cape-docker) repository by [celyrin](https://github.com/celyrin) for CAPE sandbox containerization. We build from our own fork, [z0ltrak/kvm-cape-docker](https://github.com/z0ltrak/kvm-cape-docker) (`kvm` branch), which fixes two build failures we hit on a second machine (an uninitialized CAPEv2 submodule, and a flaky poetry install) on top of celyrin's KVM-compatible setup. We are grateful for their work in making CAPE deployment easier.
 
 ---
 

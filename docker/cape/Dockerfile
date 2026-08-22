@@ -1,7 +1,9 @@
 # =============================================================================
 # malwhere — cape image overlay
 #
-# Builds FROM celyrin/cape-docker's kvm image and bakes in seven fixes
+# Builds FROM cape:kvm (built from our fork, github.com/z0ltrak/kvm-cape-docker,
+# kvm branch — see docker-compose.yml's cape service comment) and bakes in
+# seven more fixes
 # discovered during initial bring-up, so a fresh `docker compose up` doesn't
 # require re-discovering any of them by hand:
 #

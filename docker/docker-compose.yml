@@ -304,8 +304,10 @@ services:
   #
   # PREREQUISITE: ./cape/Dockerfile builds FROM cape:kvm, which must
   # already exist as a local image — it's not published to a registry.
-  # Build it first from celyrin/cape-docker's kvm branch (`make all` in
-  # that repo), THEN `docker compose build cape` here. Our Dockerfile
+  # Build it first from our fork's kvm branch, github.com/z0ltrak/kvm-cape-docker
+  # (`make all` in that repo — fixes an uninitialized CAPEv2 submodule and a
+  # flaky poetry install upstream celyrin/cape-docker hits on a fresh clone),
+  # THEN `docker compose build cape` here. Our Dockerfile
   # layers two fixes on top (see its own header comment) discovered
   # during initial bring-up: a MongoDB kernel-compatibility workaround and
   # a missing libvirt-python install. Building our own layer instead of
