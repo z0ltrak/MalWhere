@@ -18,5 +18,12 @@ done
 HOST_GID=$(stat -c '%g' "$SOCK")
 CONTAINER_GID=$(getent group libvirt | cut -d: -f3)
 if [ "$HOST_GID" != "$CONTAINER_GID" ]; then
-    groupmod -g "$HOST_GID" libvirt
+    # -o: allow a non-unique GID. The host's GID can land on whatever
+    # number some OTHER container-baked group already happens to hold
+    # (both sides assign system GIDs sequentially at package-install
+    # time, so collisions aren't a coincidence to rule out, they're
+    # expected sooner or later). Harmless here: AF_UNIX permission
+    # checks are purely numeric, so two group names sharing a GID
+    # doesn't change what socket access "libvirt" actually grants.
+    groupmod -o -g "$HOST_GID" libvirt
 fi
