@@ -19,7 +19,10 @@
 #      units actually invoke (confirmed via
 #      `poetry run python -c "import libvirt"` -> ModuleNotFoundError),
 #      so cape-processor.service's KVM/QEMU machinery check fails on every
-#      startup.
+#      startup. Now fixed at the source: the fork's own Dockerfile
+#      (z0ltrak/kvm-cape-docker, commit f1ee3cc) installs libvirt-python
+#      into this same venv as part of building cape:kvm. What's left here
+#      is just a build-time verification, not a reinstall.
 #
 #   3. cape.service, cape-web.service, and cape-processor.service don't
 #      inherit the container's env vars (LIBVIRT_GATEWAY etc.) unless told
@@ -88,15 +91,13 @@ FROM cape:kvm
 COPY mongodb-override.conf /etc/systemd/system/mongodb.service.d/override.conf
 
 # --- Fix 2: libvirt-python missing in the poetry venv -----------------------
-# Build deps for compiling the libvirt-python extension against the image's
-# already-installed libvirt. This image is KVM-configured already, so
-# libvirt-dev may already be present — installing again is a harmless no-op
-# either way, not worth a conditional check.
+# cape:kvm (built from the fork, see header above) already installs
+# libvirt-python into this exact venv at base-image build time — re-running
+# that install here was redundant duplicate work, and on a flaky network
+# it's one more thing that can fail for zero benefit. The verification
+# further down (after the USER cape / WORKDIR switch) is what's left of
+# this fix.
 USER root
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends libvirt-dev pkg-config gcc python3-dev && \
-    rm -rf /var/lib/apt/lists/*
-
 
 # --- Fix 3: none of CAPE's systemd units inherit container env vars needed
 # for %(ENV:...)s interpolation in CAPE's conf files (LIBVIRT_GATEWAY etc.)
@@ -160,7 +161,6 @@ RUN for svc in cape cape-web cape-processor; do \
 # cape-processor.service actually invoke.
 USER cape
 WORKDIR /opt/CAPEv2
-RUN /etc/poetry/bin/poetry run pip install libvirt-python
 
 # Fail the BUILD, loudly, if this doesn't actually work — rather than
 # produce an image that looks fine and only reveals the problem at runtime

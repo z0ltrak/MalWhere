@@ -26,12 +26,16 @@
 Before anything else, ensure your system meets these requirements:
 
 - **Ubuntu 24.04.4 LTS** (or compatible Linux distribution)
-- **Docker Engine 24.0+** and **Docker Compose v2**
+- **Docker Engine 24.0+** and **Docker Compose v2** (`docker.io` and
+  `docker-compose-plugin` from apt satisfy both)
 - **KVM enabled**: `egrep -c '(vmx|svm)' /proc/cpuinfo` must return > 0
 - **16 GB RAM** minimum (32 GB recommended)
 - **`/dev/kvm` accessible**: `ls -la /dev/kvm` should show the device
 
 ```bash
+# Install Docker if not present
+sudo apt-get install -y docker.io docker-compose-plugin
+
 # Verify KVM is available
 egrep -c '(vmx|svm)' /proc/cpuinfo   # must return > 0
 ls -la /dev/kvm                       # must exist
@@ -39,6 +43,16 @@ ls -la /dev/kvm                       # must exist
 # Install make if not present
 sudo apt-get install -y make
 ```
+
+Installing `docker.io` does **not** add you to the `docker` group, so every
+`docker`/`docker compose` command needs `sudo` until you do this yourself:
+
+```bash
+sudo usermod -aG docker $USER
+```
+
+Then **log out and back in** (or `newgrp docker`) for it to take effect —
+same as the `libvirt`/`kvm` group note below.
 
 ---
 
