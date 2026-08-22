@@ -143,9 +143,12 @@ RUN for svc in cape cape-web cape-processor; do \
     done
 
 # Install into the SAME venv the systemd units actually invoke — confirmed
-# via `systemctl cat cape-processor.service`: ExecStart uses
-# /etc/poetry/bin/poetry run, working directory /opt/CAPEv2. Using
-# `pip install` inside that venv rather than `poetry add` deliberately —
+# by reading CAPEv2/systemd/cape-processor.service directly: ExecStart is
+# `/usr/bin/python3 -m poetry run ...`, not a `poetry` binary on PATH or at
+# some fixed install path (an earlier version of this comment claimed
+# /etc/poetry/bin/poetry — that was wrong for this vendored CAPEv2 version
+# and is exactly what broke this build: no /etc/poetry directory exists).
+# Using `pip install` inside that venv rather than `poetry add` deliberately —
 # this doesn't touch pyproject.toml/poetry.lock, which we don't want to
 # perturb for an environment-compatibility fix that has nothing to do with
 # the project's actual declared dependencies.
@@ -166,15 +169,15 @@ WORKDIR /opt/CAPEv2
 # produce an image that looks fine and only reveals the problem at runtime
 # inside a systemd crash loop, which is exactly how we lost time on this
 # earlier today.
-RUN /etc/poetry/bin/poetry run python -c "import libvirt; print('libvirt-python OK:', libvirt.__file__)"
+RUN python3 -m poetry run python -c "import libvirt; print('libvirt-python OK:', libvirt.__file__)"
 
 # --- Fix 7: real signature/YARA detection content -------------------------
 # community.py needs urllib3, which (like libvirt-python above) isn't in
 # this image's poetry install. -af = download everything (signatures,
 # processing/reporting modules, machinery, YARA rules, MITRE data, etc.),
 # -f = don't prompt for confirmation on each file.
-RUN /etc/poetry/bin/poetry run pip install urllib3 && \
-    /etc/poetry/bin/poetry run python utils/community.py -af
+RUN python3 -m poetry run pip install urllib3 && \
+    python3 -m poetry run python utils/community.py -af
 
 # Fail the BUILD, loudly, if this doesn't actually work — same reasoning as
 # the libvirt-python check above.
