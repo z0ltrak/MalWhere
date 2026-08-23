@@ -48,14 +48,22 @@ docker/*/logs/
 # so `git clone` left it empty); ignoring it keeps that from recurring.
 /cape-docker/
 
-# CAPE runtime state under docker/cape/work — analysis output, logs, and
-# CAPE's own regenerated conf/default/ boilerplate. The hand-tuned conf/*.conf
-# files ARE tracked (see docker/cape/work/conf/) since they carry real
-# TFM-specific setup that a fresh clone needs; only the generated/runtime
-# parts are ignored here.
+# CAPE runtime state under docker/cape/work — analysis output and logs.
+# The hand-tuned conf/*.conf files ARE tracked (see docker/cape/work/conf/)
+# since they carry real TFM-specific setup that a fresh clone needs.
+#
+# conf/default/ is ALSO tracked (not ignored here) despite the name looking
+# like generated boilerplate: it's CAPE's own static reference config
+# (conf/readme.md: "it will contain the same as repo config"), bundled in
+# the cape:kvm image itself — NOT something regenerated at runtime. The
+# ./cape/work:/work bind mount hides the image's copy of it entirely (same
+# symlink pattern as storage/, see docker-compose.yml's cape service
+# comment), so a fresh clone with this ignored had no conf/default/ at all
+# and CAPE failed to start: CuckooStartupError: Config file does not exist
+# at path: /opt/CAPEv2/conf/default/cuckoo.conf.default. Only the actual
+# runtime output below is ignored.
 docker/cape/work/log/
 docker/cape/work/storage/
-docker/cape/work/conf/default/
 
 # Resubmission queue: raw dropped-file bytes copied out of CAPE storage,
 # same reasoning as docker/cape/work/storage/ above.
@@ -78,6 +86,11 @@ static/reports/diamondage_exe_retest/
 # Thesis paper -- kept local-only pre-publication (source of truth is
 # Overleaf); revisit once the project/thesis is published.
 paper/
+
+# Internal TimTalk slide deck (Slidev) -- not for the public repo, same
+# reasoning as paper/ above. Includes node_modules/, dist/, and the gif
+# assets it was built with.
+talk/
 
 # OS
 .DS_Store
