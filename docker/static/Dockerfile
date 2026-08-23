@@ -87,6 +87,8 @@ RUN pip3 install --no-cache-dir \
     capstone \
     dnfile \
     numpy \
+    cryptography \
+    stix2 \
     requests
 
 # Fail the build loudly if tlsh can't actually hash anything — b'test'*50
