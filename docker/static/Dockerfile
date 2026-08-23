@@ -56,6 +56,27 @@ RUN wget -q https://github.com/mandiant/flare-floss/releases/download/v3.1.1/flo
     chmod +x /usr/local/bin/floss && \
     rm -rf /tmp/floss*
 
+# Detect It Easy (DIE) — packer/compiler signature detection used by
+# packer_parser.py (looks for `diec`/`die` on PATH, falls back to a weaker
+# heuristic if absent). Silently missing since the REMnux base was dropped
+# above: REMnux happened to bundle DIE too, same accident tlsh's comment
+# describes, but unlike tlsh it was never re-added. No generic apt/pip
+# package exists -- DIE only ships per-distro .debs -- so pin the exact
+# Ubuntu 20.04 build for this base image; apt resolves its Qt5 runtime
+# deps (libqt5widgets5 etc.) from the standard archive.
+ARG DIE_VERSION=3.21
+RUN wget -q "https://github.com/horsicq/DIE-engine/releases/download/${DIE_VERSION}/die_${DIE_VERSION}_Ubuntu_20.04_amd64.deb" \
+    -O /tmp/die.deb && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends /tmp/die.deb && \
+    rm -f /tmp/die.deb && \
+    rm -rf /var/lib/apt/lists/*
+
+# Fail the build loudly if DIE's console binary doesn't actually work --
+# QT_QPA_PLATFORM=offscreen matches packer_parser.py's own env, since DIE's
+# Qt GUI libs need a platform plugin even in console mode on a headless container.
+RUN QT_QPA_PLATFORM=offscreen diec --version
+
 # pip on focal is too old to resolve current manylinux wheel tags for some
 # of these (confirmed: lief's install failed outright, "does not provide
 # precompiled wheels for 'linux - x86_64'", until pip itself was upgraded
