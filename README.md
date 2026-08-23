@@ -124,7 +124,11 @@ malwhere/
 - 16 GB RAM minimum
 - Large free disk space: ~14 GB for the container images plus the Windows 10
   guest VM's own disk (50 GB is comfortable, see
-  [`docker/README.md`](docker/README.md)) — 80+ GB free is a safe target
+  [`docker/README.md`](docker/README.md)). CAPE also refuses to start a new
+  task unless it sees real free space beyond that (`freespace` in
+  `docker/cape/work/conf/cuckoo.conf`, tuned down from upstream's 50GB
+  default to 10GB for this project's scale) — 100+ GB total disk keeps you
+  comfortably clear of both
 
 ### Deploy the environment
 
