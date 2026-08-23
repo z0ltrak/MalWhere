@@ -188,86 +188,166 @@ Never vendor the ISO in this repo: same reasoning as `cape:kvm` not being
 published to a registry: it's a multi-GB proprietary binary you're not
 licensed to redistribute, so each machine fetches its own.
 
-1. Create a libvirt storage pool if this host doesn't have one yet (`virsh
-   pool-list --all`: if empty):
-   ```bash
-   virsh pool-define-as default dir --target /var/lib/libvirt/images
-   virsh pool-build default && virsh pool-start default && virsh pool-autostart default
-   ```
-2. The ISO needs to be readable by the `libvirt-qemu` user, which your home
-   directory normally blocks. Grant traversal (as the file's owner, no sudo
-   needed):
-   ```bash
-   chmod o+x ~ && chmod o+rx ~/Downloads && chmod o+r ~/Downloads/your-win10.iso
-   ```
-3. On the **host** (not inside a container), create a Windows 10 x64 VM under
-   libvirt named exactly `win10x64` (matches `docker/cape/work/conf/kvm.conf`'s
-   `[win10x64]` section: rename both together if you change it). Pick a disk
-   size that actually fits in your free space (`df -h /var/lib/libvirt` first),
-   50GB is comfortable for Windows 10 + agent + tools. **Use `model=e1000`
-   for the network device, not the virtio default**, Windows 10 has no
-   built-in virtio-net driver, so a virtio NIC shows up as unrecognized and
-   "Change adapter settings" is empty; e1000 has an in-box driver and, as a
-   side benefit, doesn't announce itself as a VM to samples doing basic
-   anti-analysis checks the way "Red Hat VirtIO Ethernet Adapter" does:
-   ```bash
-   virt-install --name win10x64 --os-variant win10 --ram 4096 --vcpus 2 \
-     --disk pool=default,size=50,format=qcow2 --cdrom ~/Downloads/your-win10.iso \
-     --network network=default,model=e1000 --graphics vnc,listen=127.0.0.1 \
-     --noautoconsole
-   ```
-4. Connect to the install with `virt-viewer --connect qemu:///system win10x64`
-   and click through Setup normally. It reboots partway through (copies
-   files, then continues from disk instead of the ISO), the domain may show
-   `shut off` rather than auto-restarting depending on whether Windows issued
-   a reboot or a full poweroff; `virsh start win10x64` brings it back either
-   way, and boot order is `hd`-first by default so it resumes instead of
-   re-running Setup.
-5. Once at the desktop: set the static IP to match `GUEST_VM_IP` in
-   `docker/.env` (`192.168.122.100` by default, gateway/DNS `192.168.122.1`,
-   that's inetsim, matching `routing.conf`'s `[inetsim] server`).
-6. Enable auto-login: `netplwiz`'s checkbox doesn't render on some Windows 10
-   builds; the reliable fallback is the registry directly (elevated cmd):
-   ```cmd
-   reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 1 /f
-   reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultUserName /t REG_SZ /d "YOUR_USERNAME" /f
-   reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /t REG_SZ /d "YOUR_PASSWORD" /f
-   ```
-7. Disable Windows Update, Defender (real-time/cloud-delivered protection,
-   automatic sample submission, tamper protection), and the firewall
-   (`netsh advfirewall set allprofiles state off`), a live Defender will
-   flag/quarantine samples before CAPE's agent gets a look at them.
-8. **Fully disable UAC**, not just the "Never notify" slider, that slider
-   still leaves processes with a filtered (non-admin) token. Confirmed via
-   the agent's own `is_user_admin` field in its status response:
-   ```cmd
-   reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d 0 /f
-   ```
-   Needs a reboot to take effect. This matters concretely for this sample
-   set: RoningLoader disables Driver Signature Enforcement and installs a
-   kernel driver, which needs a real admin token, not a filtered one.
-9. Install Python 3 (check "Add to PATH"), save
+**Step 1 — storage pool.** Skip if `virsh pool-list --all` already shows one.
+```bash
+virsh pool-define-as default dir --target /var/lib/libvirt/images
+virsh pool-build default && virsh pool-start default && virsh pool-autostart default
+```
+
+**Step 2 — make the ISO readable.** The `libvirt-qemu` user needs traversal
+into wherever you downloaded it, which your home directory normally blocks
+(as the file's owner, no sudo needed):
+```bash
+chmod o+x ~ && chmod o+rx ~/Downloads && chmod o+r ~/Downloads/your-win10.iso
+```
+
+**Step 3 — create the VM, with no network attached yet.** On the **host**
+(not inside a container), named exactly `win10x64` (matches
+`docker/cape/work/conf/kvm.conf`'s `[win10x64]` section: rename both together
+if you change it). Pick a disk size that fits your free space (`df -h
+/var/lib/libvirt` first), 50GB is comfortable for Windows 10 + agent + tools.
+```bash
+virt-install --name win10x64 --os-variant win10 --ram 4096 --vcpus 2 \
+  --disk pool=default,size=50,format=qcow2 --cdrom ~/Downloads/your-win10.iso \
+  --network none --graphics vnc,listen=127.0.0.1 \
+  --noautoconsole
+```
+`--network none` is deliberate, not an oversight, see step 5.
+
+**Step 4 — click through Setup.** Connect with `virt-viewer --connect
+qemu:///system win10x64`. It reboots partway through (copies files, then
+continues from disk instead of the ISO); the domain may show `shut off`
+rather than auto-restarting depending on whether Windows issued a reboot or
+a full poweroff — `virsh start win10x64` brings it back either way, boot
+order is `hd`-first by default so it resumes instead of re-running Setup.
+
+**Step 5 — offline local account (no Microsoft email).** Because the VM has
+no network device yet, Windows Setup can't reach the internet and skips
+straight to a **local** account: just a username and password, no
+Microsoft email, no online sign-in. This is the easiest reliable way to get
+that flow — trying to click past the "connect to a network" screen while a
+NIC *is* present is finicky and varies by ISO build. Finish Setup this way,
+reach the desktop, then attach the network for real:
+```bash
+virsh attach-interface win10x64 --type network --source default \
+  --model e1000 --config --live
+```
+`--config --live` attaches it now **and** makes it persist across reboots.
+**Use `model=e1000`, not the virtio default** — Windows 10 has no built-in
+virtio-net driver, so a virtio NIC shows up unrecognized and "Change adapter
+settings" is empty; e1000 has an in-box driver and, as a side benefit,
+doesn't announce itself as a VM to samples doing basic anti-analysis checks
+the way "Red Hat VirtIO Ethernet Adapter" does.
+
+**Step 6 — static IP, with DNS pointed at the gateway.** Network settings →
+your Ethernet adapter → Edit IP settings → Manual → IPv4 on:
+| Field | Value |
+|---|---|
+| IP address | `192.168.122.100` (must match `GUEST_VM_IP` in `docker/.env`) |
+| Subnet mask | `255.255.255.0` |
+| Gateway | `192.168.122.1` |
+| Preferred DNS | `192.168.122.1` — **same as the gateway, not `8.8.8.8` or anything else** |
+
+That IP is `inetsim` (matching `routing.conf`'s `[inetsim] server`), which is
+the sandbox's fake internet — it answers *every* DNS query itself. Point DNS
+anywhere else and the guest has no route to a real DNS server (this network
+is deliberately contained, see `routing.conf`), so nothing resolves and the
+detonation looks like the malware silently failed instead of being
+sandboxed correctly.
+
+**Step 7 — auto-login.** `netplwiz`'s checkbox doesn't render on some
+Windows 10 builds; the reliable fallback is the registry directly (elevated
+cmd):
+```cmd
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 1 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultUserName /t REG_SZ /d "YOUR_USERNAME" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /t REG_SZ /d "YOUR_PASSWORD" /f
+```
+
+**Step 8 — disable Windows Update, Defender, and the firewall.** Defender:
+real-time protection, cloud-delivered protection, automatic sample
+submission, tamper protection — all off, a live Defender will
+flag/quarantine samples before CAPE's agent gets a look at them. Firewall:
+```cmd
+netsh advfirewall set allprofiles state off
+```
+
+**Step 9 — fully disable UAC**, not just the "Never notify" slider, that
+slider still leaves processes with a filtered (non-admin) token. Confirmed
+via the agent's own `is_user_admin` field in its status response:
+```cmd
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d 0 /f
+```
+Needs a reboot to take effect. This matters concretely for this sample set:
+RoningLoader disables Driver Signature Enforcement and installs a kernel
+driver, which needs a real admin token, not a filtered one.
+
+**Step 10 — install Python 3 and the CAPE agent.**
+1. Download the Python **3.12.x, 64-bit** installer directly from
+   [python.org/downloads/windows](https://www.python.org/downloads/windows/)
+   — look for `python-3.12.x-amd64.exe`. Don't use the Microsoft Store
+   package: it installs under a per-user execution-alias path that's less
+   predictable for a background process expected to survive every logon.
+   Check **"Add python.exe to PATH"** during install.
+2. Save
    [`agent.py`](https://raw.githubusercontent.com/kevoreilly/CAPEv2/master/agent/agent.py)
-   as `C:\agent.py`, and put a shortcut to `pythonw.exe C:\agent.py` in the
-   Startup folder (`shell:startup`) so it relaunches on every logon. Verify
-   from the **host** once it's running:
+   as `C:\agent.py`.
+3. Press **Win+R**, type `shell:startup`, Enter — this opens the current
+   user's Startup folder (`%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`).
+   Right-click inside it → New → Shortcut.
+4. For the target, use the **full path** to `pythonw.exe`, not just
+   `pythonw.exe` — Startup-folder shortcuts don't reliably resolve `PATH` at
+   logon, even though PATH itself was checked during install. Two likely
+   locations depending on how you installed it:
+   - Per-user (default): `C:\Users\YOUR_USERNAME\AppData\Local\Programs\Python\Python312\pythonw.exe C:\agent.py`
+   - For all users: `C:\Program Files\Python312\pythonw.exe C:\agent.py`
+
+   If unsure which applies, open an elevated cmd and run `where pythonw` to
+   get the exact path.
+5. Verify from the **host** once it's running:
    ```bash
    curl -s http://192.168.122.100:8000/ | python3 -m json.tool
    # expect: {"message": "CAPE Agent!", ..., "is_user_admin": true}
    ```
-10. With the VM in exactly this state: logged in, agent listening, nothing
-    left to configure: take a **live** snapshot (VM running, not shut down).
-    CAPE reverts straight into this ready state instead of cold-booting per
-    task:
-    ```bash
-    virsh snapshot-create-as win10x64 clean_baseline --atomic
-    ```
-    Then uncomment `snapshot = clean_baseline` in `kvm.conf`'s `[win10x64]`
-    section so CAPE targets it explicitly rather than "whatever's latest."
+
+**Step 11 — snapshot.** With the VM in exactly this state: logged in, agent
+listening, nothing left to configure: take a **live** snapshot (VM running,
+not shut down). CAPE reverts straight into this ready state instead of
+cold-booting per task:
+```bash
+virsh snapshot-create-as win10x64 clean_baseline --atomic
+```
+`docker/cape/work/conf/kvm.conf`'s `[win10x64]` section already ships with
+`snapshot = clean_baseline` active by default (not commented out — nothing
+to edit there unless you renamed the domain or picked a different snapshot
+name, in which case update both to match).
 
 Only after this exists does `docker exec malwhere-cape virsh -c qemu:///system list --all`
 show the domain, and only then will `cape.service` get past its startup
 snapshot check.
+
+### Automating this / getting a pre-built VM
+
+There's no automated or downloadable-VM shortcut for this today. Two things
+worth knowing if that's the goal:
+
+- **Steps 4–10 above (Windows Setup + hardening + agent install) can be
+  scripted** with a Windows unattended-setup answer file (`autounattend.xml`,
+  fed to `virt-install` as a second virtual CD-ROM) plus a first-logon script
+  doing the same `reg add`/`netsh` commands already documented here. That
+  would turn most of this page into "boot the VM, wait" instead of manual
+  clicking. It hasn't been built for this repo yet — it needs testing
+  against an actual Windows install to get right (answer-file schemas are
+  picky about the exact ISO build), which isn't something to author blind.
+- **Distributing the finished VM disk image itself (e.g. via Google Drive)
+  is not a good idea, and not just for file-size reasons**: it would contain
+  an actual installed copy of Windows. The free consumer ISO's terms cover
+  *you* installing Windows, not you redistributing a customized copy of it
+  to other people — the same reasoning that already keeps the ISO itself out
+  of this repo applies more strongly to a full installed disk image. If the
+  goal is letting a teacher stand this up quickly, the unattended-install
+  script above (pure scripts/config, no Microsoft IP in it) is the
+  legitimate way to get them a fast, low-effort build of their own.
 
 ### A libvirt host quirk worth knowing about
 
@@ -552,11 +632,8 @@ Related to the above but separate: the real bootstrap admin account is `admin@ad
 ### `redis` needs to be running before `misp` starts
 MISP uses `redis` for session storage: if it's down, MISP's web/API layer fails on *every* request (including pure API calls) with a misleading "Authentication failed" error that has nothing to do with the API key. `docker-compose.yml`'s `misp` service now has `depends_on: redis` with a healthcheck, so a fresh `docker compose up` won't hit this: but if you ever stop `redis` manually while `misp` keeps running, you'll need to restart `misp` too, not just `redis`.
 
-### Static container: `tlsh` module not found
-REMnux installs `tlsh` in `/opt/malchive/lib/python3.8/site-packages/`. The Dockerfile copies it to `/usr/local/lib/python3.8/dist-packages/` to make it importable. If this breaks after a REMnux base image update, recheck the path with:
-```bash
-docker exec malwhere-static find / -name "tlsh*.so" 2>/dev/null
-```
+### Static container build fails on apt (expired keys, unrelated third-party repos)
+Historically this base image was `remnux/remnux-distro:focal` rather than plain `ubuntu:20.04`; that image bundles a dozen+ third-party apt repos for tools this Dockerfile never used, and being an infrequently-rebuilt frozen tag, their signing keys (and eventually the archive's own frozen keyring) expire, breaking `apt-get update` for all of them at once with no fix available except waiting for upstream. Fixed by moving to plain `ubuntu:20.04` — confirmed nothing here actually needs REMnux-specific tooling. If you still have a local image built from the old base, `docker compose build static` picks up the new one.
 
 ### Containers not stopping with `docker compose stop`
 Always include the same `--profile` flags used at startup. Without them, Docker Compose cannot resolve which containers belong to the current configuration.
