@@ -122,6 +122,9 @@ malwhere/
 - Docker Compose v2
 - CPU with VT-x/AMD-V enabled (required for CAPE)
 - 16 GB RAM minimum
+- Large free disk space: ~14 GB for the container images plus the Windows 10
+  guest VM's own disk (50 GB is comfortable, see
+  [`docker/README.md`](docker/README.md)) — 80+ GB free is a safe target
 
 ### Deploy the environment
 

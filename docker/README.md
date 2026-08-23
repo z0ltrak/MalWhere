@@ -387,7 +387,11 @@ assuming it didn't work.
 # 1. Copy environment variables, then edit docker/.env with your MISP API
 #    key and passwords (leave LIBVIRT_GATEWAY/LIBVIRT_BRIDGE as-is, the
 #    next step overwrites just those two lines in place with real values,
-#    without touching what you just set here)
+#    without touching what you just set here). GUEST_VM_IP is NOT filled in
+#    by that next step either -- set it by hand once you've created the
+#    win10x64 guest VM (Step 6 below), to the static IP you gave it there,
+#    e.g. 192.168.122.100. Sandbox profile containers (cape/cape-processor)
+#    fail to start without it, see get_env_for_cape() in run_pipeline.py.
 cp docker/.env.example docker/.env
 
 # 2. Host libvirt/KVM setup, see "Host Setup: libvirt/KVM" above (one-time,
