@@ -15,11 +15,12 @@ section for the manual version this replaces):
   7. Normalize + map the primary sample (static+dynamic merged)
   8. Export STIX 2.1 (and, opt-in, push to MISP)
 
-Runs on the host, not inside a container -- same convention as
-normalize.py/map_attck.py/parse_cape.py/process_resubmissions.py, which
-are pure-stdlib for exactly this reason. Only the two static-analysis
-stages need a container: pefile/YARA/FLOSS/Ghidra live in malwhere-static's
-image, not on the bare host (confirmed missing here during development).
+This orchestrator itself runs on the host, same as
+normalize.py/map_attck.py/parse_cape.py/process_resubmissions.py (all
+pure-stdlib). Individual stages delegate into whichever container has
+their real dependencies: static analysis into malwhere-static
+(pefile/YARA/FLOSS/Ghidra), STIX/MISP export into malwhere-pipeline
+(stix2/pymisp) -- neither needs anything installed on the bare host.
 
 Requires: docker + the compose CLI, and this repo's docker/.env already
 set up per docker/README.md (host-prereqs.sh, the guest VM, MISP_API_KEY
@@ -160,6 +161,11 @@ def ensure_containers(need_dynamic: bool) -> None:
         compose("--profile", "core", "up", "-d", "static")
     else:
         log("static: already running")
+
+    if not container_running("pipeline"):
+        compose("--profile", "core", "up", "-d", "pipeline")
+    else:
+        log("pipeline: already running")
 
     if need_dynamic:
         for svc in ("inetsim", "cape"):
@@ -384,23 +390,23 @@ def normalize_and_map(family: str, static_report: Path, dynamic_report: Path | N
     return attck_dir / "attck_mapping.json"
 
 
-def find_venv_python() -> str:
-    """Find the repo's .venv Python, for STIX/MISP export (needs stix2/pymisp).
+def to_container_results_path(host_path: Path) -> str:
+    """Translate a host results/ path to its path inside the pipeline
+    container, which bind-mounts ../results:/results (see docker-compose.yml).
+
+    Args:
+        host_path: Path under REPO_ROOT / "results" on the host.
 
     Returns:
-        Path to .venv/bin/python3 if it exists, else the current interpreter (with a warning logged).
+        The equivalent /results/... path as seen inside the pipeline container.
     """
-    venv_python = REPO_ROOT / ".venv" / "bin" / "python3"
-    if venv_python.exists():
-        return str(venv_python)
-    log("WARNING: .venv/bin/python3 not found -- falling back to system python3 for "
-        "STIX/MISP export; this will fail if stix2/pymisp aren't installed system-wide. "
-        "See docker/pipeline/requirements.txt.")
-    return sys.executable
+    return "/results/" + str(host_path.relative_to(REPO_ROOT / "results"))
 
 
 def export_stix(family: str, mapping_path: Path) -> Path:
-    """Export the reconciled ATT&CK mapping as a STIX 2.1 bundle.
+    """Export the reconciled ATT&CK mapping as a STIX 2.1 bundle, run inside
+    the pipeline container (stix2 lives there, see docker/pipeline/Dockerfile
+    -- no host venv needed).
 
     Args:
         family: Family label, used for the output directory.
@@ -411,15 +417,18 @@ def export_stix(family: str, mapping_path: Path) -> Path:
     """
     banner(f"Exporting STIX 2.1 bundle ({family})")
     stix_dir = REPO_ROOT / "results" / family / "stix"
-    run([
-        find_venv_python(), str(REPO_ROOT / "pipeline" / "exporter" / "export_stix.py"),
-        "--mapping", str(mapping_path), "--output", str(stix_dir), "--verbose",
-    ])
+    compose(
+        "exec", "pipeline", "python3", "/app/exporter/export_stix.py",
+        "--mapping", to_container_results_path(mapping_path),
+        "--output", to_container_results_path(stix_dir), "--verbose",
+    )
     return stix_dir / "bundle.stix2"
 
 
 def export_misp(family: str, mapping_path: Path, publish: bool) -> None:
-    """Push the reconciled ATT&CK mapping into MISP as an event.
+    """Push the reconciled ATT&CK mapping into MISP as an event, run inside
+    the pipeline container (pymisp lives there, see docker/pipeline/Dockerfile
+    -- no host venv needed).
 
     Args:
         family: Family label, used in the MISP event's title.
@@ -428,12 +437,12 @@ def export_misp(family: str, mapping_path: Path, publish: bool) -> None:
     """
     banner(f"Pushing to MISP ({family})")
     cmd = [
-        find_venv_python(), str(REPO_ROOT / "pipeline" / "exporter" / "export_misp.py"),
-        "--mapping", str(mapping_path), "--verbose",
+        "exec", "pipeline", "python3", "/app/exporter/export_misp.py",
+        "--mapping", to_container_results_path(mapping_path), "--verbose",
     ]
     if publish:
         cmd.append("--publish")
-    run(cmd)
+    compose(*cmd)
 
 
 def main() -> int:
