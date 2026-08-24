@@ -213,7 +213,7 @@ if docker image inspect cape:kvm >/dev/null 2>&1; then
     else
         log "No host user at UID ${CAPE_UID} — creating a placeholder system account so libvirtd's identity lookup succeeds."
         useradd --system --no-create-home --no-user-group -u "$CAPE_UID" -g nogroup -s /usr/sbin/nologin \
-            -c "malwhere: placeholder for the cape container's UID (libvirtd identity lookup only, not a real login account)" \
+            -c "malwhere placeholder for the cape container's UID, libvirtd identity lookup only, not a real login account" \
             cape-container-uid \
             || warn "Failed to create the placeholder user — create one manually: useradd --system --no-create-home -u ${CAPE_UID} -g nogroup -s /usr/sbin/nologin cape-container-uid"
     fi
