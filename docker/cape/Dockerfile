@@ -3,7 +3,7 @@
 #
 # Builds FROM cape:kvm (built from our fork, github.com/z0ltrak/kvm-cape-docker,
 # kvm branch — see docker-compose.yml's cape service comment) and bakes in
-# eight more fixes
+# nine more fixes
 # discovered during initial bring-up, so a fresh `docker compose up` doesn't
 # require re-discovering any of them by hand:
 #
@@ -100,6 +100,15 @@
 #      read/write its own install dir (fix 7's community.py extraction
 #      included). Forcing real ownership before anything relies on it is
 #      cheap insurance against that class of drift.
+#
+#   9. Same instability as fix 8, but for file PERMISSIONS instead of
+#      ownership: fix 7's community.py pulls live from a mutable upstream
+#      repo with nothing pinned to a version, so what it fetches isn't
+#      guaranteed identical build to build. Confirmed hitting this for
+#      real on a second machine: a fetched YARA file had anomalous
+#      permission bits, breaking BuildKit's image export ("operation not
+#      permitted" / "unexpected EOF") on every single attempt. Normalize
+#      permissions across /opt/CAPEv2 unconditionally after fix 7 runs.
 #
 # Update docker-compose.yml's cape service to `build: {context: ./cape}`
 # instead of `image: cape:kvm` to use this.
@@ -222,6 +231,21 @@ RUN POETRY=$(cat /tmp/poetry_bin) && \
 RUN POETRY=$(cat /tmp/poetry_bin) && \
     $POETRY run pip install urllib3 && \
     $POETRY run python utils/community.py -af
+
+# --- Fix 9: normalize permissions on whatever community.py just fetched ----
+# community.py pulls live from a mutable upstream repo with nothing pinned
+# to a version -- two builds done at different times aren't guaranteed to
+# get identical file permissions in the archive. Confirmed hitting this for
+# real: a fresh build on a second machine got a version of
+# data/yara/CAPE/XFiles.yar with anomalous permission bits, tripping
+# "operation not permitted"/"unexpected EOF" from BuildKit's tar export on
+# every attempt (this exact machine's fetch didn't have the problem, but
+# nothing guarantees the next one won't). Cheap and unconditional, same
+# reasoning as fix 8's chown: don't trust upstream content's permissions,
+# force something sane. u+rwX/go+rX: read (+write for owner) everywhere,
+# execute only where a file already had it or it's a directory -- doesn't
+# blindly make everything executable or strip real permission bits.
+RUN chmod -R u+rwX,go+rX /opt/CAPEv2
 
 # Fail the BUILD, loudly, if this doesn't actually work — same reasoning as
 # the libvirt-python check above.

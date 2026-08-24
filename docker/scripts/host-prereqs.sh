@@ -55,8 +55,45 @@ else
     warn "kvm-ok not found (usually from cpu-checker package) — skipping that specific check, /dev/kvm exists so proceeding."
 fi
 
+log "Ensuring libvirtd doesn't require polkit for local UNIX-socket connections..."
+# Ubuntu's libvirt package is compiled with polkit support, so when
+# auth_unix_rw is left unset, libvirtd.conf's own comment says it "will
+# default to 'polkit'" -- which authorizes a connecting UNIX-socket peer by
+# resolving its UID to a real user record on THIS host. CAPE's containerized
+# "cape" user has whatever UID the base image happened to assign it (not
+# guaranteed to match ANY real account here -- confirmed hitting this for
+# real on a fresh machine: polkit's lookup failed with "Failed to find user
+# record for uid '999'", crash-looping cape.service/cape-processor forever,
+# since there was no host user at that UID). Access to this socket is
+# already gated numerically by group membership (see fix-libvirt-gid.sh's
+# own comment: "AF_UNIX permission checks are purely numeric") -- that's
+# only actually true when auth_unix_rw="none", which nothing enforced
+# before this. Setting it here makes that assumption real instead of
+# something that happened to hold by accident on whichever machine still
+# has it manually set from early bring-up.
+LIBVIRTD_CONF=/etc/libvirt/libvirtd.conf
+LIBVIRTD_CONF_CHANGED=0
+if ! grep -qE '^\s*auth_unix_rw\s*=\s*"none"' "$LIBVIRTD_CONF"; then
+    if grep -qE '^\s*auth_unix_rw\s*=' "$LIBVIRTD_CONF"; then
+        sed -i 's/^\s*auth_unix_rw\s*=.*/auth_unix_rw = "none"/' "$LIBVIRTD_CONF"
+    else
+        printf '\nauth_unix_rw = "none"\n' >> "$LIBVIRTD_CONF"
+    fi
+    LIBVIRTD_CONF_CHANGED=1
+    log "Set auth_unix_rw = \"none\" in ${LIBVIRTD_CONF}."
+else
+    log "auth_unix_rw already set to \"none\"."
+fi
+
 log "Ensuring libvirtd is enabled and running..."
 systemctl enable --now libvirtd
+if [ "$LIBVIRTD_CONF_CHANGED" -eq 1 ]; then
+    # enable --now above is a no-op if libvirtd was already running (won't
+    # pick up the config change we just made) -- restart unconditionally so
+    # the connection check below tests the ACTUAL post-fix state.
+    log "Restarting libvirtd to pick up the auth_unix_rw change..."
+    systemctl restart libvirtd
+fi
 
 # systemctl is-active can report "active" before libvirtd actually accepts
 # connections (Type=notify readiness can lag behind virtlogd.socket).
