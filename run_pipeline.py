@@ -157,6 +157,19 @@ def ensure_containers(need_dynamic: bool) -> None:
         need_dynamic: Also ensure inetsim/cape are up and wait for cape.service to become active.
     """
     banner("Ensuring required containers are up")
+
+    # docker/resubmit_queue is a bind mount (static's `./resubmit_queue:/resubmit:ro`,
+    # docker-compose.yml), entirely gitignored -- nothing pre-creates it. On a fresh
+    # clone, the FIRST thing to ever touch that path is Docker itself auto-creating
+    # the missing bind-mount source, which it does as root. Every later host-side
+    # write into it (resubmit_writer.py's manifest_dir/artifacts_dir mkdir, running as
+    # the invoking user, not root) then fails with PermissionError. Confirmed hitting
+    # this for real on a fresh clone. Pre-creating both subdirs here, host-side, before
+    # `static` ever starts, guarantees Docker always finds an already-existing,
+    # correctly-owned directory instead of creating one itself.
+    for sub in ("manifest", "artifacts"):
+        (DOCKER_DIR / "resubmit_queue" / sub).mkdir(parents=True, exist_ok=True)
+
     if not container_running("static"):
         compose("--profile", "core", "up", "-d", "static")
     else:
