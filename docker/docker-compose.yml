@@ -88,6 +88,22 @@ networks:
   # it's a static file server with no backend dependency of its own.
   malwhere_web:
     driver: bridge
+    # Explicit subnet, not auto-allocated -- malwhere_net above hardcodes
+    # 172.20.0.0/16. Left to Docker's own allocator, malwhere_web's pick
+    # depends entirely on what ELSE already exists on the host: on a
+    # machine with fewer pre-existing docker networks it lands somewhere
+    # past 172.20 and nothing collides; on one with 172.17-172.19 already
+    # taken by unrelated networks (confirmed for real: a second machine's
+    # own docker0/docker_gwbridge/an unrelated compose project's network),
+    # the allocator's next free slot IS 172.20.0.0/16 -- directly
+    # colliding with malwhere_net's hardcoded value, deterministically,
+    # on every single `up` (not a stale-daemon-state fluke; restarting
+    # dockerd changes nothing since the collision is a fixed value in
+    # this file, not allocator bookkeeping). Pinning this removes the
+    # dependency on what else happens to be running on the host.
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
 
 # ---------------------------------------------------------------------------
 # Volumes (persistent data survives container restarts)
