@@ -185,6 +185,42 @@ if ! grep -q "^GUEST_VM_IP=" "$ENV_FILE"; then
     warn "GUEST_VM_IP left blank in .env — this isn't auto-discoverable, it's whatever static IP you assign the guest VM when you create it. Fill it in by hand before bringing up the sandbox profile."
 fi
 
+log "Ensuring a host user exists at the cape container's UID..."
+# Confirmed hitting this for real: libvirtd's OWN log (journalctl -u
+# libvirtd) showed "Failed to find user record for uid 'N'" immediately
+# followed by dropping the connection, on every single attempt from the
+# cape container -- even with auth_unix_rw="none" (see the section above)
+# active the whole time. That setting only controls the AUTH scheme; this
+# is libvirtd unconditionally resolving the connecting peer's UID to a
+# username for its own identity/audit logging, regardless of auth mode --
+# nothing in auth_unix_rw gates that call. If the host has no user at that
+# UID, the lookup fails and libvirtd tears down the connection outright.
+# The container's "cape" UID isn't pinned in the base image (can differ
+# build to build -- see docker/cape/Dockerfile's fix 8), so this discovers
+# whatever UID THIS machine's build actually assigned rather than
+# hardcoding a number, and only acts if cape:kvm has actually been built
+# (it's fine to run this script before that -- see README's documented
+# order -- just re-run it after building cape:kvm to pick this up).
+if docker image inspect cape:kvm >/dev/null 2>&1; then
+    # --entrypoint override is required: this image's default entrypoint is
+    # systemd, not a shell, so a plain `docker run cape:kvm id -u cape`
+    # silently exits 255 with no output at all -- confirmed the hard way.
+    CAPE_UID="$(docker run --rm --entrypoint /usr/bin/id cape:kvm -u cape 2>/dev/null || true)"
+    if [ -z "$CAPE_UID" ]; then
+        warn "Could not determine the cape user's UID from the cape:kvm image — skipping host user alignment. Check manually: docker run --rm cape:kvm id -u cape"
+    elif getent passwd "$CAPE_UID" >/dev/null 2>&1; then
+        log "UID ${CAPE_UID} (cape container's UID) already resolves to a host user ($(getent passwd "$CAPE_UID" | cut -d: -f1)) — nothing to do."
+    else
+        log "No host user at UID ${CAPE_UID} — creating a placeholder system account so libvirtd's identity lookup succeeds."
+        useradd --system --no-create-home --no-user-group -u "$CAPE_UID" -g nogroup -s /usr/sbin/nologin \
+            -c "malwhere: placeholder for the cape container's UID (libvirtd identity lookup only, not a real login account)" \
+            cape-container-uid \
+            || warn "Failed to create the placeholder user — create one manually: useradd --system --no-create-home -u ${CAPE_UID} -g nogroup -s /usr/sbin/nologin cape-container-uid"
+    fi
+else
+    warn "cape:kvm image not built yet — once it is (see README 'Building the CAPE Image'), re-run this script to also align a host user with the cape container's UID (needed for libvirtd's connection-identity lookup)."
+fi
+
 log "Done. Guest VMs on ${BRIDGE_IF} will now be answered by inetsim at ${GATEWAY_IP} once the sandbox profile is up."
 log "Next: create the win10x64 guest VM, set GUEST_VM_IP in .env, then:"
 log "  docker compose --profile core --profile sandbox build inetsim cape"
