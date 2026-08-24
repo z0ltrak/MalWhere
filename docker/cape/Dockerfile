@@ -3,7 +3,7 @@
 #
 # Builds FROM cape:kvm (built from our fork, github.com/z0ltrak/kvm-cape-docker,
 # kvm branch — see docker-compose.yml's cape service comment) and bakes in
-# seven more fixes
+# eight more fixes
 # discovered during initial bring-up, so a fresh `docker compose up` doesn't
 # require re-discovering any of them by hand:
 #
@@ -19,10 +19,22 @@
 #      units actually invoke (confirmed via
 #      `poetry run python -c "import libvirt"` -> ModuleNotFoundError),
 #      so cape-processor.service's KVM/QEMU machinery check fails on every
-#      startup. Now fixed at the source: the fork's own Dockerfile
-#      (z0ltrak/kvm-cape-docker, commit f1ee3cc) installs libvirt-python
-#      into this same venv as part of building cape:kvm. What's left here
-#      is just a build-time verification, not a reinstall.
+#      startup. Installed explicitly here rather than relying on the fork's
+#      base image to already have it — checked directly against the
+#      currently-tagged local cape:kvm image and it's NOT there, contrary
+#      to an earlier version of this comment's assumption.
+#
+#      Separately: how poetry itself is invoked (`/etc/poetry/bin/poetry`
+#      vs `python3 -m poetry`) is NOT stable across rebuilds of cape:kvm —
+#      confirmed by git history of this exact file: 2026-08-22 switched
+#      FROM /etc/poetry/bin/poetry TO python3 -m poetry because that path
+#      didn't exist on that build; 2026-08-24's build has the opposite
+#      problem, /etc/poetry/bin/poetry exists and python3 -m poetry fails
+#      with "No module named poetry" (poetry here is the official
+#      standalone installer's self-contained venv, never pip-installed as
+#      an importable module). Since the base image has now flip-flopped on
+#      this twice, every poetry invocation below detects which one exists
+#      at build time instead of hardcoding a third guess.
 #
 #   3. cape.service, cape-web.service, and cape-processor.service don't
 #      inherit the container's env vars (LIBVIRT_GATEWAY etc.) unless told
@@ -81,6 +93,14 @@
 #      detection content — worth keeping true for a sandbox that's
 #      otherwise deliberately network-contained (see routing.conf).
 #
+#   8. The "cape" user's UID isn't pinned in the base image, so it's whatever
+#      useradd happened to assign during THAT build — can drift between
+#      machines/build times the same way fix 5's GID did. If an earlier layer
+#      under /opt/CAPEv2 ends up baked with a since-stale UID, cape can't
+#      read/write its own install dir (fix 7's community.py extraction
+#      included). Forcing real ownership before anything relies on it is
+#      cheap insurance against that class of drift.
+#
 # Update docker-compose.yml's cape service to `build: {context: ./cape}`
 # instead of `image: cape:kvm` to use this.
 # =============================================================================
@@ -91,12 +111,10 @@ FROM cape:kvm
 COPY mongodb-override.conf /etc/systemd/system/mongodb.service.d/override.conf
 
 # --- Fix 2: libvirt-python missing in the poetry venv -----------------------
-# cape:kvm (built from the fork, see header above) already installs
-# libvirt-python into this exact venv at base-image build time — re-running
-# that install here was redundant duplicate work, and on a flaky network
-# it's one more thing that can fail for zero benefit. The verification
-# further down (after the USER cape / WORKDIR switch) is what's left of
-# this fix.
+# See header comment above for the full reasoning. The actual install
+# happens further down (after the USER cape / WORKDIR switch, same place
+# Fix 7 installs urllib3) since it needs to run as cape inside the same
+# poetry-managed project venv CAPE's systemd units invoke.
 USER root
 
 # --- Fix 3: none of CAPE's systemd units inherit container env vars needed
@@ -142,12 +160,19 @@ RUN for svc in cape cape-web cape-processor; do \
             > "/etc/systemd/system/${svc}.service.d/override.conf"; \
     done
 
+# --- Fix 8: "cape" user's UID isn't pinned, ownership can drift -------------
+# See header comment above for the full reasoning. Cheap and unconditional:
+# force real ownership before switching to USER cape below, rather than
+# trusting whatever the base image happened to bake in.
+RUN chown -R cape:cape /opt/CAPEv2
+
 # Install into the SAME venv the systemd units actually invoke — confirmed
-# by reading CAPEv2/systemd/cape-processor.service directly: ExecStart is
-# `/usr/bin/python3 -m poetry run ...`, not a `poetry` binary on PATH or at
-# some fixed install path (an earlier version of this comment claimed
-# /etc/poetry/bin/poetry — that was wrong for this vendored CAPEv2 version
-# and is exactly what broke this build: no /etc/poetry directory exists).
+# by reading CAPEv2/systemd/cape-processor.service (and cape.service,
+# cape-web.service) directly: ExecStart is `/etc/poetry/bin/poetry run ...`
+# in all three, on THIS build. See header comment above (Fix 2) for why
+# every `poetry run` below is resolved via $POETRY (detected once, right
+# after WORKDIR) instead of hardcoding that path or `python3 -m poetry` —
+# this exact file has already broken from hardcoding each of those once.
 # Using `pip install` inside that venv rather than `poetry add` deliberately —
 # this doesn't touch pyproject.toml/poetry.lock, which we don't want to
 # perturb for an environment-compatibility fix that has nothing to do with
@@ -165,19 +190,38 @@ RUN for svc in cape cape-web cape-processor; do \
 USER cape
 WORKDIR /opt/CAPEv2
 
+# Resolve the poetry invocation once, into a file both later RUN steps can
+# read (each RUN is its own shell, nothing set via a plain shell variable
+# survives past one). See Fix 2's header comment for why this is detected
+# rather than hardcoded — this file has broken from hardcoding each of the
+# two possible answers once already, on consecutive base-image rebuilds.
+RUN if [ -x /etc/poetry/bin/poetry ]; then \
+        echo /etc/poetry/bin/poetry > /tmp/poetry_bin; \
+    else \
+        echo "python3 -m poetry" > /tmp/poetry_bin; \
+    fi && \
+    echo "resolved poetry invocation: $(cat /tmp/poetry_bin)"
+
+# libvirt-python isn't in this image's poetry venv either (checked directly
+# — not merely unverified, see fix 2 above) — install it before the
+# verification below, which would otherwise always fail.
+RUN POETRY=$(cat /tmp/poetry_bin) && $POETRY run pip install libvirt-python
+
 # Fail the BUILD, loudly, if this doesn't actually work — rather than
 # produce an image that looks fine and only reveals the problem at runtime
 # inside a systemd crash loop, which is exactly how we lost time on this
 # earlier today.
-RUN python3 -m poetry run python -c "import libvirt; print('libvirt-python OK:', libvirt.__file__)"
+RUN POETRY=$(cat /tmp/poetry_bin) && \
+    $POETRY run python -c "import libvirt; print('libvirt-python OK:', libvirt.__file__)"
 
 # --- Fix 7: real signature/YARA detection content -------------------------
 # community.py needs urllib3, which (like libvirt-python above) isn't in
 # this image's poetry install. -af = download everything (signatures,
 # processing/reporting modules, machinery, YARA rules, MITRE data, etc.),
 # -f = don't prompt for confirmation on each file.
-RUN python3 -m poetry run pip install urllib3 && \
-    python3 -m poetry run python utils/community.py -af
+RUN POETRY=$(cat /tmp/poetry_bin) && \
+    $POETRY run pip install urllib3 && \
+    $POETRY run python utils/community.py -af
 
 # Fail the BUILD, loudly, if this doesn't actually work — same reasoning as
 # the libvirt-python check above.
