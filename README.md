@@ -161,12 +161,20 @@ docker compose --profile core --profile sandbox up -d
 
 ### Run the pipeline on a sample
 
+Three ways to run it, from the full chain down to a single stage. Static
+analysis only needs the `core` profile; dynamic analysis needs the
+`sandbox` profile's one-time host setup done first, CAPE image built,
+Windows guest VM created, see "Deploy the environment" above and
+[`docker/README.md`](docker/README.md) for the walkthrough. Drop the
+sample under `samples/` first either way, that's the directory already
+bind-mounted read-only into the containers as `/samples`.
+
+#### Full pipeline
+
 `run_pipeline.py` is the single entry point: static analysis, CAPE
 submission, detonation, resubmission of every dropped file (each gets its
 own independent analysis, not merged into the parent's), ATT&CK mapping,
-and STIX export, all chained automatically. Drop the sample under
-`samples/` first, that's the directory already bind-mounted read-only
-into the containers as `/samples`, then:
+and STIX export, all chained automatically.
 
 ```bash
 python3 run_pipeline.py --sample samples/<sha256>.exe --family roning
@@ -188,7 +196,8 @@ Useful flags:
   re-detonating (CAPE's own analysis IDs in this project's validated
   runs: `1`=wsnake, `2`=roning, `3`=akira, `4`+=asyncrat, re-run several
   times since it's a generality smoke test, not a fixed reference sample)
-- `--skip-dynamic`: static analysis only, no CAPE submission
+- `--skip-dynamic`: static analysis only, no CAPE submission (see "Static
+  analysis only" below)
 - `--skip-resubmit`: skip resubmitting dropped files
 - `--misp` / `--misp-publish`: also push to MISP (needs the `sandbox`
   profile's MISP running; off by default, and even with `--misp` the
@@ -199,6 +208,52 @@ It's idempotent: re-running against an already-processed `--task-id`
 just confirms/regenerates the same output rather than redoing expensive
 work (both the static resubmission pass and the merge pass skip anything
 already normalized+mapped).
+
+#### Static analysis only
+
+No CAPE, no guest VM, the `core` profile is enough. Runs the full pipeline
+but stops before any CAPE submission, straight to normalize → map → export
+using static findings alone:
+
+```bash
+python3 run_pipeline.py --sample samples/<sha256>.exe --family roning --skip-dynamic
+```
+
+Or run just the static analyzer, with nothing downstream, when you only
+want the raw static report:
+
+```bash
+docker exec malwhere-static python3 /scripts/analyze.py \
+    --sample /samples/<sha256>.exe --output /reports/roning/
+# -> static/reports/roning/<sha256>_static.json (host path, via the volume mount)
+```
+
+#### Dynamic analysis only
+
+Needs the `sandbox` profile up (`docker compose --profile core --profile
+sandbox up -d`) and `docker/.env`'s `LIBVIRT_GATEWAY`/`LIBVIRT_BRIDGE`/
+`GUEST_VM_IP` already set, see [`docker/README.md`](docker/README.md).
+`run_pipeline.py` has no "skip static" flag (static analysis is cheap and
+its findings feed cross-source reconciliation, so a real run has little
+reason to skip it), but detonation and parsing run standalone if you just
+want the raw CAPE report, this is what `run_pipeline.py` itself runs under
+the hood:
+
+```bash
+# Submit to CAPE. LIBVIRT_GATEWAY/LIBVIRT_BRIDGE/GUEST_VM_IP need to reach
+# the container as real env vars, not just sit in docker/.env, hence the
+# source + explicit -e pass-through:
+set -a; source docker/.env; set +a
+docker exec -e LIBVIRT_GATEWAY -e LIBVIRT_BRIDGE -e GUEST_VM_IP malwhere-cape \
+    su - cape -w LIBVIRT_GATEWAY,LIBVIRT_BRIDGE,GUEST_VM_IP -c \
+    "cd /opt/CAPEv2/utils && poetry run python3 submit.py --timeout 200 --enforce-timeout /samples/<sha256>.exe"
+# prints: "... added as task with ID N"
+
+# Poll until CAPE reports it done, then parse:
+curl -s http://127.0.0.1:8000/apiv2/tasks/status/N/   # wait for "reported"
+python3 dynamic/scripts/parse_cape.py --task-id N --output dynamic/reports/roning/
+# -> dynamic/reports/roning/dynamic_report.json
+```
 
 <details>
 <summary>Running each stage by hand (what <code>run_pipeline.py</code> automates)</summary>
@@ -212,9 +267,8 @@ docker exec malwhere-static python3 /scripts/analyze.py \
 # -> static/reports/roning/<sha256>_static.json (host path, via the volume mount)
 ```
 
-Submit to CAPE, then parse its report by task ID once detonation finishes
-(`docker compose exec cape ... submit.py` prints the task ID; poll
-`http://127.0.0.1:8000/apiv2/tasks/status/<id>/` for `"reported"`):
+Submit to CAPE and parse its report by task ID once detonation finishes,
+see "Dynamic analysis only" above for the full submit command:
 
 ```bash
 python3 dynamic/scripts/parse_cape.py --task-id 2 --output dynamic/reports/roning/
