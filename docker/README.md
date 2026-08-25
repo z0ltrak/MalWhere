@@ -52,8 +52,16 @@ Installing `docker.io` does **not** add you to the `docker` group, so every
 sudo usermod -aG docker $USER
 ```
 
-Then **log out and back in** (or `newgrp docker`) for it to take effect —
-same as the `libvirt`/`kvm` group note below.
+Then **log out and back in** for it to take effect. Don't substitute
+`newgrp docker` here: it only refreshes the current shell for the group you
+name, and `host-prereqs.sh` below adds you to two more groups
+(`libvirt`/`kvm`) in a separate step — a `newgrp docker` run now snapshots
+your group list *before* those exist, so `docker` stops needing `sudo` but
+`virsh`/CAPE start needing it (confirmed hitting exactly this: `newgrp
+docker` now, `sudo` becomes required for `virsh` afterwards, even though it
+wasn't before). One full log out/in done once, after `host-prereqs.sh` has
+run and added all three groups, picks up everything at once and avoids the
+whole class of problem.
 
 ---
 
@@ -227,8 +235,17 @@ no network device yet, Windows Setup can't reach the internet and skips
 straight to a **local** account: just a username and password, no
 Microsoft email, no online sign-in. This is the easiest reliable way to get
 that flow — trying to click past the "connect to a network" screen while a
-NIC *is* present is finicky and varies by ISO build. Finish Setup this way,
-reach the desktop, then attach the network for real:
+NIC *is* present is finicky and varies by ISO build.
+
+**Use exactly username `sandbox`, password `sandbox`.** Not a suggestion —
+`docker/guest-setup/setup-guest.ps1` (see below) hardcodes these for the
+auto-login registry keys it writes; a different username/password here
+means auto-login silently points at an account that doesn't exist. If you
+must use different credentials, edit `$SandboxUser`/`$SandboxPassword` at
+the top of that script to match, but then every step from here on that
+assumes `sandbox`/`sandbox` needs the same substitution in your head.
+
+Finish Setup this way, reach the desktop, then attach the network for real:
 ```bash
 virsh attach-interface win10x64 --type network --source default \
   --model e1000 --config
@@ -248,6 +265,25 @@ virtio-net driver, so a virtio NIC shows up unrecognized and "Change adapter
 settings" is empty; e1000 has an in-box driver and, as a side benefit,
 doesn't announce itself as a VM to samples doing basic anti-analysis checks
 the way "Red Hat VirtIO Ethernet Adapter" does.
+
+**Fast path: run the setup script instead of Steps 6-10 by hand.** Once
+you're on the desktop with the network attached, download
+[`setup-guest.ps1`](https://raw.githubusercontent.com/z0ltrak/MalWhere/main/docker/guest-setup/setup-guest.ps1)
+(right-click → Save As, or `Invoke-WebRequest` from an elevated
+PowerShell) and run it **elevated**:
+```powershell
+powershell -ExecutionPolicy Bypass -File setup-guest.ps1
+```
+It does the static IP, auto-login, Defender/Update/firewall/UAC hardening,
+and Python + CAPE agent install below in one pass — the exact same
+commands, just typed once instead of by hand, which is what's been causing
+real setup mistakes (wrong adapter, wrong IP, a typo in a `reg add`). It
+prints what to do next (reboot, verify the agent, take the snapshot) when
+it finishes. Steps 6-10 below are kept as the manual reference for what it
+does and for troubleshooting if something about your machine doesn't match
+its assumptions (e.g. Defender Tamper Protection being on — the script
+detects and warns about this specific case, see its `.NOTES`) — if you ran
+it successfully, skip straight to **Step 11**.
 
 **Step 6 — static IP, with DNS pointed at the gateway.** Network settings →
 your Ethernet adapter → Edit IP settings → Manual → IPv4 on:
@@ -338,17 +374,18 @@ snapshot check.
 
 ### Automating this / getting a pre-built VM
 
-There's no automated or downloadable-VM shortcut for this today. Two things
-worth knowing if that's the goal:
+There's no downloadable-VM shortcut for this, and Windows Setup itself
+(Steps 1-5) is still manual. Two things worth knowing:
 
-- **Steps 4–10 above (Windows Setup + hardening + agent install) can be
-  scripted** with a Windows unattended-setup answer file (`autounattend.xml`,
-  fed to `virt-install` as a second virtual CD-ROM) plus a first-logon script
-  doing the same `reg add`/`netsh` commands already documented here. That
-  would turn most of this page into "boot the VM, wait" instead of manual
-  clicking. It hasn't been built for this repo yet — it needs testing
-  against an actual Windows install to get right (answer-file schemas are
-  picky about the exact ISO build), which isn't something to author blind.
+- **Steps 6-10 (hardening + agent install) are already scripted** —
+  `docker/guest-setup/setup-guest.ps1`, see the callout above Step 6. What's
+  left unscripted is specifically Windows Setup itself (Steps 1-5): getting
+  through the offline-account flow and attaching the NIC. That could in
+  principle also be scripted with a Windows unattended-setup answer file
+  (`autounattend.xml`, fed to `virt-install` as a second virtual CD-ROM). It
+  hasn't been built for this repo — it needs testing against an actual
+  Windows install to get right (answer-file schemas are picky about the
+  exact ISO build), which isn't something to author blind.
 - **Distributing the finished VM disk image itself (e.g. via Google Drive)
   is not a good idea, and not just for file-size reasons**: it would contain
   an actual installed copy of Windows. The free consumer ISO's terms cover
@@ -722,6 +759,18 @@ docker restart malwhere-misp
 
 ### MISP web UI login doesn't match `.env`
 Related to the above but separate: the real bootstrap admin account is `admin@admin.test`, not the `MISP_EMAIL` value in docker-compose.yml, and `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to it either. See the MISP login gotcha under Service Access above for the reset commands.
+
+### `PermissionError` on `docker/resubmit_queue/manifest` during a pipeline run
+`docker/resubmit_queue` is a gitignored bind-mount source; if `docker
+compose up` (Quickstart) ran before `run_pipeline.py` ever did — the
+documented order — Docker auto-creates it as root the first time `static`
+starts, and every later host-side write into it fails with
+`PermissionError`. `docker/scripts/host-prereqs.sh` now creates it (owned
+by you, not root) before that can happen; `run_pipeline.py` also
+pre-creates it as a backup, but that only helps on a directory that doesn't
+exist yet, not one Docker already created as root. Fix: re-run
+`sudo ./docker/scripts/host-prereqs.sh` (safe any time, reclaims ownership
+even after the fact) or manually: `sudo chown -R $USER:$USER docker/resubmit_queue`.
 
 ### `pipeline` gets a 403 from MISP even though `MISP_API_KEY` is set in `.env`
 Setting `MISP_API_KEY` in `.env` doesn't make MISP accept it — that value only becomes the `Authorization` header the `pipeline` container sends; MISP's own database still needs a matching key, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`, to even reach the container. See [Configuring & Using MISP, Navigator, and CAPE](#configuring--using-misp-navigator-and-cape) above for both ways to fix it.

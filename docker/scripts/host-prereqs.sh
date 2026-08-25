@@ -32,8 +32,10 @@ log "Checking KVM/libvirt packages..."
 # libvirt-daemon-config-network ships /usr/share/libvirt/networks/default.xml
 # (the default NAT network template) as a Recommends, not a hard Depends
 # of libvirt-daemon-system, so --no-install-recommends below would
-# silently skip it -- listed explicitly here for that reason.
-NEEDED_PKGS="qemu-kvm libvirt-daemon-system libvirt-daemon-config-network libvirt-clients bridge-utils virtinst uidmap libvirt-dev libguestfs-tools"
+# silently skip it -- listed explicitly here for that reason. virt-viewer
+# isn't pulled in by any of the above and isn't present on every Ubuntu
+# build by default (needed later for "Creating the Guest VM"'s Step 4).
+NEEDED_PKGS="qemu-kvm libvirt-daemon-system libvirt-daemon-config-network libvirt-clients bridge-utils virtinst uidmap libvirt-dev libguestfs-tools virt-viewer"
 MISSING_PKGS=""
 for pkg in $NEEDED_PKGS; do
     dpkg -s "$pkg" >/dev/null 2>&1 || MISSING_PKGS="${MISSING_PKGS} ${pkg}"
@@ -219,6 +221,25 @@ if docker image inspect cape:kvm >/dev/null 2>&1; then
     fi
 else
     warn "cape:kvm image not built yet — once it is (see README 'Building the CAPE Image'), re-run this script to also align a host user with the cape container's UID (needed for libvirtd's connection-identity lookup)."
+fi
+
+# docker/resubmit_queue is a bind mount (static's `./resubmit_queue:/resubmit:ro`,
+# docker-compose.yml) and entirely gitignored, so nothing pre-creates it. If
+# `docker compose up` (Quickstart) is the first thing to ever touch that
+# path -- which the documented setup order makes likely, since Quickstart
+# runs before run_pipeline.py ever has -- Docker auto-creates the missing
+# bind-mount source itself, as root. run_pipeline.py also pre-creates this
+# host-side before starting `static`, but that only helps if this directory
+# doesn't already exist; it can't fix one Docker already created as root,
+# since the invoking (non-root) user has no write permission on a root-owned
+# parent to begin with. Doing it here, as root, before any `docker compose
+# up` has necessarily run yet, closes that ordering hole -- and re-running
+# this (idempotent, safe any time) reclaims ownership even if it's already
+# happened.
+if [ -n "${SUDO_USER:-}" ]; then
+    log "Ensuring docker/resubmit_queue is owned by ${SUDO_USER}, not root..."
+    mkdir -p "${REPO_ROOT}/resubmit_queue/manifest" "${REPO_ROOT}/resubmit_queue/artifacts"
+    chown -R "${SUDO_USER}:$(id -gn "$SUDO_USER")" "${REPO_ROOT}/resubmit_queue"
 fi
 
 log "Done. Guest VMs on ${BRIDGE_IF} will now be answered by inetsim at ${GATEWAY_IP} once the sandbox profile is up."

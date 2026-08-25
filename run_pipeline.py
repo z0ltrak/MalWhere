@@ -164,9 +164,11 @@ def ensure_containers(need_dynamic: bool) -> None:
     # the missing bind-mount source, which it does as root. Every later host-side
     # write into it (resubmit_writer.py's manifest_dir/artifacts_dir mkdir, running as
     # the invoking user, not root) then fails with PermissionError. Confirmed hitting
-    # this for real on a fresh clone. Pre-creating both subdirs here, host-side, before
-    # `static` ever starts, guarantees Docker always finds an already-existing,
-    # correctly-owned directory instead of creating one itself.
+    # this for real on a fresh clone. host-prereqs.sh now creates this ahead of time
+    # (as root, so it can also reclaim ownership if Docker already got there first --
+    # this run_pipeline.py step alone can't, since a root-owned parent blocks the
+    # non-root mkdir below too). Kept here as a backup for the case where this
+    # directory genuinely doesn't exist yet.
     for sub in ("manifest", "artifacts"):
         (DOCKER_DIR / "resubmit_queue" / sub).mkdir(parents=True, exist_ok=True)
 
