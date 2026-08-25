@@ -11,13 +11,14 @@
 5. [Available Profiles](#available-profiles)
 6. [Quickstart](#quickstart)
 7. [Service Access](#service-access)
-8. [Daily Workflow](#daily-workflow)
-9. [Running Static Analysis](#running-static-analysis)
-10. [Resubmission Loop](#resubmission-loop)
-11. [Verifying the Static Container](#verifying-the-static-container)
-12. [Stopping the Environment](#stopping-the-environment)
-13. [Rebuilding Images](#rebuilding-images)
-14. [Known Issues & Fixes](#known-issues--fixes)
+8. [Configuring & Using MISP, Navigator, and CAPE](#configuring--using-misp-navigator-and-cape)
+9. [Daily Workflow](#daily-workflow)
+10. [Running Static Analysis](#running-static-analysis)
+11. [Resubmission Loop](#resubmission-loop)
+12. [Verifying the Static Container](#verifying-the-static-container)
+13. [Stopping the Environment](#stopping-the-environment)
+14. [Rebuilding Images](#rebuilding-images)
+15. [Known Issues & Fixes](#known-issues--fixes)
 
 ---
 
@@ -230,9 +231,18 @@ NIC *is* present is finicky and varies by ISO build. Finish Setup this way,
 reach the desktop, then attach the network for real:
 ```bash
 virsh attach-interface win10x64 --type network --source default \
-  --model e1000 --config --live
+  --model e1000 --config
+virsh destroy win10x64 && virsh start win10x64
 ```
-`--config --live` attaches it now **and** makes it persist across reboots.
+**Use `--config` only, not `--live`, then force a restart** —
+`--config --live` (hot-attaching the NIC into the running guest) has been
+unreliable here: Windows sometimes doesn't fully enumerate the new adapter
+until the next boot, so it silently stays without a working NIC even though
+`virsh` reports success. `--config` alone just persists the device in the
+domain XML for the *next* boot; `virsh destroy` (hard power-off, not a
+graceful shutdown — fine here since nothing's been configured on this NIC
+yet) followed by `virsh start` guarantees Windows boots seeing the adapter
+from POST, so it always enumerates correctly.
 **Use `model=e1000`, not the virtio default** — Windows 10 has no built-in
 virtio-net driver, so a virtio NIC shows up unrecognized and "Change adapter
 settings" is empty; e1000 has an in-box driver and, as a side benefit,
@@ -448,6 +458,86 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 
 ---
 
+## Configuring & Using MISP, Navigator, and CAPE
+
+### MISP: getting a working API key
+
+`docker/.env`'s `MISP_API_KEY` value does **not**, by itself, make MISP
+accept anything: it only flows into the `pipeline` container as the
+`MISP_KEY` env var (`docker-compose.yml`'s `pipeline` service), which
+`pipeline/exporter/export_misp.py` sends as the `Authorization` header on
+every request. Nothing tells MISP's own database "accept this string" just
+because it's sitting in `.env`, so an arbitrary value there gets a flat
+`403` from MISP — same category of problem as the MySQL password drift and
+login gotcha under Known Issues below (state baked into `mysql_data` /
+MISP's DB doesn't follow `.env` retroactively). Pick one of these two ways
+to make the two actually match:
+
+**Option A — generate a real key in the UI, then copy it into `.env`.**
+Log into the MISP web UI (`https://localhost`, see Service Access above for
+the `admin@admin.test` gotcha) → top-right avatar → **My Profile** → **Auth
+Keys** tab → **Add authentication key**. Copy the key MISP shows you
+(shown once) into `docker/.env`'s `MISP_API_KEY`, then recreate the
+`pipeline` container so it actually picks up the new value:
+```bash
+docker compose -f docker/docker-compose.yml --profile core up -d pipeline
+```
+`docker compose restart pipeline` is **not** enough here — Compose only
+re-interpolates `${MISP_API_KEY}` from `.env` when a container is created,
+not on restart, so a `.env` edit after the container already exists is
+silently ignored until it's recreated.
+
+**Option B — force MISP's key to match whatever you already put in `.env`**
+(same pattern as the password reset already used in the login gotcha
+below):
+```bash
+docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey \
+  admin@admin.test "$(grep ^MISP_API_KEY= docker/.env | cut -d= -f2)"
+```
+
+Either way, `redis` must actually be running before you touch MISP at all
+— see "`redis` needs to be running before `misp` starts" under Known
+Issues; a down `redis` produces a misleading auth-looking failure that has
+nothing to do with the key itself. Sanity-check the key works before
+running an export:
+```bash
+curl -sk -H "Authorization: $(grep ^MISP_API_KEY= docker/.env | cut -d= -f2)" \
+  -H "Accept: application/json" https://localhost/servers/getVersion.json
+```
+A working key returns MISP's version JSON; a bad one returns `{"name":
+"Authentication failed...","message":"Authentication failed...", ...}`
+with HTTP 403.
+
+### ATT&CK Navigator: loading a result layer
+
+Navigator (`http://localhost:4200`, no auth) doesn't have `results/`
+loaded by default — you point it there yourself. The `navigator` service
+serves the repo's `results/` directory read-only at `/results/`
+(`docker/navigator/default.conf`), so after a pipeline run:
+
+1. Open `http://localhost:4200`.
+2. **Open Existing Layer** → **Upload from URL**.
+3. Enter `http://localhost:4200/results/<family>/attck/navigator_layer.json`
+   (e.g. `.../results/akira/attck/navigator_layer.json`).
+
+Not sure of the exact family/path? `http://localhost:4200/results/` on its
+own renders a plain directory listing (autoindex) you can click through.
+
+### CAPE: web UI and container shell
+
+The web UI (`http://localhost:8000`, no auth in local-dev mode) is enough
+for browsing tasks/reports day to day. For anything that needs the CAPE
+service itself — checking `systemctl status`, restarting `cape-web`, the
+PostgreSQL role fix — get a shell in the container:
+```bash
+docker exec -it malwhere-cape bash
+```
+See [Verifying CAPE is Running](#verifying-cape-is-running) above for the
+specific status/API checks to run once inside (or from the host, for the
+API ones).
+
+---
+
 ## Daily Workflow
 
 ```bash
@@ -632,6 +722,9 @@ docker restart malwhere-misp
 
 ### MISP web UI login doesn't match `.env`
 Related to the above but separate: the real bootstrap admin account is `admin@admin.test`, not the `MISP_EMAIL` value in docker-compose.yml, and `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to it either. See the MISP login gotcha under Service Access above for the reset commands.
+
+### `pipeline` gets a 403 from MISP even though `MISP_API_KEY` is set in `.env`
+Setting `MISP_API_KEY` in `.env` doesn't make MISP accept it — that value only becomes the `Authorization` header the `pipeline` container sends; MISP's own database still needs a matching key, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`, to even reach the container. See [Configuring & Using MISP, Navigator, and CAPE](#configuring--using-misp-navigator-and-cape) above for both ways to fix it.
 
 ### `redis` needs to be running before `misp` starts
 MISP uses `redis` for session storage: if it's down, MISP's web/API layer fails on *every* request (including pure API calls) with a misleading "Authentication failed" error that has nothing to do with the API key. `docker-compose.yml`'s `misp` service now has `depends_on: redis` with a healthcheck, so a fresh `docker compose up` won't hit this: but if you ever stop `redis` manually while `misp` keeps running, you'll need to restart `misp` too, not just `redis`.
