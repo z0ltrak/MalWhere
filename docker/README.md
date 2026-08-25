@@ -617,6 +617,18 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 
 ## Running Static Analysis
 
+> **This is the static-analysis stage only, run by hand.** Once the
+> environment above is set up (containers running, and — if you want
+> dynamic analysis too — the CAPE image built and the guest VM created),
+> you don't need to run stages one at a time: the main
+> [README.md](../README.md)'s [**"Run the pipeline on a
+> sample"**](../README.md#run-the-pipeline-on-a-sample) section covers
+> `run_pipeline.py`, the single entry point that chains static analysis →
+> CAPE detonation → resubmission → ATT&CK mapping → STIX/MISP export
+> automatically. The manual commands below (and in "Resubmission Loop"
+> further down) stay useful for running one stage in isolation or
+> debugging a specific step.
+
 ```bash
 # Enter the static container
 docker exec -it malwhere-static bash
