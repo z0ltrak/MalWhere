@@ -21,7 +21,7 @@ The pipeline is validated against three representative malware families:
 |---|---|---|---|
 | **Akira** | Ransomware + EDR-Killer | C++ | BYOVD, VSS deletion, ChaCha20+RSA encryption, EDR process termination |
 | **WhiteSnakeStealer** | Infostealer | .NET | MaaS model, credential theft, keylogging, sandbox evasion |
-| **RONINGLOADER** | Loader + EDR-Killer + RAT | Multi-stage | PPL abuse, signed driver abuse, WDAC bypass, Gh0st RAT delivery |
+| **RONINGLOADER** | Loader + EDR-Killer + RAT | Multi-stage | PPL abuse, signed driver abuse, WDAC bypass, Gh0st RAT delivery | 
 
 
 ---
