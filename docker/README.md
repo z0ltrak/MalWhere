@@ -446,17 +446,23 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox up 
 # 5. MISP setup -- mandatory once the sandbox profile from step 4 is up
 #    (skip this if you only ran the core profile: no MISP container
 #    exists). MISP's own admin account and API key don't follow
-#    docker/.env on their own, see "MISP: getting a working API key" below
-#    for why, so pick real values and set them in MISP directly first, then
-#    write the same ones into docker/.env's MISP_ADMIN_PASSWORD/
-#    MISP_API_KEY. MISP can take a minute or two to finish initializing its
-#    database on first boot -- these fail with a connection error until it
-#    has, just retry.
+#    docker/.env on their own -- nothing tells MISP's database to accept a
+#    string just because it's sitting in .env -- so pick real values, set
+#    them in MISP directly, then write the same ones into docker/.env's
+#    MISP_ADMIN_PASSWORD/MISP_API_KEY. redis must already be running for
+#    this to work (see "redis needs to be running before misp starts"
+#    under Known Issues) and MISP can take a minute or two to finish
+#    initializing on first boot -- both failure modes just mean retry.
 docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_pw admin@admin.test 'YOUR_PASSWORD'
 docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey admin@admin.test 'YOUR_API_KEY'
 # Now set docker/.env's MISP_ADMIN_PASSWORD/MISP_API_KEY to the same
 # YOUR_PASSWORD/YOUR_API_KEY, then:
 docker compose -f docker/docker-compose.yml --profile core up -d pipeline
+
+# Sanity-check the key actually works (a working key returns MISP's
+# version JSON; a bad one 403s with "Authentication failed...")
+curl -sk -H "Authorization: $(grep ^MISP_API_KEY= docker/.env | cut -d= -f2)" \
+  -H "Accept: application/json" https://localhost/servers/getVersion.json
 
 # 6. Verify everything is running
 docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
@@ -497,59 +503,6 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 ---
 
 ## Configuring & Using MISP, Navigator, and CAPE
-
-### MISP: getting a working API key
-
-**Quickstart step 5 already does this for you (Option B below)** — read on
-for why it's needed, or to use Option A (generate the key from MISP's own
-UI) instead.
-
-`docker/.env`'s `MISP_API_KEY` value does **not**, by itself, make MISP
-accept anything: it only flows into the `pipeline` container as the
-`MISP_KEY` env var (`docker-compose.yml`'s `pipeline` service), which
-`pipeline/exporter/export_misp.py` sends as the `Authorization` header on
-every request. Nothing tells MISP's own database "accept this string" just
-because it's sitting in `.env`, so an arbitrary value there gets a flat
-`403` from MISP — same category of problem as the MySQL password drift and
-login gotcha under Known Issues below (state baked into `mysql_data` /
-MISP's DB doesn't follow `.env` retroactively). Pick one of these two ways
-to make the two actually match:
-
-**Option A — generate a real key in the UI, then copy it into `.env`.**
-Log into the MISP web UI (`https://localhost`, see Service Access above for
-the `admin@admin.test` gotcha) → top-right avatar → **My Profile** → **Auth
-Keys** tab → **Add authentication key**. Copy the key MISP shows you
-(shown once) into `docker/.env`'s `MISP_API_KEY`, then recreate the
-`pipeline` container so it actually picks up the new value:
-```bash
-docker compose -f docker/docker-compose.yml --profile core up -d pipeline
-```
-`docker compose restart pipeline` is **not** enough here — Compose only
-re-interpolates `${MISP_API_KEY}` from `.env` when a container is created,
-not on restart, so a `.env` edit after the container already exists is
-silently ignored until it's recreated.
-
-**Option B — set a key of your choosing directly in MISP, then write the
-same one into `.env`** (this is what Quickstart step 5 does, for the admin
-password too):
-```bash
-docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey \
-  admin@admin.test 'YOUR_API_KEY'
-# then set docker/.env's MISP_API_KEY to the same YOUR_API_KEY
-```
-
-Either way, `redis` must actually be running before you touch MISP at all
-— see "`redis` needs to be running before `misp` starts" under Known
-Issues; a down `redis` produces a misleading auth-looking failure that has
-nothing to do with the key itself. Sanity-check the key works before
-running an export:
-```bash
-curl -sk -H "Authorization: $(grep ^MISP_API_KEY= docker/.env | cut -d= -f2)" \
-  -H "Accept: application/json" https://localhost/servers/getVersion.json
-```
-A working key returns MISP's version JSON; a bad one returns `{"name":
-"Authentication failed...","message":"Authentication failed...", ...}`
-with HTTP 403.
 
 ### ATT&CK Navigator: loading a result layer
 
@@ -807,7 +760,7 @@ directory too; re-run `sudo ./docker/scripts/host-prereqs.sh` (safe any
 time) or fix it manually: `sudo chown -R $USER:$USER dynamic/reports/inetsim`.
 
 ### `pipeline` gets a 403 from MISP even though `MISP_API_KEY` is set in `.env`
-`.env` and MISP's own database don't sync automatically, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`. See [MISP: getting a working API key](#misp-getting-a-working-api-key) above for both ways to fix it.
+`.env` and MISP's own database don't sync automatically, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`. See [Quickstart](#quickstart) step 5 for the fix — set the same key directly on the MISP account, then into `.env`, then recreate `pipeline`.
 
 ### `redis` needs to be running before `misp` starts
 MISP uses `redis` for session storage: if it's down, MISP's web/API layer fails on *every* request (including pure API calls) with a misleading "Authentication failed" error that has nothing to do with the API key. `docker-compose.yml`'s `misp` service now has `depends_on: redis` with a healthcheck, so a fresh `docker compose up` won't hit this: but if you ever stop `redis` manually while `misp` keeps running, you'll need to restart `misp` too, not just `redis`.
