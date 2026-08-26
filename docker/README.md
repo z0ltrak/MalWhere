@@ -279,11 +279,14 @@ and Python + CAPE agent install below in one pass — the exact same
 commands, just typed once instead of by hand, which is what's been causing
 real setup mistakes (wrong adapter, wrong IP, a typo in a `reg add`). It
 prints what to do next (reboot, verify the agent, take the snapshot) when
-it finishes. Steps 6-10 below are kept as the manual reference for what it
-does and for troubleshooting if something about your machine doesn't match
-its assumptions (e.g. Defender Tamper Protection being on — the script
-detects and warns about this specific case, see its `.NOTES`) — if you ran
-it successfully, skip straight to **Step 11**.
+it finishes. Steps 6-10, collapsed below, are kept as the manual reference
+for what it does and for troubleshooting if something about your machine
+doesn't match its assumptions (e.g. Defender Tamper Protection being on —
+the script detects and warns about this specific case, see its `.NOTES`) —
+if you ran it successfully, skip straight to **Step 11**.
+
+<details>
+<summary><b>Steps 6-10, by hand</b> (skip this if <code>setup-guest.ps1</code> above already ran successfully — go straight to Step 11)</summary>
 
 **Step 6 — static IP, with DNS pointed at the gateway.** Network settings →
 your Ethernet adapter → Edit IP settings → Manual → IPv4 on:
@@ -355,6 +358,8 @@ driver, which needs a real admin token, not a filtered one.
    curl -s http://192.168.122.100:8000/ | python3 -m json.tool
    # expect: {"message": "CAPE Agent!", ..., "is_user_admin": true}
    ```
+
+</details>
 
 **Step 11 — snapshot.** With the VM in exactly this state: logged in, agent
 listening, nothing left to configure: take a **live** snapshot (VM running,
