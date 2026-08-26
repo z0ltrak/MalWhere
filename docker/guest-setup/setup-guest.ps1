@@ -7,11 +7,14 @@
     Run this from an elevated PowerShell prompt, INSIDE the guest VM, once
     you've reached the desktop with the network attached (README step 5) and
     logged in as the mandatory local account below. It automates:
-      - Step 6: static IP + DNS on the sandbox network
+      - Step 6a: download Python 3.12 and the CAPE agent (needs real
+        internet -- done first, deliberately, before DNS switches to the
+        sandbox network's fake-answer-only resolver in 6b)
+      - Step 6b: static IP + DNS on the sandbox network
       - Step 7: auto-login registry keys
       - Step 8: disable Windows Update, Defender, and the firewall
       - Step 9: fully disable UAC (not just the "Never notify" slider)
-      - Step 10: install Python 3.12, drop the CAPE agent, and start it at
+      - Step 10: install Python, wire up the CAPE agent, and start it at
         every logon via a Startup-folder shortcut
 
     It does NOT do Windows Setup itself (README steps 1-5) or the final
@@ -58,11 +61,24 @@ $AgentPath       = 'C:\agent.py'
 function Write-Step($msg) { Write-Host "`n==> $msg" -ForegroundColor Cyan }
 function Write-Warn2($msg) { Write-Host "    WARNING: $msg" -ForegroundColor Yellow }
 
-# --- Step 6: static IP + DNS ------------------------------------------------
-Write-Step "Setting static IP $StaticIP/$PrefixLength, gateway $Gateway, DNS $DnsServer"
+# --- Step 6a: download Python + the CAPE agent while real DNS still works --
+# Has to happen before the switch to the sandbox's static IP/DNS below: once
+# DNS points at $DnsServer (inetsim, by design a fake-answer-only blackhole
+# with real DNS forwarding deliberately disabled -- see docker/README.md's
+# "guest VM resolves real domains" Known Issue), python.org and
+# raw.githubusercontent.com stop resolving to anything real. Force a public
+# resolver on the current (DHCP) config just long enough to grab both files.
+Write-Step "Fetching Python $PythonVersion and the CAPE agent (needs real internet, done before the sandbox network lockdown below)"
 $adapter = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' } | Select-Object -First 1
 if (-not $adapter) { throw "No active network adapter found -- attach the NIC (README step 5) before running this script." }
+Set-DnsClientServerAddress -InterfaceIndex $adapter.ifIndex -ServerAddresses 8.8.8.8
 
+$pyInstaller = Join-Path $env:TEMP 'python-installer.exe'
+Invoke-WebRequest -Uri $PythonUrl -OutFile $pyInstaller
+Invoke-WebRequest -Uri $AgentUrl -OutFile $AgentPath
+
+# --- Step 6b: static IP + DNS -----------------------------------------------
+Write-Step "Setting static IP $StaticIP/$PrefixLength, gateway $Gateway, DNS $DnsServer"
 Get-NetIPAddress -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue |
     Remove-NetIPAddress -Confirm:$false -ErrorAction SilentlyContinue
 Get-NetRoute -InterfaceIndex $adapter.ifIndex -AddressFamily IPv4 -ErrorAction SilentlyContinue |
@@ -147,9 +163,10 @@ Set-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Syste
     -Name EnableLUA -Value 0 -Type DWord
 
 # --- Step 10: Python + CAPE agent -------------------------------------------
-Write-Step "Downloading and installing Python $PythonVersion"
-$pyInstaller = Join-Path $env:TEMP 'python-installer.exe'
-Invoke-WebRequest -Uri $PythonUrl -OutFile $pyInstaller
+# Both files were already fetched in Step 6a, before the network went into
+# its final sandboxed (no-real-DNS) state -- this just installs/wires up
+# what's already on disk, no network needed here.
+Write-Step "Installing Python $PythonVersion"
 Start-Process $pyInstaller -ArgumentList '/quiet InstallAllUsers=1 PrependPath=1' -Wait
 
 $pythonwPath = "C:\Program Files\Python$($PythonVersion -replace '\.\d+$','' -replace '\.','')\pythonw.exe"
@@ -160,9 +177,6 @@ if (-not (Test-Path $pythonwPath)) {
     else { throw "pythonw.exe not found after install -- check $pyInstaller ran correctly." }
 }
 Write-Host "    Using pythonw.exe at: $pythonwPath"
-
-Write-Step "Downloading the CAPE agent to $AgentPath"
-Invoke-WebRequest -Uri $AgentUrl -OutFile $AgentPath
 
 Write-Step "Creating a Startup-folder shortcut so the agent runs at every logon"
 $startupDir = [Environment]::GetFolderPath('Startup')

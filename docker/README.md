@@ -287,6 +287,14 @@ if you ran it successfully, skip straight to **Step 11**.
 <details>
 <summary><b>Steps 6-10, by hand</b> (skip this if <code>setup-guest.ps1</code> above already ran successfully — go straight to Step 11)</summary>
 
+**Do Step 10's downloads first, before this step** — once DNS points at
+`inetsim` below, it's a fake-answer-only blackhole by design (real
+forwarding is deliberately disabled, see the "guest VM resolves real
+domains" Known Issue), so `python.org` and `raw.githubusercontent.com`
+stop resolving to anything real. Grab the Python installer and `agent.py`
+while the adapter's still on DHCP with working real DNS, *then* come back
+and do this step.
+
 **Step 6 — static IP, with DNS pointed at the gateway.** Network settings →
 your Ethernet adapter → Edit IP settings → Manual → IPv4 on:
 | Field | Value |
