@@ -119,7 +119,7 @@ cd kvm-cape-docker
 git checkout kvm
 
 # 3. Build the image (takes 15-30 minutes on first run)
-# `make all` inits the CAPEv2 submodule for you -- see Troubleshooting below
+# `make all` inits the CAPEv2 submodule for you -- see Known Issues & Fixes
 # if you're on the upstream repo instead and hit "CAPEv2/installer not found".
 make all
 
@@ -128,48 +128,20 @@ docker images | grep cape
 # Expected: cape    kvm    <id>    <size ~5-6GB>
 ```
 
-> **Attribution:** This CAPE Docker setup is based on the excellent work by [celyrin](https://github.com/celyrin) in the [cape-docker](https://github.com/celyrin/cape-docker) repository. We use our own fork, [z0ltrak/kvm-cape-docker](https://github.com/z0ltrak/kvm-cape-docker) (`kvm` branch), which bakes in fixes for two build failures hit bringing this up on a second machine -- see Troubleshooting below for what they were, in case you're working from upstream instead.
+> **Attribution:** This CAPE Docker setup is based on the excellent work by [celyrin](https://github.com/celyrin) in the [cape-docker](https://github.com/celyrin/cape-docker) repository. We use our own fork, [z0ltrak/kvm-cape-docker](https://github.com/z0ltrak/kvm-cape-docker) (`kvm` branch), which bakes in fixes for two build failures hit bringing this up on a second machine -- see [Known Issues & Fixes](#known-issues--fixes) for what they were, in case you're working from upstream instead.
 
-### Troubleshooting the Build
-
-Our fork above already fixes both of these. They're documented here in case
-you're building from upstream `celyrin/cape-docker` instead:
-
-**Error: "CAPEv2/installer not found"**
-
-CAPEv2 is a git submodule; a plain `git clone` leaves it empty. Either clone
-with `--recurse-submodules`, or:
-```bash
-cd ~/cape-docker
-git submodule update --init --recursive
-make all
-```
-
-**Error: "poetry: not found"**
-```bash
-# Edit the Dockerfile to install poetry before use
-cd ~/cape-docker
-nano Dockerfile
-# Add this line before RUN poetry install:
-# RUN sudo pip3 install poetry
-# Then rebuild: make all
-```
+Building from upstream `celyrin/cape-docker` instead of our fork? See
+[Known Issues & Fixes](#known-issues--fixes) for the two build errors
+("`CAPEv2/installer not found`", "`poetry: not found`") our fork already
+fixes.
 
 ### Post-Build: PostgreSQL Setup
 
-After the image is built and you start the sandbox profile, the `cape` container initializes its PostgreSQL/MongoDB databases (`cape_task_db`, `cape_postgres_data`, `cape_mongo_data`) on first boot. If it fails (which can happen if PostgreSQL isn't ready in time), create the role manually:
-
-```bash
-# Start the sandbox profile first
-docker compose -f docker/docker-compose.yml --profile sandbox up -d cape
-
-# Wait 10 seconds, then create the DB role if needed
-docker exec malwhere-cape sudo -u postgres psql -c \
-  "CREATE ROLE cape WITH SUPERUSER LOGIN PASSWORD 'SuperPuperSecret';"
-docker exec malwhere-cape sudo -u postgres psql -c \
-  "CREATE DATABASE cape WITH OWNER cape;"
-docker exec malwhere-cape systemctl restart cape-web cape
-```
+After the image is built and you start the sandbox profile, the `cape`
+container initializes its PostgreSQL/MongoDB databases (`cape_task_db`,
+`cape_postgres_data`, `cape_mongo_data`) on first boot. If `cape-web` fails
+to come up, see [Known Issues & Fixes](#known-issues--fixes) ("CAPE's
+PostgreSQL role missing after a fresh build") for the manual fix.
 
 ### Verifying CAPE is Running
 
@@ -414,23 +386,9 @@ There's no downloadable-VM shortcut for this, and Windows Setup itself
   script above (pure scripts/config, no Microsoft IP in it) is the
   legitimate way to get them a fast, low-effort build of their own.
 
-### A libvirt host quirk worth knowing about
-
-If `virsh`/CAPE intermittently fail with `Permission denied` or `Connection
-refused` on `/var/run/libvirt/libvirt-sock`, and the socket's group keeps
-flip-flopping between `libvirt` and something unrelated (e.g. `nm-openvpn`)
-independent of anything you're doing: that's what happens when something
-else on the host recreates `libvirtd.socket` mid-session (its unit uses
-`SocketMode=0660`/`SocketGroup=libvirt`, freshly resolved from `/etc/group`
-each time it's (re)created). The `cape` image's own fixes (masking its
-internal `libvirtd` so it can't compete for the same bind-mounted socket, and
-realigning its `libvirt` group GID to match the host's on every service
-start: see `docker/cape/Dockerfile`) handle the container side automatically.
-If it's still happening, `sudo systemctl restart libvirtd.socket libvirtd.service`
-on the host resolves it: a "Job failed" message from restarting both units
-together is usually just an ordering race, not a real failure; check
-`systemctl is-active libvirtd.socket libvirtd.service` afterward before
-assuming it didn't work.
+**Seeing intermittent `Permission denied`/`Connection refused` from `virsh`
+or CAPE?** See [Known Issues & Fixes](#known-issues--fixes) for a host-side
+libvirt socket quirk that causes exactly this.
 
 ---
 
@@ -504,19 +462,12 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 > MISP's own image defaults win over that env var on first init. Worse,
 > `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to that account
 > either, so "log in with the password from `.env`" may just fail. If it does,
-> reset both credentials directly against the running container, this is a
-> live fix against the `mysql_data` volume, not something a `docker-compose.yml`
-> change can set once and forget:
-> ```bash
-> docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_pw admin@admin.test 'YOUR_PASSWORD'
-> docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey admin@admin.test 'YOUR_API_KEY'
-> ```
-> Same category of issue as the MISP MySQL password drift (see Known Issues
-> below): if `mysql_data` is ever rebuilt from scratch, both resets need
-> to be redone.
+> see [Known Issues & Fixes](#known-issues--fixes) ("MISP web UI login doesn't
+> match `.env`") for the reset commands.
 
 > **CAPE note:** PostgreSQL `cape` role must exist before cape-web starts.
-> If CAPE fails after a fresh deploy, run the PostgreSQL setup commands from the Post-Build section above.
+> If CAPE fails after a fresh deploy, see [Known Issues & Fixes](#known-issues--fixes)
+> ("CAPE's PostgreSQL role missing after a fresh build") for the fix.
 
 ---
 
@@ -795,7 +746,12 @@ docker restart malwhere-misp
 ```
 
 ### MISP web UI login doesn't match `.env`
-Related to the above but separate: the real bootstrap admin account is `admin@admin.test`, not the `MISP_EMAIL` value in docker-compose.yml, and `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to it either. See the MISP login gotcha under Service Access above for the reset commands.
+Related to the above but separate: the real bootstrap admin account is `admin@admin.test`, not the `MISP_EMAIL` value in docker-compose.yml (see the MISP login gotcha under [Service Access](#service-access)), and `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to it either. Reset both credentials directly against the running container — this is a live fix against the `mysql_data` volume, not something a `docker-compose.yml` change can set once and forget:
+```bash
+docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_pw admin@admin.test 'YOUR_PASSWORD'
+docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey admin@admin.test 'YOUR_API_KEY'
+```
+Same category of issue as the MISP MySQL password drift above: if `mysql_data` is ever rebuilt from scratch, both resets need to be redone.
 
 ### `PermissionError` on `docker/resubmit_queue/manifest` during a pipeline run
 `docker/resubmit_queue` is a gitignored bind-mount source; if `docker
@@ -810,7 +766,7 @@ exist yet, not one Docker already created as root. Fix: re-run
 even after the fact) or manually: `sudo chown -R $USER:$USER docker/resubmit_queue`.
 
 ### `pipeline` gets a 403 from MISP even though `MISP_API_KEY` is set in `.env`
-Setting `MISP_API_KEY` in `.env` doesn't make MISP accept it — that value only becomes the `Authorization` header the `pipeline` container sends; MISP's own database still needs a matching key, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`, to even reach the container. See [Configuring & Using MISP, Navigator, and CAPE](#configuring--using-misp-navigator-and-cape) above for both ways to fix it.
+`.env` and MISP's own database don't sync automatically, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`. See [MISP: getting a working API key](#misp-getting-a-working-api-key) above for both ways to fix it.
 
 ### `redis` needs to be running before `misp` starts
 MISP uses `redis` for session storage: if it's down, MISP's web/API layer fails on *every* request (including pure API calls) with a misleading "Authentication failed" error that has nothing to do with the API key. `docker-compose.yml`'s `misp` service now has `depends_on: redis` with a healthcheck, so a fresh `docker compose up` won't hit this: but if you ever stop `redis` manually while `misp` keeps running, you'll need to restart `misp` too, not just `redis`.
@@ -821,8 +777,42 @@ Historically this base image was `remnux/remnux-distro:focal` rather than plain 
 ### Containers not stopping with `docker compose stop`
 Always include the same `--profile` flags used at startup. Without them, Docker Compose cannot resolve which containers belong to the current configuration.
 
+### CAPE's PostgreSQL role missing after a fresh build
+After the image is built and you start the sandbox profile, the `cape` container initializes its PostgreSQL/MongoDB databases (`cape_task_db`, `cape_postgres_data`, `cape_mongo_data`) on first boot. If `cape-web` fails to start because PostgreSQL wasn't ready in time, create the role manually:
+```bash
+# Start the sandbox profile first
+docker compose -f docker/docker-compose.yml --profile sandbox up -d cape
+
+# Wait 10 seconds, then create the DB role if needed
+docker exec malwhere-cape sudo -u postgres psql -c \
+  "CREATE ROLE cape WITH SUPERUSER LOGIN PASSWORD 'SuperPuperSecret';"
+docker exec malwhere-cape sudo -u postgres psql -c \
+  "CREATE DATABASE cape WITH OWNER cape;"
+docker exec malwhere-cape systemctl restart cape-web cape
+```
+
+### `virsh`/CAPE intermittently fail with "Permission denied" or "Connection refused"
+On `/var/run/libvirt/libvirt-sock`, with the socket's group flip-flopping between `libvirt` and something unrelated (e.g. `nm-openvpn`) independent of anything you're doing: that's what happens when something else on the host recreates `libvirtd.socket` mid-session (its unit uses `SocketMode=0660`/`SocketGroup=libvirt`, freshly resolved from `/etc/group` each time it's (re)created). The `cape` image's own fixes (masking its internal `libvirtd` so it can't compete for the same bind-mounted socket, and realigning its `libvirt` group GID to match the host's on every service start: see `docker/cape/Dockerfile`) handle the container side automatically. If it's still happening, `sudo systemctl restart libvirtd.socket libvirtd.service` on the host resolves it: a "Job failed" message from restarting both units together is usually just an ordering race, not a real failure; check `systemctl is-active libvirtd.socket libvirtd.service` afterward before assuming it didn't work.
+
 ### CAPE build fails with "poetry: not found" or "CAPEv2/installer not found"
-Both fixed in our fork ([z0ltrak/kvm-cape-docker](https://github.com/z0ltrak/kvm-cape-docker), `kvm` branch) -- see [Building the CAPE Image](#building-the-cape-image-required-first-step) above. If you're building from upstream `celyrin/cape-docker` instead, see the Troubleshooting subsection there for the manual fixes.
+Both fixed in our fork ([z0ltrak/kvm-cape-docker](https://github.com/z0ltrak/kvm-cape-docker), `kvm` branch) -- see [Building the CAPE Image](#building-the-cape-image-required-first-step) above. If you're building from upstream `celyrin/cape-docker` instead:
+
+**"CAPEv2/installer not found"** -- CAPEv2 is a git submodule; a plain `git clone` leaves it empty. Either clone with `--recurse-submodules`, or:
+```bash
+cd ~/cape-docker
+git submodule update --init --recursive
+make all
+```
+
+**"poetry: not found"**
+```bash
+# Edit the Dockerfile to install poetry before use
+cd ~/cape-docker
+nano Dockerfile
+# Add this line before RUN poetry install:
+# RUN sudo pip3 install poetry
+# Then rebuild: make all
+```
 
 ---
 
