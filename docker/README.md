@@ -418,18 +418,17 @@ libvirt socket quirk that causes exactly this.
 ## Quickstart
 
 ```bash
-# 1. Copy environment variables, then edit docker/.env with a real
-#    MISP_API_KEY and MISP_ADMIN_PASSWORD of your choosing (leave
-#    LIBVIRT_GATEWAY/LIBVIRT_BRIDGE as-is, step 2 below overwrites just
-#    those two lines in place with real values, without touching what you
-#    just set here). GUEST_VM_IP is NOT filled in by that step either --
-#    set it by hand once you've created the win10x64 guest VM ("Creating
-#    the Guest VM" above, Step 6), to the static IP you gave it there, e.g.
-#    192.168.122.100. Sandbox profile containers (cape/cape-processor) fail
-#    to start without it, see get_env_for_cape() in run_pipeline.py.
-#    Whatever you set MISP_API_KEY/MISP_ADMIN_PASSWORD to here is just a
-#    placeholder until step 5 below makes MISP's own database actually
-#    accept it -- MISP doesn't exist yet at this point in Quickstart.
+# 1. Copy environment variables. Leave LIBVIRT_GATEWAY/LIBVIRT_BRIDGE as-is
+#    (step 2 below overwrites just those two lines in place with real
+#    values) and MISP_API_KEY/MISP_ADMIN_PASSWORD as their placeholders for
+#    now -- step 5 below has you pick real values, set them in MISP
+#    directly, then write them here (MISP doesn't exist yet at this point
+#    in Quickstart, so there's nothing to set them on). GUEST_VM_IP is NOT
+#    filled in by step 2 either -- set it by hand once you've created the
+#    win10x64 guest VM ("Creating the Guest VM" above, Step 6), to the
+#    static IP you gave it there, e.g. 192.168.122.100. Sandbox profile
+#    containers (cape/cape-processor) fail to start without it, see
+#    get_env_for_cape() in run_pipeline.py.
 cp docker/.env.example docker/.env
 
 # 2. Host libvirt/KVM setup, see "Host Setup: libvirt/KVM" above (one-time,
@@ -448,11 +447,15 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox up 
 #    (skip this if you only ran the core profile: no MISP container
 #    exists). MISP's own admin account and API key don't follow
 #    docker/.env on their own, see "MISP: getting a working API key" below
-#    for why, so force both to match what you set in step 1. MISP can take
-#    a minute or two to finish initializing its database on first boot --
-#    these fail with a connection error until it has, just retry.
-docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_pw admin@admin.test "$(grep ^MISP_ADMIN_PASSWORD= docker/.env | cut -d= -f2)"
-docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey admin@admin.test "$(grep ^MISP_API_KEY= docker/.env | cut -d= -f2)"
+#    for why, so pick real values and set them in MISP directly first, then
+#    write the same ones into docker/.env's MISP_ADMIN_PASSWORD/
+#    MISP_API_KEY. MISP can take a minute or two to finish initializing its
+#    database on first boot -- these fail with a connection error until it
+#    has, just retry.
+docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_pw admin@admin.test 'YOUR_PASSWORD'
+docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey admin@admin.test 'YOUR_API_KEY'
+# Now set docker/.env's MISP_ADMIN_PASSWORD/MISP_API_KEY to the same
+# YOUR_PASSWORD/YOUR_API_KEY, then:
 docker compose -f docker/docker-compose.yml --profile core up -d pipeline
 
 # 6. Verify everything is running
@@ -480,9 +483,11 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 > not the `MISP_EMAIL` value set in docker-compose.yml (`admin@malwhere.local`),
 > MISP's own image defaults win over that env var on first init. Worse,
 > `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to that account
-> either, so "log in with the password from `.env`" fails unless you ran
-> Quickstart step 5 (which resets it to match). If you skipped that step, or
-> it still fails, see [Known Issues & Fixes](#known-issues--fixes) ("MISP web
+> either, so "log in with the password from `.env`" only works once you've
+> run Quickstart step 5 — which sets the real password on the account
+> directly, then has you copy that same password into `.env`. If you
+> skipped that step, or it still fails, see [Known Issues &
+> Fixes](#known-issues--fixes) ("MISP web
 > UI login doesn't match `.env`") for the reset commands.
 
 > **CAPE note:** PostgreSQL `cape` role must exist before cape-web starts.
@@ -524,11 +529,13 @@ re-interpolates `${MISP_API_KEY}` from `.env` when a container is created,
 not on restart, so a `.env` edit after the container already exists is
 silently ignored until it's recreated.
 
-**Option B — force MISP's key to match whatever you already put in `.env`**
-(same pattern Quickstart step 5 uses for the admin password too):
+**Option B — set a key of your choosing directly in MISP, then write the
+same one into `.env`** (this is what Quickstart step 5 does, for the admin
+password too):
 ```bash
 docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey \
-  admin@admin.test "$(grep ^MISP_API_KEY= docker/.env | cut -d= -f2)"
+  admin@admin.test 'YOUR_API_KEY'
+# then set docker/.env's MISP_API_KEY to the same YOUR_API_KEY
 ```
 
 Either way, `redis` must actually be running before you touch MISP at all
