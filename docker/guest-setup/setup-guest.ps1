@@ -37,6 +37,13 @@
 #Requires -RunAsAdministrator
 $ErrorActionPreference = 'Stop'
 
+# Windows PowerShell 5.1's default SecurityProtocol on a fresh, unpatched
+# Windows 10 install doesn't include TLS 1.2 -- python.org (and
+# raw.githubusercontent.com) refuse the handshake, and Invoke-WebRequest
+# below fails with "The underlying connection was closed: An unexpected
+# error occurred on a send." Force it before either download runs.
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 $SandboxUser     = 'sandbox'
 $SandboxPassword = 'sandbox'
 $StaticIP        = '192.168.122.100'
