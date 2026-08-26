@@ -267,11 +267,10 @@ doesn't announce itself as a VM to samples doing basic anti-analysis checks
 the way "Red Hat VirtIO Ethernet Adapter" does.
 
 **Fast path: run the setup script instead of Steps 6-10 by hand.** Once
-you're on the desktop with the network attached, download
-[`setup-guest.ps1`](https://raw.githubusercontent.com/z0ltrak/MalWhere/main/docker/guest-setup/setup-guest.ps1)
-(right-click → Save As, or `Invoke-WebRequest` from an elevated
-PowerShell) and run it **elevated**:
+you're on the desktop with the network attached, from an **elevated**
+PowerShell prompt:
 ```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/z0ltrak/MalWhere/main/docker/guest-setup/setup-guest.ps1" -OutFile setup-guest.ps1
 powershell -ExecutionPolicy Bypass -File setup-guest.ps1
 ```
 It does the static IP, auto-login, Defender/Update/firewall/UAC hardening,
@@ -313,10 +312,35 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultU
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /t REG_SZ /d "YOUR_PASSWORD" /f
 ```
 
-**Step 8 — disable Windows Update, Defender, and the firewall.** Defender:
-real-time protection, cloud-delivered protection, automatic sample
-submission, tamper protection — all off, a live Defender will
-flag/quarantine samples before CAPE's agent gets a look at them. Firewall:
+**Step 8 — disable Windows Update, Defender, and the firewall.** Defender's
+behavior monitor will silently neutralize CAPE's monitor injection before it
+captures anything — and it does this with **no error, no crash, no visible
+sign at all**. A guest with Defender quietly still on produces
+"successful" analyses with zero real behavioral data (no `logs/`, no
+dropped files, no screenshots) forever, which looks exactly like "the
+malware just didn't do anything," not like a broken sandbox. This actually
+happened building this project: `Set-MpPreference` alone was run, reported
+no errors, and Defender was still fully active weeks later with Tamper
+Protection confirmed OFF the whole time — the preference-based disable
+alone just doesn't reliably stick. Use both the preferences AND the policy
+registry keys (elevated PowerShell), then **verify**, don't just trust that
+nothing errored:
+```powershell
+Set-MpPreference -DisableRealtimeMonitoring $true -DisableIOAVProtection $true -DisableBehaviorMonitoring $true -MAPSReporting 0 -SubmitSamplesConsent 2
+
+$rtp = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection'
+New-Item 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender' -Force | Out-Null
+Set-ItemProperty 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender' DisableAntiSpyware 1 -Type DWord
+New-Item $rtp -Force | Out-Null
+'DisableRealtimeMonitoring','DisableBehaviorMonitoring','DisableOnAccessProtection','DisableScanOnRealtimeEnable' |
+    ForEach-Object { Set-ItemProperty $rtp $_ 1 -Type DWord }
+
+# Verify -- this is the step that actually matters:
+Get-Service WinDefend | Select-Object Status   # must say Stopped, not Running
+```
+If `WinDefend` isn't `Stopped`, don't proceed — check Tamper Protection
+(Windows Security → Virus & threat protection → Manage settings) is off and
+retry, rebooting in between if needed. Firewall:
 ```cmd
 netsh advfirewall set allprofiles state off
 ```
@@ -765,6 +789,13 @@ Two separate, stacked bugs, both found while tracing a RoningLoader run that onl
 2. **Even with that fixed, INetSim's own DNS service (`dns_53_tcp_udp`) turned out to be dead on arrival** on this Ubuntu 24.04 base image: it logs "started" and then silently exits within seconds, every single time, no error — `docker exec malwhere-inetsim ps aux` shows every other service fork alive (http/https/smtp/...) but never that one. Root cause: INetSim 1.3.2 (2020) calls `Net::DNS::Nameserver`'s deprecated `->main_loop()`, which no longer actually blocks/listens under the `libnet-dns-perl` version Ubuntu 24.04 ships (1.44). Fixed by disabling INetSim's own DNS service entirely (`Dockerfile` comments out `start_service dns`) and replacing it with a small dedicated `dnsmasq` blackhole in `entrypoint.sh` that does the exact same job `dns_default_ip` was supposed to — answer every query with the fake IP. Rebuild the image to pick this up (same command as above).
 
 If you're not sure whether either of these ever bit you: check a `dump.pcap` from any past dynamic analysis run for real-looking domains/IPs (Windows telemetry, CDN edge nodes, etc.) rather than a single fake IP repeated for every A record — if you see that, DNS wasn't actually contained, and technique counts / IOCs from that run should be treated as suspect, not as "this is just how the malware behaves."
+
+### Dynamic analysis "succeeds" but produces almost no ATT&CK techniques or artifacts
+If a task reports `reported`/completes with no errors anywhere, but `docker/cape/work/storage/analyses/<id>/` only has `binary/scripts/reports/selfextracted/files.json/dump.pcap` and is missing `logs/*.bson`, `CAPE/`, `files/`, and `shots/`, the sample never actually got monitored — something silently ate CAPE's injection before it captured anything. The most likely cause, confirmed the hard way on this project's own guest: **Windows Defender's real-time protection and behavior monitor were still active** despite Steps 6-10 (or `setup-guest.ps1`) supposedly having disabled them — `Set-MpPreference` alone doesn't reliably stick, and it fails *silently*, with no error at setup time and no crash at analysis time. Check directly on the guest (while it's running, e.g. via `virt-viewer`):
+```powershell
+Get-Service WinDefend | Select-Object Status   # must be Stopped, not Running
+```
+If it's `Running`, redo Step 8 above (both the preference AND the registry-policy version, the registry keys are the durable one), reboot, re-verify, and re-take the `clean_baseline` snapshot (`virsh snapshot-delete win10x64 clean_baseline` then `virsh snapshot-create-as win10x64 clean_baseline --atomic`) — every task run against the old snapshot needs to be treated as unreliable, not as ground truth about the sample's real behavior.
 
 ### `pipeline` gets a 403 from MISP even though `MISP_API_KEY` is set in `.env`
 `.env` and MISP's own database don't sync automatically, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`. See [Quickstart](#quickstart) step 5 for the fix — set the same key directly on the MISP account, then into `.env`, then recreate `pipeline`.
