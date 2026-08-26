@@ -389,29 +389,13 @@ Unlike `MISP_API_KEY`, this one doesn't need a container recreate —
 `get_env_for_cape()`), so it just needs to be there before the next
 sandbox-profile run.
 
-### Automating this / getting a pre-built VM
-
-There's no downloadable-VM shortcut for this, and Windows Setup itself
-(Steps 1-5) is still manual. Two things worth knowing:
-
-- **Steps 6-10 (hardening + agent install) are already scripted** —
-  `docker/guest-setup/setup-guest.ps1`, see the callout above Step 6. What's
-  left unscripted is specifically Windows Setup itself (Steps 1-5): getting
-  through the offline-account flow and attaching the NIC. That could in
-  principle also be scripted with a Windows unattended-setup answer file
-  (`autounattend.xml`, fed to `virt-install` as a second virtual CD-ROM). It
-  hasn't been built for this repo — it needs testing against an actual
-  Windows install to get right (answer-file schemas are picky about the
-  exact ISO build), which isn't something to author blind.
-- **Distributing the finished VM disk image itself (e.g. via Google Drive)
-  is not a good idea, and not just for file-size reasons**: it would contain
-  an actual installed copy of Windows. The free consumer ISO's terms cover
-  *you* installing Windows, not you redistributing a customized copy of it
-  to other people — the same reasoning that already keeps the ISO itself out
-  of this repo applies more strongly to a full installed disk image. If the
-  goal is letting a teacher stand this up quickly, the unattended-install
-  script above (pure scripts/config, no Microsoft IP in it) is the
-  legitimate way to get them a fast, low-effort build of their own.
+> **No downloadable pre-built VM is provided, and won't be:** the finished
+> disk image would contain an actual installed copy of Windows. The free
+> consumer ISO's terms cover *you* installing Windows, not redistributing a
+> customized copy of it to other people — the same reasoning that already
+> keeps the ISO itself out of this repo applies more strongly to a full
+> installed disk image. Each machine has to run Steps 1-11 (or the
+> `setup-guest.ps1` fast path for 6-10) itself.
 
 **Seeing intermittent `Permission denied`/`Connection refused` from `virsh`
 or CAPE?** See [Known Issues & Fixes](#known-issues--fixes) for a host-side
@@ -434,21 +418,18 @@ libvirt socket quirk that causes exactly this.
 ## Quickstart
 
 ```bash
-# 1. Copy environment variables, then edit docker/.env with your MISP API
-#    key and passwords (leave LIBVIRT_GATEWAY/LIBVIRT_BRIDGE as-is, the
-#    next step overwrites just those two lines in place with real values,
-#    without touching what you just set here). GUEST_VM_IP is NOT filled in
-#    by that next step either -- set it by hand once you've created the
-#    win10x64 guest VM (Step 6 below), to the static IP you gave it there,
-#    e.g. 192.168.122.100. Sandbox profile containers (cape/cape-processor)
-#    fail to start without it, see get_env_for_cape() in run_pipeline.py.
-#    NOTE: whatever you put in MISP_API_KEY here is just a placeholder --
-#    MISP doesn't exist yet, so there's nothing for it to match. Once step 4
-#    below has MISP up, go make the two actually agree (see "MISP: getting
-#    a working API key" further down) and re-run
-#    `docker compose -f docker/docker-compose.yml --profile core up -d pipeline`
-#    so the pipeline container picks up the real key -- Compose only reads
-#    .env on container creation, not on restart.
+# 1. Copy environment variables, then edit docker/.env with a real
+#    MISP_API_KEY and MISP_ADMIN_PASSWORD of your choosing (leave
+#    LIBVIRT_GATEWAY/LIBVIRT_BRIDGE as-is, step 2 below overwrites just
+#    those two lines in place with real values, without touching what you
+#    just set here). GUEST_VM_IP is NOT filled in by that step either --
+#    set it by hand once you've created the win10x64 guest VM ("Creating
+#    the Guest VM" above, Step 6), to the static IP you gave it there, e.g.
+#    192.168.122.100. Sandbox profile containers (cape/cape-processor) fail
+#    to start without it, see get_env_for_cape() in run_pipeline.py.
+#    Whatever you set MISP_API_KEY/MISP_ADMIN_PASSWORD to here is just a
+#    placeholder until step 5 below makes MISP's own database actually
+#    accept it -- MISP doesn't exist yet at this point in Quickstart.
 cp docker/.env.example docker/.env
 
 # 2. Host libvirt/KVM setup, see "Host Setup: libvirt/KVM" above (one-time,
@@ -463,7 +444,18 @@ docker compose -f docker/docker-compose.yml --profile core up -d
 #    cape:kvm image built and the win10x64 guest VM created, see above)
 docker compose -f docker/docker-compose.yml --profile core --profile sandbox up -d
 
-# 5. Verify everything is running
+# 5. MISP setup -- mandatory once the sandbox profile from step 4 is up
+#    (skip this if you only ran the core profile: no MISP container
+#    exists). MISP's own admin account and API key don't follow
+#    docker/.env on their own, see "MISP: getting a working API key" below
+#    for why, so force both to match what you set in step 1. MISP can take
+#    a minute or two to finish initializing its database on first boot --
+#    these fail with a connection error until it has, just retry.
+docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_pw admin@admin.test "$(grep ^MISP_ADMIN_PASSWORD= docker/.env | cut -d= -f2)"
+docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey admin@admin.test "$(grep ^MISP_API_KEY= docker/.env | cut -d= -f2)"
+docker compose -f docker/docker-compose.yml --profile core up -d pipeline
+
+# 6. Verify everything is running
 docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 ```
 
@@ -488,9 +480,10 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 > not the `MISP_EMAIL` value set in docker-compose.yml (`admin@malwhere.local`),
 > MISP's own image defaults win over that env var on first init. Worse,
 > `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to that account
-> either, so "log in with the password from `.env`" may just fail. If it does,
-> see [Known Issues & Fixes](#known-issues--fixes) ("MISP web UI login doesn't
-> match `.env`") for the reset commands.
+> either, so "log in with the password from `.env`" fails unless you ran
+> Quickstart step 5 (which resets it to match). If you skipped that step, or
+> it still fails, see [Known Issues & Fixes](#known-issues--fixes) ("MISP web
+> UI login doesn't match `.env`") for the reset commands.
 
 > **CAPE note:** PostgreSQL `cape` role must exist before cape-web starts.
 > If CAPE fails after a fresh deploy, see [Known Issues & Fixes](#known-issues--fixes)
@@ -501,6 +494,10 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 ## Configuring & Using MISP, Navigator, and CAPE
 
 ### MISP: getting a working API key
+
+**Quickstart step 5 already does this for you (Option B below)** — read on
+for why it's needed, or to use Option A (generate the key from MISP's own
+UI) instead.
 
 `docker/.env`'s `MISP_API_KEY` value does **not**, by itself, make MISP
 accept anything: it only flows into the `pipeline` container as the
@@ -528,8 +525,7 @@ not on restart, so a `.env` edit after the container already exists is
 silently ignored until it's recreated.
 
 **Option B — force MISP's key to match whatever you already put in `.env`**
-(same pattern as the password reset already used in the login gotcha
-below):
+(same pattern Quickstart step 5 uses for the admin password too):
 ```bash
 docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey \
   admin@admin.test "$(grep ^MISP_API_KEY= docker/.env | cut -d= -f2)"
