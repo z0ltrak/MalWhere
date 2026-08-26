@@ -48,4 +48,25 @@ find /var/log/inetsim -type d -exec chmod 0770 {} +
 find /var/log/inetsim -type f -exec chmod 0660 {} +
 umask 002
 
+# INetSim's own DNS service is disabled at build time (Dockerfile comments
+# out `start_service dns` -- it's non-functional on this base image, see
+# that comment for why). This dnsmasq instance does the exact same job
+# dns_default_ip was supposed to: answer every single query, for every
+# domain, with our own fake IP, so the guest VM never gets a real DNS
+# answer. Runs as its own background daemon (dnsmasq's normal behavior,
+# not `exec`'d) so inetsim itself stays PID 1; `set -e` above means a bind
+# failure here (e.g. something else still holding port 53 on this address)
+# aborts the container instead of silently leaving DNS unanswered.
+cat > /etc/dnsmasq-blackhole.conf <<EOF
+port=53
+bind-interfaces
+listen-address=${LIBVIRT_GATEWAY}
+no-resolv
+no-hosts
+address=/#/${LIBVIRT_GATEWAY}
+user=nobody
+group=nogroup
+EOF
+dnsmasq --conf-file=/etc/dnsmasq-blackhole.conf
+
 exec "$@"

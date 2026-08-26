@@ -148,6 +148,32 @@ if ! is_default_active; then
         fail "libvirt's default network isn't active and won't start. Run these manually and check the output: virsh net-info default   /   virsh net-list --all"
 fi
 
+log "Checking libvirt's default network for its own DNS forwarder..."
+# libvirt's own dnsmasq for the default network binds the exact same
+# bridge gateway IP (port 53) that inetsim's dns_default_ip answers from.
+# Whichever process wins that bind race gets ALL of the guest VM's DNS
+# traffic -- and libvirt's dnsmasq reliably wins it, silently handing the
+# guest real internet DNS answers instead of inetsim's fake one. Found by
+# tracing a real ATT&CK-technique-count discrepancy between runs: with
+# inetsim fully healthy, the guest still resolved genuine Microsoft/Azure
+# infrastructure during a detonation. `<dns enable='no'/>` turns libvirt's
+# forwarder off so only inetsim (its dnsmasq blackhole, see
+# docker/inetsim/entrypoint.sh) answers on that address.
+if virsh net-dumpxml default 2>/dev/null | grep -q "<dns enable='no'/>"; then
+    log "libvirt's DNS forwarder is already disabled on the default network."
+elif virsh list --name 2>/dev/null | grep -q .; then
+    warn "A guest VM is currently running -- skipping the DNS-forwarder fix to avoid dropping its network mid-analysis. Shut the VM down and re-run this script to apply it."
+else
+    TMP_NET_XML="$(mktemp)"
+    virsh net-dumpxml default > "$TMP_NET_XML"
+    sed -i "/<bridge /a\\  <dns enable='no'/>" "$TMP_NET_XML"
+    virsh net-define "$TMP_NET_XML" || fail "Failed to define the patched default network XML. Run manually: virsh net-edit default and add <dns enable='no'/> inside the <network> element."
+    virsh net-destroy default >/dev/null 2>&1 || true
+    virsh net-start default || fail "Failed to restart libvirt's default network after disabling DNS. Run manually: virsh net-start default"
+    rm -f "$TMP_NET_XML"
+    log "libvirt's DNS forwarder disabled; default network restarted."
+fi
+
 log "Discovering the actual bridge interface and gateway IP..."
 NET_NAME="default"
 # Pulled from net-dumpxml's XML output (structured, fixed attribute

@@ -8,8 +8,10 @@
 # from the guest VM via the host's libvirt bridge, which a Docker bridge
 # network can't provide). Package comes straight from Ubuntu's universe
 # repo, so we patch only what's necessary and otherwise keep upstream's
-# defaults (broad protocol coverage: dns, http, https, smtp(s), pop3(s),
-# ftp(s), irc, ntp, and the low-level echo/discard/chargen/dummy catch-alls).
+# defaults (broad protocol coverage: http, https, smtp(s), pop3(s),
+# ftp(s), irc, ntp, and the low-level echo/discard/chargen/dummy catch-alls
+# -- DNS is a separate dnsmasq blackhole, INetSim's own DNS service is
+# disabled below, see entrypoint.sh for why).
 # =============================================================================
 
 FROM ubuntu:24.04
@@ -17,7 +19,7 @@ FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends inetsim openssl netcat-openbsd && \
+    apt-get install -y --no-install-recommends inetsim openssl netcat-openbsd dnsmasq && \
     rm -rf /var/lib/apt/lists/*
 
 # --- Config patch (build-time, host-agnostic only) -------------------------
@@ -36,6 +38,17 @@ RUN sed -i \
         -e 's/^#service_run_as_user .*/service_run_as_user inetsim/' \
         /etc/inetsim/inetsim.conf && \
     grep -q '^service_run_as_user inetsim' /etc/inetsim/inetsim.conf
+
+# INetSim's own DNS service is dead weight on this base image: Ubuntu
+# 24.04's libnet-dns-perl (1.44) silently no-ops the deprecated
+# Net::DNS::Nameserver->main_loop() API that INetSim 1.3.2 (2020) calls --
+# the fork logs "started" and then just exits within seconds, every single
+# time, no error. Disabled here and replaced in entrypoint.sh with a tiny
+# dedicated dnsmasq instance doing the exact same job dns_default_ip was
+# supposed to (answer every query with our own fake IP). Every other
+# service (http/https/smtp/...) is unaffected and stays on INetSim as-is.
+RUN sed -i 's/^start_service dns$/#start_service dns/' /etc/inetsim/inetsim.conf && \
+    grep -q '^#start_service dns$' /etc/inetsim/inetsim.conf
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
