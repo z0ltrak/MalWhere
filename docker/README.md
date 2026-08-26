@@ -27,15 +27,37 @@
 Before anything else, ensure your system meets these requirements:
 
 - **Ubuntu 24.04.4 LTS** (or compatible Linux distribution)
-- **Docker Engine 24.0+** and **Docker Compose v2** (`docker.io` and
-  `docker-compose-plugin` from apt satisfy both)
+- **Docker Engine 24.0+** and **Docker Compose v2**
 - **KVM enabled**: `egrep -c '(vmx|svm)' /proc/cpuinfo` must return > 0
 - **16 GB RAM** minimum (32 GB recommended)
 - **`/dev/kvm` accessible**: `ls -la /dev/kvm` should show the device
 
+`docker-compose-plugin` is a Docker Inc. package, not an Ubuntu one — it
+isn't in Ubuntu's own apt repos at all, so a bare `sudo apt-get install
+docker-compose-plugin` fails with "Unable to locate package" no matter what
+else you've installed. Docker's own apt repository has to be added first
+(and its signing key trusted, or apt refuses it with `NO_PUBKEY`/signature
+errors). Follow Docker's official step-by-step —
+[docs.docker.com/engine/install/ubuntu — Install using the
+repository](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+— or the short version:
+
 ```bash
-# Install Docker if not present
-sudo apt-get install -y docker.io docker-compose-plugin
+# 1. Add Docker's GPG key and apt repository (required before installing
+#    docker-compose-plugin, see above)
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+# 2. Install Docker Engine, CLI, and the Compose v2 plugin
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # Verify KVM is available
 egrep -c '(vmx|svm)' /proc/cpuinfo   # must return > 0
@@ -45,7 +67,7 @@ ls -la /dev/kvm                       # must exist
 sudo apt-get install -y make
 ```
 
-Installing `docker.io` does **not** add you to the `docker` group, so every
+Installing Docker this way does **not** add you to the `docker` group, so every
 `docker`/`docker compose` command needs `sudo` until you do this yourself:
 
 ```bash
