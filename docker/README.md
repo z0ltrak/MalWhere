@@ -437,8 +437,12 @@ docker compose -f docker/docker-compose.yml --profile core --profile sandbox up 
 docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_pw admin@admin.test 'YOUR_PASSWORD'
 docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey admin@admin.test 'YOUR_API_KEY'
 
-# >>>>> EDIT docker/.env NOW: set MISP_ADMIN_PASSWORD=YOUR_PASSWORD and
-# >>>>> MISP_API_KEY=YOUR_API_KEY (the same values used just above) <<<<<
+# ############################################################
+# ###  STOP -- EDIT docker/.env NOW, DO NOT SKIP THIS:
+# ###    MISP_ADMIN_PASSWORD=YOUR_PASSWORD
+# ###    MISP_API_KEY=YOUR_API_KEY
+# ###  (the same YOUR_PASSWORD/YOUR_API_KEY used just above)
+# ############################################################
 
 docker compose -f docker/docker-compose.yml --profile core up -d pipeline
 
