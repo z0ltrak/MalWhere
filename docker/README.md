@@ -266,9 +266,37 @@ settings" is empty; e1000 has an in-box driver and, as a side benefit,
 doesn't announce itself as a VM to samples doing basic anti-analysis checks
 the way "Red Hat VirtIO Ethernet Adapter" does.
 
-**Fast path: run the setup script instead of Steps 6-10 by hand.** Once
-you're on the desktop with the network attached, from an **elevated**
-PowerShell prompt:
+**Fast path: run the setup script instead of Steps 6-10 by hand.** Two
+things have to be true *before* you run it, or it fails partway through
+(with a clear error either way, but better to not hit them at all):
+
+1. **Working DNS.** A fresh guest's DHCP-assigned DNS server is
+   `192.168.122.1` — that's `inetsim`'s address, and `inetsim` is a
+   fake-answer-only blackhole by design (real forwarding is deliberately
+   disabled, see the "guest VM resolves real domains" Known Issue below).
+   At this point in setup nothing has switched that yet, but it also isn't
+   real DNS, so `raw.githubusercontent.com` won't resolve either. Point DNS
+   at a real resolver first, from an **elevated** PowerShell prompt:
+   ```powershell
+   Get-NetAdapter   # note the adapter name, usually "Ethernet"
+   Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses 8.8.8.8
+   ```
+   (The script itself repeats this same override internally before its own
+   downloads, then switches DNS to the real `192.168.122.1`/`inetsim`
+   setup at the end — this manual step is only to get the script itself
+   downloaded in the first place.)
+2. **Tamper Protection off.** Windows 10 ships with this **on by default**
+   on a fresh install, and it specifically blocks *programmatic* changes to
+   Defender (PowerShell, registry, Group Policy) while still allowing
+   changes through the GUI — a script and hand-typed commands hit this
+   identically, it's not particular to either approach. Must be turned off
+   by hand, Microsoft deliberately didn't make this scriptable:
+   - Open **Windows Security** (Start menu search, or run
+     `Start-Process "windowsdefender:"` from PowerShell).
+   - **Virus & threat protection** → **Manage settings**.
+   - Toggle **Tamper Protection** to **Off**.
+
+With both of those done, from the same elevated PowerShell prompt:
 ```powershell
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/z0ltrak/MalWhere/main/docker/guest-setup/setup-guest.ps1" -OutFile setup-guest.ps1
 powershell -ExecutionPolicy Bypass -File setup-guest.ps1
@@ -280,9 +308,8 @@ real setup mistakes (wrong adapter, wrong IP, a typo in a `reg add`). It
 prints what to do next (reboot, verify the agent, take the snapshot) when
 it finishes. Steps 6-10, collapsed below, are kept as the manual reference
 for what it does and for troubleshooting if something about your machine
-doesn't match its assumptions (e.g. Defender Tamper Protection being on —
-the script detects and warns about this specific case, see its `.NOTES`) —
-if you ran it successfully, skip straight to **Step 11**.
+doesn't match its assumptions — if you ran it successfully, skip straight
+to **Step 11**.
 
 <details>
 <summary><b>Steps 6-10, by hand</b> (skip this if <code>setup-guest.ps1</code> above already ran successfully — go straight to Step 11)</summary>
