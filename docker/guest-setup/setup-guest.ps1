@@ -77,18 +77,62 @@ Write-Step "Disabling the firewall (all profiles)"
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 
 Write-Step "Disabling Windows Update"
+# Same "stop the service and hope" gap as Defender below, and it has the
+# same failure mode: Set-Service -StartupType Disabled doesn't stop Update
+# Orchestrator (UsoSvc) from restarting wuauserv on-demand regardless of its
+# configured start type. Add the policy registry key too, and verify.
 Stop-Service wuauserv -Force -ErrorAction SilentlyContinue
 Set-Service wuauserv -StartupType Disabled
+Stop-Service UsoSvc -Force -ErrorAction SilentlyContinue
+Set-Service UsoSvc -StartupType Disabled -ErrorAction SilentlyContinue
+$wuPolicyPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'
+New-Item -Path $wuPolicyPath -Force | Out-Null
+Set-ItemProperty -Path $wuPolicyPath -Name NoAutoUpdate -Value 1 -Type DWord
+
+$wuSvc = Get-Service wuauserv -ErrorAction SilentlyContinue
+if ($wuSvc -and $wuSvc.Status -ne 'Stopped') {
+    Write-Warn2 "wuauserv is still '$($wuSvc.Status)' -- Windows Update may still be reachable. This mattered in practice: a guest that can quietly patch itself no longer matches whatever behavior a sample showed on the day the clean-baseline snapshot was taken, and dynamic-analysis results stop being reproducible over the guest's lifetime."
+}
 
 Write-Step "Disabling Defender real-time/cloud protection and sample submission"
+# Set-MpPreference alone is NOT enough -- confirmed the hard way: a guest
+# built with only this had RealTimeProtectionEnabled/BehaviorMonitorEnabled
+# still True days later, with Tamper Protection OFF the whole time (so that
+# wasn't even the cause -- the preference-based disable just doesn't
+# reliably stick by itself). Defender's behavior monitor silently ate every
+# single dynamic-analysis run: CAPE's monitor injection never produced any
+# logs/dropped-files/screenshots, with no error anywhere, for weeks, because
+# nothing crashes -- Defender just quietly neutralizes it. Belt-and-braces
+# fix: Set-MpPreference AND the policy registry keys (a stronger, more
+# durable disable than preferences alone), THEN VERIFY both the reported
+# status and the actual WinDefend service state -- don't just trust that
+# the commands didn't error.
 Set-MpPreference -DisableRealtimeMonitoring $true -DisableIOAVProtection $true `
     -DisableBehaviorMonitoring $true -MAPSReporting 0 -SubmitSamplesConsent 2 `
     -ErrorAction SilentlyContinue
+
+$defenderPolicyPath = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender'
+$rtpPolicyPath = "$defenderPolicyPath\Real-Time Protection"
+New-Item -Path $defenderPolicyPath -Force | Out-Null
+Set-ItemProperty -Path $defenderPolicyPath -Name DisableAntiSpyware -Value 1 -Type DWord
+New-Item -Path $rtpPolicyPath -Force | Out-Null
+foreach ($name in 'DisableRealtimeMonitoring', 'DisableBehaviorMonitoring', 'DisableOnAccessProtection', 'DisableScanOnRealtimeEnable') {
+    Set-ItemProperty -Path $rtpPolicyPath -Name $name -Value 1 -Type DWord
+}
+
 $tamperStatus = $null
 try { $tamperStatus = (Get-MpComputerStatus -ErrorAction Stop).IsTamperProtected } catch {}
 if ($tamperStatus) {
-    Write-Warn2 "Tamper Protection is ON -- Defender will silently re-enable itself and none of the above took effect. Turn it off manually: Windows Security -> Virus & threat protection -> Manage settings -> Tamper Protection, then re-run this script."
+    throw "Tamper Protection is ON -- Defender will silently re-enable itself and none of the above will take effect. Turn it off manually: Windows Security -> Virus & threat protection -> Manage settings -> Tamper Protection, then re-run this script."
 }
+
+Write-Step "Verifying Defender is actually off (not just that the commands didn't error)"
+Start-Sleep -Seconds 2
+$svc = Get-Service WinDefend -ErrorAction SilentlyContinue
+if ($svc -and $svc.Status -ne 'Stopped') {
+    throw "WinDefend service is still '$($svc.Status)' after attempting to disable it. Reboot and re-run this script -- if it's still running after that, Defender is being re-enabled by something outside this script's control (Group Policy, an MDM/Intune enrollment, a scheduled platform update) and needs to be tracked down by hand before taking the clean-baseline snapshot, or every dynamic analysis run on this VM will silently produce empty results with no error."
+}
+Write-Host "    WinDefend service: Stopped -- confirmed off." -ForegroundColor Green
 
 # --- Step 9: fully disable UAC ----------------------------------------------
 Write-Step "Disabling UAC (EnableLUA=0 -- needs a reboot to take effect)"
