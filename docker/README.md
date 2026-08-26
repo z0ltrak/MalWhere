@@ -756,6 +756,9 @@ reading it. `docker/scripts/host-prereqs.sh` now reclaims ownership of this
 directory too; re-run `sudo ./docker/scripts/host-prereqs.sh` (safe any
 time) or fix it manually: `sudo chown -R $USER:$USER dynamic/reports/inetsim`.
 
+### `inetsim` crash-loops with "No group r/w permissions on main logfile"
+This is a real bug that was living in `docker/inetsim/entrypoint.sh`, not a one-off host issue — if you built the image before this was fixed, rebuild it: `docker compose -f docker/docker-compose.yml build inetsim && docker compose -f docker/docker-compose.yml up -d inetsim`. Root cause: `INetSim::Log` (upstream INetSim's own code) refuses to start unless its logfiles have group r/w bits set, but Docker's default umask makes any logfile the entrypoint creates fresh come out without group write — so it died on every single start. The entrypoint now sets `umask 002` and sweeps any leftover files from before the fix, so a rebuilt image won't hit this again. Silently losing `inetsim` this way is worse than it looks: RoningLoader (and anything else that's network-gated before it does anything interesting) gets stranded at its first outbound call and never reaches injection/persistence/discovery, which can look like "this run just behaved differently" rather than "the sandbox's fake internet was down the whole time" — check `docker ps` shows `inetsim` as `Up`/`healthy`, not `Restarting`, before trusting a dynamic analysis run's technique count.
+
 ### `pipeline` gets a 403 from MISP even though `MISP_API_KEY` is set in `.env`
 `.env` and MISP's own database don't sync automatically, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`. See [Quickstart](#quickstart) step 5 for the fix — set the same key directly on the MISP account, then into `.env`, then recreate `pipeline`.
 

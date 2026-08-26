@@ -31,8 +31,21 @@ grep -q "^service_bind_address ${LIBVIRT_GATEWAY}$" /etc/inetsim/inetsim.conf ||
 # time. Per-connection handlers run as the unprivileged `inetsim` user
 # (service_run_as_user), so they need write access here or logging silently
 # breaks.
+#
+# INetSim::Log itself refuses to start unless its main/sub/debug logfiles
+# have group r/w bits set (perl5/INetSim/Log.pm checks `(mode & 0060) ==
+# 0060` and exits with "No group r/w permissions on main logfile" otherwise
+# -- this is a hard requirement in INetSim's own code, not something
+# inetsim.conf can relax). Docker's default umask (022) makes any logfile
+# INetSim creates fresh come out 644 (no group write), so it dies on every
+# single start with that exact error. `umask 002` makes new files 664
+# instead. Also sweep any files left over from a prior run (started before
+# this fix existed, or created under the wrong umask) since chmod on the
+# directory alone doesn't touch files already inside it.
 mkdir -p /var/log/inetsim
 chown -R inetsim:inetsim /var/log/inetsim
-chmod 0700 /var/log/inetsim
+find /var/log/inetsim -type d -exec chmod 0770 {} +
+find /var/log/inetsim -type f -exec chmod 0660 {} +
+umask 002
 
 exec "$@"
