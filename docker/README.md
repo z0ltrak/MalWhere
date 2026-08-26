@@ -418,55 +418,48 @@ libvirt socket quirk that causes exactly this.
 ## Quickstart
 
 ```bash
-# 1. Copy environment variables. Leave LIBVIRT_GATEWAY/LIBVIRT_BRIDGE as-is
-#    (step 2 below overwrites just those two lines in place with real
-#    values) and MISP_API_KEY/MISP_ADMIN_PASSWORD as their placeholders for
-#    now -- step 5 below has you pick real values, set them in MISP
-#    directly, then write them here (MISP doesn't exist yet at this point
-#    in Quickstart, so there's nothing to set them on). GUEST_VM_IP is NOT
-#    filled in by step 2 either -- set it by hand once you've created the
-#    win10x64 guest VM ("Creating the Guest VM" above, Step 6), to the
-#    static IP you gave it there, e.g. 192.168.122.100. Sandbox profile
-#    containers (cape/cape-processor) fail to start without it, see
-#    get_env_for_cape() in run_pipeline.py.
+# 1. Copy environment variables (MISP_API_KEY/MISP_ADMIN_PASSWORD and
+#    GUEST_VM_IP are just placeholders for now -- see steps 2 and 5, and
+#    "Creating the Guest VM" above, and the note below)
 cp docker/.env.example docker/.env
 
-# 2. Host libvirt/KVM setup, see "Host Setup: libvirt/KVM" above (one-time,
-#    needs sudo; safe to re-run). Writes the real LIBVIRT_GATEWAY/
-#    LIBVIRT_BRIDGE into docker/.env, discovered from this machine.
+# 2. Host libvirt/KVM setup (one-time, needs sudo; safe to re-run)
 sudo ./docker/scripts/host-prereqs.sh
 
 # 3. Start core services (daily development)
 docker compose -f docker/docker-compose.yml --profile core up -d
 
-# 4. Start full environment (when dynamic analysis is needed, requires the
-#    cape:kvm image built and the win10x64 guest VM created, see above)
+# 4. Start full environment (dynamic analysis -- requires cape:kvm built
+#    and the guest VM created, see above)
 docker compose -f docker/docker-compose.yml --profile core --profile sandbox up -d
 
-# 5. MISP setup -- mandatory once the sandbox profile from step 4 is up
-#    (skip this if you only ran the core profile: no MISP container
-#    exists). MISP's own admin account and API key don't follow
-#    docker/.env on their own -- nothing tells MISP's database to accept a
-#    string just because it's sitting in .env -- so pick real values, set
-#    them in MISP directly, then write the same ones into docker/.env's
-#    MISP_ADMIN_PASSWORD/MISP_API_KEY. redis must already be running for
-#    this to work (see "redis needs to be running before misp starts"
-#    under Known Issues) and MISP can take a minute or two to finish
-#    initializing on first boot -- both failure modes just mean retry.
+# 5. MISP setup (mandatory once step 4 is up; skip if you only ran core)
 docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_pw admin@admin.test 'YOUR_PASSWORD'
 docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey admin@admin.test 'YOUR_API_KEY'
-# Now set docker/.env's MISP_ADMIN_PASSWORD/MISP_API_KEY to the same
-# YOUR_PASSWORD/YOUR_API_KEY, then:
+
+# >>>>> EDIT docker/.env NOW: set MISP_ADMIN_PASSWORD=YOUR_PASSWORD and
+# >>>>> MISP_API_KEY=YOUR_API_KEY (the same values used just above) <<<<<
+
 docker compose -f docker/docker-compose.yml --profile core up -d pipeline
 
-# Sanity-check the key actually works (a working key returns MISP's
-# version JSON; a bad one 403s with "Authentication failed...")
+# Sanity-check: a working key returns MISP's version JSON, a bad one 403s
 curl -sk -H "Authorization: $(grep ^MISP_API_KEY= docker/.env | cut -d= -f2)" \
   -H "Accept: application/json" https://localhost/servers/getVersion.json
 
 # 6. Verify everything is running
 docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 ```
+
+Step 1's placeholders get filled in twice: `host-prereqs.sh` (step 2)
+overwrites `LIBVIRT_GATEWAY`/`LIBVIRT_BRIDGE` in place with values it
+discovers from this machine; `GUEST_VM_IP` has to wait for the guest VM to
+exist (set it by hand once "Creating the Guest VM" above is done, to the
+static IP you gave it there). Step 5 is mandatory, not optional, because
+MISP's own database never picks up whatever's sitting in `.env` on its
+own — see the MISP login gotcha under [Service Access](#service-access)
+and "`redis` needs to be running before `misp` starts" under [Known
+Issues](#known-issues--fixes) for the mechanics, and why it can take MISP
+a minute or two to respond on first boot.
 
 ---
 
