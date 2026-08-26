@@ -242,6 +242,21 @@ if [ -n "${SUDO_USER:-}" ]; then
     chown -R "${SUDO_USER}:$(id -gn "$SUDO_USER")" "${REPO_ROOT}/resubmit_queue"
 fi
 
+# ../dynamic/reports/inetsim is another bind mount (inetsim's
+# `../dynamic/reports/inetsim:/var/log/inetsim`, docker-compose.yml) with
+# the same ordering hole: inetsim's own service runs as a non-root user
+# inside the container, so if Docker auto-creates this bind-mount source
+# before anything else touches it, the host directory ends up owned by
+# whatever UID that is -- observed as UID 100/GID 101, which happen to
+# collide with unrelated host system accounts (dhcpcd/messagebus) purely by
+# number, locking the invoking user out of even reading it (breaks plain
+# `git status` with a "Permission denied" warning).
+if [ -n "${SUDO_USER:-}" ]; then
+    log "Ensuring dynamic/reports/inetsim is owned by ${SUDO_USER}, not inetsim's container UID..."
+    mkdir -p "$(dirname "${REPO_ROOT}")/dynamic/reports/inetsim"
+    chown -R "${SUDO_USER}:$(id -gn "$SUDO_USER")" "$(dirname "${REPO_ROOT}")/dynamic/reports/inetsim"
+fi
+
 log "Done. Guest VMs on ${BRIDGE_IF} will now be answered by inetsim at ${GATEWAY_IP} once the sandbox profile is up."
 log "Next: create the win10x64 guest VM, set GUEST_VM_IP in .env, then:"
 log "  docker compose --profile core --profile sandbox build inetsim cape"

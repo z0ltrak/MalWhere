@@ -69,6 +69,10 @@ docker/cape/work/storage/
 # same reasoning as docker/cape/work/storage/ above.
 docker/resubmit_queue/
 
+# inetsim's own runtime logs (bind-mounted from inside its container), not
+# analysis output.
+dynamic/reports/inetsim/
+
 # Analysis artifacts with PII or sensitive IOCs
 results/**/raw/
 

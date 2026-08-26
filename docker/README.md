@@ -765,6 +765,17 @@ exist yet, not one Docker already created as root. Fix: re-run
 `sudo ./docker/scripts/host-prereqs.sh` (safe any time, reclaims ownership
 even after the fact) or manually: `sudo chown -R $USER:$USER docker/resubmit_queue`.
 
+### `dynamic/reports/inetsim/` locks you out with "Permission denied" (breaks plain `git status`)
+Same bug as the `resubmit_queue` one above, different bind mount: `inetsim`'s
+`../dynamic/reports/inetsim:/var/log/inetsim` (`docker-compose.yml`). If
+Docker auto-creates this one first, it's owned by whatever UID `inetsim`'s
+own service runs as inside the container — observed as UID 100/GID 101,
+which happen to collide with unrelated host system accounts
+(`dhcpcd`/`messagebus`) purely by number — locking your own user out of even
+reading it. `docker/scripts/host-prereqs.sh` now reclaims ownership of this
+directory too; re-run `sudo ./docker/scripts/host-prereqs.sh` (safe any
+time) or fix it manually: `sudo chown -R $USER:$USER dynamic/reports/inetsim`.
+
 ### `pipeline` gets a 403 from MISP even though `MISP_API_KEY` is set in `.env`
 `.env` and MISP's own database don't sync automatically, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`. See [MISP: getting a working API key](#misp-getting-a-working-api-key) above for both ways to fix it.
 
