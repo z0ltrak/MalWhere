@@ -100,6 +100,15 @@ HOST's libvirt/KVM: docker-compose cannot set this part up, because it's
 outside any container. Run this once, before building or starting anything:
 
 ```bash
+# 1. Copy environment variables (MISP_API_KEY/MISP_ADMIN_PASSWORD are
+#    placeholders until Quickstart's step 3; GUEST_VM_IP stays blank until
+#    "Creating the Guest VM" below gives you a static IP to put there)
+cp docker/.env.example docker/.env
+
+# 2. Host libvirt/KVM setup (needs sudo; safe to re-run) -- must run AFTER
+#    step 1, not before: it writes LIBVIRT_GATEWAY/LIBVIRT_BRIDGE into
+#    docker/.env in place, so the file needs to already exist with the
+#    full template, not just the two keys this script itself would create.
 sudo ./docker/scripts/host-prereqs.sh
 ```
 
@@ -134,7 +143,7 @@ This project uses **KVM** (Kernel-based Virtual Machine) for hardware-accelerate
 ```bash
 # 1. Clone our fixed fork of the cape-docker build repository (outside the MalWhere project)
 cd ~
-git clone git@github.com:z0ltrak/kvm-cape-docker.git
+git clone https://github.com/z0ltrak/kvm-cape-docker.git
 cd kvm-cape-docker
 
 # 2. Switch to the KVM branch (CRITICAL for our setup!)
@@ -456,9 +465,9 @@ Only after this exists does `docker exec malwhere-cape virsh -c qemu:///system l
 show the domain, and only then will `cape.service` get past its startup
 snapshot check.
 
-**Step 12 — write the IP into `.env`.** If you haven't already (Quickstart
-step 1 leaves this blank on purpose), set it now — `docker/.env` already
-has a `GUEST_VM_IP=` line from `.env.example`, so replace it in place
+**Step 12 — write the IP into `.env`.** If you haven't already ("Host Setup:
+libvirt/KVM" above leaves this blank on purpose), set it now — `docker/.env`
+already has a `GUEST_VM_IP=` line from `.env.example`, so replace it in place
 rather than appending a second one:
 ```bash
 sed -i 's/^GUEST_VM_IP=.*/GUEST_VM_IP=192.168.122.100/' docker/.env
@@ -496,23 +505,21 @@ libvirt socket quirk that causes exactly this.
 
 ## Quickstart
 
+Assumes `docker/.env` already exists and `host-prereqs.sh` has already run
+(["Host Setup: libvirt/KVM"](#host-setup-libvirtkvm) above) — if you haven't
+done that yet, do it first, then set `GUEST_VM_IP` in `docker/.env` by hand
+once ["Creating the Guest VM"](#creating-the-guest-vm) is done, to the static
+IP you gave it there.
+
 ```bash
-# 1. Copy environment variables (MISP_API_KEY/MISP_ADMIN_PASSWORD and
-#    GUEST_VM_IP are just placeholders for now -- see steps 2 and 5, and
-#    "Creating the Guest VM" above, and the note below)
-cp docker/.env.example docker/.env
-
-# 2. Host libvirt/KVM setup (one-time, needs sudo; safe to re-run)
-sudo ./docker/scripts/host-prereqs.sh
-
-# 3. Start core services (daily development)
+# 1. Start core services (daily development)
 docker compose -f docker/docker-compose.yml --profile core up -d
 
-# 4. Start full environment (dynamic analysis -- requires cape:kvm built
+# 2. Start full environment (dynamic analysis -- requires cape:kvm built
 #    and the guest VM created, see above)
 docker compose -f docker/docker-compose.yml --profile core --profile sandbox up -d
 
-# 5. MISP setup (mandatory once step 4 is up; skip if you only ran core)
+# 3. MISP setup (mandatory once step 2 is up; skip if you only ran core)
 docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_pw admin@admin.test 'YOUR_PASSWORD'
 docker exec malwhere-misp /var/www/MISP/app/Console/cake user change_authkey admin@admin.test 'YOUR_API_KEY'
 
@@ -529,20 +536,16 @@ docker compose -f docker/docker-compose.yml --profile core up -d pipeline
 curl -sk -H "Authorization: $(grep ^MISP_API_KEY= docker/.env | cut -d= -f2)" \
   -H "Accept: application/json" https://localhost/servers/getVersion.json
 
-# 6. Verify everything is running
+# 4. Verify everything is running
 docker compose -f docker/docker-compose.yml --profile core --profile sandbox ps
 ```
 
-Step 1's placeholders get filled in twice: `host-prereqs.sh` (step 2)
-overwrites `LIBVIRT_GATEWAY`/`LIBVIRT_BRIDGE` in place with values it
-discovers from this machine; `GUEST_VM_IP` has to wait for the guest VM to
-exist (set it by hand once "Creating the Guest VM" above is done, to the
-static IP you gave it there). Step 5 is mandatory, not optional, because
-MISP's own database never picks up whatever's sitting in `.env` on its
-own — see the MISP login gotcha under [Service Access](#service-access)
-and "`redis` needs to be running before `misp` starts" under [Known
-Issues](#known-issues--fixes) for the mechanics, and why it can take MISP
-a minute or two to respond on first boot.
+Step 3 is mandatory, not optional, because MISP's own database never picks
+up whatever's sitting in `.env` on its own — see the MISP login gotcha
+under [Service Access](#service-access) and "`redis` needs to be running
+before `misp` starts" under [Known Issues](#known-issues--fixes) for the
+mechanics, and why it can take MISP a minute or two to respond on first
+boot.
 
 ---
 
@@ -566,7 +569,7 @@ a minute or two to respond on first boot.
 > MISP's own image defaults win over that env var on first init. Worse,
 > `MISP_PASSWORD`/`MISP_ADMIN_PASSWORD` doesn't reliably apply to that account
 > either, so "log in with the password from `.env`" only works once you've
-> run Quickstart step 5 — which sets the real password on the account
+> run Quickstart step 3 — which sets the real password on the account
 > directly, then has you copy that same password into `.env`. If you
 > skipped that step, or it still fails, see [Known Issues &
 > Fixes](#known-issues--fixes) ("MISP web
@@ -885,7 +888,7 @@ Fix, two parts:
    A correct rule always has a `--dport <published-port>` match. One without it will DNAT unrelated traffic (including CAPE's own resultserver port) into whatever container it belongs to. Restarting the affected container regenerates the *correct* rule but does **not** remove a stale broken one already sitting earlier in the chain — delete the specific broken line by hand (`sudo iptables -t nat -D DOCKER <the exact broken rule text>`); don't flush the whole `DOCKER` chain, since Docker manages it and other containers' legitimate rules live there too.
 
 ### `pipeline` gets a 403 from MISP even though `MISP_API_KEY` is set in `.env`
-`.env` and MISP's own database don't sync automatically, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`. See [Quickstart](#quickstart) step 5 for the fix — set the same key directly on the MISP account, then into `.env`, then recreate `pipeline`.
+`.env` and MISP's own database don't sync automatically, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`. See [Quickstart](#quickstart) step 3 for the fix — set the same key directly on the MISP account, then into `.env`, then recreate `pipeline`.
 
 ### `redis` needs to be running before `misp` starts
 MISP uses `redis` for session storage: if it's down, MISP's web/API layer fails on *every* request (including pure API calls) with a misleading "Authentication failed" error that has nothing to do with the API key. `docker-compose.yml`'s `misp` service now has `depends_on: redis` with a healthcheck, so a fresh `docker compose up` won't hit this: but if you ever stop `redis` manually while `misp` keeps running, you'll need to restart `misp` too, not just `redis`.
