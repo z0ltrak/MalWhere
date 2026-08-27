@@ -57,6 +57,7 @@ $PythonVersion   = '3.12.7'
 $PythonUrl       = "https://www.python.org/ftp/python/$PythonVersion/python-$PythonVersion-amd64.exe"
 $AgentUrl        = 'https://raw.githubusercontent.com/kevoreilly/CAPEv2/master/agent/agent.py'
 $AgentPath       = 'C:\agent.py'
+$Pywin32PyTag    = 'cp312-cp312-win_amd64.whl'
 
 function Write-Step($msg) { Write-Host "`n==> $msg" -ForegroundColor Cyan }
 function Write-Warn2($msg) { Write-Host "    WARNING: $msg" -ForegroundColor Yellow }
@@ -76,6 +77,22 @@ Set-DnsClientServerAddress -InterfaceIndex $adapter.ifIndex -ServerAddresses 8.8
 $pyInstaller = Join-Path $env:TEMP 'python-installer.exe'
 Invoke-WebRequest -Uri $PythonUrl -OutFile $pyInstaller
 Invoke-WebRequest -Uri $AgentUrl -OutFile $AgentPath
+
+# pywin32: NOT bundled with the python.org installer, but analyzer.py imports
+# win32api/win32con/etc. for essentially all of its Windows monitoring and
+# injection code. Without it, analyzer.py crashes on import on every single
+# task -- confirmed the hard way: this produced zero behavioral data (empty
+# logs/CAPE/shots folders, no error anywhere CAPE surfaces) for every family
+# tested, indistinguishable from the agent just hanging. Resolve the current
+# wheel URL from PyPI's JSON API rather than hardcoding a version-specific
+# download link that goes stale; fetch it now, in the same real-internet
+# window as Python itself, since the sandbox network can't reach PyPI later.
+Write-Step "Fetching pywin32 (analyzer.py needs it for all Windows API access -- see docker/README.md's Known Issues)"
+$pywin32Info = Invoke-RestMethod -Uri 'https://pypi.org/pypi/pywin32/json'
+$pywin32Wheel = $pywin32Info.urls | Where-Object { $_.filename -like "*-$Pywin32PyTag" } | Select-Object -First 1
+if (-not $pywin32Wheel) { throw "Could not find a pywin32 wheel matching *-$Pywin32PyTag on PyPI -- check $PythonVersion still maps to that ABI tag." }
+$pywin32WheelPath = Join-Path $env:TEMP $pywin32Wheel.filename
+Invoke-WebRequest -Uri $pywin32Wheel.url -OutFile $pywin32WheelPath
 
 # --- Step 6b: static IP + DNS -----------------------------------------------
 Write-Step "Setting static IP $StaticIP/$PrefixLength, gateway $Gateway, DNS $DnsServer"
@@ -177,6 +194,18 @@ if (-not (Test-Path $pythonwPath)) {
     else { throw "pythonw.exe not found after install -- check $pyInstaller ran correctly." }
 }
 Write-Host "    Using pythonw.exe at: $pythonwPath"
+$pythonExePath = Join-Path (Split-Path $pythonwPath) 'python.exe'
+
+Write-Step "Installing pywin32 (offline -- fetched in Step 6a, before the sandbox network locked out real internet)"
+& $pythonExePath -m pip install --no-index $pywin32WheelPath
+if ($LASTEXITCODE -ne 0) { throw "pip install of the pywin32 wheel failed (exit $LASTEXITCODE) -- see output above." }
+
+Write-Step "Verifying pywin32 actually imports (not just that pip reported success)"
+$verifyOut = & $pythonExePath -c "import win32api; print(win32api.GetVersion())" 2>&1
+if ($LASTEXITCODE -ne 0) {
+    throw "win32api failed to import after installing pywin32: $verifyOut -- analyzer.py will silently crash on every task without this. Confirmed hitting exactly this: it produces empty logs/CAPE/shots folders with no error anywhere CAPE surfaces, indistinguishable from the agent just hanging."
+}
+Write-Host "    win32api imports OK (GetVersion: $verifyOut)." -ForegroundColor Green
 
 Write-Step "Creating a Startup-folder shortcut so the agent runs at every logon"
 $startupDir = [Environment]::GetFolderPath('Startup')
@@ -194,5 +223,18 @@ Write-Host "Done. Next steps:" -ForegroundColor Green
 Write-Host "  1. Reboot (required for the UAC change to take effect)."
 Write-Host "  2. From the HOST, verify the agent: curl -s http://${StaticIP}:8000/ | python3 -m json.tool"
 Write-Host "     Expect: is_user_admin: true (confirms UAC is actually off, not just the slider)."
-Write-Host "  3. Take the clean-baseline snapshot (README step 11), from the host, VM still running:"
+Write-Host "  3. Reset and verify the agent's OWN internal status is clean, from the HOST -- this is"
+Write-Host "     the step that's easy to skip and silently ruins the snapshot: the agent is a"
+Write-Host "     long-running process that's ALSO part of the live snapshot's frozen memory, and if"
+Write-Host "     anything (a stray test, a health-check, poking at it while debugging something"
+Write-Host "     else) ever called its /execute or /execpy endpoints before you snapshot, its"
+Write-Host "     internal status gets stuck at 'running' -- baked into the snapshot forever. CAPE's"
+Write-Host "     analyzer.py then hangs completely silently on every single future task using this"
+Write-Host "     snapshot: zero logs, zero dropped files, zero screenshots, no error anywhere,"
+Write-Host "     because it never gets past its own startup. Confirmed hitting exactly this."
+Write-Host "     curl -s -X POST http://${StaticIP}:8000/status -d 'status=init'"
+Write-Host "     curl -s http://${StaticIP}:8000/status"
+Write-Host "     Expect the second command to show `"status`": `"init`" -- if it shows anything else,"
+Write-Host "     do NOT snapshot yet; something is still using the agent."
+Write-Host "  4. Take the clean-baseline snapshot (README step 11), from the host, VM still running:"
 Write-Host "     virsh snapshot-create-as win10x64 clean_baseline --atomic"

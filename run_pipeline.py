@@ -281,9 +281,19 @@ def submit_to_cape(exe_container_path: str, analysis_timeout: int, env: dict) ->
     exec_flags = []
     for k in ("LIBVIRT_GATEWAY", "LIBVIRT_BRIDGE", "GUEST_VM_IP"):
         exec_flags += ["-e", f"{k}={env[k]}"]
+    # --route inetsim is required explicitly: CAPEv2's own Task.route DB
+    # column defaults to Python False instead of None (lib/cuckoo/core/data/
+    # task.py), which gets stored/retrieved as the string "0" -- truthy in
+    # Python, so it silently overrides routing.conf's route=inetsim with an
+    # unrecognized value on every submission that doesn't set --route itself.
+    # Without this, analysis_manager never calls rooter("inetsim_enable"),
+    # the iptables rule excluding the resultserver port from the inetsim
+    # redirect never gets installed, and dynamic analysis silently produces
+    # zero behavioral data every time -- this was the root cause behind the
+    # multi-day "technique count collapsed" investigation (2026-08-27).
     cape_cmd = (
         f"cd /opt/CAPEv2/utils && poetry run python3 submit.py "
-        f"--timeout {analysis_timeout} --enforce-timeout {exe_container_path}"
+        f"--timeout {analysis_timeout} --enforce-timeout --route inetsim {exe_container_path}"
     )
     out = compose_capture(
         "exec", *exec_flags, "cape",

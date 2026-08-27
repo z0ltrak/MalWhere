@@ -423,7 +423,27 @@ driver, which needs a real admin token, not a filtered one.
 **Step 11 — snapshot.** With the VM in exactly this state: logged in, agent
 listening, nothing left to configure: take a **live** snapshot (VM running,
 not shut down). CAPE reverts straight into this ready state instead of
-cold-booting per task:
+cold-booting per task.
+
+**First, reset and verify the agent's own internal status is clean.** The
+agent is a long-running process, and it's *also* part of the live
+snapshot's frozen memory — if anything ever called its `/execute` or
+`/execpy` endpoints before you snapshot (a stray test, a health-check,
+poking at it while debugging something unrelated), its internal status
+gets stuck at `running` and that gets baked into the snapshot permanently.
+The result is silent and easy to miss: every future task against this
+snapshot has `analyzer.py` hang before it gets anywhere — zero logs, zero
+dropped files, zero screenshots, no error anywhere, because CAPE's own
+"analysis completed successfully" just means the timeout elapsed, not that
+anything actually happened. Confirmed hitting exactly this.
+```bash
+curl -s -X POST http://GUEST_VM_IP:8000/status -d 'status=init'
+curl -s http://GUEST_VM_IP:8000/status   # must show "status": "init"
+```
+If the second command shows anything other than `init`, do **not**
+snapshot yet — something is still using the agent; find and stop it first.
+
+Only once that's confirmed clean:
 ```bash
 virsh snapshot-create-as win10x64 clean_baseline --atomic
 ```
@@ -831,6 +851,38 @@ If a task reports `reported`/completes with no errors anywhere, but `docker/cape
 Get-Service WinDefend | Select-Object Status   # must be Stopped, not Running
 ```
 If it's `Running`, redo Step 8 above (both the preference AND the registry-policy version, the registry keys are the durable one), reboot, re-verify, and re-take the `clean_baseline` snapshot (`virsh snapshot-delete win10x64 clean_baseline` then `virsh snapshot-create-as win10x64 clean_baseline --atomic`) — every task run against the old snapshot needs to be treated as unreliable, not as ground truth about the sample's real behavior.
+
+### The guest's agent has a stale "running" status baked into the snapshot — every task hangs silently with zero capture
+A second, distinct cause of the exact same symptom as the Defender issue above (task reports success, `logs/CAPE/files/shots` all empty) — but this one hits *every* sample, not just ones that trip Defender, and it's easy to confuse with "the malware just didn't do much." The agent (`agent.py`) is a long-running process that's *part of* the live snapshot's frozen memory. If its `/execute` or `/execpy` endpoints were ever called before the snapshot was taken — a stray test, a health-check, poking at it while debugging something unrelated — its internal status gets stuck at `running` (instead of the clean `init` a fresh agent start has) and that gets baked into the snapshot permanently. `analyzer.py` then hangs completely before it ever gets to logging, injecting, or launching the sample, on every single task that reverts to this snapshot, with no error anywhere: CAPE's "analysis completed successfully" only means the timeout elapsed, not that anything happened.
+
+Confirmed the mechanism directly: booted the guest standalone, queried `GET http://GUEST_VM_IP:8000/status` and found `"status": "running"` on a snapshot that had never had a real task run against it yet. Reset it (`POST /status -d 'status=init'`) and reran the exact same launch by hand — it went from a 0-byte log file to a fully successful run (DLL injection, monitor configs, the works).
+
+Fix: reset and verify before *every* snapshot you take (this is now baked into `setup-guest.ps1`'s own instructions and README Step 11 above):
+```bash
+curl -s -X POST http://GUEST_VM_IP:8000/status -d 'status=init'
+curl -s http://GUEST_VM_IP:8000/status   # must show "status": "init", not "running"
+```
+If you already have a snapshot you suspect is affected: boot it (`virsh start win10x64` if `shut off`, or use it as-is if already `running`), run the same two commands, then re-take the snapshot (`virsh snapshot-delete` then `virsh snapshot-create-as ... --atomic`) — no need to redo any of the actual setup, this is purely an agent in-memory state issue, not a Windows configuration one.
+
+### Dynamic analysis "succeeds" but produces zero behavioral data, and even a plain `import win32api` fails on the guest
+A third cause of the same top-level symptom (`logs/CAPE/files/shots` all empty): the python.org installer does **not** bundle `pywin32`, but `analyzer.py` imports `win32api`/`win32con`/etc. for nearly all of its Windows monitoring and injection code — without it, `analyzer.py` crashes on import on every single task, with no error CAPE surfaces anywhere (it just never gets far enough to log anything). `setup-guest.ps1` now fetches the correct wheel from PyPI during Step 6a's real-internet window (the sandbox network can't reach PyPI once DNS switches to `inetsim`) and installs it offline in Step 10, verifying `import win32api` actually succeeds before continuing. If you built a guest with an older version of this script, or otherwise suspect this on an existing guest, check directly:
+```powershell
+& "C:\Program Files\Python312\python.exe" -c "import win32api; print(win32api.GetVersion())"
+```
+If that fails, download a matching `pywin32-*-cp312-cp312-win_amd64.whl` from PyPI on a machine with real internet, transfer it to the guest, and `pip install --no-index <path-to-wheel>` — then re-take the `clean_baseline` snapshot.
+
+### Dynamic analysis "succeeds" but every task produces zero behavioral data (not just one Defender-affected sample)
+A fourth, distinct cause of the exact same top-level symptom as the entries above (`logs/CAPE/files/shots` all empty, no error anywhere) — but this one is host-level, not guest-level, and hits *every single task regardless of family, snapshot, or guest configuration*. Root cause: CAPEv2's own `Task.route` database column (`lib/cuckoo/core/data/task.py`) defaults to Python `False` instead of `None`, which gets stored/retrieved as the string `"0"` — truthy in Python. `analysis_manager.py`'s routing setup does `if self.task.route: self.route = self.task.route`, so this silently overrides `routing.conf`'s `route = inetsim` with the unrecognized value `"0"` on every task submission that doesn't pass `--route` explicitly, logged as `WARNING: Unknown network routing destination specified, ignoring routing for this analysis: 0` — easy to read past as harmless. Because routing gets skipped, `rooter("inetsim_enable", ...)` never runs, and the iptables rule that's supposed to exclude the resultserver's own port from the `inetsim` catch-all redirect never gets installed.
+
+On its own this is usually harmless (nothing else claims that port range) — but it becomes a silent total-failure mode if the host's Docker-managed NAT rules are ever in a bad state: confirmed hitting a corrupted Docker port-publish rule for an unrelated container (`ghcr.io/mitre-attack/attack-navigator`, published as `4200:80`) missing its `--dport 4200` match, so it unconditionally DNAT'd *all* local TCP traffic — including the resultserver's port 2042 — to that container's internal nginx. `analyzer.py` connected "successfully" every time, got an HTTP 400 back, and lost the connection instantly: zero behavioral data, on every family, for as long as both bugs coincided. Confirmed by connecting from the guest directly to the resultserver port and reading a real `nginx` banner back instead of CAPE's silent netlog protocol — and confirmed again by connecting with the entire `cape` container stopped and *still* getting the nginx response, which is what proved it was a host NAT issue and not anything in CAPE.
+
+Fix, two parts:
+1. **`run_pipeline.py` now always passes `--route inetsim`** on submission, working around the CAPEv2 default-value bug directly — this alone is enough for normal use.
+2. If you ever see the exact symptom above (zero behavioral data despite `Enabled route 'inetsim'` in `cuckoo.log`), check the host's Docker-managed NAT rules for anything overly broad:
+   ```bash
+   sudo iptables-nft-save -t nat | grep DOCKER
+   ```
+   A correct rule always has a `--dport <published-port>` match. One without it will DNAT unrelated traffic (including CAPE's own resultserver port) into whatever container it belongs to. Restarting the affected container regenerates the *correct* rule but does **not** remove a stale broken one already sitting earlier in the chain — delete the specific broken line by hand (`sudo iptables -t nat -D DOCKER <the exact broken rule text>`); don't flush the whole `DOCKER` chain, since Docker manages it and other containers' legitimate rules live there too.
 
 ### `pipeline` gets a 403 from MISP even though `MISP_API_KEY` is set in `.env`
 `.env` and MISP's own database don't sync automatically, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`. See [Quickstart](#quickstart) step 5 for the fix — set the same key directly on the MISP account, then into `.env`, then recreate `pipeline`.
