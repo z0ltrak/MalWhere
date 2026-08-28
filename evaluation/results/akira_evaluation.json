@@ -1,16 +1,16 @@
 {
   "counts": {
-    "automated": 13,
-    "ground_truth": 12
+    "automated": 15,
+    "ground_truth": 13
   },
   "strict": {
-    "tp": 11,
-    "fp": 2,
+    "tp": 12,
+    "fp": 3,
     "fn": 1,
-    "gt_matched_count": 11,
-    "precision": 0.8462,
-    "recall": 0.9167,
-    "f1": 0.88,
+    "gt_matched_count": 12,
+    "precision": 0.8,
+    "recall": 0.9231,
+    "f1": 0.8572,
     "matched_techniques": [
       "T1057",
       "T1071",
@@ -19,27 +19,29 @@
       "T1490",
       "T1497",
       "T1622",
+      "T1685",
       "T1027",
       "T1033",
       "T1059",
-      "T1685"
+      "T1082"
     ],
     "false_positive_techniques": [
       "T1027.002",
-      "T1070"
+      "T1070",
+      "T1518"
     ],
     "missed_techniques": [
       "T1685.005"
     ]
   },
   "family_level": {
-    "tp": 12,
-    "fp": 1,
+    "tp": 13,
+    "fp": 2,
     "fn": 0,
-    "gt_matched_count": 12,
-    "precision": 0.9231,
+    "gt_matched_count": 13,
+    "precision": 0.8667,
     "recall": 1.0,
-    "f1": 0.96,
+    "f1": 0.9286,
     "matched_techniques": [
       "T1057",
       "T1071",
@@ -48,21 +50,23 @@
       "T1490",
       "T1497",
       "T1622",
+      "T1685",
       "T1027",
       "T1027.002",
       "T1033",
       "T1059",
-      "T1685"
+      "T1082"
     ],
     "false_positive_techniques": [
-      "T1070"
+      "T1070",
+      "T1518"
     ],
     "missed_techniques": []
   },
   "precision_by_confidence": {
     "high": {
-      "count": 7,
-      "tp": 7,
+      "count": 8,
+      "tp": 8,
       "fp": 0,
       "precision": 1.0
     },
@@ -71,26 +75,32 @@
       "tp": 5,
       "fp": 1,
       "precision": 0.8333
+    },
+    "low": {
+      "count": 1,
+      "tp": 0,
+      "fp": 1,
+      "precision": 0.0
     }
   },
   "precision_by_source": {
     "static": {
-      "count": 8,
-      "tp": 7,
+      "count": 7,
+      "tp": 6,
       "fp": 1,
-      "precision": 0.875
+      "precision": 0.8571
     },
     "dynamic+static": {
-      "count": 2,
-      "tp": 2,
-      "fp": 0,
-      "precision": 1.0
-    },
-    "dynamic": {
       "count": 3,
       "tp": 3,
       "fp": 0,
       "precision": 1.0
+    },
+    "dynamic": {
+      "count": 5,
+      "tp": 4,
+      "fp": 1,
+      "precision": 0.8
     }
   }
 }

@@ -33,10 +33,10 @@ manually-validated ground truth (`manual_analysis/*/manual_*_report.md`).
 
 | Sample | Auto | GT | Strict P | Strict R | Strict F1 | Family P | Family R | Family F1 |
 |---|---|---|---|---|---|---|---|---|
-| akira | 13 | 12 | 0.85 | 0.92 | 0.88 | 0.92 | 1.00 | 0.96 |
-| roning | 20 | 25 | 0.60 | 0.48 | 0.53 | 0.85 | 0.68 | 0.76 |
-| roning + resubmitted | 25 | 25 | 0.60 | 0.60 | 0.60 | 0.84 | 0.84 | 0.84 |
-| wsnake | 34 | 45 | 0.91 | 0.69 | 0.78 | 1.00 | 0.80 | 0.89 |
+| akira | 15 | 13 | 0.80 | 0.92 | 0.86 | 0.87 | 1.00 | 0.93 |
+| roning | 21 | 26 | 0.71 | 0.58 | 0.64 | 0.95 | 0.77 | 0.85 |
+| roning + resubmitted | 28 | 26 | 0.64 | 0.69 | 0.67 | 0.86 | 0.92 | 0.89 |
+| wsnake | 31 | 46 | 0.90 | 0.61 | 0.73 | 0.97 | 0.70 | 0.81 |
 
 ## Precision by confidence tier (family-level match)
 
@@ -44,24 +44,25 @@ manually-validated ground truth (`manual_analysis/*/manual_*_report.md`).
 
 | Tier | Count | TP | FP | Precision |
 |---|---|---|---|---|
-| high | 7 | 7 | 0 | 1.00 |
+| high | 8 | 8 | 0 | 1.00 |
 | medium | 6 | 5 | 1 | 0.83 |
+| low | 1 | 0 | 1 | 0.00 |
 
 **roning**
 
 | Tier | Count | TP | FP | Precision |
 |---|---|---|---|---|
-| high | 15 | 14 | 1 | 0.93 |
-| medium | 3 | 2 | 1 | 0.67 |
+| high | 14 | 14 | 0 | 1.00 |
+| medium | 5 | 5 | 0 | 1.00 |
 | low | 2 | 1 | 1 | 0.50 |
 
 **wsnake**
 
 | Tier | Count | TP | FP | Precision |
 |---|---|---|---|---|
-| high | 24 | 24 | 0 | 1.00 |
+| high | 19 | 19 | 0 | 1.00 |
 | medium | 9 | 9 | 0 | 1.00 |
-| low | 1 | 1 | 0 | 1.00 |
+| low | 3 | 2 | 1 | 0.67 |
 
 ## Precision by source agreement (family-level match)
 
@@ -69,22 +70,22 @@ manually-validated ground truth (`manual_analysis/*/manual_*_report.md`).
 
 | Sources | Count | TP | FP | Precision |
 |---|---|---|---|---|
-| dynamic | 3 | 3 | 0 | 1.00 |
-| dynamic+static | 2 | 2 | 0 | 1.00 |
-| static | 8 | 7 | 1 | 0.88 |
+| dynamic | 5 | 4 | 1 | 0.80 |
+| dynamic+static | 3 | 3 | 0 | 1.00 |
+| static | 7 | 6 | 1 | 0.86 |
 
 **roning**
 
 | Sources | Count | TP | FP | Precision |
 |---|---|---|---|---|
-| dynamic | 13 | 12 | 1 | 0.92 |
-| dynamic+static | 3 | 2 | 1 | 0.67 |
+| dynamic | 14 | 14 | 0 | 1.00 |
+| dynamic+static | 3 | 3 | 0 | 1.00 |
 | static | 4 | 3 | 1 | 0.75 |
 
 **wsnake**
 
 | Sources | Count | TP | FP | Precision |
 |---|---|---|---|---|
-| dynamic | 18 | 18 | 0 | 1.00 |
-| dynamic+static | 4 | 4 | 0 | 1.00 |
-| static | 12 | 12 | 0 | 1.00 |
+| dynamic | 15 | 14 | 1 | 0.93 |
+| dynamic+static | 3 | 3 | 0 | 1.00 |
+| static | 13 | 13 | 0 | 1.00 |
