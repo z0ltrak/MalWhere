@@ -142,6 +142,10 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1201": "Password Policy Discovery",
     "T1518": "Software Discovery",
     "T1555.003": "Credentials from Password Stores: Credentials from Web Browsers",
+    # Seen in resubmit-queue re-analysis of RoningLoader's dropped files
+    # (2nd clean-clone validation, 2026-08-28).
+    "T1134": "Access Token Manipulation",
+    "T1056.001": "Input Capture: Keylogging",
 }
 
 _attck_bundle_cache = None
