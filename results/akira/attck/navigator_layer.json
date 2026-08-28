@@ -78,7 +78,7 @@
       "techniqueID": "T1486",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic+static corroborated; evidence: WriteFile, akira, arika, expand 32-byte k, mass_ransom_note_drop, ransomware_file_modifications, ransomware_files, ransomware_iocp_asynchronous_encryption",
+      "comment": "dynamic+static corroborated; evidence: WriteFile, akira, arika, expand 32-byte k, mass_ransom_note_drop, ransomware_file_modifications, ransomware_files, ransomware_iocp_asynchronous_encryption, ransomware_message",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -150,7 +150,7 @@
       "techniqueID": "T1685",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic+static corroborated; evidence: OpenProcess, TerminateProcess, WTSEnumerateProcessesW, amsi_enumeration",
+      "comment": "dynamic+static corroborated; evidence: OpenProcess, TerminateProcess, WTSEnumerateProcessesW, amsi_enumeration, antiav_servicestop",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -165,10 +165,10 @@
       ]
     },
     {
-      "techniqueID": "T1033",
+      "techniqueID": "T1027",
       "score": 60,
       "color": "#ffe766",
-      "comment": "dynamic corroborated; evidence: privilege_elevation_check",
+      "comment": "dynamic corroborated; evidence: packer_unknown_pe_section_name, pe_deep_entrypoint, pe_tls_callbacks",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -183,10 +183,28 @@
       ]
     },
     {
-      "techniqueID": "T1055",
+      "techniqueID": "T1027.002",
       "score": 60,
       "color": "#ffe766",
-      "comment": "dynamic corroborated; evidence: creates_suspended_process, resumethread_remote_process",
+      "comment": "dynamic corroborated; evidence: packer_unknown_pe_section_name",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "medium"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1033",
+      "score": 60,
+      "color": "#ffe766",
+      "comment": "dynamic corroborated; evidence: privilege_elevation_check",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -237,10 +255,10 @@
       ]
     },
     {
-      "techniqueID": "T1555",
+      "techniqueID": "T1082",
       "score": 60,
       "color": "#ffe766",
-      "comment": "dynamic corroborated; evidence: credential_access_via_windows_credential_history, infostealer_browser",
+      "comment": "dynamic corroborated; evidence: discover_registry_mount_points, mountpoint_manager_access, mountpoints_volume_discovery",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -255,118 +273,10 @@
       ]
     },
     {
-      "techniqueID": "T1003",
-      "score": 30,
-      "color": "#8ec843",
-      "comment": "dynamic corroborated; evidence: infostealer_browser",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "low"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1005",
-      "score": 30,
-      "color": "#8ec843",
-      "comment": "dynamic corroborated; evidence: infostealer_browser",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "low"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1082",
-      "score": 30,
-      "color": "#8ec843",
-      "comment": "dynamic corroborated; evidence: discover_registry_mount_points",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "low"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
       "techniqueID": "T1518",
       "score": 30,
       "color": "#8ec843",
       "comment": "dynamic corroborated; evidence: amsi_enumeration",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "low"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1552",
-      "score": 30,
-      "color": "#8ec843",
-      "comment": "dynamic corroborated; evidence: infostealer_browser",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "low"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1552.001",
-      "score": 30,
-      "color": "#8ec843",
-      "comment": "dynamic corroborated; evidence: infostealer_browser",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "low"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1555.003",
-      "score": 30,
-      "color": "#8ec843",
-      "comment": "dynamic corroborated; evidence: infostealer_browser",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [

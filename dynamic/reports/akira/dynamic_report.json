@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0",
   "source": "cape",
-  "source_report_path": "docker/cape/work/storage/analyses/3/reports/report.json",
-  "cape_task_id": 3,
-  "parsed_at": "2026-08-12T15:40:37.772836+00:00",
+  "source_report_path": "docker/cape/work/storage/analyses/51/reports/report.json",
+  "cape_task_id": 51,
+  "parsed_at": "2026-08-28T21:00:18.065340+00:00",
   "target": {
-    "filename": "sample.exe",
+    "filename": "06c2a137c31aae5d02b4.exe",
     "md5": "aa88621587a40bf353cc07a965e00ee2",
     "sha1": "dfa5e52cd8a709cd2b479c71c9c06a89990a0e9f",
     "sha256": "06c2a137c31aae5d02b4d7df61ffd31f1af9a9e59978f15b3f7265cc751bff1f",
@@ -15,9 +15,9 @@
   "analysis": {
     "malscore": 10.0,
     "malstatus": "Malicious",
-    "duration_seconds": 233,
-    "started": "2026-08-11 13:53:54",
-    "ended": "2026-08-11 13:57:47",
+    "duration_seconds": 293,
+    "started": "2026-08-28 20:13:48",
+    "ended": "2026-08-28 20:18:41",
     "cape_version": "2.5",
     "family_detections": [
       {
@@ -44,7 +44,7 @@
         "location_discovery"
       ],
       "ttps": [],
-      "match_count": 3
+      "match_count": 7
     },
     {
       "name": "queries_locale_api",
@@ -70,7 +70,7 @@
         "T1548",
         "T1036"
       ],
-      "match_count": 9
+      "match_count": 40
     },
     {
       "name": "antidebug_setunhandledexceptionfilter",
@@ -105,7 +105,7 @@
       "ttps": [
         "T1485"
       ],
-      "match_count": 122
+      "match_count": 74
     },
     {
       "name": "privilege_elevation_check",
@@ -120,7 +120,7 @@
         "T1033",
         "T1082"
       ],
-      "match_count": 8
+      "match_count": 14
     },
     {
       "name": "query_fips_reconnaissance",
@@ -135,6 +135,61 @@
         "T1082"
       ],
       "match_count": 16
+    },
+    {
+      "name": "mountpoints_volume_discovery",
+      "description": "Queries the mount points and then resolves volume paths to enumerate storage devices",
+      "severity": 2,
+      "confidence": 20,
+      "categories": [
+        "discovery",
+        "ransomware",
+        "wiper"
+      ],
+      "ttps": [
+        "T1082"
+      ],
+      "match_count": 23
+    },
+    {
+      "name": "creates_suspended_process",
+      "description": "Creates a process in a suspended state, likely for injection",
+      "severity": 2,
+      "confidence": 50,
+      "categories": [
+        "injection",
+        "process hollowing"
+      ],
+      "ttps": [
+        "T1055"
+      ],
+      "match_count": 2
+    },
+    {
+      "name": "resumethread_remote_process",
+      "description": "Resumed a thread in another process",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "injection",
+        "unpacking"
+      ],
+      "ttps": [
+        "T1055"
+      ],
+      "match_count": 3
+    },
+    {
+      "name": "reads_memory_remote_process",
+      "description": "Reads from the memory of another process",
+      "severity": 2,
+      "confidence": 100,
+      "categories": [
+        "memory scraping",
+        "injection"
+      ],
+      "ttps": [],
+      "match_count": 47
     },
     {
       "name": "pe_deep_entrypoint",
@@ -181,6 +236,100 @@
       "match_count": 1
     },
     {
+      "name": "discover_registry_mount_points",
+      "description": "Queries registry mount points to identify historical or connected removable/network drives",
+      "severity": 2,
+      "confidence": 20,
+      "categories": [
+        "discovery",
+        "ransomware",
+        "wiper"
+      ],
+      "ttps": [
+        "T1082"
+      ],
+      "match_count": 12
+    },
+    {
+      "name": "antiav_servicestop",
+      "description": "Attempts to stop active services",
+      "severity": 3,
+      "confidence": 100,
+      "categories": [
+        "anti-av"
+      ],
+      "ttps": [
+        "T1543.003",
+        "T1562.001",
+        "T1489",
+        "T1543",
+        "T1562"
+      ],
+      "match_count": 123
+    },
+    {
+      "name": "amsi_enumeration",
+      "description": "Enumerated Anti-Malware Scan Interface (AMSI) providers, a potential precursor to AMSI bypass or EDR unhooking",
+      "severity": 3,
+      "confidence": 40,
+      "categories": [
+        "discovery",
+        "defense_evasion"
+      ],
+      "ttps": [
+        "T1518",
+        "T1562"
+      ],
+      "match_count": 3
+    },
+    {
+      "name": "mountpoint_manager_access",
+      "description": "Repeatedly opens the MountPointManager device to enumerate drive letters and resolve volume paths to discover all attached drives and network shares",
+      "severity": 3,
+      "confidence": 60,
+      "categories": [
+        "ransomware",
+        "wiper",
+        "discovery"
+      ],
+      "ttps": [
+        "T1082"
+      ],
+      "match_count": 2
+    },
+    {
+      "name": "infostealer_browser",
+      "description": "Steals private information from local Internet browsers",
+      "severity": 3,
+      "confidence": 30,
+      "categories": [
+        "infostealer"
+      ],
+      "ttps": [
+        "T1552.001",
+        "T1555.003",
+        "T1003",
+        "T1005",
+        "T1552",
+        "T1555"
+      ],
+      "match_count": 1256
+    },
+    {
+      "name": "ransomware_file_modifications",
+      "description": "Exhibits possible ransomware or wiper file modification behavior: suspicious_file_moves, overwrites_existing_files, composite_ransomware_file_behaviour",
+      "severity": 3,
+      "confidence": 50,
+      "categories": [
+        "ransomware",
+        "wiper"
+      ],
+      "ttps": [
+        "T1486"
+      ],
+      "match_count": 290
+    },
+    {
       "name": "mass_ransom_note_drop",
       "description": "Writes or copies the same ransom note filename across multiple directories",
       "severity": 3,
@@ -220,7 +369,7 @@
       "ttps": [
         "T1083"
       ],
-      "match_count": 74
+      "match_count": 1827
     },
     {
       "name": "ransomware_files",
@@ -251,6 +400,38 @@
   ],
   "attck_mappings": [
     {
+      "technique": "T1685",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "antiav_servicestop",
+      "confidence": "high",
+      "justification": "CAPE signature 'antiav_servicestop' fired (severity=3, confidence=100%, categories=['anti-av'])"
+    },
+    {
+      "technique": "T1685",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "antiav_servicestop",
+      "confidence": "high",
+      "justification": "CAPE signature 'antiav_servicestop' fired (severity=3, confidence=100%, categories=['anti-av'])"
+    },
+    {
+      "technique": "T1518",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "amsi_enumeration",
+      "confidence": "low",
+      "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
+    },
+    {
+      "technique": "T1685",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "amsi_enumeration",
+      "confidence": "low",
+      "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
+    },
+    {
       "technique": "T1033",
       "name": "",
       "source": "dynamic_signature",
@@ -259,12 +440,36 @@
       "justification": "CAPE signature 'privilege_elevation_check' fired (severity=2, confidence=80%, categories=['discovery', 'privilege_escalation'])"
     },
     {
+      "technique": "T1082",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "mountpoint_manager_access",
+      "confidence": "medium",
+      "justification": "CAPE signature 'mountpoint_manager_access' fired (severity=3, confidence=60%, categories=['ransomware', 'wiper', 'discovery'])"
+    },
+    {
+      "technique": "T1082",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "mountpoints_volume_discovery",
+      "confidence": "low",
+      "justification": "CAPE signature 'mountpoints_volume_discovery' fired (severity=2, confidence=20%, categories=['discovery', 'ransomware', 'wiper'])"
+    },
+    {
       "technique": "T1486",
       "name": "",
       "source": "dynamic_signature",
       "evidence": "ransomware_iocp_asynchronous_encryption",
       "confidence": "high",
       "justification": "CAPE signature 'ransomware_iocp_asynchronous_encryption' fired (severity=4, confidence=80%, categories=['ransomware'])"
+    },
+    {
+      "technique": "T1486",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "ransomware_file_modifications",
+      "confidence": "medium",
+      "justification": "CAPE signature 'ransomware_file_modifications' fired (severity=3, confidence=50%, categories=['ransomware', 'wiper'])"
     },
     {
       "technique": "T1486",
@@ -323,6 +528,14 @@
       "justification": "CAPE signature 'folder_enumeration' fired (severity=3, confidence=70%, categories=['ransomware', 'wiper', 'infostealer', 'discovery'])"
     },
     {
+      "technique": "T1082",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "discover_registry_mount_points",
+      "confidence": "low",
+      "justification": "CAPE signature 'discover_registry_mount_points' fired (severity=2, confidence=20%, categories=['discovery', 'ransomware', 'wiper'])"
+    },
+    {
       "technique": "T1486",
       "name": "",
       "source": "dynamic_signature",
@@ -332,171 +545,12 @@
     }
   ],
   "network": {
-    "domains": [
-      {
-        "domain": "github.com",
-        "ip": "140.82.121.3"
-      },
-      {
-        "domain": "www.msftconnecttest.com",
-        "ip": "185.43.182.40"
-      }
-    ],
-    "hosts": [
-      {
-        "ip": "185.43.182.25",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "www.msftconnecttest.com",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "2.20.253.87",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "www.msftconnecttest.com",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "2.20.253.75",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "www.msftconnecttest.com",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "96.16.86.160",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "40.126.53.9",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "20.231.128.66",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "20.190.181.23",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "20.190.181.3",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "40.126.53.6",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "40.126.53.16",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      }
-    ],
-    "dns_requests": [
-      {
-        "request": "github.com",
-        "type": "A",
-        "answers": [
-          {
-            "type": "A",
-            "data": "140.82.121.3"
-          }
-        ],
-        "first_seen": 1786456478.034211
-      },
-      {
-        "request": "www.msftconnecttest.com",
-        "type": "A",
-        "answers": [
-          {
-            "type": "A",
-            "data": "2.20.253.75"
-          },
-          {
-            "type": "CNAME",
-            "data": "www.msftconnecttest.com.edgesuite.net"
-          },
-          {
-            "type": "CNAME",
-            "data": "a39.d.akamai.net"
-          },
-          {
-            "type": "A",
-            "data": "2.20.253.87"
-          },
-          {
-            "type": "A",
-            "data": "185.43.182.25"
-          }
-        ],
-        "first_seen": 1786456506.781627
-      }
-    ],
+    "domains": [],
+    "hosts": [],
+    "dns_requests": [],
     "http_requests": [],
-    "tcp_count": 0,
-    "udp_count": 40
+    "tcp_count": 64,
+    "udp_count": 53
   },
   "dropped_files": [
     {
@@ -512,11 +566,11 @@
       ]
     },
     {
-      "name": "Log-11-08-2026-13-54-16.txt",
-      "sha256": "fc2f55e0ef349732fe36f934cfc9bfa4761a1ebd6c5ff2e0aae8c277ca5c3603",
-      "md5": "03cdf2f216f994052bb61905adaec04c",
-      "sha1": "8241146bb0dc4f264583c335fb8f8e5aa4fe862c",
-      "size": 1881566,
+      "name": "Log-28-08-2026-20-14-05.txt",
+      "sha256": "32c08b9853796171f1a554ff00cbadf5c3d77feebaddf6d7c5987e005060444b",
+      "md5": "d1b62354af828c8f17bfaa0e99fdf8ca",
+      "sha1": "ffb3ad2314c0f20849ed201c93b310efb551eb01",
+      "size": 95054,
       "type": "ASCII text, with CRLF line terminators",
       "cape_type": "",
       "roles": [
@@ -526,52 +580,107 @@
   ],
   "host_activity": {
     "mutexes": [
-      "Local\\SM0:1000:304:WilStaging_02",
-      "Local\\SM0:7164:304:WilStaging_02"
+      "Local\\SM0:3616:304:WilStaging_02",
+      "Local\\SM0:3616:120:WilError_03",
+      "Local\\SM0:3664:304:WilStaging_02",
+      "Local\\SM0:4332:304:WilStaging_02"
     ],
     "created_services": [],
     "started_services": [
-      "VSS",
-      "swprv"
+      "edgeupdate"
     ],
     "commands_executed": [
-      "C:\\Windows\\system32\\DllHost.exe /Processid:{338B40F9-9D68-4B53-A793-6B9AA0C5F63B}",
-      "C:\\Windows\\system32\\DllHost.exe /Processid:{AB8902B4-09CA-4BB6-B78D-A8F59079A8D5}"
+      "C:\\Windows\\system32\\DllHost.exe /Processid:{AB8902B4-09CA-4BB6-B78D-A8F59079A8D5}",
+      "\"C:\\Windows\\SystemApps\\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\\StartMenuExperienceHost.exe\" -ServerName:App.AppXywbrabmsek0gm3tkwpr5kwzbs55tkqay.mca",
+      "\"C:\\Windows\\system32\\backgroundTaskHost.exe\" -ServerName:App.AppXsqpbawq1jx69hhfyy1dr9y35whgstkrr.mca"
     ],
     "registry_keys_written": {
       "items": [
         "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0000\\RegFiles0000",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0000\\RegFilesHash"
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0000\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0001\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0001\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0002\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0002\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0003\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0003\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0000\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0001\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0003\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0002\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0004\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0004\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0004\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0005\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0005\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0005\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0006\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0006\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0006\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0007\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0007\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0008\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0008\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0009\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0009\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0010\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0010\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0011\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0011\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0010\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0011\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0008\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0007\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0009\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0012\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0012\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0012\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0013\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0013\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0014\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0014\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0015\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0015\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0016\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0016\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0017\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0017\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0013\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0015\\Sequence",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0018\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0018\\RegFilesHash",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0019\\RegFiles0000",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0019\\RegFilesHash"
       ],
-      "total_count": 2,
+      "total_count": 55,
       "truncated": false
     }
   },
   "process_tree": [
     {
-      "name": "sample.exe",
-      "pid": 2044,
-      "parent_id": 4484,
-      "module_path": "C:\\Users\\Windows\\AppData\\Local\\Temp\\sample.exe",
+      "name": "06c2a137c31aae5d02b4.exe",
+      "pid": 3616,
+      "parent_id": 3888,
+      "module_path": "C:\\Users\\sandbox\\AppData\\Local\\Temp\\06c2a137c31aae5d02b4.exe",
       "children": []
     },
     {
       "name": "svchost.exe",
-      "pid": 772,
-      "parent_id": 640,
+      "pid": 708,
+      "parent_id": 580,
       "module_path": "C:\\Windows\\System32\\svchost.exe",
       "children": [
         {
           "name": "dllhost.exe",
-          "pid": 1000,
-          "parent_id": 772,
+          "pid": 3664,
+          "parent_id": 708,
           "module_path": "C:\\Windows\\System32\\dllhost.exe",
           "children": []
         },
         {
           "name": "dllhost.exe",
-          "pid": 7164,
-          "parent_id": 772,
+          "pid": 4332,
+          "parent_id": 708,
           "module_path": "C:\\Windows\\System32\\dllhost.exe",
           "children": []
         }
@@ -579,11 +688,39 @@
     },
     {
       "name": "svchost.exe",
-      "pid": 3728,
-      "parent_id": 640,
+      "pid": 5724,
+      "parent_id": 580,
       "module_path": "C:\\Windows\\System32\\svchost.exe",
       "children": []
     }
   ],
-  "process_injection_signatures": []
+  "process_injection_signatures": [
+    {
+      "name": "creates_suspended_process",
+      "description": "Creates a process in a suspended state, likely for injection",
+      "severity": 2,
+      "categories": [
+        "injection",
+        "process hollowing"
+      ]
+    },
+    {
+      "name": "resumethread_remote_process",
+      "description": "Resumed a thread in another process",
+      "severity": 2,
+      "categories": [
+        "injection",
+        "unpacking"
+      ]
+    },
+    {
+      "name": "reads_memory_remote_process",
+      "description": "Reads from the memory of another process",
+      "severity": 2,
+      "categories": [
+        "memory scraping",
+        "injection"
+      ]
+    }
+  ]
 }

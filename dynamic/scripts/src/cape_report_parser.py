@@ -20,6 +20,48 @@ _UNRELIABLE_SIGNATURES = {
     "unbacked_process_mitigation_alteration",    # caller addresses resolve to a system DLL, not the sample
     "stealth_window",                            # hidden console window from ordinary silent subprocess use
     "anomalous_deletefile",                      # Akira's own encryption routine renames files, doesn't delete them
+    # Verified against Akira's task #51: both attributed entirely to
+    # svchost.exe (PID 708), unrelated to the sample's own process
+    # (PID 3616, different branch of the process tree) --
+    # "resumethread_remote_process" data literally reads "Process
+    # svchost.exe with process ID 708 resumed a thread in another process
+    # with the process ID 5340", never mentioning the sample. Ordinary
+    # Windows service-host/COM-surrogate (dllhost.exe) activity present in
+    # every sandbox detonation, not something the sample did.
+    "creates_suspended_process",
+    "resumethread_remote_process",
+}
+
+# Signatures meant to detect *targeted* access to a handful of specific
+# credential-store files, whose ttps mapping stops being trustworthy once
+# match_count is high enough to indicate *indiscriminate* file-system
+# access instead -- a different, unrelated technique wearing this
+# signature's name. Verified against Akira: infostealer_browser fired
+# with match_count=1256, every one of them an NtQueryAttributesFile
+# metadata-only call (never a read) walking every single file under
+# Microsoft\Edge\User Data\Default\ (Cache\data_N, AutofillStrikeDatabase\
+# LOCK, BudgetDatabase\LOG, ...) -- the signature of a pre-encryption
+# directory walk, not a targeted Login Data/Cookies read. A real browser
+# infostealer touches on the order of 1 handful of named files per
+# profile; the ceiling here is deliberately generous (an order of
+# magnitude above any plausible legitimate count) since this is
+# calibrated against a single confirmed false-positive case, not a
+# validated corpus -- revisit if a real infostealer sample is ever seen
+# firing this signature near the ceiling.
+#
+# infostealer_ftp/_mail/_bitcoin share the exact same design (narrow name,
+# broad path-substring matching underneath) and haven't shown this failure
+# yet -- they fired legitimately for WhiteSnakeStealer with tiny counts
+# (1, 8, 2) -- but nothing stops a future bulk-file-toucher (ransomware,
+# a wiper) from tripping them the same way infostealer_browser tripped on
+# Akira if its sweep happens to pass over an FTP client config, a mail
+# client's store, or a wallet.dat-named path. Same ceiling, same rationale,
+# applied preemptively rather than after the fact.
+_SIGNATURE_MATCH_COUNT_CEILING = {
+    "infostealer_browser": 100,
+    "infostealer_ftp": 100,
+    "infostealer_mail": 100,
+    "infostealer_bitcoin": 100,
 }
 
 # Per-technique corrections within an otherwise-kept signature's ttps
@@ -247,8 +289,12 @@ class CapeReportParser:
             sig_name = entry.get("signature", "")
             if sig_name in _UNRELIABLE_SIGNATURES:
                 continue
-            technique_ids = entry.get("ttps", [])
             sig = sig_by_name.get(sig_name, {})
+            match_count = len(sig.get("data", [])) if isinstance(sig.get("data"), list) else None
+            ceiling = _SIGNATURE_MATCH_COUNT_CEILING.get(sig_name)
+            if ceiling is not None and match_count is not None and match_count > ceiling:
+                continue
+            technique_ids = entry.get("ttps", [])
             severity = sig.get("severity") or 1
             confidence_pct = sig.get("confidence") or 50
             tier = bucket_confidence(int(severity), int(confidence_pct))
