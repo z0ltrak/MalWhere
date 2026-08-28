@@ -1,0 +1,210 @@
+\section{Case Studies}
+\label{sec:case-studies}
+
+Aggregate numbers (\S\ref{sec:evaluation}) show \emph{that} the
+pipeline performs well; the five cases below show \emph{why}: concrete
+instances of the validation discipline finding and resolving a real
+problem, each illustrating a different class of failure a purely
+numeric evaluation would not surface on its own.
+
+\subsection{RoningLoader's Multi-Stage Chain}
+\label{sec:case-roning}
+
+RoningLoader's infection chain, established through manual reverse
+engineering, is not one binary but four: a loader that decrypts and
+drops a kernel-mode rootkit driver used to hide its own process and
+files, a separate DLL whose sole function is enumerating and
+terminating security products, and a remote-access client that
+establishes the actual C2 channel. Each component's own capability is
+real and independently significant; none of the three dropped
+components appear as an import or string in the loader binary itself,
+since they are decrypted into memory or dropped to disk only at
+runtime.
+
+Table~\ref{tab:results} already shows the numeric consequence:
+scoring the loader in isolation reaches 0.68 recall against ground
+truth written for the full chain, because roughly a third of the
+techniques a human analyst correctly attributes to ``RoningLoader'' as
+a family are only observable by analyzing the dropped components
+directly. The resubmission loop (\S\ref{sec:resubmission}) exists
+specifically because this is a structural property of multi-stage
+malware, not a quirk of one sample, and closes 16 of those 32 recall
+points by giving each component its own independent analysis pass
+rather than attempting to infer its capability from the parent's own
+evidence.
+
+\subsection{The Installer Aggregation Bug}
+\label{sec:case-installer}
+
+Early in validation, an installer-packaged sample's static report
+showed evidence consistent with only \emph{one} of its several bundled
+components, despite the multi-pass extraction logic
+(\S\ref{sec:static-rules}) having processed all of them. Tracing the
+report generation code directly, rather than assuming the multi-pass
+logic itself was at fault, found the actual defect one stage later:
+\code{\_analyze\_installer}, the function aggregating per-component
+results into the sample's single top-level report, was silently
+\emph{substituting} one child component's analysis for another's under
+a specific condition, rather than merging both.
+
+The bug was confirmed, not just inferred from the symptom, via the
+report's own \code{hash\_match} field, a value recorded for exactly
+this kind of cross-check, showing the reported hash belonged to a
+different extracted file than the one whose findings were actually
+present in the report body. Fixing the aggregation logic to merge
+findings from every extracted component, rather than the most recently
+processed one, restored the missing evidence and directly improved
+recall on the affected sample once re-evaluated.
+
+The lesson generalized beyond this one fix: it motivated treating every
+new pipeline capability, the resubmission loop chief among them, as
+needing its own explicit corroboration step (lineage manifests, hash
+cross-checks) rather than trusting that ``the code ran without error''
+implies ``the code produced the right output.'' Finding and fixing this
+class of bug before it could silently understate a sample's real
+capability is itself a concrete demonstration of what the pipeline's
+validation discipline is for.
+
+\subsection{WhiteSnakeStealer's Ground-Truth Gap}
+\label{sec:case-wsnake}
+
+\S\ref{sec:fp-audit} summarizes the outcome; the process is worth
+detailing once as a concrete example of what ``audited against the full
+report text'' means in practice. WhiteSnakeStealer's pipeline output
+included \technique{T1620} (Reflective Code Loading) with static
+evidence, specific .NET BCL calls consistent with in-memory assembly
+loading. The sample's own ATT\&CK Techniques table, however, had no
+\technique{T1620} row, so the automated evaluation initially scored
+this as a false positive.
+
+Reading the report's narrative section, rather than trusting its
+summary table alone, found an explicit paragraph describing the exact
+reflective-loading mechanism the static rule had flagged: independent
+analyst confirmation existed, it simply had not been transcribed into
+the table the automated ground-truth extractor reads. This is a
+documentation gap in the source report, not a pipeline error, and was
+fixed by adding the missing row to the report itself (and regenerating
+ground truth from it), rather than by adjusting the pipeline's
+confidence or suppressing the finding. It is presented here
+specifically because two structurally similar cases on RoningLoader
+(\S\ref{sec:fp-audit}) were resolved the opposite way, left open,
+precisely because this kind of independent textual confirmation was
+what those two cases lacked. Together, the two outcomes show the
+pipeline's own evidence being treated the same way regardless of
+whether the discrepancy ultimately favored it.
+
+\subsection{The XOR Key False-Positive Cascade}
+\label{sec:case-xor}
+
+Single-byte XOR brute-forcing (\code{config\_parser.py}) exhaustively
+tries all 256 keys against candidate ciphertext regions and
+regex-matches the result against a dotted-quad IP pattern, the
+technique that recovered RoningLoader's genuine C2 IP
+(\code{202.95.11.173}) with no prior key knowledge
+(\S\ref{sec:limitations}, item~\ref{lim:key-ceiling}). Run without safeguards against a
+second sample, WhiteSnakeStealer, the same routine produced 8
+syntactically valid but entirely spurious dotted-quad matches from a
+single wrong key (\code{0x2e}, ASCII \code{.}): a repeating,
+null-padded integer table in the binary's compiled data happened to
+decode to eight fake IP addresses under that one key, since null bytes
+decode to literal \code{.} characters under it and a repeating
+structure in the source data produces a repeating false match.
+
+Two filters closed the gap, each justified by a distinct property a
+genuine embedded value has and a decoding accident does not. First, a
+\textbf{clean-boundary check}: the byte immediately preceding and
+following a match must be \code{0x00} or the key byte itself, which a
+real, null-terminated embedded string satisfies and an arbitrary byte
+sequence decoded by an unrelated key generally does not. Second, a
+\textbf{match-density cap} of two IP-shaped matches per key anywhere in
+the file, on the principle that a genuine configuration value appears
+once, or rarely a handful of times, while a cascade from decoding
+unrelated structured data under the wrong key does not self-limit.
+Verified against both directions afterward: RoningLoader's genuine C2
+IP still produces exactly one match and survives the density cap;
+WhiteSnakeStealer's eight spurious matches are now correctly discarded.
+
+The lesson generalized beyond this one fix: it is what motivated the
+explicit project policy (\S\ref{sec:limitations}, item~\ref{lim:tool-constraints}) that any new
+exhaustive-search-based recovery capability must be validated against a
+second sample, not just the one that motivated building it, before
+being trusted. Had this capability been declared production-ready after
+RoningLoader alone, the pipeline would have shipped with a
+false-positive generator that happened not to have fired yet.
+
+\subsection{Network IOC Contamination: Parsing Noise and Sandbox
+  Background Traffic}
+\label{sec:case-ioc-noise}
+
+Auditing the pipeline's STIX/MISP-facing IOC output directly, rather
+than only the ATT\&CK technique scores \S\ref{sec:evaluation} already
+covers, surfaced two independent contamination sources neither
+technique-level metric can see, since neither changes which techniques
+are reported: fixing both left every sample's technique set, precision,
+and recall bit-for-bit unchanged.
+
+First, the static domain extractor's dotted-string regex was filtered
+only by a hand-written denylist, so it mis-tokenized compiler metadata
+as domains (\code{kernel32.dllfailed}) and, across RoningLoader's 26
+resubmitted components (\S\ref{sec:resubmission}), an entire class of
+Authenticode certificate-chain endpoints (\code{crl.comodoca.com})
+present in essentially any code-signed PE -- none of them
+adversary-chosen infrastructure. A TLD allowlist, a compound-identifier
+casing check, and a small, exact-matched allowlist for the
+confirmed-benign PKI endpoints removed every instance across all three
+families and all 26 resubmitted components.
+
+Second, and unrelated to the first, CAPE's dynamic network capture
+(\code{network.hosts}) is a whole-VM PCAP dump with no per-process
+attribution: it cannot distinguish the sample's own connections from the
+sandbox guest's background OS traffic. Cross-referencing every IP
+observed across all three families' detonations against ASN
+registration data found 18 resolving to Microsoft (Azure AD/Teams
+telemetry) or Akamai (the CDN fronting Windows Update/Defender) and
+repeating byte-for-byte across a ransomware, an infostealer, and a
+loader -- three samples with no plausible reason to share
+infrastructure. A narrowly-scoped allowlist of these specific,
+individually-confirmed IPs, not a blanket ASN/CIDR rule (which would
+also have discarded legitimate adversary domain fronting), removed them
+from the reported IOCs.
+
+The fix is independently checkable against WhiteSnakeStealer's own
+ground truth, which documents a 31-node, 29-unique-IP HTTP C2 list.
+After the sandbox-noise filter, the pipeline's dynamic-capture output
+recovers that list exactly: 29 of 29, zero missed, independently
+corroborated by CAPE's own \code{dead\_connect} signature.
+
+Contamination was not fully zero, though: re-auditing this exact claim
+during the migration to ATT\&CK v19 (2026-08) found 5 further IPs the
+two filters above did not catch -- none affecting the technique-level
+scores, since IOC filtering and technique scoring are independent. Four
+turned out to be the same class of sandbox noise as the 18 above (two
+self-identifying \code{*.msedge.net} hostnames on Microsoft's ASN, two
+Cloudflare-range addresses confirmed by cross-referencing CAPE's
+per-process \code{connect()} trace rather than just the summarized
+capture) and were added to the allowlist. The fifth, resolving to
+\code{ip-api.com}, turned out to be a genuine finding: the sample itself
+calls \code{WinHttpGetProxyForUrl} against a public IP-geolocation
+endpoint with no corresponding literal string anywhere in the binary,
+the URL built at runtime. It was added to WhiteSnakeStealer's manual
+ground truth as \technique{T1016} (System Network Configuration
+Discovery), the same evidentiary bar as every other entry in that
+report.
+
+The lesson generalizes the same way the other cases do: every exclusion
+is a specific, individually-justified, auditable entry, logged with its
+own reason string, not a general reputation filter, since the whole
+point of this pipeline over a reputation aggregator
+(\S\ref{sec:related-work}) is that every decision stays traceable to a
+concrete cause rather than asserted.
+
+The fix's own generality was checked, not assumed: running the same
+discipline against a fourth, structurally unrelated family (a
+native-crypter-wrapped .NET RAT/backdoor, added specifically to test
+generalization past the three validated ones) surfaced two further
+instances of the same failure mode on that family's own resubmitted
+components, plus a class never seen before: X.509 certificate OIDs
+(\code{2.5.4.*}, \code{2.5.29.*}) mistaken for IPs on two of
+RoningLoader's own resubmitted components. Each was fixed the same way:
+a general, evidenced rule, verified against every known-real IP across
+both families before being trusted.

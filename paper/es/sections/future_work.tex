@@ -1,0 +1,62 @@
+\section{Trabajo futuro}
+\label{sec:future-work}
+
+\begin{itemize}
+
+\item \textbf{Familias adicionales validadas.} La extensi\'on de mayor
+  valor (\S\ref{sec:limitations}, punto~\ref{lim:n3}) es una validaci\'on
+  completa respaldada por ingenier\'ia inversa manual de m\'as
+  familias. Ya se realiz\'o una comprobaci\'on m\'as ligera e informal
+  frente a una 4\textsuperscript{a} familia sin afinar (AsyncRAT): una
+  detonaci\'on real en CAPE m\'as el reenv\'io autom\'atico de sus
+  cargas soltadas confirm\'o que la pipeline produce un resultado
+  sensato y sin ca\'idas de principio a fin. Esto carece de datos de
+  referencia manuales y no se trata como evidencia de validaci\'on, solo
+  como una comprobaci\'on interna de cordura de que la pipeline
+  generaliza en absoluto (documentada en \code{README.md}); no
+  sustituye a la extensi\'on completa con datos de referencia que
+  describe este punto.
+
+\item \textbf{An\'alisis din\'amico Linux/ELF para familias de botnets
+  IoT.} Investigado de forma concreta y no descartado por suposici\'on,
+  y aplazado deliberadamente por tres razones espec\'ificas, cada una
+  verificada de forma independiente: el analizador ELF actual de la
+  pipeline extrae solo metadatos estructurales b\'asicos, sin ninguna
+  regla de detecci\'on ATT\&CK conectada, a diferencia de la v\'ia PE
+  con sus aproximadamente 85 t\'ecnicas mapeadas; la propia
+  documentaci\'on de CAPE describe su soporte de sandboxing Linux/ELF
+  como una capacidad en desarrollo activo, no de nivel producci\'on; y
+  todav\'ia no existe ninguna muestra de familia ELF con datos de
+  referencia frente a la que verificar cualquier nueva regla de
+  detecci\'on espec\'ifica de Linux, sin lo cual construir reglas
+  repetir\'ia exactamente el riesgo de sobreajuste que ya se\~nala
+  \S\ref{sec:limitations} para el lado Windows. Dado lo
+  desproporcionadamente comunes que son las botnets basadas en ELF en
+  dispositivos IoT y Linux embebido en comparaci\'on con la atenci\'on
+  que les presta la propia literatura de investigaci\'on de malware,
+  se considera una extensi\'on genuinamente valiosa, pero una que
+  primero necesita una muestra de familia ELF validada y una capacidad
+  real de an\'alisis din\'amico, no un conjunto de reglas reajustado
+  sobre el an\'alisis est\'atico por s\'i solo.
+
+\item \textbf{Un estudio de calibraci\'on de confianza con potencia
+  estad\'istica.} El hallazgo de \S\ref{sec:confidence-calibration} de
+  que 14 de las 15 discrepancias auditadas provienen de hallazgos de
+  una sola fuente, con la \'unica excepci\'on entre fuentes
+  (\technique{T1497} de RoningLoader) atribuible a una cuesti\'on de
+  completitud de los datos de referencia y no a un nivel de confianza
+  mal calibrado, es una se\~nal direccional de tres muestras, no una
+  afirmaci\'on con potencia estad\'istica, y se beneficiar\'ia de un
+  conjunto de validaci\'on m\'as grande y dise\~nado para ello.
+
+\item \textbf{Recuperaci\'on de claves en tiempo de ejecuci\'on
+  mediante emulaci\'on.} La clave RC4 que nunca existe como bytes
+  contiguos en la DLL de RoningLoader (\S\ref{sec:limitations},
+  punto~\ref{lim:key-ceiling}) es, en principio, recuperable emulando su rutina de
+  ensamblado (p.\ ej.\ con Unicorn) en lugar de mediante cualquier
+  b\'usqueda de patr\'on de bytes est\'atica, un esfuerzo de
+  ingenier\'ia sustancialmente mayor que el m\'odulo actual de
+  recuperaci\'on est\'atica de configuraci\'on, y fuera de alcance de
+  esta tesis en consecuencia.
+
+\end{itemize}

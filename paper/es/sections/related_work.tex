@@ -1,0 +1,148 @@
+\section{Trabajo relacionado}
+\label{sec:related-work}
+
+\subsection{An\'alisis din\'amico basado en sandbox}
+
+Los sandboxes automatizados de malware se remontan a Cuckoo
+Sandbox~\cite{cuckoo}, cuya arquitectura (un controlador que orquesta
+la detonaci\'on dentro de una m\'aquina virtual desechable, con un
+agente en el hu\'esped que reporta llamadas a API y artefactos de
+vuelta al host) sigue siendo el patr\'on est\'andar. CAPE~\cite{cape}
+(Config And Payload Extraction) bifurc\'o este linaje espec\'ificamente
+para a\~nadir desempaquetado autom\'atico y extracci\'on de
+configuraci\'on para familias de malware conocidas, e incluye una
+amplia biblioteca de firmas de comportamiento mantenida por la
+comunidad, cada una opcionalmente etiquetada con identificadores de
+t\'ecnica MITRE ATT\&CK. Esta pipeline se apoya directamente en CAPE
+para el an\'alisis din\'amico (\S\ref{sec:dynamic}), y trata sus
+mapeos de firma a t\'ecnica mantenidos por la comunidad como una
+hip\'otesis de partida a verificar, no como datos de referencia a
+asumir; una distinci\'on sustanciada de forma concreta en
+\S\ref{sec:evaluation}: varios de los mapeos propios de CAPE se
+comprobaron frente a su evidencia en bruto y resultaron ser
+sistem\'aticamente demasiado amplios para las muestras en las que se
+activaron, un paso de inspecci\'on que esta pipeline realiza y que la
+mayor\'ia de despliegues de sandbox omiten.
+
+\subsection{Mapeo est\'atico a ATT\&CK}
+
+Mapear artefactos est\'aticos (importaciones, cadenas, coincidencias
+YARA) directamente a t\'ecnicas ATT\&CK es una pr\'actica com\'un en
+productos EDR comerciales y en herramientas de la comunidad. El
+equivalente de c\'odigo abierto m\'as cercano es capa, de
+Mandiant~\cite{capa}, que compara reglas curadas de importaciones,
+cadenas y patrones de bytes contra un binario para reportar las
+capacidades que implementa, muchas de ellas ya mapeadas a ATT\&CK. La
+mayor\'ia de reglas de capa, como la mayor\'ia de b\'usquedas de
+indicador de un EDR, son coincidencias de un \'unico indicador: basta
+un nombre de importaci\'on o un patr\'on de cadena para activar la
+regla. Este proyecto diverge deliberadamente de ese patr\'on en su
+modelo de confianza (\S\ref{sec:static-rules}): un \'unico indicador
+gen\'erico (una importaci\'on usada para muchos prop\'ositos
+leg\'itimos) se trata como evidencia m\'as d\'ebil que una
+\emph{combinaci\'on coherente} de indicadores que solo tiene sentido en
+conjunto para la t\'ecnica afirmada. Concretamente,
+\technique{OpenProcess} por s\'i sola no es evidencia de inyecci\'on de
+proceso (\technique{T1055}), pero \technique{OpenProcess} junto con
+\technique{VirtualAllocEx} y \technique{WriteProcessMemory} s\'i lo es,
+porque las tres API componen una primitiva reconocible que no tiene
+otro prop\'osito com\'un. Esto sacrifica parte de la amplitud de capa
+(que incluye cientos de reglas cubriendo muchas plataformas y clases de
+capacidad) a cambio de una precisi\'on m\'as estrecha pero respaldada
+por evidencia en las t\'ecnicas de Windows que esta pipeline s\'i
+cubre, una decisi\'on de compromiso explicitada y medida directamente
+en \S\ref{sec:fp-audit}.
+
+\subsection{Extracci\'on autom\'atica desde informes de amenazas}
+
+Una l\'inea de trabajo paralela extrae t\'ecnicas ATT\&CK no de un
+binario sino de prosa de analista sin estructurar: TTPDrill~\cite{ttpdrill}
+analiza informes de inteligencia de amenazas con una ontolog\'ia
+propia y una pipeline de PLN para recuperar acciones del atacante;
+TRAM, de MITRE Engenuity~\cite{tram}, y rcATT~\cite{rcatt} entrenan
+ambos clasificadores de texto para etiquetar p\'arrafos de informes CTI
+con etiquetas de t\'ecnica ATT\&CK probables. Estas herramientas
+resuelven un problema genuinamente distinto: ayudan a un analista que
+ya dispone de un \emph{informe escrito} a convertirlo en etiquetas de
+t\'ecnica estructuradas y legibles por m\'aquina de forma m\'as
+r\'apida. Esta pipeline, en cambio, deriva sus etiquetas de t\'ecnica
+directamente del propio binario y comportamiento en tiempo de
+ejecuci\'on de la muestra, sin ning\'un informe como paso intermedio,
+lo que permite que cada hallazgo lleve asociada una pieza concreta de
+evidencia verificable (una combinaci\'on de importaciones, el campo de
+datos en bruto de una firma) en lugar de la puntuaci\'on de confianza
+de un clasificador de PLN sobre texto libre. Los dos enfoques son
+complementarios, no competidores: un clasificador al estilo TRAM
+podr\'ia en principio tomar como texto de entrada los propios casos de
+estudio escritos por esta pipeline (\S\ref{sec:case-studies}), cerrando
+el ciclo de evidencia binaria a informe y de vuelta a etiquetas de
+t\'ecnica reextra\'idas.
+
+\subsection{Agregadores de reputaci\'on y esc\'aneres multimotor}
+
+VirusTotal~\cite{virustotal} es la herramienta a la que primero recurre
+la mayor\'ia de analistas de respuesta a incidentes, y constituye un
+punto de comparaci\'on \'util porque opera en el extremo opuesto del
+compromiso entre amplitud y profundidad que asume esta pipeline.
+VirusTotal agrega veredictos de decenas de motores antivirus e
+integraciones de sandbox sobre un corpus de env\'ios de una escala que
+ning\'una pipeline de investigaci\'on individual puede igualar, lo que lo
+hace excelente para el triaje r\'apido de reputaci\'on: si un hash ya es
+conocido, y si otros proveedores ya lo marcan. Lo que VirusTotal no
+hace es reconciliar esas se\~nales entre s\'i para una \'unica
+afirmaci\'on: el veredicto de cada motor y las etiquetas de
+comportamiento de cada sandbox se muestran uno junto a otro, no se
+contrastan, de modo que dos etiquetas de t\'ecnica contradictorias
+procedentes de dos integraciones distintas se muestran ambas sin m\'as,
+sin ning\'un mecanismo que resuelva cu\'al de ellas respalda realmente
+la evidencia en bruto. Esta pipeline apunta precisamente a ese hueco,
+no a la amplitud de VirusTotal: muchas menos muestras, pero cada
+afirmaci\'on de t\'ecnica trazada hasta la combinaci\'on de
+importaciones, el campo de datos de firma o el patr\'on de cadena
+exacto que la produjo, la concordancia entre fuentes y entre niveles
+modelada expl\'icitamente (\S\ref{sec:reconciliation}), y los
+componentes soltados por una muestra multietapa analizados y atribuidos
+de forma individual en lugar de fundirse en un \'unico veredicto
+agregado para el hash del padre (\S\ref{sec:resubmission}). Las dos
+herramientas no son sustitutas: una consulta a VirusTotal es el primer
+paso correcto para el triaje a escala, y esta pipeline es el siguiente
+paso correcto una vez que una muestra concreta necesita un mapeo de
+t\'ecnica defendible y ligado a evidencia, no una puntuaci\'on de
+reputaci\'on.
+
+\subsection{Est\'andares de intercambio de inteligencia de amenazas}
+
+STIX~2.1~\cite{stix21} (Structured Threat Information Expression) y
+MISP~\cite{misp} (Malware Information Sharing Platform) son los dos
+formatos de intercambio a los que exporta esta pipeline. STIX define
+un grafo de objetos tipados (indicadores, malware, patrones de ataque,
+relaciones) pensado para el intercambio m\'aquina a m\'aquina; MISP es a
+la vez un modelo de datos y una plataforma en ejecuci\'on que la
+mayor\'ia de organizaciones ya operan. Exportar a ambos, en lugar de
+producir \'unicamente un informe legible por humanos, es lo que hace
+que el resultado de la pipeline sea directamente consumible por las
+herramientas que un equipo de operaciones de seguridad ya utiliza, sin
+necesidad de transcripci\'on manual.
+
+\subsection{Posicionamiento}
+
+Esta tesis no propone una primitiva de detecci\'on novedosa: cada
+se\~nal individual utilizada (una importaci\'on de API, un patr\'on de
+cadena, una firma de comportamiento de sandbox) es una t\'ecnica bien
+establecida en la pr\'actica del an\'alisis de malware, y herramientas
+como capa y CAPE ya exponen muchas de esas mismas se\~nales en bruto.
+La contribuci\'on est\'a en la \emph{integraci\'on}: un modelo de
+reconciliaci\'on de confianza que es verificablemente m\'as que la suma
+de sus fuentes (\S\ref{sec:reconciliation}), un mecanismo para atribuir
+correctamente la capacidad distribuida del malware multietapa
+(\S\ref{sec:resubmission}), y, argumentada como la m\'as defendible de
+las tres, una disciplina de validaci\'on en la que cada afirmaci\'on que
+hace la pipeline se comprueba frente a evidencia real antes de confiar
+en ella, documentada con suficiente especificidad como para que la
+comprobaci\'on misma sea reproducible (\S\ref{sec:evaluation}).
+Posicionada frente a los dos polos revisados arriba, esta pipeline se
+sit\'ua deliberadamente entre un agregador amplio y no reconciliado
+como VirusTotal y un informe manual de ingenier\'ia inversa estrecho,
+de una sola muestra: automatizado y exportador de est\'andares como el
+primero, verificado por evidencia y espec\'ifico por t\'ecnica como el
+segundo.

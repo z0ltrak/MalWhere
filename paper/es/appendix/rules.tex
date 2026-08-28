@@ -1,0 +1,144 @@
+\section{Ampliaci\'on de cobertura de reglas de detecci\'on}
+\label{app:rules}
+
+Listado completo, t\'ecnica por t\'ecnica, de los seis lotes de
+cobertura resumidos en \S\ref{sec:coverage}. Cada fila se verific\'o
+tras a\~nadirse para no activarse en ninguna de las tres muestras
+validadas, confirmando que la ampliaci\'on no altera la
+Tabla~\ref{tab:results}.
+
+\begingroup
+\scriptsize
+\renewcommand{\code}[1]{\texttt{#1}}
+\begin{longtable}{@{}p{2.0cm}p{5.2cm}p{6.2cm}@{}}
+\toprule
+\textbf{T\'ecnica} & \textbf{Nombre} & \textbf{Mecanismo de detecci\'on} \\
+\midrule
+\endhead
+\multicolumn{3}{r}{\textit{contin\'ua en la p\'agina siguiente}} \\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\multicolumn{3}{@{}l}{\textbf{Lote 1: Persistence y Defense Evasion}} \\
+T1546.010 & AppInit DLLs & cadena de registro \code{AppInit\_DLLs} \\
+\rowline
+T1547.004 & Winlogon Helper DLL & cadena \code{Winlogon\textbackslash Shell}/\code{Userinit} \\
+\rowline
+T1547.005 & Security Support Provider & cadena \code{Security Packages} \\
+\rowline
+T1547.002 & Authentication Package & cadena \code{Authentication Packages} \\
+\rowline
+T1546.012 & Image File Execution Options Injection & cadena \code{Image File Execution Options} \\
+\rowline
+T1546.003 & WMI Event Subscription & cadenas \code{\_\_EventFilter}/\code{\_\_EventConsumer}/\newline\code{\_\_FilterToConsumerBinding} \\
+\rowline
+T1197 & BITS Jobs & cadena \code{bitsadmin} \\
+\rowline
+T1685.005 & Clear Windows Event Logs & cadena \code{wevtutil cl} \\
+\rowline
+T1218.010 & Regsvr32 (Squiblydoo) & cadena \code{scrobj.dll} \\
+\rowline
+T1218.005 & Mshta & \code{mshta.exe} + \code{.hta} (ambos requeridos) \\
+\rowline
+T1055.012 & Process Hollowing & combinaci\'on (\S\ref{sec:static-rules}, Tabla~\ref{tab:combos}) \\
+
+\multicolumn{3}{@{}l}{\textbf{Lote 2: Credential Access y Collection}} \\
+T1003.001 & LSASS Memory & importaci\'on \code{MiniDumpWriteDump} + cadena \code{lsass.exe} \\
+\rowline
+T1003.002 & Security Account Manager & cadena \code{hklm\textbackslash sam} \\
+\rowline
+T1003.004 & LSA Secrets & cadena \code{SECURITY\textbackslash Policy\textbackslash Secrets} \\
+\rowline
+T1552.002 & Credentials in Registry & patrones de ruta de credenciales en registro \\
+\rowline
+T1552.004 & Private Keys & marcadores PEM/OpenSSH, \code{.ppk} \\
+\rowline
+T1555.004 & Windows Credential Manager & importaci\'on \code{VaultOpenVault}, cadena \code{VaultCli.dll} \\
+\rowline
+T1556.002 & Password Filter DLL & cadena \code{Notification Packages} \\
+\rowline
+T1040 & Network Sniffing & cadenas \code{wpcap.dll}/\code{Packet.dll} \\
+\rowline
+T1125 & Video Capture & cadena \code{avicap32.dll} \\
+\rowline
+T1114.001 & Local Email Collection & cadenas \code{.ost}/\code{.pst} \\
+\rowline
+T1039 & Data from Network Shared Drive & \code{WNetOpenEnumW/A} + \code{WNetEnumResourceW/A} + \code{WNetCloseEnum} \\
+
+\multicolumn{3}{@{}l}{\textbf{Lote 3: Execution y Command and Control}} \\
+T1053.005 & Scheduled Task & cadena \code{schtasks} / patr\'on de comando \\
+\rowline
+T1059.001 & PowerShell (codificado/oculto) & \code{-EncodedCommand} + \code{-WindowStyle Hidden} (ambos requeridos) \\
+\rowline
+T1559.002 & Dynamic Data Exchange & cadena \code{DDEAUTO} \\
+\rowline
+T1127.001 & MSBuild & cadena \code{msbuild.exe} \\
+\rowline
+T1569.002 & Service Execution & cadenas \code{sc start}/\code{net start} \\
+\rowline
+T1102.002 & Web Service (bidireccional) & \code{api.telegram.org}, \code{pastebin.com/raw}, \newline\code{raw.githubusercontent.com}, \code{discord.com/api/webhooks} \\
+\rowline
+T1572 & Protocol Tunneling & \code{Renci.SshNet}, \code{ngrok}, \code{serveo.net} \\
+\rowline
+T1090.002 & External Proxy & cadena \code{:9050} (puerto SOCKS de Tor) \\
+
+\multicolumn{3}{@{}l}{\textbf{Lote 4: Discovery}} \\
+T1518.001 & Security Software Discovery & cadenas \code{MsMpEng.exe} / \code{avp.exe} / \code{SecurityCenter2} \\
+\rowline
+T1049 & System Network Connections Discovery & importaciones \code{GetTcpTable} / \code{GetExtendedTcpTable} / \code{GetUdpTable} \\
+\rowline
+T1087.001 & Local Account Discovery & importaci\'on \code{NetUserEnum} \\
+\rowline
+T1018 & Remote System Discovery & importaci\'on \code{NetServerEnum} \\
+\rowline
+T1120 & Peripheral Device Discovery & importaci\'on \code{SetupDiGetClassDevsW/A} \\
+\rowline
+T1614.001 & System Language Discovery & importaciones \code{GetSystemDefaultLangID}/\newline\code{GetUserDefaultUILanguage} \\
+\rowline
+T1010 & Application Window Discovery & combinaci\'on (\S\ref{sec:static-rules}, Tabla~\ref{tab:combos}) \\
+\rowline
+T1033 & System Owner/User Discovery & importaci\'on \code{GetUserNameW/A} (trasladada desde T1082) \\
+
+\multicolumn{3}{@{}l}{\textbf{Lote 5: Impact}} \\
+T1529 & System Shutdown/Reboot & importaci\'on \code{ExitWindowsEx} \\
+\rowline
+T1531 & Account Access Removal & importaci\'on \code{NetUserChangePassword} \\
+\rowline
+T1561.001 & Disk Content Wipe & cadena \code{\textbackslash\textbackslash.\textbackslash PhysicalDrive} \\
+\rowline
+T1496 & Resource Hijacking & cadena \code{stratum+tcp://} \\
+
+\multicolumn{3}{@{}l}{\textbf{Lote 6: Privilege Escalation y Exfiltration}} \\
+T1134.001 & Token Impersonation/Theft & \code{ImpersonateLoggedOnUser} + \code{DuplicateToken(Ex)} \\
+\rowline
+T1134.002 & Create Process with Token & importaci\'on \code{CreateProcessWithTokenW} \\
+\rowline
+T1134.003 & Make and Impersonate Token & \code{ImpersonateLoggedOnUser} + \code{LogonUserW/A} \\
+\rowline
+T1548.002 & Bypass User Account Control & cadena \code{ms-settings} \textbackslash\ \code{Shell} \textbackslash\ \code{Open} \textbackslash\ \code{command} \\
+\rowline
+T1546.008 & Accessibility Features & cadena \code{sethc.exe} \\
+\rowline
+T1546.009 & AppCert DLLs & cadena \code{AppCertDlls} \\
+\rowline
+T1547.014 & Active Setup & cadena \code{Active Setup\textbackslash Installed Components} \\
+\rowline
+T1098 & Account Manipulation & cadena \code{net localgroup administrators} \\
+\rowline
+T1567.001 & Exfil.\ a repositorio de c\'odigo & cadena \code{api.github.com} \\
+\rowline
+T1567.002 & Exfil.\ a almacenamiento en la nube & \code{dropboxapi.com} / \code{storage.googleapis.com} \\
+\rowline
+T1567.003 & Exfil.\ a sitios de almacenamiento de texto & \code{pastebin.com} / \code{api} / \code{api\_post.php} \\
+\rowline
+T1567.004 & Exfil.\ por webhook & mapeo dual desde la evidencia de webhook de Discord de T1102.002 \\
+\rowline
+T1048.003 & Exfil.\ por protocolo no cifrado ajeno a C2 & importaci\'on \code{FtpPutFileW/A} \\
+
+\caption{55 identificadores de t\'ecnica a\~nadidos a lo largo de seis
+lotes de cobertura (\S\ref{sec:coverage}), obtenidos de las propias
+descripciones de t\'ecnica de MITRE.}
+\label{tab:rules-full}
+\end{longtable}
+\endgroup

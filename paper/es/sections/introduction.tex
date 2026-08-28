@@ -1,0 +1,131 @@
+\section{Introducci\'on}
+\label{sec:introduction}
+
+\subsection{Motivaci\'on}
+
+Cuando una muestra de malware llega a un equipo de respuesta a
+incidentes o de inteligencia de amenazas, el resultado \'util rara vez
+es el propio binario: es un resumen estructurado y accionable de qu\'e
+indicadores de compromiso (IOCs) presenta, qu\'e t\'ecnicas de
+MITRE ATT\&CK~\cite{mitre-attack} implementa, y artefactos listos para
+alimentar ingenier\'ia de detecci\'on (reglas Sigma, firmas YARA) o una
+plataforma de inteligencia de amenazas como MISP~\cite{misp}. A menudo
+ya existe una primera pasada r\'apida sobre ese resumen: una consulta
+de hash a un agregador de reputaci\'on como VirusTotal devuelve
+veredictos de proveedores y etiquetas de comportamiento de sandbox en
+segundos. Lo que esa primera pasada no ofrece es una respuesta
+\emph{reconciliada}, ya que las muchas se\~nales que muestra se
+presentan una junto a otra en lugar de contrastarse entre s\'i, de
+modo que convertirlas en un mapeo de t\'ecnica defendible para una
+muestra concreta todav\'ia suele significar que un analista humano
+detona la muestra manualmente en un sandbox, traza su c\'odigo en un
+desensamblador y redacta el informe a mano. Ese proceso es riguroso
+pero lento, y no escala al volumen de muestras que un equipo de
+operaciones de seguridad encuentra realmente.
+
+Los sandboxes automatizados como CAPE~\cite{cape} ya producen grandes
+vol\'umenes de datos de comportamiento en bruto: trazas de llamadas a
+API, ficheros soltados, actividad de red, coincidencias de firmas
+mantenidas por la comunidad. Las herramientas de an\'alisis est\'atico
+extraen importaciones, cadenas y artefactos de cargas empaquetadas
+directamente del binario. Lo que generalmente falta es la capa que se
+sit\'ua entre estos hallazgos en bruto y algo que un analista o una
+plataforma consumidora pueda usar directamente: reconciliar evidencia
+est\'atica y din\'amica para la \emph{misma} afirmaci\'on, mapear esa
+evidencia sobre una taxonom\'ia de t\'ecnicas est\'andar con un nivel de
+confianza defendible, y exportarla en un formato que las plataformas de
+inteligencia de amenazas ya consumen.
+
+\subsection{Planteamiento del problema}
+
+Tres problemas concretos motivan este trabajo, cada uno identificado al
+construir y validar la pipeline descrita en esta tesis:
+
+\begin{enumerate}
+  \item \textbf{Reconciliaci\'on de confianza entre fuentes.} Una
+    t\'ecnica observada tanto por an\'alisis est\'atico (una
+    combinaci\'on de importaciones) como por an\'alisis din\'amico (una
+    firma de sandbox) es evidencia m\'as s\'olida que cualquiera de las
+    dos por separado, pero solo si ambas observaciones se refieren
+    realmente a la misma t\'ecnica. Una implementaci\'on ingenua que
+    compara observaciones por identificador de t\'ecnica exacto pasa
+    por alto el caso habitual en el que una fuente reporta una t\'ecnica
+    padre y la otra reporta una subt\'ecnica espec\'ifica para lo que,
+    en realidad, es el mismo comportamiento.
+  \item \textbf{Malware multietapa.} Un cargador que suelta un driver
+    rootkit, un m\'odulo antiantivirus y un cliente de acceso remoto
+    tiene capacidades reales distribuidas entre varios binarios, no
+    concentradas en el \'unico fichero detonado inicialmente. Fusionar
+    ingenuamente la evidencia de cada componente soltado en la
+    puntuaci\'on de confianza propia de la muestra padre atribuir\'ia
+    err\'oneamente esa capacidad, ya que el comportamiento de la carga
+    soltada no demuestra que el cargador realice ese comportamiento.
+  \item \textbf{Confiar en el resultado.} Una pipeline que reporta alta
+    confianza para un hallazgo equivocado es peor que una que no
+    reporta nada, porque enga\~na activamente a quien consume el
+    resultado. Esto motiva tratar cada regla de detecci\'on como una
+    afirmaci\'on que necesita evidencia, y cada resultado de
+    evaluaci\'on como algo que auditar antes de confiar en \'el, no
+    solo como una cifra que reportar.
+\end{enumerate}
+
+\subsection{Contribuciones}
+
+Esta tesis aporta las siguientes contribuciones, cada una sustanciada
+en detalle en secciones posteriores:
+
+\begin{itemize}
+  \item Un \textbf{modelo de reconciliaci\'on de confianza cruzada entre
+    fuentes y entre niveles de t\'ecnica} (\S\ref{sec:reconciliation})
+    que extiende la regla est\'andar ``ambas fuentes coinciden
+    $\Rightarrow$ confianza alta'' para reconocer tambi\'en la
+    concordancia entre una t\'ecnica padre reportada por una fuente y su
+    subt\'ecnica espec\'ifica reportada por la otra, un hueco confirmado
+    en datos reales de evaluaci\'on, no meramente te\'orico.
+  \item Un \textbf{bucle de reenv\'io} (\S\ref{sec:resubmission}) que
+    analiza de forma independiente cada fichero que una muestra
+    multietapa suelta o inyecta durante la detonaci\'on, etiquetando
+    cada uno con su linaje hacia la muestra padre sin mezclar su
+    evidencia en la salida de confianza propia de la muestra padre.
+  \item Un \textbf{conjunto de reglas de detecci\'on est\'atica
+    reproducible y trazable a evidencia} (\S\ref{sec:coverage}),
+    ampliado sistem\'aticamente de unas 30 a aproximadamente 85
+    identificadores de t\'ecnica MITRE ATT\&CK relevantes para Windows,
+    con cada adici\'on trazada a la descripci\'on oficial de MITRE para
+    esa t\'ecnica y verificada frente al conjunto de muestras validadas
+    antes de confiar en que no sobreajusta.
+  \item Una \textbf{metodolog\'ia de evaluaci\'on y proceso de
+    auditor\'ia} (\S\ref{sec:evaluation}) que va m\'as all\'a de
+    precisi\'on/exhaustividad: precisi\'on estratificada por nivel de
+    confianza y por acuerdo entre fuentes para comprobar si las propias
+    afirmaciones del modelo de reconciliaci\'on se sostienen, y una
+    auditor\'ia sistem\'atica de falsos positivos en la que cada
+    discrepancia entre la salida de la pipeline y los datos de
+    referencia verificados manualmente se diagnostic\'o individualmente a
+    una causa concreta y verificable antes de corregirse, dejarse
+    abierta, o atribuirse a un hueco en los datos de referencia.
+\end{itemize}
+
+\subsection{Estructura del documento}
+
+La Secci\'on~\ref{sec:related-work} sit\'ua este trabajo respecto a las
+herramientas de sandboxing existentes, los enfoques de mapeo est\'atico
+a ATT\&CK, y agregadores de reputaci\'on como VirusTotal. La
+Secci\'on~\ref{sec:architecture} describe la arquitectura de la
+pipeline de principio a fin. La Secci\'on~\ref{sec:evaluation}
+presenta la metodolog\'ia de evaluaci\'on y los resultados, incluida la
+auditor\'ia de falsos positivos. La Secci\'on~\ref{sec:case-studies}
+detalla cinco casos concretos, incluyendo un error arquitect\'onico real
+encontrado y corregido a trav\'es del proceso de evaluaci\'on, que
+ilustran la disciplina de validaci\'on del proyecto con m\'as
+concreci\'on de lo que permiten las cifras agregadas. La
+Secci\'on~\ref{sec:limitations} enuncia con precisi\'on las
+limitaciones de la pipeline, cada una ligada a una causa espec\'ifica
+diagnosticada. La Secci\'on~\ref{sec:future-work} esboza extensiones
+concretas, incluyendo una, an\'alisis din\'amico Linux/ELF para
+familias de botnets IoT, evaluada y deliberadamente aplazada por
+razones expl\'icitas, no impl\'icitas. La Secci\'on~\ref{sec:conclusion}
+concluye. El Anexo~\ref{app:rules} tabula el conjunto de reglas de
+detecci\'on a\~nadidas durante la ampliaci\'on de cobertura. El
+c\'odigo fuente completo de la pipeline se publica en el repositorio
+p\'ublico del proyecto en lugar de reproducirse aqu\'i.

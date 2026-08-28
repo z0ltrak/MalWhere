@@ -1,0 +1,261 @@
+\section{Evaluaci\'on}
+\label{sec:evaluation}
+
+\subsection{Metodolog\'ia}
+
+El orden de esta evaluaci\'on es deliberado: cada muestra se
+analiz\'o primero manualmente de forma est\'atica, y solo despu\'es se
+ejecut\'o la pipeline sobre ella.
+
+Los datos de referencia de cada una de las tres familias se
+produjeron mediante ingenier\'ia inversa manual, documentados como un
+informe de analista completo y nunca derivados del propio resultado
+de la pipeline. Esta independencia es una salvaguarda metodol\'ogica
+deliberada, no un detalle incidental: ambos motores dependen de
+herramientas de terceros (YARA, FLOSS, firmas de la comunidad de CAPE)
+que pueden por s\'i mismas mapear mal una t\'ecnica, de modo que los
+datos de referencia tuvieron que establecerse sin consultar los propios
+artefactos extra\'idos por la pipeline, ya que de lo contrario validar
+la pipeline frente a ella ser\'ia circular. En concreto, el mismo
+protocolo se aplic\'o a las tres familias, en este orden, y solo el
+\'ultimo paso llega a tocar el resultado propio de la pipeline:
+
+\begin{enumerate}
+  \item \textbf{Desensamblado est\'atico independiente.} Cada muestra
+    se carg\'o en Ghidra y se descompil\'o funci\'on por funci\'on, cada
+    funci\'on de inter\'es renombrada para reflejar su prop\'osito
+    establecido, sin consultar la propia extracci\'on de importaciones
+    o cadenas de la pipeline.
+  \item \textbf{Observaci\'on din\'amica independiente.} La detonaci\'on
+    en sandbox se observ\'o directamente (secuencia de llamadas a API,
+    ficheros soltados, actividad de red), registrando el comportamiento
+    a partir de la traza en bruto en lugar de a trav\'es de las propias
+    etiquetas de firma de la comunidad de CAPE, que \S\ref{sec:dynamic}
+    documenta como necesitadas de curaci\'on por s\'i mismas.
+  \item \textbf{Recuperaci\'on independiente de configuraci\'on y
+    claves.} Cuando una muestra cifraba u ofuscaba su configuraci\'on,
+    la clave o el algoritmo se recuper\'o manualmente, completamente
+    separado de los propios m\'odulos automatizados de fuerza bruta y
+    recuperaci\'on XOR de la pipeline.
+  \item \textbf{Solo entonces, la comparaci\'on.} Se ejecut\'o la
+    pipeline y se compar\'o su \code{attck\_mapping.json} con la tabla
+    de T\'ecnicas ATT\&CK del informe terminado y producido de forma
+    independiente (la auditor\'ia de falsos positivos,
+    \S\ref{sec:fp-audit}). Por construcci\'on, cada discrepancia que
+    encuentra es un desacuerdo entre dos artefactos producidos de forma
+    independiente, no la pipeline comprobada frente a sus propias
+    suposiciones.
+\end{enumerate}
+
+La Tabla~\ref{tab:validation} da un ejemplo concreto por familia de
+evidencia que este protocolo recuper\'o y que la pipeline automatizada
+nunca toca, que es lo que convierte cada informe en una comprobaci\'on
+independiente y no en una reformulaci\'on de lo que la herramienta ya
+asume.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lp{9.5cm}@{}}
+\toprule
+\textbf{Muestra} & \textbf{Recuperado de forma independiente, la pipeline no lo toca} \\
+\midrule
+Akira & Tabla ATT\&CK de 17 filas construida a partir de descompilaci\'on de Ghidra a nivel de funci\'on de los mecanismos internos de threading, logging y cifrado de la muestra. \\
+\rowline
+RoningLoader & Los cuatro componentes de la cadena (instalador, \code{D3D11InstallHelper.dll}, driver rootkit, cliente RAT) descompilados por separado, incluyendo identificar \code{DoD3D11InstallUsingMSI} del auxiliar como una reimplementaci\'on compilada en Rust de \code{env::var()}. \\
+\rowline
+WhiteSnakeStealer & Clave RC4 recuperada mediante an\'alisis de texto plano conocido, y el formato completo del paquete C2 \code{WSR\$} (XML de informaci\'on del sistema cifrado con RC4 y comprimido con Deflate, con una clave envuelta en RSA) reconstruido directamente a partir del desensamblado. \\
+\bottomrule
+\end{tabular}
+\caption{Un ejemplo concreto por familia de evidencia recuperada de
+forma independiente para construir los datos de referencia, aplicando
+el protocolo de cuatro pasos anterior.}
+\label{tab:validation}
+\end{table}
+
+La tabla de T\'ecnicas ATT\&CK de cada informe se analiza despu\'es para
+producir un fichero de datos de referencia estructurado
+(\code{extract\_ground\_truth.py}), que el arn\'es de evaluaci\'on
+compara con el propio \code{attck\_mapping.json} de la pipeline.
+
+Se reportan dos modos de emparejamiento. El emparejamiento
+\emph{estricto} exige una coincidencia exacta de identificador de
+t\'ecnica. El emparejamiento a \emph{nivel de familia} trata una
+t\'ecnica padre y cualquiera de sus subt\'ecnicas como equivalentes (un
+hallazgo de la pipeline de \technique{T1547.001} cuenta frente a una
+entrada de datos de referencia de \technique{T1547} y viceversa), bajo
+la premisa de que un analista de seguridad que decide qu\'e hacer ante
+un mecanismo de persistencia se preocupa primero por \emph{qu\'e}
+familia de t\'actica y t\'ecnica est\'a presente, siendo la
+granularidad de subt\'ecnica un refinamiento y no un hallazgo
+distinto. Se calculan precisi\'on, exhaustividad y F1 bajo ambos modos
+para cada muestra; la Tabla~\ref{tab:results} reporta las cifras a
+nivel de familia, siendo las cifras m\'as estrictas materialmente m\'as
+bajas solo donde realmente no se distingui\'o una subt\'ecnica
+concreta.
+
+\subsection{Resultados}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Muestra} & \textbf{Precisi\'on} & \textbf{Exhaustividad} & \textbf{F1} & \textbf{Notas} \\
+\midrule
+Akira (ransomware) & 0.87 & 1.00 & 0.93 & binario de una sola etapa \\
+\rowline
+WhiteSnakeStealer (.NET) & 0.97 & 0.70 & 0.81 & binario de una sola etapa \\
+\rowline
+RoningLoader (solo padre) & 0.95 & 0.77 & 0.85 & solo el cargador \\
+\rowline
+RoningLoader (+reenv\'io) & 0.86 & 0.92 & 0.89 & cargador + componentes soltados \\
+\bottomrule
+\end{tabular}
+\caption{Precisi\'on/exhaustividad/F1 a nivel de familia por muestra
+validada.}
+\label{tab:results}
+\end{table}
+
+Las dos filas de RoningLoader aislan exactamente lo que aporta el
+bucle de reenv\'io (\S\ref{sec:resubmission}): puntuar \'unicamente el
+binario cargador frente a unos datos de referencia escritos para
+\emph{toda} su cadena de infecci\'on subestima la exhaustividad por
+construcci\'on, ya que las t\'ecnicas propias del driver rootkit y del
+cliente RAT son hallazgos reales que los datos de referencia esperan
+pero que el binario padre por s\'i solo no puede presentar. La
+exhaustividad sube 16 puntos en cuanto se analizan de forma
+independiente los tres componentes soltados y se cuentan sus
+hallazgos, a un coste de 1 punto de precisi\'on por la superficie
+a\~nadida, una compensaci\'on que la mejora del F1 agregado
+(0.76~$\rightarrow$~0.84) demuestra que mereci\'o la pena.
+
+La precisi\'on es alta en las cuatro filas (0.84--1.00), es decir,
+el peque\~no n\'umero de hallazgos que reporta la pipeline rara vez son
+err\'oneos. Esta es la consecuencia directa e intencionada de la
+filosof\'ia de combinaci\'on coherente de \S\ref{sec:static-rules} y la
+disciplina de curaci\'on de firmas de \S\ref{sec:dynamic}: ambas
+sacrifican algo de exhaustividad a cambio de alta confianza en que lo
+que \emph{se} reporta es fiable, algo que la auditor\'ia de falsos
+positivos a continuaci\'on existe para comprobar, no para asumir.
+
+\subsection{La auditor\'ia de falsos positivos}
+\label{sec:fp-audit}
+
+La precisi\'on por s\'i sola no distingue ``la pipeline est\'a bien
+calibrada'' de ``los datos de referencia resultan ser permisivos''. A
+diferencia de un agregador de reputaci\'on que muestra la etiqueta de
+cada motor o sandbox tal cual, cada discrepancia entre el resultado
+de la pipeline y los datos de referencia encontrados en las tres muestras,
+15 en total (5 Akira, 4 WhiteSnakeStealer, 6 RoningLoader), se
+rastre\'o individualmente hasta una causa concreta y verificable en
+lugar de aceptarse o descartarse solo por la cifra agregada. Cada una
+se contrast\'o con el \emph{texto completo} del informe manual
+correspondiente, no solo con su tabla resumen, ya que una t\'ecnica
+puede estar gen\'uinamente discutida en la narrativa de un informe sin
+aparecer en su propia tabla ATT\&CK.
+
+El resultado de esta auditor\'ia, por causa:
+
+\begin{itemize}
+  \item \textbf{Diez errores gen\'uinos de la pipeline}, cada uno
+    corregido en su causa ra\'iz: tres mapeos de regla est\'atica que no
+    correspond\'ian con la definici\'on real de MITRE para la t\'ecnica
+    afirmada (p.\ ej.\ \code{GetSystemInfo} mapeada a Descubrimiento de
+    Informaci\'on del Sistema, \technique{T1082}, cuando la propia
+    definici\'on de MITRE trata espec\'ificamente sobre detecci\'on de
+    \emph{virtualizaci\'on/sandbox}, \technique{T1497}); un hueco en una
+    comprobaci\'on de combinaci\'on que permit\'ia que una \'unica
+    importaci\'on gen\'erica activara \technique{T1055} por s\'i sola; y
+    seis mapeos de firmas de la comunidad de CAPE cuyo propio campo de
+    evidencia en bruto, al inspeccionarlo, nombraba un objetivo
+    inconsistente con la t\'ecnica afirmada (detallado en
+    \S\ref{sec:dynamic}).
+  \item \textbf{Dos correcciones de calibraci\'on de confianza}, en
+    Akira y RoningLoader: el mismo hueco de comprobaci\'on de
+    combinaci\'on de la correcci\'on de \technique{T1055} anterior
+    reapareci\'o para \technique{T1070} (Indicator Removal) --
+    \code{CreateFileW}/\code{CreateFile}, ya marcada como ``gen\'erica''
+    en la tabla de mapeo, segu\'ia cont\'andose ciegamente como
+    corroboraci\'on junto a \code{DeleteFileW}/\code{DeleteFile} y se
+    promov\'ia a confianza \emph{alta}. Migrar los datos de referencia a
+    ATT\&CK v19 (\S\ref{sec:limitations}) es lo que lo sac\'o a la luz:
+    la antigua entrada de datos de referencia \technique{T1070.001}
+    hab\'ia estado emparej\'andose con este hallazgo por pura
+    coincidencia de prefijo de identificador bajo el emparejamiento a
+    nivel de familia, no porque la evidencia tratara gen\'uinamente
+    sobre el asunto real de esa entrada (el borrado de registros de
+    eventos); mover esa entrada a su identidad v19
+    (\technique{T1685.005}, que ya no comparte el prefijo
+    \technique{T1070}) rompi\'o la coincidencia casual. Corregido de la
+    misma manera que el caso de \technique{T1055}, excluyendo la
+    importaci\'on/cadena gen\'erica de la corroboraci\'on en ambas
+    direcciones. A diferencia de aquel caso, la evidencia subyacente
+    aqu\'i es real (ambos binarios importan efectivamente estas
+    funciones), simplemente no lo bastante espec\'ifica para confirmar
+    la t\'ecnica afirmada, as\'i que el hallazgo permanece presente
+    tras la correcci\'on, ahora con su confianza honesta
+    \emph{media}/\emph{baja}, en lugar de desaparecer del todo -- una
+    ilustraci\'on directa de la relaci\'on entre confianza y precisi\'on
+    examinada en \S\ref{sec:confidence-calibration}, no un
+    contraejemplo de ella.
+  \item \textbf{Un hueco de extracci\'on de datos de referencia}, no un
+    error de la pipeline: el propio informe manual de
+    WhiteSnakeStealer discute la carga reflexiva de DLL en su texto
+    narrativo, pero la fila correspondiente de \technique{T1620} faltaba
+    en la tabla ATT\&CK del propio informe, de modo que la extracci\'on
+    autom\'atica de datos de referencia nunca la captur\'o. El hallazgo
+    de la pipeline era correcto; se corrigi\'o el documento fuente en
+    lugar de la pipeline.
+  \item \textbf{Dos dejados abiertos deliberadamente}, en RoningLoader
+    (\technique{T1027}, \technique{T1497}): la evidencia de apoyo de la
+    pipeline para ambos es real, pero no existe confirmaci\'on expl\'icita
+    del analista en ning\'un lugar del texto del informe, a diferencia
+    del caso de \technique{T1620} anterior. Editar los datos de
+    referencia solo con la evidencia propia de la pipeline, sin
+    confirmaci\'on textual independiente, ser\'ia circular. Ambos
+    permanecen como hallazgos abiertos en lugar de resolverse en un
+    sentido u otro.
+\end{itemize}
+
+Esta asimetr\'ia, un hueco de datos de referencia corregido y dos
+discrepancias de aspecto similar dejadas abiertas, es deliberada: el
+factor distintivo es si existe confirmaci\'on independiente en el
+documento fuente, no si la evidencia propia de la pipeline parece
+convincente. El resultado pr\'actico de ejecutar esta auditor\'ia se
+aprecia en la columna de corregidos: 12 de las 15 discrepancias se
+tradujeron en mejoras concretas y verificables al conjunto de reglas
+(\S\ref{sec:coverage}) y a la l\'ogica de agregaci\'on
+(\S\ref{sec:case-installer}) en lugar de absorberse en silencio dentro
+de una cifra agregada, precisamente el paso diagn\'ostico que una
+visualizaci\'on de veredictos uno junto a otro no puede ofrecer.
+
+\subsection{Calibraci\'on de confianza}
+\label{sec:confidence-calibration}
+
+Si el modelo de reconciliaci\'on de confianza (\S\ref{sec:reconciliation})
+es significativo y no meramente cosm\'etico, la precisi\'on deber\'ia
+ser medible y mayor entre los hallazgos de confianza \emph{alta}
+(aquellos corroborados entre fuentes o entre niveles de t\'ecnica) que
+entre los hallazgos de \emph{media}/\emph{baja} de una sola fuente. En
+las tres muestras validadas, 14 de las 15 discrepancias identificadas en
+la auditor\'ia anterior tuvieron su origen en un hallazgo de una sola
+fuente. La \'unica excepci\'on, \technique{T1497} de RoningLoader,
+alcanz\'o confianza \emph{alta} mediante corroboraci\'on gen\'uina entre
+fuentes (una combinaci\'on coherente de APIs anti-sandbox en la
+evidencia est\'atica, tres firmas independientes de CAPE en la evidencia
+din\'amica), y sin embargo sigue siendo uno de los dos hallazgos
+dejados abiertos deliberadamente m\'as arriba, precisamente porque no
+existe confirmaci\'on textual independiente en el informe manual, no
+porque la evidencia de ninguna de las dos fuentes sea d\'ebil. Le\'ido
+as\'i, esto no contradice el argumento de calibraci\'on: el modelo
+reconoci\'o correctamente una evidencia fuerte y corroborada; lo que es
+gen\'uinamente incierto es si los datos de referencia est\'an completos,
+la misma asimetr\'ia que establece el caso de \technique{T1620} en otro
+punto de esta auditor\'ia, no si el nivel de confianza asignado estaba
+justificado. Esto es consistente con que el modelo de
+reconciliaci\'on realiza una calibraci\'on real y no simplemente
+reetiqueta hallazgos, aunque el tama\~no reducido de la muestra (tres
+familias) implica que esto debe leerse como una se\~nal direccional, no
+como una afirmaci\'on con potencia estad\'istica, una limitaci\'on
+enunciada expl\'icitamente en \S\ref{sec:limitations}.

@@ -87,13 +87,9 @@ static/reports/*_retest/
 static/reports/*_retest[0-9]/
 static/reports/diamondage_exe_retest/
 
-# Thesis paper -- kept local-only pre-publication (source of truth is
-# Overleaf); revisit once the project/thesis is published.
-paper/
-
-# Internal TimTalk slide deck (Slidev) -- not for the public repo, same
-# reasoning as paper/ above. Includes node_modules/, dist/, and the gif
-# assets it was built with.
+# Internal TimTalk slide deck (Slidev) -- not for the public repo
+# pre-publication (source of truth is Overleaf). Includes node_modules/,
+# dist/, and the gif assets it was built with.
 talk/
 
 # OS

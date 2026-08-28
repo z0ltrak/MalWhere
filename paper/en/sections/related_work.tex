@@ -1,0 +1,129 @@
+\section{Related Work}
+\label{sec:related-work}
+
+\subsection{Sandbox-Based Dynamic Analysis}
+
+Automated malware sandboxes trace back to Cuckoo Sandbox~\cite{cuckoo},
+whose architecture (a controller orchestrating detonation inside a
+disposable virtual machine, with an in-guest agent reporting API calls
+and artifacts back to the host) remains the standard pattern.
+CAPE~\cite{cape} (Config And Payload Extraction) forked this lineage
+specifically to add automated unpacking and configuration extraction
+for known malware families, and ships with a large community-maintained
+library of behavioral signatures, each optionally tagged with MITRE
+ATT\&CK technique identifiers. This pipeline builds directly on CAPE
+for dynamic analysis (\S\ref{sec:dynamic}), and treats its
+community-maintained signature-to-technique mappings as a starting
+hypothesis to verify rather than ground truth to trust outright, a
+distinction substantiated concretely in \S\ref{sec:evaluation}: several
+of CAPE's own signature mappings were checked against their raw
+evidence and found to be systematically over-broad for the samples
+they fired on, an inspection step this pipeline performs and most
+sandbox deployments skip.
+
+\subsection{Static ATT\&CK Mapping}
+
+Mapping static artifacts (imports, strings, YARA matches) directly to
+ATT\&CK techniques is common practice in commercial EDR products and in
+community tooling. The closest open-source counterpart is
+Mandiant's capa~\cite{capa}, which matches curated rules of imports,
+strings, and byte patterns against a binary to report the capabilities
+it implements, many of them pre-mapped to ATT\&CK. Most capa rules,
+like most EDR indicator lookups, are single-indicator matches: one
+import name or string pattern is enough to fire a rule. This project
+deliberately diverges from that pattern in its confidence model
+(\S\ref{sec:static-rules}): a single generic indicator (an import used
+for many legitimate purposes) is treated as weaker evidence than a
+\emph{coherent combination} of indicators that only makes sense
+together for the claimed technique. Concretely, \technique{OpenProcess}
+alone is not evidence of process injection (\technique{T1055}), but
+\technique{OpenProcess} together with \technique{VirtualAllocEx} and
+\technique{WriteProcessMemory} is, because the three APIs compose into
+one recognizable primitive with no other common purpose. This trades
+some of capa's breadth (capa ships hundreds of rules covering many
+platforms and capability classes) for narrower, evidence-gated
+precision on the Windows techniques this pipeline does cover, a
+trade-off made explicit and measured directly in
+\S\ref{sec:fp-audit}.
+
+\subsection{Automated Extraction from Threat Reports}
+
+A parallel line of work extracts ATT\&CK techniques not from a binary
+but from unstructured analyst prose: TTPDrill~\cite{ttpdrill} parses
+threat-intelligence reports with a custom ontology and NLP pipeline to
+recover attacker actions; MITRE Engenuity's TRAM~\cite{tram} and
+rcATT~\cite{rcatt} both train text classifiers to tag CTI report
+paragraphs with likely ATT\&CK technique labels. These tools solve a
+genuinely different problem: they help an analyst who already has a
+\emph{written report} turn it into structured, machine-readable
+technique labels faster. This pipeline instead derives its technique
+labels directly from a sample's own binary and runtime behavior, with
+no report as an intermediate step, which is what lets every finding
+carry a specific piece of verifiable evidence (an import combination,
+a signature's raw data field) rather than an NLP classifier's
+confidence score over free text. The two approaches are complementary
+rather than competing: a TRAM-style classifier could in principle
+consume this pipeline's own written case studies (\S\ref{sec:case-studies})
+as its input text, closing the loop from binary evidence to report to
+re-extracted technique labels.
+
+\subsection{Reputation Aggregators and Multi-Engine Scanners}
+
+VirusTotal~\cite{virustotal} is the tool most incident responders reach
+for first, and is a useful point of comparison because it operates at
+the opposite end of the breadth-versus-depth trade-off this pipeline
+makes. VirusTotal aggregates verdicts from dozens of antivirus engines
+and sandbox integrations across a submission corpus of a scale no
+individual research pipeline can match, which makes it excellent for
+fast reputation triage: is this hash already known, and do other
+vendors already flag it. What VirusTotal does not do is reconcile
+those signals against each other for a single claim: each engine's
+verdict and each sandbox's behavioral tags are surfaced side by side,
+not cross-checked, so two contradictory technique tags from two
+different integrations are both simply displayed, with no mechanism
+resolving which one the raw evidence actually supports. This pipeline
+targets that specific gap rather than VirusTotal's breadth: far fewer
+samples, but every technique claim traced to the exact import
+combination, signature data field, or string pattern that produced it,
+cross-source and cross-level agreement modeled explicitly
+(\S\ref{sec:reconciliation}), and a multi-stage sample's dropped
+components analyzed and attributed individually rather than folded
+into one aggregate verdict for the parent hash
+(\S\ref{sec:resubmission}). The two tools are not substitutes: a
+VirusTotal lookup is the right first step for triage at scale, and this
+pipeline is the right next step once a specific sample needs a
+defensible, evidence-linked technique mapping rather than a reputation
+score.
+
+\subsection{Threat Intelligence Interchange Standards}
+
+STIX~2.1~\cite{stix21} (Structured Threat Information Expression) and
+MISP~\cite{misp} (Malware Information Sharing Platform) are the two
+interchange formats this pipeline exports to. STIX defines a graph of
+typed objects (indicators, malware, attack patterns, relationships)
+intended for machine-to-machine sharing; MISP is both a data model and
+a running platform most organizations already operate. Exporting to
+both, rather than only producing a human-readable report, is what
+makes pipeline output directly consumable by a security operations
+team's existing tooling instead of requiring manual transcription.
+
+\subsection{Positioning}
+
+This thesis does not propose a novel detection primitive: every
+individual signal used (an API import, a string pattern, a sandbox
+behavioral signature) is a well-established technique in malware
+analysis practice, and tools like capa and CAPE already surface many
+of the same raw signals. The contribution is in the
+\emph{integration}: a confidence reconciliation model that is
+verifiably more than the sum of its sources (\S\ref{sec:reconciliation}),
+a mechanism for correctly attributing multi-stage malware's distributed
+capability (\S\ref{sec:resubmission}), and, argued as the most
+defensible contribution of the three, a validation discipline in which
+every claim the pipeline makes is checked against real evidence before
+being trusted, documented with enough specificity that the check itself
+is reproducible (\S\ref{sec:evaluation}). Positioned against the two
+poles surveyed above, this pipeline sits deliberately between a
+broad, unreconciled aggregator like VirusTotal and a narrow,
+single-sample manual reverse-engineering report: automated and
+standards-exporting like the former, evidence-verified and
+technique-specific like the latter.

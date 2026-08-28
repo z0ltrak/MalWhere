@@ -1,0 +1,105 @@
+\section{Limitations}
+\label{sec:limitations}
+
+Stating limitations this precisely is itself part of the
+contribution argued in \S\ref{sec:related-work}: a reputation
+aggregator's side-by-side verdicts carry no equivalent account of where
+they might be wrong, which makes them fast to consult but hard to
+audit. Every limitation below is instead diagnosed to a specific,
+verifiable cause rather than stated generically, so that each one is
+either already mitigated concretely or scoped as a precise next step
+(\S\ref{sec:future-work}) rather than an open-ended caveat.
+
+\begin{enumerate}
+
+\item \label{lim:n3} \textbf{Small validation set (N=3).} Three families is too few
+  for a statistically powered claim, and is the point most deserving of
+  scrutiny in this work. The size is not just a time constraint: this
+  thesis's advisors explicitly recommended capping validation at three
+  families to keep the project within a manageable scope for a
+  master's thesis, prioritizing the depth of each validation over
+  spreading the effort across more samples. Three mitigations partly
+  compensate for that size: ground truth is
+  function-level, Ghidra-verified manual reverse engineering per sample,
+  a materially higher bar than a larger but shallower set would carry;
+  a full audit of \code{static/scripts/} for
+  sample-specific hardcoding disguised as generic logic found and
+  removed four instances, each replaced with a
+  class-level equivalent and re-verified not to regress any validated
+  sample; and RoningLoader's resubmission loop (\S\ref{sec:resubmission})
+  independently scores 26 additional components against the same
+  ground truth, real additional evaluation surface rather than a
+  statistical trick. Extending to further families remains the
+  highest-value follow-up (\S\ref{sec:future-work}).
+
+\item \label{lim:attck-version} \textbf{Pinned ATT\&CK version requires
+  periodic manual migration.} All technique IDs in this pipeline,
+  ground truth, and Navigator layers target MITRE ATT\&CK v19.2.
+  CAPE's community signatures, by contrast, are frozen to whichever
+  version they were last written against and are remapped to their
+  current identity only at curation time (\S\ref{sec:dynamic}), not
+  automatically at the source. This thesis migrated its own ground
+  truth from v14 to v19 during development, non-trivial manual work
+  that itself surfaced the
+  \technique{T1070}/\technique{T1685.005} confidence-calibration bug
+  detailed in \S\ref{sec:fp-audit}. Every future MITRE ATT\&CK revision
+  will require repeating that same effort, since nothing in the current
+  design automates it.
+
+\item \label{lim:containment} \textbf{Containment-first sandboxing
+  limits network/C2 observation.} CAPE detonates against INetSim's simulated network with
+  no real egress, by design. Several missed techniques across all three
+  samples cluster around exfiltration and proxy/tunneling behavior
+  (\technique{T1041}, \technique{T1090}, \technique{T1571/T1572},
+  \technique{T1046}) that a simulated network cannot fully elicit. This
+  is a structural property of a containment-first research environment,
+  not a defect to fix.
+
+\item \label{lim:key-ceiling} \textbf{Static key/config recovery has a
+  precise ceiling.}
+  Single-byte XOR is exhaustively brute-forceable (128 keys), and was
+  used to recover RoningLoader's C2 IP with no prior key knowledge, but
+  only after two independent false-positive filters were added
+  (\S\ref{sec:case-xor}). By contrast, a separate payload's RC4 key,
+  independently verified via manual Ghidra RE, is assembled at
+  \emph{runtime} from three register-arithmetic-combined constants and
+  never exists as a contiguous byte sequence in the file: no static
+  byte-pattern method, however exhaustive, can recover a key that is
+  never stored as bytes. The boundary is precisely whether the key
+  exists as bytes on disk, not a general statement that ``encryption is
+  hard.''
+
+\item \label{lim:tool-constraints} \textbf{Tool-level constraints.} FLOSS's emulation-based string
+  decoding timed out on Akira, the most anti-analysis-heavy sample,
+  logged explicitly rather than silently absent. AES/ChaCha20 recovery
+  only succeeds against a zero nonce/IV. Any new brute-force-based
+  recovery capability is now, by explicit policy, validated against a
+  second sample before being trusted, after the XOR key false-positive
+  cascade (\S\ref{sec:case-xor}) was caught this way rather than on
+  first success.
+
+\item \label{lim:reproducibility} \textbf{Reproducibility.} \S\ref{sec:deployment} describes the
+  full \code{docker-compose} deployment; the one gap worth restating
+  here is that the \code{sandbox} profile's Windows guest VM needs
+  one-time manual host provisioning (libvirt/KVM), documented with its
+  own troubleshooting notes, since it cannot be created by
+  \code{docker-compose} alone.
+
+\item \label{lim:rule-coverage} \textbf{Static rule coverage is
+  deliberately narrow.} Roughly 85
+  of 474 Windows-relevant MITRE techniques have a dedicated static
+  rule, the scoping rationale detailed in \S\ref{sec:coverage}.
+
+\item \label{lim:network-attribution} \textbf{Dynamic network capture
+  has no per-process attribution.}
+  CAPE's \code{network.hosts} list reflects the whole sandbox VM's
+  traffic, not just the sample's own process, so the guest OS's own
+  background telemetry can appear indistinguishably from the sample's
+  real connections (\S\ref{sec:case-ioc-noise}). The mitigation applied
+  is a narrow, individually-confirmed allowlist of the specific IPs
+  actually observed contaminating these three samples' detonations, not
+  a general ASN or reputation filter; a newly detonated sample could
+  surface the same class of contamination under a different IP the
+  current allowlist does not yet cover.
+
+\end{enumerate}
