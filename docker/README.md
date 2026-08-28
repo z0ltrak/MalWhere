@@ -881,11 +881,11 @@ On its own this is usually harmless (nothing else claims that port range) — bu
 
 Fix, two parts:
 1. **`run_pipeline.py` now always passes `--route inetsim`** on submission, working around the CAPEv2 default-value bug directly — this alone is enough for normal use.
-2. If you ever see the exact symptom above (zero behavioral data despite `Enabled route 'inetsim'` in `cuckoo.log`), check the host's Docker-managed NAT rules for anything overly broad:
+2. The Docker-managed NAT corruption is a separate, second cause of the identical symptom — confirmed hitting it for real on two independent machines (a fresh clean clone included), so it's not a one-off fluke of one host's Docker install. `run_pipeline.py`'s `ensure_containers()` now runs `fix_broken_docker_nat_rules()` automatically on every dynamic-analysis invocation, right after `cape.service` comes up: it reads the host's `nat` table via `docker compose exec cape iptables-save -t nat` (safe without a separate host-level `sudo` — `cape` runs `privileged: true` + `network_mode: host`, so it shares the host's network namespace and can inspect/repair the real `DOCKER` chain directly), finds any `-A DOCKER ... -j DNAT ...` rule missing its `--dport` match, and deletes exactly that rule (`iptables -t nat -D DOCKER <same args>` — never a chain flush, since other containers' legitimate rules live in the same chain). If you ever want to check by hand instead:
    ```bash
-   sudo iptables-nft-save -t nat | grep DOCKER
+   docker compose exec cape iptables-save -t nat | grep DOCKER
    ```
-   A correct rule always has a `--dport <published-port>` match. One without it will DNAT unrelated traffic (including CAPE's own resultserver port) into whatever container it belongs to. Restarting the affected container regenerates the *correct* rule but does **not** remove a stale broken one already sitting earlier in the chain — delete the specific broken line by hand (`sudo iptables -t nat -D DOCKER <the exact broken rule text>`); don't flush the whole `DOCKER` chain, since Docker manages it and other containers' legitimate rules live there too.
+   A correct rule always has a `--dport <published-port>` match; one without it will DNAT unrelated traffic (including CAPE's own resultserver port) into whatever container it belongs to. If the automated fix ever reports it couldn't clear a broken rule, `run_pipeline.py` exits with the offending line printed — delete it the same way shown above, then rerun.
 
 ### `pipeline` gets a 403 from MISP even though `MISP_API_KEY` is set in `.env`
 `.env` and MISP's own database don't sync automatically, and a `.env` edit after the `pipeline` container already exists needs a recreate (`up -d pipeline`), not `restart`. See [Quickstart](#quickstart) step 3 for the fix — set the same key directly on the MISP account, then into `.env`, then recreate `pipeline`.

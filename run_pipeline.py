@@ -203,6 +203,60 @@ def ensure_containers(need_dynamic: bool) -> None:
             log("ERROR: cape.service did not become active in time")
             sys.exit(1)
 
+        fix_broken_docker_nat_rules()
+
+
+def fix_broken_docker_nat_rules() -> None:
+    """Detect and remove Docker-managed NAT rules missing a --dport match.
+
+    Docker's own iptables management has, twice now on two separate
+    machines, emitted a port-publish DNAT rule for some *other* container
+    (e.g. navigator's 4200:80) without its --dport match -- see
+    docker/README.md's troubleshooting entry for the full writeup. Such a
+    rule unconditionally DNATs every local TCP connection arriving on a
+    non-Docker-bridge interface into that container, including the guest
+    VM's traffic to CAPE's own resultserver port -- so dynamic analysis
+    "succeeds" but silently produces zero behavioral data, with no error
+    anywhere. Since cape runs privileged with network_mode: host, it shares
+    the host's network namespace and can inspect/repair the host's own
+    DOCKER chain directly through docker exec -- no separate host-level
+    sudo prompt needed.
+    """
+    banner("Checking Docker-managed NAT rules for the known --dport bug")
+
+    def broken_dnat_rules() -> list:
+        saved = compose_capture("exec", "cape", "iptables-save", "-t", "nat")
+        return [
+            line for line in saved.splitlines()
+            if line.startswith("-A DOCKER ") and "-j DNAT" in line and "--dport" not in line
+        ]
+
+    broken = broken_dnat_rules()
+    if not broken:
+        log("Docker NAT rules look fine (every DOCKER DNAT rule has a --dport match)")
+        return
+
+    for line in broken:
+        log(f"WARNING: found a Docker-managed NAT rule with no --dport match -- this "
+            f"unconditionally hijacks unrelated TCP traffic, including CAPE's "
+            f"resultserver port: {line}")
+        delete_args = line.split()[2:]  # "-A DOCKER <rest>" -> <rest>, for `iptables -D DOCKER <rest>`
+        compose("exec", "cape", "iptables", "-t", "nat", "-D", "DOCKER", *delete_args)
+        log("Deleted the broken rule.")
+
+    still_broken = broken_dnat_rules()
+    if still_broken:
+        log("ERROR: broken Docker NAT rule(s) still present after attempting to delete them:")
+        for line in still_broken:
+            log(f"  {line}")
+        log("See docker/README.md's troubleshooting entry for the manual fix.")
+        sys.exit(1)
+
+    log(f"Fixed {len(broken)} broken Docker NAT rule(s). If any OTHER container "
+        f"depended on the rule(s) just deleted, restart it so Docker regenerates "
+        f"the correct (--dport-qualified) version -- CAPE's own traffic is already "
+        f"safe now that the hijacking rule is gone.")
+
 
 def run_static_analysis(exe_container_path: str, family: str) -> None:
     """Run static analysis on the sample inside the `static` container.
