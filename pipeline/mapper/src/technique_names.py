@@ -1,26 +1,15 @@
 """Offline-safe MITRE ATT&CK technique name resolution.
 
-3-tier resolution, never blocks on network (malwhere_net is `internal: true`
-— no egress — see docker-compose.yml):
-  1. --attck-bundle <path>, if given: authoritative names parsed directly out
-     of a local enterprise-attack.json STIX bundle (see fetch_attck_bundle.py
-     for how to get one). Pure stdlib json -- map_attck.py runs on the host,
-     not in the pipeline container, so this module can't depend on a
-     container-only package like mitreattack-python.
-  2. Built-in fallback dict below, covering every technique ID actually
-     observed across the 3 validated samples' static+dynamic reports.
-  3. Generic "Unknown ATT&CK technique (ID)" placeholder — never fails.
+2-tier resolution, no network or external files ever (malwhere_net is
+`internal: true` -- no egress -- see docker-compose.yml; this module has no
+dependency on a fetched STIX bundle either, by design -- see the dict below):
+  1. Built-in fallback dict below, covering every technique ID actually
+     observed across the validated samples' static+dynamic reports, plus a
+     full-tactic expansion for Execution, Persistence, and Command and
+     Control (the tactics a single-VM detonation sandbox can actually
+     produce evidence for -- see the comment above that block).
+  2. Generic "Unknown ATT&CK technique (ID)" placeholder — never fails.
 """
-
-import json
-from pathlib import Path
-from typing import Optional
-
-# Where fetch_attck_bundle.py saves the bundle by default; map_attck.py's
-# --attck-bundle argument defaults to this path when it exists, so fetching
-# the bundle once is enough to upgrade every future run to tier 1 with no
-# other changes needed.
-DEFAULT_BUNDLE_PATH = Path(__file__).resolve().parent.parent / "data" / "enterprise-attack.json"
 
 # Curated directly from real data: every technique ID observed in
 # results/{wsnake,roning,akira}/iocs/normalized_iocs.json as of the initial
@@ -122,6 +111,9 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1018": "Remote System Discovery",
     "T1010": "Application Window Discovery",
     "T1518.001": "Software Discovery: Security Software Discovery",
+    # 3rd validation round (2026-08-28), full E2E re-run after removing the
+    # tier-1 STIX-bundle path and expanding Execution/Persistence/C2.
+    "T1012": "Query Registry",
     # Impact coverage extension.
     "T1529": "System Shutdown/Reboot",
     "T1531": "Account Access Removal",
@@ -156,87 +148,203 @@ TECHNIQUE_NAME_FALLBACK = {
     # (2nd clean-clone validation, 2026-08-28).
     "T1134": "Access Token Manipulation",
     "T1056.001": "Input Capture: Keylogging",
+
+    # Full-tactic expansion (2026-08-28) for Execution, Persistence, and
+    # Command and Control -- the 3 tactics a sample detonated in a single
+    # isolated guest VM can actually produce evidence for (unlike Lateral
+    # Movement, Initial Access, Reconnaissance, and Resource Development,
+    # which describe attacker-side or multi-host activity this pipeline's
+    # methodology structurally can't observe). Sourced from MITRE's public
+    # enterprise-attack.json (ATT&CK v19.2), transcribed once rather than
+    # depending on a fetched bundle at runtime.
+    "T1001": "Data Obfuscation",
+    "T1001.001": "Data Obfuscation: Junk Data",
+    "T1001.002": "Data Obfuscation: Steganography",
+    "T1001.003": "Data Obfuscation: Protocol or Service Impersonation",
+    "T1008": "Fallback Channels",
+    "T1037": "Boot or Logon Initialization Scripts",
+    "T1037.001": "Boot or Logon Initialization Scripts: Logon Script (Windows)",
+    "T1037.002": "Boot or Logon Initialization Scripts: Login Hook",
+    "T1037.003": "Boot or Logon Initialization Scripts: Network Logon Script",
+    "T1037.004": "Boot or Logon Initialization Scripts: RC Scripts",
+    "T1037.005": "Boot or Logon Initialization Scripts: Startup Items",
+    "T1053.002": "Scheduled Task/Job: At",
+    "T1053.003": "Scheduled Task/Job: Cron",
+    "T1053.005": "Scheduled Task/Job: Scheduled Task",
+    "T1053.006": "Scheduled Task/Job: Systemd Timers",
+    "T1053.007": "Scheduled Task/Job: Container Orchestration Job",
+    "T1059.002": "Command and Scripting Interpreter: AppleScript",
+    "T1059.003": "Command and Scripting Interpreter: Windows Command Shell",
+    "T1059.004": "Command and Scripting Interpreter: Unix Shell",
+    "T1059.005": "Command and Scripting Interpreter: Visual Basic",
+    "T1059.006": "Command and Scripting Interpreter: Python",
+    "T1059.007": "Command and Scripting Interpreter: JavaScript",
+    "T1059.008": "Command and Scripting Interpreter: Network Device CLI",
+    "T1059.009": "Command and Scripting Interpreter: Cloud API",
+    "T1059.010": "Command and Scripting Interpreter: AutoHotKey & AutoIT",
+    "T1059.011": "Command and Scripting Interpreter: Lua",
+    "T1059.012": "Command and Scripting Interpreter: Hypervisor CLI",
+    "T1059.013": "Command and Scripting Interpreter: Container CLI/API",
+    "T1071.001": "Application Layer Protocol: Web Protocols",
+    "T1071.002": "Application Layer Protocol: File Transfer Protocols",
+    "T1071.003": "Application Layer Protocol: Mail Protocols",
+    "T1071.004": "Application Layer Protocol: DNS",
+    "T1071.005": "Application Layer Protocol: Publish/Subscribe Protocols",
+    "T1072": "Software Deployment Tools",
+    "T1078": "Valid Accounts",
+    "T1078.001": "Valid Accounts: Default Accounts",
+    "T1078.002": "Valid Accounts: Domain Accounts",
+    "T1078.003": "Valid Accounts: Local Accounts",
+    "T1078.004": "Valid Accounts: Cloud Accounts",
+    "T1090.001": "Proxy: Internal Proxy",
+    "T1090.003": "Proxy: Multi-hop Proxy",
+    "T1090.004": "Proxy: Domain Fronting",
+    "T1092": "Communication Through Removable Media",
+    "T1095": "Non-Application Layer Protocol",
+    "T1098.001": "Account Manipulation: Additional Cloud Credentials",
+    "T1098.002": "Account Manipulation: Additional Email Delegate Permissions",
+    "T1098.003": "Account Manipulation: Additional Cloud Roles",
+    "T1098.004": "Account Manipulation: SSH Authorized Keys",
+    "T1098.005": "Account Manipulation: Device Registration",
+    "T1098.006": "Account Manipulation: Additional Container Cluster Roles",
+    "T1098.007": "Account Manipulation: Additional Local or Domain Groups",
+    "T1102": "Web Service",
+    "T1102.001": "Web Service: Dead Drop Resolver",
+    "T1102.003": "Web Service: One-Way Communication",
+    "T1104": "Multi-Stage Channels",
+    "T1127": "Trusted Developer Utilities Proxy Execution",
+    "T1127.002": "Trusted Developer Utilities Proxy Execution: ClickOnce",
+    "T1127.003": "Trusted Developer Utilities Proxy Execution: JamPlus",
+    "T1132.001": "Data Encoding: Standard Encoding",
+    "T1132.002": "Data Encoding: Non-Standard Encoding",
+    "T1133": "External Remote Services",
+    "T1136": "Create Account",
+    "T1136.001": "Create Account: Local Account",
+    "T1136.002": "Create Account: Domain Account",
+    "T1136.003": "Create Account: Cloud Account",
+    "T1137": "Office Application Startup",
+    "T1137.001": "Office Application Startup: Office Template Macros",
+    "T1137.002": "Office Application Startup: Office Test",
+    "T1137.003": "Office Application Startup: Outlook Forms",
+    "T1137.004": "Office Application Startup: Outlook Home Page",
+    "T1137.005": "Office Application Startup: Outlook Rules",
+    "T1137.006": "Office Application Startup: Add-ins",
+    "T1176": "Software Extensions",
+    "T1176.001": "Software Extensions: Browser Extensions",
+    "T1176.002": "Software Extensions: IDE Extensions",
+    "T1203": "Exploitation for Client Execution",
+    "T1204": "User Execution",
+    "T1204.001": "User Execution: Malicious Link",
+    "T1204.002": "User Execution: Malicious File",
+    "T1204.003": "User Execution: Malicious Image",
+    "T1204.004": "User Execution: Malicious Copy and Paste",
+    "T1204.005": "User Execution: Malicious Library",
+    "T1205": "Traffic Signaling",
+    "T1205.001": "Traffic Signaling: Port Knocking",
+    "T1205.002": "Traffic Signaling: Socket Filters",
+    "T1219": "Remote Access Tools",
+    "T1219.001": "Remote Access Tools: IDE Tunneling",
+    "T1219.002": "Remote Access Tools: Remote Desktop Software",
+    "T1219.003": "Remote Access Tools: Remote Access Hardware",
+    "T1505": "Server Software Component",
+    "T1505.001": "Server Software Component: SQL Stored Procedures",
+    "T1505.002": "Server Software Component: Transport Agent",
+    "T1505.003": "Server Software Component: Web Shell",
+    "T1505.004": "Server Software Component: IIS Components",
+    "T1505.005": "Server Software Component: Terminal Services DLL",
+    "T1505.006": "Server Software Component: vSphere Installation Bundles",
+    "T1525": "Implant Internal Image",
+    "T1542": "Pre-OS Boot",
+    "T1542.001": "Pre-OS Boot: System Firmware",
+    "T1542.002": "Pre-OS Boot: Component Firmware",
+    "T1542.004": "Pre-OS Boot: ROMMONkit",
+    "T1542.005": "Pre-OS Boot: TFTP Boot",
+    "T1543.001": "Create or Modify System Process: Launch Agent",
+    "T1543.002": "Create or Modify System Process: Systemd Service",
+    "T1543.004": "Create or Modify System Process: Launch Daemon",
+    "T1543.005": "Create or Modify System Process: Container Service",
+    "T1546": "Event Triggered Execution",
+    "T1546.001": "Event Triggered Execution: Change Default File Association",
+    "T1546.002": "Event Triggered Execution: Screensaver",
+    "T1546.004": "Event Triggered Execution: Unix Shell Configuration Modification",
+    "T1546.005": "Event Triggered Execution: Trap",
+    "T1546.006": "Event Triggered Execution: LC_LOAD_DYLIB Addition",
+    "T1546.007": "Event Triggered Execution: Netsh Helper DLL",
+    "T1546.011": "Event Triggered Execution: Application Shimming",
+    "T1546.013": "Event Triggered Execution: PowerShell Profile",
+    "T1546.014": "Event Triggered Execution: Emond",
+    "T1546.015": "Event Triggered Execution: Component Object Model Hijacking",
+    "T1546.016": "Event Triggered Execution: Installer Packages",
+    "T1546.017": "Event Triggered Execution: Udev Rules",
+    "T1546.018": "Event Triggered Execution: Python Startup Hooks",
+    "T1547.003": "Boot or Logon Autostart Execution: Time Providers",
+    "T1547.006": "Boot or Logon Autostart Execution: Kernel Modules and Extensions",
+    "T1547.007": "Boot or Logon Autostart Execution: Re-opened Applications",
+    "T1547.008": "Boot or Logon Autostart Execution: LSASS Driver",
+    "T1547.009": "Boot or Logon Autostart Execution: Shortcut Modification",
+    "T1547.010": "Boot or Logon Autostart Execution: Port Monitors",
+    "T1547.012": "Boot or Logon Autostart Execution: Print Processors",
+    "T1547.013": "Boot or Logon Autostart Execution: XDG Autostart Entries",
+    "T1547.015": "Boot or Logon Autostart Execution: Login Items",
+    "T1554": "Compromise Host Software Binary",
+    "T1556": "Modify Authentication Process",
+    "T1556.001": "Modify Authentication Process: Domain Controller Authentication",
+    "T1556.003": "Modify Authentication Process: Pluggable Authentication Modules",
+    "T1556.004": "Modify Authentication Process: Network Device Authentication",
+    "T1556.005": "Modify Authentication Process: Reversible Encryption",
+    "T1556.006": "Modify Authentication Process: Multi-Factor Authentication",
+    "T1556.007": "Modify Authentication Process: Hybrid Identity",
+    "T1556.008": "Modify Authentication Process: Network Provider DLL",
+    "T1556.009": "Modify Authentication Process: Conditional Access Policies",
+    "T1559": "Inter-Process Communication",
+    "T1559.001": "Inter-Process Communication: Component Object Model",
+    "T1559.003": "Inter-Process Communication: XPC Services",
+    "T1568.001": "Dynamic Resolution: Fast Flux DNS",
+    "T1568.002": "Dynamic Resolution: Domain Generation Algorithms",
+    "T1568.003": "Dynamic Resolution: DNS Calculation",
+    "T1569": "System Services",
+    "T1569.001": "System Services: Launchctl",
+    "T1569.003": "System Services: Systemctl",
+    "T1571": "Non-Standard Port",
+    "T1573.001": "Encrypted Channel: Symmetric Cryptography",
+    "T1573.002": "Encrypted Channel: Asymmetric Cryptography",
+    "T1574.001": "Hijack Execution Flow: DLL",
+    "T1574.004": "Hijack Execution Flow: Dylib Hijacking",
+    "T1574.005": "Hijack Execution Flow: Executable Installer File Permissions Weakness",
+    "T1574.006": "Hijack Execution Flow: Dynamic Linker Hijacking",
+    "T1574.007": "Hijack Execution Flow: Path Interception by PATH Environment Variable",
+    "T1574.008": "Hijack Execution Flow: Path Interception by Search Order Hijacking",
+    "T1574.009": "Hijack Execution Flow: Path Interception by Unquoted Path",
+    "T1574.010": "Hijack Execution Flow: Services File Permissions Weakness",
+    "T1574.011": "Hijack Execution Flow: Services Registry Permissions Weakness",
+    "T1574.012": "Hijack Execution Flow: COR_PROFILER",
+    "T1574.013": "Hijack Execution Flow: KernelCallbackTable",
+    "T1574.014": "Hijack Execution Flow: AppDomainManager",
+    "T1609": "Container Administration Command",
+    "T1610": "Deploy Container",
+    "T1648": "Serverless Execution",
+    "T1651": "Cloud Administration Command",
+    "T1653": "Power Settings",
+    "T1659": "Content Injection",
+    "T1665": "Hide Infrastructure",
+    "T1668": "Exclusive Control",
+    "T1671": "Cloud Application Integration",
+    "T1674": "Input Injection",
+    "T1675": "ESXi Administration Command",
+    "T1677": "Poisoned Pipeline Execution",
 }
 
-_attck_bundle_cache = None
 
-
-def _load_bundle_names(bundle_path: Path) -> Optional[dict]:
-    """Load and cache technique_id -> name from a local ATT&CK STIX bundle.
-
-    Parses the bundle's `objects` list directly rather than via a STIX
-    library: every attack-pattern object's external_references carries its
-    technique_id (source_name "mitre-attack") alongside the object's own
-    name. Includes revoked/deprecated techniques too, since older CAPE
-    signatures can still reference retired IDs.
-
-    A subtechnique's raw STIX `name` is just its own short name (e.g.
-    "Software Packing", not "Obfuscated Files or Information: Software
-    Packing") -- the parent name lives on a separate attack-pattern object,
-    joined via a "subtechnique-of" relationship. Reconstructs the
-    "Parent: Sub" form here so bundle-sourced names match
-    TECHNIQUE_NAME_FALLBACK's existing convention instead of silently
-    reformatting every subtechnique name the moment a bundle is present.
-
-    Args:
-        bundle_path: Path to an enterprise-attack.json STIX bundle.
-
-    Returns:
-        Dict mapping technique_id -> name, or None if the bundle couldn't be loaded/parsed.
-    """
-    global _attck_bundle_cache
-    if _attck_bundle_cache is not None:
-        return _attck_bundle_cache
-    try:
-        with open(bundle_path, encoding="utf-8") as f:
-            bundle = json.load(f)
-
-        techniques = [obj for obj in bundle.get("objects", []) if obj.get("type") == "attack-pattern"]
-        name_by_stix_id = {obj["id"]: obj.get("name", "") for obj in techniques if obj.get("id")}
-        technique_id_by_stix_id = {}
-        for obj in techniques:
-            for ref in obj.get("external_references", []):
-                if ref.get("source_name") == "mitre-attack" and ref.get("external_id"):
-                    technique_id_by_stix_id[obj["id"]] = ref["external_id"]
-                    break
-
-        parent_stix_id_of = {
-            rel["source_ref"]: rel["target_ref"]
-            for rel in bundle.get("objects", [])
-            if rel.get("type") == "relationship" and rel.get("relationship_type") == "subtechnique-of"
-        }
-
-        names = {}
-        for stix_id, technique_id in technique_id_by_stix_id.items():
-            own_name = name_by_stix_id.get(stix_id, "")
-            parent_stix_id = parent_stix_id_of.get(stix_id)
-            parent_name = name_by_stix_id.get(parent_stix_id) if parent_stix_id else None
-            names[technique_id] = f"{parent_name}: {own_name}" if parent_name else own_name
-
-        _attck_bundle_cache = names
-        return names
-    except (OSError, json.JSONDecodeError, KeyError):
-        return None
-
-
-def resolve_technique_name(technique_id: str, attck_bundle: Optional[str] = None, verbose: bool = False) -> str:
-    """Resolve a technique ID to its name, via the 3-tier fallback described in this module's docstring.
+def resolve_technique_name(technique_id: str, verbose: bool = False) -> str:
+    """Resolve a technique ID to its name, via the 2-tier fallback described in this module's docstring.
 
     Args:
         technique_id: MITRE technique ID, e.g. 'T1055'.
-        attck_bundle: Optional path to a local enterprise-attack.json STIX bundle for authoritative names.
         verbose: Log a warning when falling back to the generic placeholder.
 
     Returns:
         The technique's name, or 'Unknown ATT&CK technique (<id>)' if not found anywhere.
     """
-    if attck_bundle:
-        bundle_path = Path(attck_bundle)
-        if bundle_path.exists():
-            names = _load_bundle_names(bundle_path)
-            if names and technique_id in names:
-                return names[technique_id]
-
     if technique_id in TECHNIQUE_NAME_FALLBACK:
         return TECHNIQUE_NAME_FALLBACK[technique_id]
 

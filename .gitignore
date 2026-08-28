@@ -36,10 +36,6 @@ __pycache__/
 venv/
 .env
 
-# Fetched by pipeline/mapper/fetch_attck_bundle.py -- large (~50MB), pinned
-# by checksum in that script, not something to commit.
-pipeline/mapper/data/
-
 # Docker volumes & secrets
 docker/*/data/
 docker/*/logs/

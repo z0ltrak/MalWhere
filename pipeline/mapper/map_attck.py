@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from src.models import MappedTechnique
 from src.navigator_layer import build_navigator_layer
 from src.reconcile import CONFIDENCE_MODEL_RULE, CONFIDENCE_MODEL_VERSION, apply_cross_level_corroboration, reconcile
-from src.technique_names import DEFAULT_BUNDLE_PATH, resolve_technique_name
+from src.technique_names import resolve_technique_name
 
 
 def main():
@@ -39,13 +39,6 @@ def main():
         "--output", "-o",
         required=True,
         help="Output directory for attck_mapping.json and navigator_layer.json"
-    )
-    parser.add_argument(
-        "--attck-bundle",
-        default=str(DEFAULT_BUNDLE_PATH) if DEFAULT_BUNDLE_PATH.exists() else None,
-        help="Path to a local enterprise-attack.json STIX bundle for authoritative technique names "
-             f"(default: {DEFAULT_BUNDLE_PATH} if present -- see fetch_attck_bundle.py -- "
-             "else the built-in fallback dict)"
     )
     parser.add_argument(
         "--attck-version",
@@ -75,7 +68,7 @@ def main():
         technique_id = entry["technique"]
         observations = entry["observations"]
         final, score, static_best, dynamic_best, sources = reconcile(observations)
-        name = resolve_technique_name(technique_id, attck_bundle=args.attck_bundle, verbose=args.verbose)
+        name = resolve_technique_name(technique_id, verbose=args.verbose)
         mapped.append(
             MappedTechnique(
                 technique_id=technique_id,

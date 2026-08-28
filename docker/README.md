@@ -598,28 +598,6 @@ serves the repo's `results/` directory read-only at `/results/`
 Not sure of the exact family/path? `http://localhost:4200/results/` on its
 own renders a plain directory listing (autoindex) you can click through.
 
-### ATT&CK technique names: optional authoritative bundle
-
-By default, `map_attck.py` names techniques from a small hardcoded dict
-(`pipeline/mapper/src/technique_names.py`) covering every ID observed so
-far. It's fine for the 3 validated families, but a new sample can surface a
-technique ID that isn't in it yet, which renders as
-`"Unknown ATT&CK technique (T####)"` instead of the real name.
-
-To make name resolution authoritative for the full ATT&CK matrix instead
-(one-time, requires network — the only setup step that does, besides the
-initial `docker pull`s and sourcing samples):
-```bash
-python3 pipeline/mapper/fetch_attck_bundle.py
-```
-This downloads a pinned, checksum-verified copy of MITRE's
-`enterprise-attack.json` STIX bundle to `pipeline/mapper/data/` (gitignored
-— it's ~50MB of fetchable reference data, not something to commit). Every
-`map_attck.py` run afterwards (including the resubmission loop) auto-detects
-it and uses it for every technique ID, with no other configuration needed.
-Skip this and the pipeline works exactly as before, falling back to the
-hardcoded dict.
-
 ### CAPE: web UI and container shell
 
 The web UI (`http://localhost:8000`, no auth in local-dev mode) is enough
