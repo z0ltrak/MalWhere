@@ -78,7 +78,7 @@
       "techniqueID": "T1071",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: contains_pe_overlay, unbacked_dns_resolution, unbacked_memory_network_connection",
+      "comment": "dynamic corroborated; evidence: unbacked_dns_resolution, unbacked_memory_network_connection",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -96,7 +96,7 @@
       "techniqueID": "T1082",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: antisandbox_system_parameters_info, antisandbox_windows_activation, antivm_checks_available_memory, discover_registry_mount_points, hardware_id_profiling, mountpoint_manager_access, mountpoints_volume_discovery",
+      "comment": "dynamic corroborated; evidence: antisandbox_system_parameters_info, antivm_display, discover_registry_mount_points, mountpoint_manager_access, mountpoints_volume_discovery",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -168,7 +168,7 @@
       "techniqueID": "T1497",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic+static corroborated; evidence: GetTickCount, QueryPerformanceCounter, Sleep, QueryPerformanceCounter, Sleep, QueryPerformanceCounter, GetTickCount, antisandbox_windows_activation, mouse_movement_detect, unbacked_delay_execution",
+      "comment": "dynamic+static corroborated; evidence: GetTickCount, QueryPerformanceCounter, Sleep, QueryPerformanceCounter, Sleep, QueryPerformanceCounter, GetTickCount, mouse_movement_detect, unbacked_delay_execution",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -240,7 +240,7 @@
       "techniqueID": "T1620",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: dropper, unbacked_api_resolution, unbacked_library_load",
+      "comment": "dynamic corroborated; evidence: unbacked_api_resolution, unbacked_library_load",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -276,7 +276,7 @@
       "techniqueID": "T1685",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: antiav_servicestop, antisandbox_unhook, unbacked_exception_filter",
+      "comment": "dynamic corroborated; evidence: antiav_servicestop, unbacked_exception_filter",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -294,7 +294,7 @@
       "techniqueID": "T1027",
       "score": 60,
       "color": "#ffe766",
-      "comment": "dynamic corroborated; evidence: allocated_memory_protection_noaccess, pe_section_vsize_rsize_anomaly",
+      "comment": "dynamic corroborated; evidence: allocated_memory_protection_noaccess",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -345,6 +345,42 @@
       ]
     },
     {
+      "techniqueID": "T1003",
+      "score": 30,
+      "color": "#8ec843",
+      "comment": "dynamic corroborated; evidence: infostealer_browser",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "low"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1005",
+      "score": 30,
+      "color": "#8ec843",
+      "comment": "dynamic corroborated; evidence: infostealer_browser",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "low"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
+        }
+      ]
+    },
+    {
       "techniqueID": "T1070",
       "score": 30,
       "color": "#8ec843",
@@ -377,6 +413,78 @@
         {
           "name": "sources",
           "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1552",
+      "score": 30,
+      "color": "#8ec843",
+      "comment": "dynamic corroborated; evidence: infostealer_browser",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "low"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1552.001",
+      "score": 30,
+      "color": "#8ec843",
+      "comment": "dynamic corroborated; evidence: infostealer_browser",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "low"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1555",
+      "score": 30,
+      "color": "#8ec843",
+      "comment": "dynamic corroborated; evidence: infostealer_browser",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "low"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1555.003",
+      "score": 30,
+      "color": "#8ec843",
+      "comment": "dynamic corroborated; evidence: infostealer_browser",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "low"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
         }
       ]
     }

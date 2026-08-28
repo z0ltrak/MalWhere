@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T21:20:58.449938+00:00",
+  "generated_at": "2026-08-28T14:53:28.409754+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
@@ -9,15 +9,15 @@
     "static_imphash": null,
     "static_ssdeep": "98304:dhzAJ3UifrjsG4SbcC2K2pSW7hKaAkFF41o4wr4d:dhviXsxKqLp/1K7kE6r4d",
     "static_tlsh": "T14BF52349E3A0D357D0314A7C097E8FFD697AEC322865B7DB5B41B262D2B2B6CD807502",
-    "static_filename": "sample.exe",
+    "static_filename": "roning.exe",
     "static_file_type": "nsis_installer",
-    "dynamic_sha256": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
-    "dynamic_md5": "73a84cba28d14625441e1b0eac2a67f1",
-    "dynamic_filename": "binary",
-    "dynamic_file_type": "PE32 executable (GUI) Intel 80386, for MS Windows",
-    "hash_match": true,
-    "malscore": 9.0,
-    "malstatus": "Malicious",
+    "dynamic_sha256": "",
+    "dynamic_md5": "",
+    "dynamic_filename": "",
+    "dynamic_file_type": "",
+    "hash_match": false,
+    "malscore": 0.0,
+    "malstatus": null,
     "family_detections": []
   },
   "iocs": {
@@ -28,353 +28,12 @@
         "sha256": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
         "md5": "73a84cba28d14625441e1b0eac2a67f1",
         "sha1": "813c1de6102e1cc953f86567e972d0e19d9e530a",
-        "filename": "sample.exe",
+        "filename": "roning.exe",
         "type": "nsis_installer"
       },
       {
         "role": "primary_sample",
-        "source": "dynamic",
-        "sha256": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
-        "md5": "73a84cba28d14625441e1b0eac2a67f1",
-        "sha1": "813c1de6102e1cc953f86567e972d0e19d9e530a",
-        "filename": "binary",
-        "type": "PE32 executable (GUI) Intel 80386, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "9ebed197a87457b2def45f81be4f946cdd5138bcb4cee68ca2d09e0803b8a428",
-        "md5": "a32c614938d06eaf0a799850026495f1",
-        "sha1": "22f5af107a2877d3a3a4c6cbc3b999d13698333c",
-        "filename": "{31351756-3F24-4963-8380-4E7602335AAE}.cip",
-        "type": "data"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "1cbb3d517793c2239d0c8e7e05ba2bce1e920bb50355d10889bd41b6b7a69a61",
-        "md5": "1909e031316287156c2dac3018ba337b",
-        "sha1": "73e7b295f5ce10ec6fa9ed02cbef5bfe9d655090",
-        "filename": "MiniFilterDrv",
-        "type": "PE32+ executable (GUI) x86-64, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "c497b58ff068c3ac21d3b30fef5af2c7d6182277348ad96928f7b28e410e862d",
-        "md5": "fa7298ceff285e62268fd337b532894b",
-        "sha1": "02ec8e672ee8900b4f155ac5503cf1655d808ac5",
-        "filename": "9ZUPMq.3w",
-        "type": "data"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "b7c8d25259bfc25b43427d31c25603037c039bbf9e76116d52759ba681499c3a",
-        "md5": "dc2546fbff3aec1245f9a4d611c9f759",
-        "sha1": "b2295d1df787093d589ae7ec2f177e0e2ab41b4c",
-        "filename": "hjk.txt",
-        "type": "data"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "03f41826ee5624e938ff9de7b621fc954decdf4b6f8cc266c43706881053c1ba",
-        "md5": "e1f74e71e8695423ceec9747894a0776",
-        "sha1": "26c7aee1773662e0a46ecd8786aa6b7e93ffc9f0",
-        "filename": "vally3dka.sys",
-        "type": "PE32+ executable (GUI) x86-64, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc",
-        "md5": "00893b7c3e8c39d4663257ddec678aa9",
-        "sha1": "97e2a79af66c94fadb0f039fea405c1e612d6729",
-        "filename": "trustinstaller.bin",
-        "type": "data"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "1c1528b546aa29be6614707cbe408cb4b46e8ed05bf3fe6b388b9f22a4ee37e2",
-        "md5": "3a7cb580bd340505f6dc5b4c829a3eca",
-        "sha1": "21cc730517d74fa1d13316d7e0d817f3bd710906",
-        "filename": "fhq.bat",
-        "type": "DOS batch file, ISO-8859 text, with CRLF line terminators"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "395f835731d25803a791db984062dd5cfdcade6f95cc5d0f68d359af32f6258d",
-        "md5": "fa42ebb1071abc0e618c296ea2cf71a6",
-        "sha1": "9e0c0737b0e37b3e821d011eecd9b0c7c9f2a15a",
-        "filename": "1.bat",
-        "type": "DOS batch file, ASCII text, with CRLF line terminators"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "4d5beb8efd4ade583c8ff730609f142550e8ed14c251bae1097c35a756ed39e6",
-        "md5": "f8c3fc89d7a33c90110e401acc799d05",
-        "sha1": "c52d46c66d6469877b156e166ca2dbfb72fe90eb",
-        "filename": "1.dll",
-        "type": "PE32+ executable (DLL) (GUI) x86-64, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "6700041d70548617fdee64444fc0c4ae2e817b63e92710d38846460ea5a0133b",
-        "md5": "10a6c57bee50e59a70d7d64a479e45cd",
-        "sha1": "6f7d8c30397136d304147a3c8b721ce2f25cf4b4",
-        "filename": "FlashLink Global.lnk",
-        "type": "MS Windows shortcut, Item id list present, Has Relative path, Has Working directory, ctime=Mon Jan  1 00:00:00 1601, mtime=Mon Jan  1 00:00:00 1601, atime=Mon Jan  1 00:00:00 1601, length=0, window=hide"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "417c513be26467c76e973399070df9d73d9ede8048d01c97efb8649b54885b85",
-        "md5": "5b3a2c5687d7c5866f83544018f0c705",
-        "sha1": "cd4f49d3483d33c3887be47399b560c977109b99",
-        "filename": "MoUsoCoreWorker.1b30e5ea-10b4-4df4-9b57-da118bc14b3c.1.etl",
-        "type": "data"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "78b0a1c7847506452ee518b03f8502ecc4f5d746a87d1130157383dd9a6e0e57",
-        "md5": "4c153ab7598fc93fccbbd3239375ffa0",
-        "sha1": "050ec34368bd23a49f5f72a273daf551fa1fdfb2",
-        "filename": "D3D11InstallHelper.dll",
-        "type": "PE32+ executable (DLL) (GUI) x86-64, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "a39b6a090f474e15df3ab76cd8272580be07d5c203b0798a653a7574b8b5572e",
-        "md5": "b267d99f3b5f3cbf1e55758755165acb",
-        "sha1": "16664656c966fa9f435803b8ebccf188f0b59d18",
-        "filename": "uninstall.exe",
-        "type": "PE32 executable (GUI) Intel 80386, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c",
-        "md5": "d920c1a909744e206405ec13539ee01c",
-        "sha1": "bf778f27c8abc9bd44ca484bf18d45cd17f7bbc8",
-        "filename": "goldendays.dll",
-        "type": "PE32+ executable (DLL) (GUI) x86-64, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "62ad0bf1e4354fdb5e84384469f4d13fb854e573649b27e3367cf730cb401c3e",
-        "md5": "95fb33741c0927c448823a1accd09777",
-        "sha1": "9bfcc36c5c9fe4521e4e1665ae60f708bee8ad92",
-        "filename": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000d.db",
-        "type": "data"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "7970924667a0549ec2e379b3e05c158ad09e0cb3457061decb3d1c8000442def",
-        "md5": "1f19b959ac41c496d0be64cfd5c0e3b4",
-        "sha1": "c1625af1e4237288a7d6f5819d27a8ad580f1b64",
-        "filename": "store.db",
-        "type": "SQLite 3.x database, user version 3, last written using SQLite version 3029000, file counter 7, database pages 15, cookie 0x6, schema 4, UTF-16 little endian, version-valid-for 7"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "4913d4cccf84cd0534069107cff3e8e2f427160cad841547db9019310ac86cc7",
-        "md5": "d458b8251443536e4a334147e0170e95",
-        "sha1": "ba8d4d580f1bc0bb2eaa8b9b02ee9e91b8b50fc3",
-        "filename": "UserInfo.dll",
-        "type": "PE32 executable (DLL) (GUI) Intel 80386, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "a696f2543cdfd0578f96d458816051e65ed25e757502ed190182e5f85ef522cb",
-        "md5": "786680a4c3714af139623b7ad67f71e9",
-        "sha1": "e41b1aea6db5918d48ad2db1b24fdb83a28859f0",
-        "filename": "Enpug.bin",
-        "type": "data"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9",
-        "md5": "082cb645d7b4fabd2ae92ec334049a3e",
-        "sha1": "ec25e8244d642fe64bb8d35a0531cbb3a7a9d904",
-        "filename": "66VOAk0O.exe",
-        "type": "PE32+ executable (GUI) x86-64, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "9111099efe9d5c9b391dc132b2faf0a3851a760d4106d5368e30ac744eb42706",
-        "md5": "4add245d4ba34b04f213409bfe504c07",
-        "sha1": "ef756d6581d70e87d58cc4982e3f4d18e0ea5b09",
-        "filename": "System.dll",
-        "type": "PE32 executable (DLL) (GUI) Intel 80386, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "1c174ec623a51362bc15e2f8fb3feedae12a8840a8d67e6dee81d6f4efbdc55e",
-        "md5": "f24b640f8d3fa1ac442de0568810edfe",
-        "sha1": "d8ae9cc94d7fe82da5fb37e320cc4a450722c99c",
-        "filename": "filecoauth-2026-08-11.1218.868.1.odl",
-        "type": "data"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "627169b1bad0744f636c72a86f6f8e0ff1f4fbb475e8629576a2462a0341ca4f",
-        "md5": "5b3bea02989eaa3c91cc0529b28c0fdb",
-        "sha1": "8b938dda75e9c72be2e34be0a3fd855b09d780c2",
-        "filename": "vmservice.sys",
-        "type": "PE32+ executable (GUI) x86-64, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "0b057cadffa2a1fa6c6262b71cda748a40a0a540bc20b7143e4859b1a7bea38a",
-        "md5": "f94a29e3ffba4dbec5c971774498703d",
-        "sha1": "af390420a84ec678c73fa661507a5b75fd3a7a56",
-        "filename": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000c.db",
-        "type": "data"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "2fecfb0e3111c22a38200af49555ac0b2f9449be43adce334909ddd42e40ac05",
-        "md5": "2e8750f609ad015b9e5a82a4ded13892",
-        "sha1": "c41d98039c76211803d12cfa03af1c77aaaef021",
-        "filename": "cversions.3.db",
-        "type": "firmware d00 v0 (revision 0) `  V2, 16777216 bytes or less, UNKNOWN3 0x1000000, at 0x1000000 0 bytes , at 0 0 bytes "
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "56a43b1f30c67304e0202d7d59fb96e8b44d73d7b9f14110b8a6d0bac1c0af66",
-        "md5": "aec9a4bc3ee629a305020e6f107f150f",
-        "sha1": "c45d08868ad52b38930067b9962e9c8d0ac9d4e9",
-        "filename": "kill.txt",
-        "type": "data"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "8b7be2edaa15781ffa4f0d971361108c7ed724b2b31ab9b369e4ed7646480db8",
-        "md5": "a5ec0d9b54ef42b16a26c5ba521a6e82",
-        "sha1": "dd56e9753f8e292f99198ac8db1a87748a3cf83a",
-        "filename": "WuProvider.91094383-7a4b-40cd-bca4-e8a41269a0d1.1.etl",
-        "type": "data"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "4226e32b283af8022a30eb1434bca9d13bba7ecfa9e4721cc24708ff3b5e4d30",
-        "md5": "92dbeaa031c57fca593b530e598ae134",
-        "sha1": "475b348478f404428d29e300e0f313229e02933c",
-        "filename": "agg.txt",
-        "type": "data"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "f3e9b0d43b66fa6b05d2fa4de4547517a3ec0bc0b14de3c349d817465bbf7ab4",
-        "md5": "6ebdde247cad8468575f1f2a4d7ae2a2",
-        "sha1": "d0c502f45df55c0465c9406088ff016c2e7e6817",
-        "filename": "nsis_tauri_utils.dll",
-        "type": "PE32 executable (DLL) (GUI) Intel 80386, for MS Windows"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
-        "md5": "dba136b8380bbe468f702dc58f05b203",
-        "sha1": "1475c8eeca35598b3eb8df585c01c33eb53c8753",
-        "filename": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
-        "type": "PE32+ executable (GUI) x86-64, for MS Windows"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "c534840b2c1617f3b26821480b9d4cf551d43a4d273eb71072d48de19dce740f",
-        "md5": "c2324686005c994673fd086d75879afa",
-        "sha1": "d3f2230d5b42bf3552a5a7fe4d021799504260d6",
-        "filename": "c534840b2c1617f3b26821480b9d4cf551d43a4d273eb71072d48de19dce740f",
-        "type": "PE32+ executable (GUI) x86-64, for MS Windows"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "8bfadac3678dabc42a7bfa2efd024a1fb102db1ab38995920c5ce7558517e194",
-        "md5": "7223e1b91ea4b67d92999620510c9fee",
-        "sha1": "dbab68d87f8f71727127f1520aba3e9c8ee76f4a",
-        "filename": "8bfadac3678dabc42a7bfa2efd024a1fb102db1ab38995920c5ce7558517e194",
-        "type": "PE32+ executable (console) x86-64, for MS Windows"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "11a6cb1d63a14e4a34aeedc43fa640d782c41533cc02ffdace19c3b5eacc03de",
-        "md5": "08e304e049c8be35e3c08fd1125d1c74",
-        "sha1": "73be3ce547d5a853f33aa2455f23fc1bb50537c2",
-        "filename": "11a6cb1d63a14e4a34aeedc43fa640d782c41533cc02ffdace19c3b5eacc03de",
-        "type": "PE32+ executable (GUI) x86-64, for MS Windows",
-        "cape_type": "Unpacked PE Image: 64-bit executable"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5",
-        "md5": "c9fae85ee2b0d25f1a302b6192512c33",
-        "sha1": "ab68f82092ce5456df405063d986ebbf9f669feb",
-        "filename": "05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5",
-        "type": "PE32+ executable (GUI) x86-64, for MS Windows"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "65367ad3a97da1b56896ba69abbbac238990f74921aba0e726db0b6d7e2c67e8",
-        "md5": "edad037c7896f30d1696a4368a306504",
-        "sha1": "72451a842cf40ec0f0d06b6462609a30a8c38764",
-        "filename": "65367ad3a97da1b56896ba69abbbac238990f74921aba0e726db0b6d7e2c67e8",
-        "type": "PE32+ executable (DLL) (GUI) x86-64, for MS Windows"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "1668cc758726d95ccc1fdae3a766da8ca3862082bf0e5c265e94ef442f2cf3cb",
-        "md5": "f6edf599aaafcb225a60de36eca66be7",
-        "sha1": "c7083ba98ff29446e38f470b68ee51c2bbc72aa8",
-        "filename": "1668cc758726d95ccc1fdae3a766da8ca3862082bf0e5c265e94ef442f2cf3cb",
-        "type": "PE32+ executable (GUI) x86-64, for MS Windows",
-        "cape_type": "Unpacked PE Image: 64-bit executable"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
-        "md5": "7a5ba5b73a9a516ac275d2ce8b0dcda4",
-        "sha1": "a285fcb132d54ca1c554f3939f207bce9b21d131",
-        "filename": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
-        "type": "PE32+ executable (GUI) x86-64, for MS Windows"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "94cb49cb1bd30ca46c117ff341506aecaec4c53c53727072a123a3f58d604118",
-        "md5": "e679298a4e804f555727f45c6a253136",
-        "sha1": "f5607cc266943aafd3440c1f28388d0e7c56c297",
-        "filename": "94cb49cb1bd30ca46c117ff341506aecaec4c53c53727072a123a3f58d604118",
-        "type": "data",
-        "cape_type": "unknown"
+        "source": "dynamic"
       }
     ],
     "network_iocs": {
@@ -398,29 +57,11 @@
           "sources": [
             "dynamic"
           ]
-        },
-        {
-          "value": "103.235.46.102",
-          "sources": [
-            "dynamic"
-          ]
         }
       ],
       "urls": [
         {
-          "value": "http://www.microsoft.com/pki/certs/CSPCA.crt0",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://crl.microsoft.com/pki/crl/products/tspca.crl0H",
+          "value": "http://www.microsoft.com/pki/certs/tspca.crt0",
           "sources": [
             "static"
           ]
@@ -432,9 +73,27 @@
           ]
         },
         {
-          "value": "http://www.microsoft.com/pki/certs/tspca.crt0",
+          "value": "http://www.microsoft.com/pki/certs/CSPCA.crt0",
           "sources": [
             "static"
+          ]
+        },
+        {
+          "value": "http://crl.microsoft.com/pki/crl/products/tspca.crl0H",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://www.baidu.com/",
+          "sources": [
+            "dynamic"
           ]
         }
       ],
@@ -599,6 +258,18 @@
           ]
         },
         {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Cached\\{289AF617-1CC3-42A6-926C-E6A863F0E3BA} {ADD8BA80-002B-11D0-8F0F-00C04FD7D062} 0xFFFF",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Cached\\{35786D3C-B075-49B9-88DD-029876E11C01} {ADD8BA80-002B-11D0-8F0F-00C04FD7D062} 0xFFFF",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
           "value": "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\MiniFilterDrv\\Instances",
           "sources": [
             "dynamic"
@@ -629,7 +300,13 @@
           ]
         },
         {
-          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Security and Maintenance\\Checks\\{852FB1F8-5CC6-4567-9C0E-7C330F8807C2}.check.100\\CheckSetting",
+          "value": "HKEY_CURRENT_USER\\Software\\Classes\\Local Settings\\MuiCache\\b\\417C44EB\\@C:\\Windows\\ImmersiveControlPanel\\systemsettings.exe,-650",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\UFH\\SHC\\2",
           "sources": [
             "dynamic"
           ]
@@ -641,31 +318,25 @@
           ]
         },
         {
-          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CloudStore\\Store\\Cache\\DefaultAccount\\$de${f02e4223-9380-472e-b51a-5055a5b7b6c5}$$windows.data.unifiedtile.localstartvolatiletilepropertiesmap\\Current\\Data",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Security and Maintenance\\Checks\\{E8433B72-5842-4d43-8645-BC2C35960837}.check.101\\CheckSetting",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Security and Maintenance\\Checks\\{C8E6F269-B90A-4053-A3BE-499AFCEC98C4}.check.0\\CheckSetting",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Security and Maintenance\\Checks\\{E8433B72-5842-4d43-8645-BC2C35960837}.check.100\\CheckSetting",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\jvaqbjf.vzzrefvirpbagebycnary_pj5a1u2gklrjl!zvpebfbsg.jvaqbjf.vzzrefvirpbagebycnary",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Security and Maintenance\\Checks\\{E8433B72-5842-4d43-8645-BC2C35960837}.check.102\\CheckSetting",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\HRZR_PGYFRFFVBA",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ActivityDataModel\\ReaderRevisionInfo\\1CD40912-DB90-BFB2-A30B-84B429687ADE",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Cortana\\IsAvailable",
           "sources": [
             "dynamic"
           ]
@@ -677,55 +348,637 @@
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Orchestrator\\UpdateManagerCtorFailures",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Search\\TraySearchBoxVisibleOnAnyMonitor",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsSelfHost\\FIDs\\AllFlights",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Notifications\\QuietHours",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\ETag",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Notifications\\QuietHours\\QuietHoursServiceState",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\LastUpdated",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\Shell\\Bags\\1\\Desktop\\IconLayouts",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\LastRefreshAttempted",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\Shell\\Bags\\1\\Desktop\\IconNameVersion",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\RefreshInterval",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.3g2\\OpenWithProgids\\WMP11.AssocFile.3G2",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\LastHTTPCode",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.3gp\\OpenWithProgids\\WMP11.AssocFile.3GP",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\QueryStringHash",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.3gp2\\OpenWithProgids\\WMP11.AssocFile.3G2",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsSelfHost\\ClientState\\CurrentCallsPerDayCount",
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.3gpp\\OpenWithProgids\\WMP11.AssocFile.3GP",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.aac\\OpenWithProgids\\WMP11.AssocFile.ADTS",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.adt\\OpenWithProgids\\WMP11.AssocFile.ADTS",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.adts\\OpenWithProgids\\WMP11.AssocFile.ADTS",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.aif\\OpenWithProgids\\WMP11.AssocFile.AIFF",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.aifc\\OpenWithProgids\\WMP11.AssocFile.AIFF",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.aiff\\OpenWithProgids\\WMP11.AssocFile.AIFF",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.asf\\OpenWithProgids\\WMP11.AssocFile.ASF",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.asx\\OpenWithProgids\\WMP11.AssocFile.ASX",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.au\\OpenWithProgids\\WMP11.AssocFile.AU",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.avi\\OpenWithProgids\\WMP11.AssocFile.AVI",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.bmp\\OpenWithProgids\\Paint.Picture",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.cab\\OpenWithProgids\\CABFolder",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.cdxml\\OpenWithProgids\\Microsoft.PowerShellCmdletDefinitionXML.1",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.css\\OpenWithProgids\\CSSfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.dds\\OpenWithProgids\\ddsfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.dib\\OpenWithProgids\\Paint.Picture",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.dll\\OpenWithProgids\\dllfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.docx\\OpenWithProgids\\docxfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.emf\\OpenWithProgids\\emffile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.exe\\OpenWithProgids\\exefile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.flac\\OpenWithProgids\\WMP11.AssocFile.FLAC",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.fon\\OpenWithProgids\\fonfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.gif\\OpenWithProgids\\giffile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.htm\\OpenWithProgids\\htmlfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.html\\OpenWithProgids\\htmlfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.ico\\OpenWithProgids\\icofile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.inf\\OpenWithProgids\\inffile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.ini\\OpenWithProgids\\inifile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.jfif\\OpenWithProgids\\pjpegfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.jpe\\OpenWithProgids\\jpegfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.jpeg\\OpenWithProgids\\jpegfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.jpg\\OpenWithProgids\\jpegfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.jxr\\OpenWithProgids\\wdpfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.lnk\\OpenWithProgids\\lnkfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.m1v\\OpenWithProgids\\WMP11.AssocFile.MPEG",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.m2t\\OpenWithProgids\\WMP11.AssocFile.M2TS",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.m2ts\\OpenWithProgids\\WMP11.AssocFile.M2TS",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.m2v\\OpenWithProgids\\WMP11.AssocFile.MPEG",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.m3u\\OpenWithProgids\\WMP11.AssocFile.m3u",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.m4a\\OpenWithProgids\\WMP11.AssocFile.M4A",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.m4v\\OpenWithProgids\\WMP11.AssocFile.MP4",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mht\\OpenWithProgids\\mhtmlfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mhtml\\OpenWithProgids\\mhtmlfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mid\\OpenWithProgids\\WMP11.AssocFile.MIDI",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.midi\\OpenWithProgids\\WMP11.AssocFile.MIDI",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mk3d\\OpenWithProgids\\WMP11.AssocFile.MK3D",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mka\\OpenWithProgids\\WMP11.AssocFile.MKA",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mkv\\OpenWithProgids\\WMP11.AssocFile.MKV",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mod\\OpenWithProgids\\WMP11.AssocFile.MPEG",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mov\\OpenWithProgids\\WMP11.AssocFile.MOV",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.MP2\\OpenWithProgids\\WMP11.AssocFile.MP3",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mp2v\\OpenWithProgids\\WMP11.AssocFile.MPEG",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mp3\\OpenWithProgids\\WMP11.AssocFile.MP3",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mp4\\OpenWithProgids\\WMP11.AssocFile.MP4",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mp4v\\OpenWithProgids\\WMP11.AssocFile.MP4",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mpa\\OpenWithProgids\\WMP11.AssocFile.MPEG",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.MPE\\OpenWithProgids\\WMP11.AssocFile.MPEG",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mpeg\\OpenWithProgids\\WMP11.AssocFile.MPEG",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mpg\\OpenWithProgids\\WMP11.AssocFile.MPEG",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mpv2\\OpenWithProgids\\WMP11.AssocFile.MPEG",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.mts\\OpenWithProgids\\WMP11.AssocFile.M2TS",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.ocx\\OpenWithProgids\\ocxfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.odt\\OpenWithProgids\\odtfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.otf\\OpenWithProgids\\otffile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.png\\OpenWithProgids\\pngfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.ps1\\OpenWithProgids\\Microsoft.PowerShellScript.1",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.ps1xml\\OpenWithProgids\\Microsoft.PowerShellXMLData.1",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.psd1\\OpenWithProgids\\Microsoft.PowerShellData.1",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.psm1\\OpenWithProgids\\Microsoft.PowerShellModule.1",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.pssc\\OpenWithProgids\\Microsoft.PowerShellSessionConfiguration.1",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.rle\\OpenWithProgids\\rlefile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.rmi\\OpenWithProgids\\WMP11.AssocFile.MIDI",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.rtf\\OpenWithProgids\\rtffile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.scf\\OpenWithProgids\\SHCmdFile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.search-ms\\OpenWithProgids\\SearchFolder",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.snd\\OpenWithProgids\\WMP11.AssocFile.AU",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.sys\\OpenWithProgids\\sysfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.tif\\OpenWithProgids\\TIFImage.Document",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.tiff\\OpenWithProgids\\TIFImage.Document",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.TS\\OpenWithProgids\\WMP11.AssocFile.TTS",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.ttc\\OpenWithProgids\\ttcfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.ttf\\OpenWithProgids\\ttffile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.TTS\\OpenWithProgids\\WMP11.AssocFile.TTS",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.txt\\OpenWithProgids\\txtfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.wav\\OpenWithProgids\\WMP11.AssocFile.WAV",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.wax\\OpenWithProgids\\WMP11.AssocFile.WAX",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.wdp\\OpenWithProgids\\wdpfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.wm\\OpenWithProgids\\WMP11.AssocFile.ASF",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.wma\\OpenWithProgids\\WMP11.AssocFile.WMA",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.wmf\\OpenWithProgids\\wmffile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.wmv\\OpenWithProgids\\WMP11.AssocFile.WMV",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.wmx\\OpenWithProgids\\WMP11.AssocFile.ASX",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.WPL\\OpenWithProgids\\WMP11.AssocFile.WPL",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.wvx\\OpenWithProgids\\WMP11.AssocFile.WVX",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.xml\\OpenWithProgids\\xmlfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.xsl\\OpenWithProgids\\xslfile",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\.zip\\OpenWithProgids\\CompressedFolder",
           "sources": [
             "dynamic"
           ]
@@ -733,13 +986,13 @@
       ],
       "file_paths": [
         {
-          "value": "C:\\Program Files\\DirectX",
+          "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\local.rs",
           "sources": [
             "static"
           ]
         },
         {
-          "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\local.rs",
+          "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\sys\\thread_local\\native\\lazy.rs",
           "sources": [
             "static"
           ]
@@ -751,7 +1004,7 @@
           ]
         },
         {
-          "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\sys\\thread_local\\native\\lazy.rs",
+          "value": "C:\\Program Files\\DirectX",
           "sources": [
             "static"
           ]
@@ -765,67 +1018,235 @@
       ],
       "mutexes": [
         {
-          "value": "Local\\SM0:6528:304:WilStaging_02",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
           "value": "cversions.3.m",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "Local\\__DDrawCheckExclMode__",
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_idx.db!rwWriterMutex",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "Local\\MSCTF.Asm.MutexDefault1",
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_16.db!dfMaintainer",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "CicLoadWinStaWinSta0",
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_32.db!dfMaintainer",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "Local\\MSCTF.CtfMonitorInstMutexDefault1",
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_48.db!dfMaintainer",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "Local\\SM0:5516:304:WilStaging_02",
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_96.db!dfMaintainer",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "Global\\MoUsoCoreworkerRunning",
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_256.db!dfMaintainer",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "Local\\SM0:9120:120:WilError_03",
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_768.db!dfMaintainer",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "Local\\SM0:9120:304:WilStaging_02",
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_1280.db!dfMaintainer",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "Local\\SM0:868:168:WilStaging_02",
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_1920.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_2560.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_sr.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_wide.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_exif.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_wide_alternate.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_custom_stream.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_idx.db!IconCacheInit",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:iconcache_idx.db!rwReaderRefs",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!rwWriterMutex",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_16.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_32.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_48.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_96.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_256.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_768.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_1280.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_1920.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_2560.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_sr.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_wide.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_exif.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_wide_alternate.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_custom_stream.db!dfMaintainer",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!ThumbnailCacheInit",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!rwReaderRefs",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Local\\SM0:3928:120:WilError_03",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!118",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Local\\SM0:3784:120:WilError_03",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Local\\SM0:3784:304:WilStaging_02",
           "sources": [
             "dynamic"
           ]
@@ -1031,14 +1452,6 @@
           "confidence": "high",
           "name": "",
           "justification": "CAPE signature 'unbacked_memory_network_connection' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "contains_pe_overlay",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'contains_pe_overlay' fired (severity=2, confidence=100%, categories=['static'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -1066,26 +1479,10 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "hardware_id_profiling",
+          "evidence": "antivm_display",
           "confidence": "high",
           "name": "",
-          "justification": "CAPE signature 'hardware_id_profiling' fired (severity=3, confidence=80%, categories=['evasion', 'recon', 'anti-sandbox'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "antisandbox_windows_activation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'antisandbox_windows_activation' fired (severity=3, confidence=100%, categories=['anti_sandbox', 'evasion', 'discovery'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "antivm_checks_available_memory",
-          "confidence": "low",
-          "name": "",
-          "justification": "CAPE signature 'antivm_checks_available_memory' fired (severity=1, confidence=100%, categories=['antivm'])"
+          "justification": "CAPE signature 'antivm_display' fired (severity=3, confidence=100%, categories=['anti-vm'])"
         },
         {
           "source": "dynamic",
@@ -1279,14 +1676,6 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "antisandbox_windows_activation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'antisandbox_windows_activation' fired (severity=3, confidence=100%, categories=['anti_sandbox', 'evasion', 'discovery'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
           "evidence": "unbacked_delay_execution",
           "confidence": "high",
           "name": "",
@@ -1432,14 +1821,6 @@
           "confidence": "high",
           "name": "",
           "justification": "CAPE signature 'unbacked_library_load' fired (severity=3, confidence=100%, categories=['evasion', 'execution', 'fileless'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "dropper",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'dropper' fired (severity=2, confidence=50%, categories=['dropper'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -1538,22 +1919,6 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "antisandbox_unhook",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'antisandbox_unhook' fired (severity=3, confidence=60%, categories=['anti-sandbox'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "antisandbox_unhook",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'antisandbox_unhook' fired (severity=3, confidence=60%, categories=['anti-sandbox'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
           "evidence": "unbacked_exception_filter",
           "confidence": "high",
           "name": "",
@@ -1581,14 +1946,6 @@
           "confidence": "medium",
           "name": "",
           "justification": "CAPE signature 'allocated_memory_protection_noaccess' fired (severity=2, confidence=100%, categories=['evasion', 'stealth', 'defense_evasion', 'obfuscation'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "pe_section_vsize_rsize_anomaly",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'pe_section_vsize_rsize_anomaly' fired (severity=2, confidence=50%, categories=['packer', 'static'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -1635,6 +1992,52 @@
           "confidence": "medium",
           "name": "",
           "justification": "CAPE signature 'dllload_suspicious_directory' fired (severity=2, confidence=50%, categories=['side loading'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1003",
+      "technique_name": "OS Credential Dumping",
+      "final_confidence": "low",
+      "confidence_score": 30,
+      "sources": [
+        "dynamic"
+      ],
+      "static_best_confidence": null,
+      "dynamic_best_confidence": "low",
+      "evidence": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "infostealer_browser",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'infostealer_browser' fired (severity=3, confidence=30%, categories=['infostealer'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1005",
+      "technique_name": "Data from Local System",
+      "final_confidence": "low",
+      "confidence_score": 30,
+      "sources": [
+        "dynamic"
+      ],
+      "static_best_confidence": null,
+      "dynamic_best_confidence": "low",
+      "evidence": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "infostealer_browser",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'infostealer_browser' fired (severity=3, confidence=30%, categories=['infostealer'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -1717,15 +2120,107 @@
       ],
       "cross_level_corroboration": false,
       "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1552",
+      "technique_name": "Unsecured Credentials",
+      "final_confidence": "low",
+      "confidence_score": 30,
+      "sources": [
+        "dynamic"
+      ],
+      "static_best_confidence": null,
+      "dynamic_best_confidence": "low",
+      "evidence": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "infostealer_browser",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'infostealer_browser' fired (severity=3, confidence=30%, categories=['infostealer'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1552.001",
+      "technique_name": "Unsecured Credentials: Credentials In Files",
+      "final_confidence": "low",
+      "confidence_score": 30,
+      "sources": [
+        "dynamic"
+      ],
+      "static_best_confidence": null,
+      "dynamic_best_confidence": "low",
+      "evidence": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "infostealer_browser",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'infostealer_browser' fired (severity=3, confidence=30%, categories=['infostealer'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1555",
+      "technique_name": "Credentials from Password Stores",
+      "final_confidence": "low",
+      "confidence_score": 30,
+      "sources": [
+        "dynamic"
+      ],
+      "static_best_confidence": null,
+      "dynamic_best_confidence": "low",
+      "evidence": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "infostealer_browser",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'infostealer_browser' fired (severity=3, confidence=30%, categories=['infostealer'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1555.003",
+      "technique_name": "Credentials from Password Stores: Credentials from Web Browsers",
+      "final_confidence": "low",
+      "confidence_score": 30,
+      "sources": [
+        "dynamic"
+      ],
+      "static_best_confidence": null,
+      "dynamic_best_confidence": "low",
+      "evidence": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "infostealer_browser",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'infostealer_browser' fired (severity=3, confidence=30%, categories=['infostealer'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
     }
   ],
   "summary": {
-    "total_techniques": 20,
+    "total_techniques": 26,
     "high": 15,
     "medium": 3,
-    "low": 2,
+    "low": 8,
     "both_sources": 3,
     "static_only": 4,
-    "dynamic_only": 13
+    "dynamic_only": 19
   }
 }

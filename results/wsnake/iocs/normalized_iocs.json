@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T21:20:51.815640+00:00",
+  "generated_at": "2026-08-28T14:37:01.063887+00:00",
   "sources": {
-    "static_report": "static/reports/wsnake/sample_static.json",
-    "dynamic_report": "dynamic/reports/wsnake/dynamic_report.json"
+    "static_report": "/home/martin/malwhere/static/reports/wsnake/sample_static.json",
+    "dynamic_report": "/home/martin/malwhere/dynamic/reports/wsnake/dynamic_report.json"
   },
   "sample": {
     "family": "wsnake",
@@ -15,13 +15,13 @@
     "static_tlsh": "T1C2D3B496B2959FA1D99A8C7E81B25730037059068EC1FF0599DEF1902DC32C8EB176EF",
     "static_filename": "sample.exe",
     "static_file_type": "pe_dotnet",
-    "dynamic_sha256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312",
-    "dynamic_md5": "ea08b197bbe8bc874a5c65500db03bf2",
-    "dynamic_filename": "binary",
-    "dynamic_file_type": "PE32 executable (GUI) Intel 80386 Mono/.Net assembly, for MS Windows",
-    "hash_match": true,
-    "malscore": 9.0,
-    "malstatus": "Malicious",
+    "dynamic_sha256": "",
+    "dynamic_md5": "",
+    "dynamic_filename": "",
+    "dynamic_file_type": "",
+    "hash_match": false,
+    "malscore": 0.0,
+    "malstatus": null,
     "family_detections": []
   },
   "hashes": [
@@ -36,51 +36,11 @@
     },
     {
       "role": "primary_sample",
-      "source": "dynamic",
-      "sha256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312",
-      "md5": "ea08b197bbe8bc874a5c65500db03bf2",
-      "sha1": "3cbe0f9a6bb6c1600e196d3c2b54132c72ccce0d",
-      "filename": "binary",
-      "type": "PE32 executable (GUI) Intel 80386 Mono/.Net assembly, for MS Windows"
-    },
-    {
-      "role": "dropped_file",
-      "source": "dynamic",
-      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
-      "md5": "c4ca4238a0b923820dcc509a6f75849b",
-      "sha1": "356a192b7913b04c54574d18c28d46e6395428ab",
-      "filename": "report.lock",
-      "type": "very short file (no magic)"
-    },
-    {
-      "role": "cape_payload",
-      "source": "dynamic",
-      "sha256": "13927b77dc514837e5f4e3f4cbcd4a19466bf9e75d8a11358b1fa6ec71aab382",
-      "md5": "3890320f641e91e763b0f962538439ad",
-      "sha1": "7ee2117082636b1e17dab4f3fd5865195440f54f",
-      "filename": "13927b77dc514837e5f4e3f4cbcd4a19466bf9e75d8a11358b1fa6ec71aab382",
-      "type": "data",
-      "cape_type": "Unpacked Shellcode"
-    },
-    {
-      "role": "cape_payload",
-      "source": "dynamic",
-      "sha256": "fde560b18e281fe765b8bc729160c4da71a3f3c9dc1dca7143f0414b8af524e9",
-      "md5": "d5c9ab0f44f0ef2aa04d43505b0fae62",
-      "sha1": "9ad1083ef1018b178873d6650bb050f3e0af49c0",
-      "filename": "fde560b18e281fe765b8bc729160c4da71a3f3c9dc1dca7143f0414b8af524e9",
-      "type": "data",
-      "cape_type": "Unpacked Shellcode"
+      "source": "dynamic"
     }
   ],
   "network_iocs": {
     "domains": [
-      {
-        "value": "90f364fdc014e0961d460c2d63103332.afd.footprintdns.com",
-        "sources": [
-          "dynamic"
-        ]
-      },
       {
         "value": "ip-api.com",
         "sources": [
@@ -94,303 +54,118 @@
         "sources": [
           "dynamic"
         ]
-      },
+      }
+    ],
+    "urls": [
       {
-        "value": "47.96.78.224",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "38.60.191.38",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "101.126.19.171",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "101.132.223.26",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "101.43.160.136",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "129.151.109.160",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "47.110.140.182",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "168.138.211.88",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "18.228.80.130",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "41.87.207.180",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "8.134.71.132",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "138.2.92.67",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "8.219.110.16",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "66.42.56.128",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "154.9.207.142",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "44.228.161.50",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "192.99.196.191",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "107.161.20.142",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "159.203.174.113",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "116.202.101.219",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "185.217.98.121",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "95.216.147.179",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "5.196.181.135",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "45.82.65.63",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "194.164.198.113",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "206.189.109.146",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "46.4.73.118",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "167.99.138.249",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "206.166.251.4",
+        "value": "http://ip-api.com/line?fields=query,country",
         "sources": [
           "dynamic"
         ]
       }
     ],
-    "urls": [],
     "emails": []
   },
   "host_iocs": {
     "registry_paths": [
       {
-        "value": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Tracing\\sample_RASAPI32",
+        "value": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Tracing\\wsnake_RASAPI32",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\EnableFileTracing",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\EnableFileTracing",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\EnableAutoFileTracing",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\EnableAutoFileTracing",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\EnableConsoleTracing",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\EnableConsoleTracing",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\FileTracingMask",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\FileTracingMask",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\ConsoleTracingMask",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\ConsoleTracingMask",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\MaxFileSize",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\MaxFileSize",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\FileDirectory",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\FileDirectory",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Tracing\\sample_RASMANCS",
+        "value": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Tracing\\wsnake_RASMANCS",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\EnableFileTracing",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\EnableFileTracing",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\EnableAutoFileTracing",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\EnableAutoFileTracing",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\EnableConsoleTracing",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\EnableConsoleTracing",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\FileTracingMask",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\FileTracingMask",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\ConsoleTracingMask",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\ConsoleTracingMask",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\MaxFileSize",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\MaxFileSize",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\FileDirectory",
+        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\FileDirectory",
         "sources": [
           "dynamic"
         ]
       },
       {
         "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows\\IPSEC\\Policy\\Local",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "HKEY_LOCAL_MACHINE\\Software\\Policies\\Microsoft\\PeerDist",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\PeerDist\\Service\\HTTPExtension",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\PeerDist\\CacheMgr\\CacheRescalingFactor",
         "sources": [
           "dynamic"
         ]
@@ -411,13 +186,19 @@
         ]
       },
       {
-        "value": "Local\\SM0:676:304:WilStaging_02",
+        "value": "Local\\SM0:4224:304:WilStaging_02",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "Local\\SM0:5560:304:WilStaging_02",
+        "value": "Local\\SM0:5492:120:WilError_03",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "Local\\SM0:5492:304:WilStaging_02",
         "sources": [
           "dynamic"
         ]
@@ -470,19 +251,6 @@
       ]
     },
     {
-      "technique": "T1027",
-      "observations": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_crypto_operations",
-          "confidence": "low",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_crypto_operations' fired (severity=3, confidence=40%, categories=['evasion', 'c2', 'fileless', 'obfuscation', 'shellcode'])"
-        }
-      ]
-    },
-    {
       "technique": "T1033",
       "observations": [
         {
@@ -526,14 +294,6 @@
           "confidence": "high",
           "name": "",
           "justification": "CAPE signature 'antivm_wmi' fired (severity=3, confidence=80%, categories=['anti-vm'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_com_instantiation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_com_instantiation' fired (severity=3, confidence=80%, categories=['execution', 'discovery', 'lateral_movement', 'fileless'])"
         }
       ]
     },
@@ -583,6 +343,14 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
+          "evidence": "resumethread_remote_process",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'resumethread_remote_process' fired (severity=2, confidence=100%, categories=['injection', 'unpacking'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
           "evidence": "unbacked_api_resolution",
           "confidence": "high",
           "name": "",
@@ -595,43 +363,6 @@
           "confidence": "low",
           "name": "",
           "justification": "CAPE signature 'unbacked_memory_protection_alteration' fired (severity=3, confidence=20%, categories=['evasion', 'stealth', 'fileless', 'shellcode'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_mutex_creation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_mutex_creation' fired (severity=3, confidence=100%, categories=['execution', 'evasion', 'fileless'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_process_creation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_process_creation' fired (severity=3, confidence=100%, categories=['execution', 'evasion', 'fileless'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_memory_network_connection",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_memory_network_connection' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
-        }
-      ]
-    },
-    {
-      "technique": "T1057",
-      "observations": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_process_enumeration",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_process_enumeration' fired (severity=3, confidence=100%, categories=['discovery', 'fileless', 'reconnaissance', 'shellcode'])"
         }
       ]
     },
@@ -657,32 +388,6 @@
       ]
     },
     {
-      "technique": "T1070",
-      "observations": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "pe_compile_timestomping",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'pe_compile_timestomping' fired (severity=3, confidence=100%, categories=['generic'])"
-        }
-      ]
-    },
-    {
-      "technique": "T1070.006",
-      "observations": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "pe_compile_timestomping",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'pe_compile_timestomping' fired (severity=3, confidence=100%, categories=['generic'])"
-        }
-      ]
-    },
-    {
       "technique": "T1071",
       "observations": [
         {
@@ -696,18 +401,10 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "unbacked_dns_resolution",
-          "confidence": "high",
+          "evidence": "reads_memory_remote_process",
+          "confidence": "medium",
           "name": "",
-          "justification": "CAPE signature 'unbacked_dns_resolution' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_memory_network_connection",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_memory_network_connection' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
+          "justification": "CAPE signature 'reads_memory_remote_process' fired (severity=2, confidence=100%, categories=['memory scraping', 'injection'])"
         },
         {
           "source": "dynamic",
@@ -738,22 +435,6 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "hardware_id_profiling",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'hardware_id_profiling' fired (severity=3, confidence=80%, categories=['evasion', 'recon', 'anti-sandbox'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "antisandbox_windows_activation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'antisandbox_windows_activation' fired (severity=3, confidence=100%, categories=['anti_sandbox', 'evasion', 'discovery'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
           "evidence": "antivm_checks_available_memory",
           "confidence": "low",
           "name": "",
@@ -766,43 +447,6 @@
           "confidence": "high",
           "name": "",
           "justification": "CAPE signature 'antivm_wmi' fired (severity=3, confidence=80%, categories=['anti-vm'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "mountpoint_manager_access",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'mountpoint_manager_access' fired (severity=3, confidence=60%, categories=['ransomware', 'wiper', 'discovery'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "mountpoints_volume_discovery",
-          "confidence": "low",
-          "name": "",
-          "justification": "CAPE signature 'mountpoints_volume_discovery' fired (severity=2, confidence=20%, categories=['discovery', 'ransomware', 'wiper'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "discover_registry_mount_points",
-          "confidence": "low",
-          "name": "",
-          "justification": "CAPE signature 'discover_registry_mount_points' fired (severity=2, confidence=20%, categories=['discovery', 'ransomware', 'wiper'])"
-        }
-      ]
-    },
-    {
-      "technique": "T1083",
-      "observations": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "folder_enumeration",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'folder_enumeration' fired (severity=3, confidence=70%, categories=['ransomware', 'wiper', 'infostealer', 'discovery'])"
         }
       ]
     },
@@ -820,19 +464,6 @@
       ]
     },
     {
-      "technique": "T1105",
-      "observations": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_file_dropping",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_file_dropping' fired (severity=3, confidence=100%, categories=['execution', 'exfiltration', 'fileless', 'shellcode'])"
-        }
-      ]
-    },
-    {
       "technique": "T1112",
       "observations": [
         {
@@ -842,14 +473,6 @@
           "confidence": "high",
           "name": "Modify Registry",
           "justification": "The managed .NET API calls Microsoft.Win32.RegistryKey::CreateSubKey, Microsoft.Win32.RegistryKey::DeleteSubKeyTree, Microsoft.Win32.RegistryKey::SetValue were resolved from the assembly's method bodies (call/callvirt/newobj targets, not just type/method names). Multiple corroborating BCL API calls, not one in isolation, is what makes this a strong signal for Modify Registry."
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_registry_modification",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_registry_modification' fired (severity=3, confidence=100%, categories=['persistence', 'evasion', 'fileless'])"
         }
       ]
     },
@@ -966,14 +589,6 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "antisandbox_windows_activation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'antisandbox_windows_activation' fired (severity=3, confidence=100%, categories=['anti_sandbox', 'evasion', 'discovery'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
           "evidence": "antivm_wmi",
           "confidence": "high",
           "name": "",
@@ -982,28 +597,15 @@
       ]
     },
     {
-      "technique": "T1543",
+      "technique": "T1518",
       "observations": [
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "unbacked_service_manipulation",
-          "confidence": "high",
+          "evidence": "amsi_enumeration",
+          "confidence": "low",
           "name": "",
-          "justification": "CAPE signature 'unbacked_service_manipulation' fired (severity=3, confidence=100%, categories=['lateral_movement', 'persistence', 'fileless', 'shellcode'])"
-        }
-      ]
-    },
-    {
-      "technique": "T1547",
-      "observations": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_registry_modification",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_registry_modification' fired (severity=3, confidence=100%, categories=['persistence', 'evasion', 'fileless'])"
+          "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
         }
       ]
     },
@@ -1140,86 +742,20 @@
           "justification": "CAPE signature 'unbacked_library_load' fired (severity=3, confidence=100%, categories=['evasion', 'execution', 'fileless'])"
         }
       ]
+    },
+    {
+      "technique": "T1685",
+      "observations": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "amsi_enumeration",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
+        }
+      ]
     }
   ],
-  "discarded_entries": [
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "domains",
-      "raw_value": "104.212.67.104"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "104.18.33.89"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "172.64.154.167"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "96.16.86.160"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "40.126.53.16"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "96.16.86.208"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "104.212.67.66"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "96.16.86.215"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "96.16.86.212"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "96.16.86.214"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "96.16.86.210"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "96.16.86.219"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "4.242.235.91"
-    }
-  ]
+  "discarded_entries": []
 }

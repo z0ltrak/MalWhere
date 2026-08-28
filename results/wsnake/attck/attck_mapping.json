@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T21:20:57.011781+00:00",
+  "generated_at": "2026-08-28T14:53:28.471719+00:00",
   "sample": {
     "family": "wsnake",
     "static_sha256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312",
@@ -11,13 +11,13 @@
     "static_tlsh": "T1C2D3B496B2959FA1D99A8C7E81B25730037059068EC1FF0599DEF1902DC32C8EB176EF",
     "static_filename": "sample.exe",
     "static_file_type": "pe_dotnet",
-    "dynamic_sha256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312",
-    "dynamic_md5": "ea08b197bbe8bc874a5c65500db03bf2",
-    "dynamic_filename": "binary",
-    "dynamic_file_type": "PE32 executable (GUI) Intel 80386 Mono/.Net assembly, for MS Windows",
-    "hash_match": true,
-    "malscore": 9.0,
-    "malstatus": "Malicious",
+    "dynamic_sha256": "",
+    "dynamic_md5": "",
+    "dynamic_filename": "",
+    "dynamic_file_type": "",
+    "hash_match": false,
+    "malscore": 0.0,
+    "malstatus": null,
     "family_detections": []
   },
   "iocs": {
@@ -33,51 +33,11 @@
       },
       {
         "role": "primary_sample",
-        "source": "dynamic",
-        "sha256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312",
-        "md5": "ea08b197bbe8bc874a5c65500db03bf2",
-        "sha1": "3cbe0f9a6bb6c1600e196d3c2b54132c72ccce0d",
-        "filename": "binary",
-        "type": "PE32 executable (GUI) Intel 80386 Mono/.Net assembly, for MS Windows"
-      },
-      {
-        "role": "dropped_file",
-        "source": "dynamic",
-        "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
-        "md5": "c4ca4238a0b923820dcc509a6f75849b",
-        "sha1": "356a192b7913b04c54574d18c28d46e6395428ab",
-        "filename": "report.lock",
-        "type": "very short file (no magic)"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "13927b77dc514837e5f4e3f4cbcd4a19466bf9e75d8a11358b1fa6ec71aab382",
-        "md5": "3890320f641e91e763b0f962538439ad",
-        "sha1": "7ee2117082636b1e17dab4f3fd5865195440f54f",
-        "filename": "13927b77dc514837e5f4e3f4cbcd4a19466bf9e75d8a11358b1fa6ec71aab382",
-        "type": "data",
-        "cape_type": "Unpacked Shellcode"
-      },
-      {
-        "role": "cape_payload",
-        "source": "dynamic",
-        "sha256": "fde560b18e281fe765b8bc729160c4da71a3f3c9dc1dca7143f0414b8af524e9",
-        "md5": "d5c9ab0f44f0ef2aa04d43505b0fae62",
-        "sha1": "9ad1083ef1018b178873d6650bb050f3e0af49c0",
-        "filename": "fde560b18e281fe765b8bc729160c4da71a3f3c9dc1dca7143f0414b8af524e9",
-        "type": "data",
-        "cape_type": "Unpacked Shellcode"
+        "source": "dynamic"
       }
     ],
     "network_iocs": {
       "domains": [
-        {
-          "value": "90f364fdc014e0961d460c2d63103332.afd.footprintdns.com",
-          "sources": [
-            "dynamic"
-          ]
-        },
         {
           "value": "ip-api.com",
           "sources": [
@@ -91,303 +51,118 @@
           "sources": [
             "dynamic"
           ]
-        },
+        }
+      ],
+      "urls": [
         {
-          "value": "47.96.78.224",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "38.60.191.38",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "101.126.19.171",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "101.132.223.26",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "101.43.160.136",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "129.151.109.160",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "47.110.140.182",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "168.138.211.88",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "18.228.80.130",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "41.87.207.180",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "8.134.71.132",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "138.2.92.67",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "8.219.110.16",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "66.42.56.128",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "154.9.207.142",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "44.228.161.50",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "192.99.196.191",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "107.161.20.142",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "159.203.174.113",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "116.202.101.219",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "185.217.98.121",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "95.216.147.179",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "5.196.181.135",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "45.82.65.63",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "194.164.198.113",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "206.189.109.146",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "46.4.73.118",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "167.99.138.249",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "206.166.251.4",
+          "value": "http://ip-api.com/line?fields=query,country",
           "sources": [
             "dynamic"
           ]
         }
       ],
-      "urls": [],
       "emails": []
     },
     "host_iocs": {
       "registry_paths": [
         {
-          "value": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Tracing\\sample_RASAPI32",
+          "value": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Tracing\\wsnake_RASAPI32",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\EnableFileTracing",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\EnableFileTracing",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\EnableAutoFileTracing",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\EnableAutoFileTracing",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\EnableConsoleTracing",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\EnableConsoleTracing",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\FileTracingMask",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\FileTracingMask",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\ConsoleTracingMask",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\ConsoleTracingMask",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\MaxFileSize",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\MaxFileSize",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\FileDirectory",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASAPI32\\FileDirectory",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Tracing\\sample_RASMANCS",
+          "value": "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Tracing\\wsnake_RASMANCS",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\EnableFileTracing",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\EnableFileTracing",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\EnableAutoFileTracing",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\EnableAutoFileTracing",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\EnableConsoleTracing",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\EnableConsoleTracing",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\FileTracingMask",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\FileTracingMask",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\ConsoleTracingMask",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\ConsoleTracingMask",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\MaxFileSize",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\MaxFileSize",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\FileDirectory",
+          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\wsnake_RASMANCS\\FileDirectory",
           "sources": [
             "dynamic"
           ]
         },
         {
           "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows\\IPSEC\\Policy\\Local",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "HKEY_LOCAL_MACHINE\\Software\\Policies\\Microsoft\\PeerDist",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\PeerDist\\Service\\HTTPExtension",
-          "sources": [
-            "dynamic"
-          ]
-        },
-        {
-          "value": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\PeerDist\\CacheMgr\\CacheRescalingFactor",
           "sources": [
             "dynamic"
           ]
@@ -408,13 +183,19 @@
           ]
         },
         {
-          "value": "Local\\SM0:676:304:WilStaging_02",
+          "value": "Local\\SM0:4224:304:WilStaging_02",
           "sources": [
             "dynamic"
           ]
         },
         {
-          "value": "Local\\SM0:5560:304:WilStaging_02",
+          "value": "Local\\SM0:5492:120:WilError_03",
+          "sources": [
+            "dynamic"
+          ]
+        },
+        {
+          "value": "Local\\SM0:5492:304:WilStaging_02",
           "sources": [
             "dynamic"
           ]
@@ -470,7 +251,7 @@
     },
     {
       "technique_id": "T1016",
-      "technique_name": "Unknown ATT&CK technique (T1016)",
+      "technique_name": "System Network Configuration Discovery",
       "final_confidence": "high",
       "confidence_score": 100,
       "sources": [
@@ -493,7 +274,7 @@
     },
     {
       "technique_id": "T1041",
-      "technique_name": "Unknown ATT&CK technique (T1041)",
+      "technique_name": "Exfiltration Over C2 Channel",
       "final_confidence": "high",
       "confidence_score": 100,
       "sources": [
@@ -541,14 +322,6 @@
           "confidence": "high",
           "name": "",
           "justification": "CAPE signature 'antivm_wmi' fired (severity=3, confidence=80%, categories=['anti-vm'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_com_instantiation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_com_instantiation' fired (severity=3, confidence=80%, categories=['execution', 'discovery', 'lateral_movement', 'fileless'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -609,6 +382,14 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
+          "evidence": "resumethread_remote_process",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'resumethread_remote_process' fired (severity=2, confidence=100%, categories=['injection', 'unpacking'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
           "evidence": "unbacked_api_resolution",
           "confidence": "high",
           "name": "",
@@ -621,53 +402,6 @@
           "confidence": "low",
           "name": "",
           "justification": "CAPE signature 'unbacked_memory_protection_alteration' fired (severity=3, confidence=20%, categories=['evasion', 'stealth', 'fileless', 'shellcode'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_mutex_creation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_mutex_creation' fired (severity=3, confidence=100%, categories=['execution', 'evasion', 'fileless'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_process_creation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_process_creation' fired (severity=3, confidence=100%, categories=['execution', 'evasion', 'fileless'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_memory_network_connection",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_memory_network_connection' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1057",
-      "technique_name": "Process Discovery",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "high",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_process_enumeration",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_process_enumeration' fired (severity=3, confidence=100%, categories=['discovery', 'fileless', 'reconnaissance', 'shellcode'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -705,99 +439,6 @@
       "cross_level_sibling": null
     },
     {
-      "technique_id": "T1070",
-      "technique_name": "Indicator Removal",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "high",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "pe_compile_timestomping",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'pe_compile_timestomping' fired (severity=3, confidence=100%, categories=['generic'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1070.006",
-      "technique_name": "Indicator Removal: Timestomp",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "high",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "pe_compile_timestomping",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'pe_compile_timestomping' fired (severity=3, confidence=100%, categories=['generic'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1071",
-      "technique_name": "Application Layer Protocol",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "high",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "http_request",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'http_request' fired (severity=2, confidence=100%, categories=['network'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_dns_resolution",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_dns_resolution' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_memory_network_connection",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_memory_network_connection' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "recon_checkip",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'recon_checkip' fired (severity=2, confidence=100%, categories=['network', 'discovery'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
       "technique_id": "T1082",
       "technique_name": "System Information Discovery",
       "final_confidence": "high",
@@ -808,22 +449,6 @@
       "static_best_confidence": null,
       "dynamic_best_confidence": "high",
       "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "hardware_id_profiling",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'hardware_id_profiling' fired (severity=3, confidence=80%, categories=['evasion', 'recon', 'anti-sandbox'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "antisandbox_windows_activation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'antisandbox_windows_activation' fired (severity=3, confidence=100%, categories=['anti_sandbox', 'evasion', 'discovery'])"
-        },
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
@@ -839,30 +464,6 @@
           "confidence": "high",
           "name": "",
           "justification": "CAPE signature 'antivm_wmi' fired (severity=3, confidence=80%, categories=['anti-vm'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "mountpoint_manager_access",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'mountpoint_manager_access' fired (severity=3, confidence=60%, categories=['ransomware', 'wiper', 'discovery'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "mountpoints_volume_discovery",
-          "confidence": "low",
-          "name": "",
-          "justification": "CAPE signature 'mountpoints_volume_discovery' fired (severity=2, confidence=20%, categories=['discovery', 'ransomware', 'wiper'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "discover_registry_mount_points",
-          "confidence": "low",
-          "name": "",
-          "justification": "CAPE signature 'discover_registry_mount_points' fired (severity=2, confidence=20%, categories=['discovery', 'ransomware', 'wiper'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -892,39 +493,15 @@
       "cross_level_sibling": null
     },
     {
-      "technique_id": "T1105",
-      "technique_name": "Ingress Tool Transfer",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "high",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_file_dropping",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_file_dropping' fired (severity=3, confidence=100%, categories=['execution', 'exfiltration', 'fileless', 'shellcode'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
       "technique_id": "T1112",
       "technique_name": "Modify Registry",
       "final_confidence": "high",
       "confidence_score": 100,
       "sources": [
-        "dynamic",
         "static"
       ],
       "static_best_confidence": "high",
-      "dynamic_best_confidence": "high",
+      "dynamic_best_confidence": null,
       "evidence": [
         {
           "source": "static",
@@ -933,14 +510,6 @@
           "confidence": "high",
           "name": "Modify Registry",
           "justification": "The managed .NET API calls Microsoft.Win32.RegistryKey::CreateSubKey, Microsoft.Win32.RegistryKey::DeleteSubKeyTree, Microsoft.Win32.RegistryKey::SetValue were resolved from the assembly's method bodies (call/callvirt/newobj targets, not just type/method names). Multiple corroborating BCL API calls, not one in isolation, is what makes this a strong signal for Modify Registry."
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_registry_modification",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_registry_modification' fired (severity=3, confidence=100%, categories=['persistence', 'evasion', 'fileless'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -971,7 +540,7 @@
     },
     {
       "technique_id": "T1115",
-      "technique_name": "Unknown ATT&CK technique (T1115)",
+      "technique_name": "Clipboard Data",
       "final_confidence": "high",
       "confidence_score": 100,
       "sources": [
@@ -1015,64 +584,10 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "antisandbox_windows_activation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'antisandbox_windows_activation' fired (severity=3, confidence=100%, categories=['anti_sandbox', 'evasion', 'discovery'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
           "evidence": "antivm_wmi",
           "confidence": "high",
           "name": "",
           "justification": "CAPE signature 'antivm_wmi' fired (severity=3, confidence=80%, categories=['anti-vm'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1543",
-      "technique_name": "Create or Modify System Process",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "high",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_service_manipulation",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_service_manipulation' fired (severity=3, confidence=100%, categories=['lateral_movement', 'persistence', 'fileless', 'shellcode'])"
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1547",
-      "technique_name": "Boot or Logon Autostart Execution",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "high",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "unbacked_registry_modification",
-          "confidence": "high",
-          "name": "",
-          "justification": "CAPE signature 'unbacked_registry_modification' fired (severity=3, confidence=100%, categories=['persistence', 'evasion', 'fileless'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -1273,6 +788,45 @@
       "cross_level_sibling": null
     },
     {
+      "technique_id": "T1071",
+      "technique_name": "Application Layer Protocol",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "dynamic"
+      ],
+      "static_best_confidence": null,
+      "dynamic_best_confidence": "medium",
+      "evidence": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "http_request",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'http_request' fired (severity=2, confidence=100%, categories=['network'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "reads_memory_remote_process",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'reads_memory_remote_process' fired (severity=2, confidence=100%, categories=['memory scraping', 'injection'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "recon_checkip",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'recon_checkip' fired (severity=2, confidence=100%, categories=['network', 'discovery'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
       "technique_id": "T1074",
       "technique_name": "Data Staged",
       "final_confidence": "medium",
@@ -1290,29 +844,6 @@
           "confidence": "medium",
           "name": "Data Staged",
           "justification": "The malware strings GZipStream, FilenameInZip, ZipFileEntry indicate an archive-building engine bundling data prior to transfer. The same evidence that supports Archive via Utility (T1560.001) also supports Data Staged (T1074) -- collecting data into an archive format is a form of staging it before exfiltration."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1083",
-      "technique_name": "File and Directory Discovery",
-      "final_confidence": "medium",
-      "confidence_score": 60,
-      "sources": [
-        "dynamic"
-      ],
-      "static_best_confidence": null,
-      "dynamic_best_confidence": "medium",
-      "evidence": [
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "folder_enumeration",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'folder_enumeration' fired (severity=3, confidence=70%, categories=['ransomware', 'wiper', 'infostealer', 'discovery'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -1343,7 +874,7 @@
     },
     {
       "technique_id": "T1123",
-      "technique_name": "Unknown ATT&CK technique (T1123)",
+      "technique_name": "Audio Capture",
       "final_confidence": "medium",
       "confidence_score": 60,
       "sources": [
@@ -1366,7 +897,7 @@
     },
     {
       "technique_id": "T1132",
-      "technique_name": "Unknown ATT&CK technique (T1132)",
+      "technique_name": "Data Encoding",
       "final_confidence": "medium",
       "confidence_score": 60,
       "sources": [
@@ -1389,7 +920,7 @@
     },
     {
       "technique_id": "T1140",
-      "technique_name": "Unknown ATT&CK technique (T1140)",
+      "technique_name": "Deobfuscate/Decode Files or Information",
       "final_confidence": "medium",
       "confidence_score": 60,
       "sources": [
@@ -1412,7 +943,7 @@
     },
     {
       "technique_id": "T1201",
-      "technique_name": "Unknown ATT&CK technique (T1201)",
+      "technique_name": "Password Policy Discovery",
       "final_confidence": "medium",
       "confidence_score": 60,
       "sources": [
@@ -1465,8 +996,8 @@
       "cross_level_sibling": null
     },
     {
-      "technique_id": "T1027",
-      "technique_name": "Obfuscated Files or Information",
+      "technique_id": "T1518",
+      "technique_name": "Software Discovery",
       "final_confidence": "low",
       "confidence_score": 30,
       "sources": [
@@ -1478,10 +1009,33 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "unbacked_crypto_operations",
+          "evidence": "amsi_enumeration",
           "confidence": "low",
           "name": "",
-          "justification": "CAPE signature 'unbacked_crypto_operations' fired (severity=3, confidence=40%, categories=['evasion', 'c2', 'fileless', 'obfuscation', 'shellcode'])"
+          "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1685",
+      "technique_name": "Disable or Modify Tools",
+      "final_confidence": "low",
+      "confidence_score": 30,
+      "sources": [
+        "dynamic"
+      ],
+      "static_best_confidence": null,
+      "dynamic_best_confidence": "low",
+      "evidence": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "amsi_enumeration",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
         }
       ],
       "cross_level_corroboration": false,
@@ -1489,12 +1043,12 @@
     }
   ],
   "summary": {
-    "total_techniques": 34,
-    "high": 24,
+    "total_techniques": 28,
+    "high": 17,
     "medium": 9,
-    "low": 1,
-    "both_sources": 4,
-    "static_only": 12,
-    "dynamic_only": 18
+    "low": 2,
+    "both_sources": 3,
+    "static_only": 13,
+    "dynamic_only": 12
   }
 }

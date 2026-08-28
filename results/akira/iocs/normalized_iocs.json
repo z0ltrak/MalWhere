@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T19:07:15.467604+00:00",
+  "generated_at": "2026-08-28T14:31:43.076385+00:00",
   "sources": {
-    "static_report": "static/reports/akira/sample_static.json",
-    "dynamic_report": "dynamic/reports/akira/dynamic_report.json"
+    "static_report": "/home/martin/malwhere/static/reports/akira/akira_static.json",
+    "dynamic_report": "/home/martin/malwhere/dynamic/reports/akira/dynamic_report.json"
   },
   "sample": {
     "family": "akira",
@@ -13,22 +13,16 @@
     "static_imphash": "f89d971f855e5743dd4d1e73a5da5699",
     "static_ssdeep": "24576:zQagXrs6xiS7Ay/i4NBqThb23KAwcCcoVuqs:zQa36bg4NBqT1VAwfcoVQ",
     "static_tlsh": "T1B1352941A5164AF6F652CABD4A32C42FEEF736050B10DAE75581B23A2F030E92F7C759",
-    "static_filename": "sample.exe",
+    "static_filename": "akira.exe",
     "static_file_type": "pe_dotnet",
-    "dynamic_sha256": "06c2a137c31aae5d02b4d7df61ffd31f1af9a9e59978f15b3f7265cc751bff1f",
-    "dynamic_md5": "aa88621587a40bf353cc07a965e00ee2",
-    "dynamic_filename": "sample.exe",
-    "dynamic_file_type": "PE32+ executable (GUI) x86-64, for MS Windows",
-    "hash_match": true,
-    "malscore": 10.0,
-    "malstatus": "Malicious",
+    "dynamic_sha256": "",
+    "dynamic_md5": "",
+    "dynamic_filename": "",
+    "dynamic_file_type": "",
+    "hash_match": false,
+    "malscore": 0.0,
+    "malstatus": null,
     "family_detections": [
-      {
-        "family": "Akira",
-        "detail_sources": [
-          "Yara"
-        ]
-      },
       {
         "family": "Avaddon",
         "detail_sources": [
@@ -44,45 +38,16 @@
       "sha256": "06c2a137c31aae5d02b4d7df61ffd31f1af9a9e59978f15b3f7265cc751bff1f",
       "md5": "aa88621587a40bf353cc07a965e00ee2",
       "sha1": "dfa5e52cd8a709cd2b479c71c9c06a89990a0e9f",
-      "filename": "sample.exe",
+      "filename": "akira.exe",
       "type": "pe_dotnet"
     },
     {
       "role": "primary_sample",
-      "source": "dynamic",
-      "sha256": "06c2a137c31aae5d02b4d7df61ffd31f1af9a9e59978f15b3f7265cc751bff1f",
-      "md5": "aa88621587a40bf353cc07a965e00ee2",
-      "sha1": "dfa5e52cd8a709cd2b479c71c9c06a89990a0e9f",
-      "filename": "sample.exe",
-      "type": "PE32+ executable (GUI) x86-64, for MS Windows"
-    },
-    {
-      "role": "dropped_file",
-      "source": "dynamic",
-      "sha256": "c0ff2697a726ade5a55968b4ddb73693ec8b014adce0ef110177cc65b5841ea3",
-      "md5": "7c1953c7772becdf24901464ac412001",
-      "sha1": "a24b4b2d15c95a77ae2679c107b0c6e5105430c0",
-      "filename": "akira_readme.txt",
-      "type": "ASCII text, with very long lines (435), with CRLF, CR line terminators"
-    },
-    {
-      "role": "dropped_file",
-      "source": "dynamic",
-      "sha256": "fc2f55e0ef349732fe36f934cfc9bfa4761a1ebd6c5ff2e0aae8c277ca5c3603",
-      "md5": "03cdf2f216f994052bb61905adaec04c",
-      "sha1": "8241146bb0dc4f264583c335fb8f8e5aa4fe862c",
-      "filename": "Log-11-08-2026-13-54-16.txt",
-      "type": "ASCII text, with CRLF line terminators"
+      "source": "dynamic"
     }
   ],
   "network_iocs": {
     "domains": [
-      {
-        "value": "akiral2iz6a7qgd3ayp3l6yub7xx2uep76idk3u2kollpj5z3z636bad.onion",
-        "sources": [
-          "static"
-        ]
-      },
       {
         "value": "akiralkzxzq2dsrzsrvbr2xgbbu2wgsmxryd4csgfameg52n7efvr2id.onion",
         "sources": [
@@ -90,27 +55,14 @@
         ]
       },
       {
-        "value": "github.com",
-        "sources": [
-          "dynamic"
-        ]
-      }
-    ],
-    "ips": [
-      {
-        "value": "140.82.121.3",
-        "sources": [
-          "dynamic"
-        ]
-      }
-    ],
-    "urls": [
-      {
-        "value": "https://akiral2iz6a7qgd3ayp3l6yub7xx2uep76idk3u2kollpj5z3z636bad.onion.",
+        "value": "akiral2iz6a7qgd3ayp3l6yub7xx2uep76idk3u2kollpj5z3z636bad.onion",
         "sources": [
           "static"
         ]
-      },
+      }
+    ],
+    "ips": [],
+    "urls": [
       {
         "value": "https://akiralkzxzq2dsrzsrvbr2xgbbu2wgsmxryd4csgfameg52n7efvr2id.onion/d/6937967676-AWUMG",
         "sources": [
@@ -119,6 +71,12 @@
       },
       {
         "value": "https://www.torproject.org/download/.",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "https://akiral2iz6a7qgd3ayp3l6yub7xx2uep76idk3u2kollpj5z3z636bad.onion.",
         "sources": [
           "static"
         ]
@@ -139,18 +97,252 @@
         "sources": [
           "dynamic"
         ]
-      }
-    ],
-    "file_paths": [],
-    "mutexes": [
+      },
       {
-        "value": "Local\\SM0:1000:304:WilStaging_02",
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0001\\RegFiles0000",
         "sources": [
           "dynamic"
         ]
       },
       {
-        "value": "Local\\SM0:7164:304:WilStaging_02",
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0001\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0002\\RegFiles0000",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0002\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0002\\Sequence",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0001\\Sequence",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0000\\Sequence",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0003\\RegFiles0000",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0003\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0004\\RegFiles0000",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0004\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0005\\RegFiles0000",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0005\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0006\\RegFiles0000",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0006\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0004\\Sequence",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0003\\Sequence",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0005\\Sequence",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0006\\Sequence",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0008\\RegFiles0000",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0008\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0009\\RegFiles0000",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0009\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0007\\RegFiles0000",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0007\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0010\\RegFiles0000",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0010\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0011\\RegFiles0000",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0011\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0011\\Sequence",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0010\\Sequence",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0012\\RegFiles0000",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0012\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0013\\RegFiles0000",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\RestartManager\\Session0013\\RegFilesHash",
+        "sources": [
+          "dynamic"
+        ]
+      }
+    ],
+    "file_paths": [],
+    "mutexes": [
+      {
+        "value": "Local\\SM0:3812:304:WilStaging_02",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "Local\\SM0:3812:120:WilError_03",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "Local\\SM0:2216:304:WilStaging_02",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "Local\\SM0:2796:120:WilError_03",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "Local\\SM0:2796:304:WilStaging_02",
+        "sources": [
+          "dynamic"
+        ]
+      },
+      {
+        "value": "Local\\SM0:4080:304:WilStaging_02",
         "sources": [
           "dynamic"
         ]
@@ -161,44 +353,28 @@
   },
   "technique_observations": [
     {
-      "technique": "T1027",
+      "technique": "T1003",
       "observations": [
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "pe_deep_entrypoint",
-          "confidence": "medium",
+          "evidence": "infostealer_browser",
+          "confidence": "low",
           "name": "",
-          "justification": "CAPE signature 'pe_deep_entrypoint' fired (severity=2, confidence=50%, categories=['packer', 'static'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "pe_tls_callbacks",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'pe_tls_callbacks' fired (severity=2, confidence=50%, categories=['packer', 'anti-debug', 'static'])"
-        },
-        {
-          "source": "dynamic",
-          "source_type": "dynamic_signature",
-          "evidence": "packer_unknown_pe_section_name",
-          "confidence": "medium",
-          "name": "",
-          "justification": "CAPE signature 'packer_unknown_pe_section_name' fired (severity=2, confidence=100%, categories=['packer'])"
+          "justification": "CAPE signature 'infostealer_browser' fired (severity=3, confidence=30%, categories=['infostealer'])"
         }
       ]
     },
     {
-      "technique": "T1027.002",
+      "technique": "T1005",
       "observations": [
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "packer_unknown_pe_section_name",
-          "confidence": "medium",
+          "evidence": "infostealer_browser",
+          "confidence": "low",
           "name": "",
-          "justification": "CAPE signature 'packer_unknown_pe_section_name' fired (severity=2, confidence=100%, categories=['packer'])"
+          "justification": "CAPE signature 'infostealer_browser' fired (severity=3, confidence=30%, categories=['infostealer'])"
         }
       ]
     },
@@ -212,6 +388,27 @@
           "confidence": "medium",
           "name": "",
           "justification": "CAPE signature 'privilege_elevation_check' fired (severity=2, confidence=80%, categories=['discovery', 'privilege_escalation'])"
+        }
+      ]
+    },
+    {
+      "technique": "T1055",
+      "observations": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "creates_suspended_process",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'creates_suspended_process' fired (severity=2, confidence=50%, categories=['injection', 'process hollowing'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "resumethread_remote_process",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'resumethread_remote_process' fired (severity=2, confidence=100%, categories=['injection', 'unpacking'])"
         }
       ]
     },
@@ -288,6 +485,19 @@
           "confidence": "high",
           "name": "Application Layer Protocol",
           "justification": "Found 2 .onion URLs in the binary. Onion URLs are characteristic of Tor-based command and control (T1071), indicating the malware can communicate via the Tor network."
+        }
+      ]
+    },
+    {
+      "technique": "T1082",
+      "observations": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "discover_registry_mount_points",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'discover_registry_mount_points' fired (severity=2, confidence=20%, categories=['discovery', 'ransomware', 'wiper'])"
         }
       ]
     },
@@ -374,18 +584,18 @@
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "mass_ransom_note_drop",
-          "confidence": "high",
+          "evidence": "ransomware_file_modifications",
+          "confidence": "medium",
           "name": "",
-          "justification": "CAPE signature 'mass_ransom_note_drop' fired (severity=3, confidence=100%, categories=['ransomware'])"
+          "justification": "CAPE signature 'ransomware_file_modifications' fired (severity=3, confidence=50%, categories=['ransomware', 'wiper'])"
         },
         {
           "source": "dynamic",
           "source_type": "dynamic_signature",
-          "evidence": "ransomware_message",
+          "evidence": "mass_ransom_note_drop",
           "confidence": "high",
           "name": "",
-          "justification": "CAPE signature 'ransomware_message' fired (severity=3, confidence=100%, categories=['ransomware'])"
+          "justification": "CAPE signature 'mass_ransom_note_drop' fired (severity=3, confidence=100%, categories=['ransomware'])"
         },
         {
           "source": "dynamic",
@@ -448,6 +658,79 @@
       ]
     },
     {
+      "technique": "T1518",
+      "observations": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "amsi_enumeration",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
+        }
+      ]
+    },
+    {
+      "technique": "T1552",
+      "observations": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "infostealer_browser",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'infostealer_browser' fired (severity=3, confidence=30%, categories=['infostealer'])"
+        }
+      ]
+    },
+    {
+      "technique": "T1552.001",
+      "observations": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "infostealer_browser",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'infostealer_browser' fired (severity=3, confidence=30%, categories=['infostealer'])"
+        }
+      ]
+    },
+    {
+      "technique": "T1555",
+      "observations": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "infostealer_browser",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'infostealer_browser' fired (severity=3, confidence=30%, categories=['infostealer'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "credential_access_via_windows_credential_history",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'credential_access_via_windows_credential_history' fired (severity=2, confidence=100%, categories=['credentials'])"
+        }
+      ]
+    },
+    {
+      "technique": "T1555.003",
+      "observations": [
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "infostealer_browser",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'infostealer_browser' fired (severity=3, confidence=30%, categories=['infostealer'])"
+        }
+      ]
+    },
+    {
       "technique": "T1622",
       "observations": [
         {
@@ -486,76 +769,17 @@
           "confidence": "medium",
           "name": "Disable or Modify Tools",
           "justification": "The API functions OpenProcess, TerminateProcess, WTSEnumerateProcessesW are all imported by the binary. This is a coherent enumerate-then-kill primitive: deliberately searching the process list (WTSEnumerateProcessesW) rather than acting on a handle already held, then opening and terminating a match. Consistent with Disable or Modify Tools (T1685) even without a decrypted target name to confirm which process is targeted -- medium rather than high confidence for that reason."
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "amsi_enumeration",
+          "confidence": "low",
+          "name": "",
+          "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
         }
       ]
     }
   ],
-  "discarded_entries": [
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "domains",
-      "raw_value": "www.msftconnecttest.com"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "185.43.182.25 (www.msftconnecttest.com)"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "2.20.253.87 (www.msftconnecttest.com)"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "2.20.253.75 (www.msftconnecttest.com)"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "96.16.86.160"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "40.126.53.9"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "20.231.128.66"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "20.190.181.23"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "20.190.181.3"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "40.126.53.6"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "dynamic",
-      "field": "hosts",
-      "raw_value": "40.126.53.16"
-    }
-  ]
+  "discarded_entries": []
 }

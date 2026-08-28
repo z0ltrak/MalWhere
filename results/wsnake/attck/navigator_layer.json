@@ -78,7 +78,7 @@
       "techniqueID": "T1047",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic+static corroborated; evidence: System.Management.ManagementClass::GetInstances, System.Management.ManagementObjectSearcher::Get, antivm_wmi, unbacked_com_instantiation",
+      "comment": "dynamic+static corroborated; evidence: System.Management.ManagementClass::GetInstances, System.Management.ManagementObjectSearcher::Get, antivm_wmi",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -96,7 +96,7 @@
       "techniqueID": "T1055",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic+static corroborated; evidence: OpenProcess, ReadProcessMemory, VirtualQueryEx, ReadProcessMemory, VirtualQueryEx, creates_suspended_process, registers_vectored_exception_handler, unbacked_api_resolution, unbacked_memory_network_connection, unbacked_memory_protection_alteration, unbacked_mutex_creation, unbacked_process_creation",
+      "comment": "dynamic+static corroborated; evidence: OpenProcess, ReadProcessMemory, VirtualQueryEx, ReadProcessMemory, VirtualQueryEx, creates_suspended_process, registers_vectored_exception_handler, resumethread_remote_process, unbacked_api_resolution, unbacked_memory_protection_alteration",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -107,24 +107,6 @@
         {
           "name": "sources",
           "value": "dynamic, static"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1057",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: unbacked_process_enumeration",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
         }
       ]
     },
@@ -147,64 +129,10 @@
       ]
     },
     {
-      "techniqueID": "T1070",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: pe_compile_timestomping",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1070.006",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: pe_compile_timestomping",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1071",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: http_request, recon_checkip, unbacked_dns_resolution, unbacked_memory_network_connection",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
       "techniqueID": "T1082",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: antisandbox_windows_activation, antivm_checks_available_memory, antivm_wmi, discover_registry_mount_points, hardware_id_profiling, mountpoint_manager_access, mountpoints_volume_discovery",
+      "comment": "dynamic corroborated; evidence: antivm_checks_available_memory, antivm_wmi",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -237,28 +165,10 @@
       ]
     },
     {
-      "techniqueID": "T1105",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: unbacked_file_dropping",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
       "techniqueID": "T1112",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic+static corroborated; evidence: Microsoft.Win32.RegistryKey::CreateSubKey, Microsoft.Win32.RegistryKey::DeleteSubKeyTree, Microsoft.Win32.RegistryKey::SetValue, unbacked_registry_modification",
+      "comment": "static corroborated; evidence: Microsoft.Win32.RegistryKey::CreateSubKey, Microsoft.Win32.RegistryKey::DeleteSubKeyTree, Microsoft.Win32.RegistryKey::SetValue",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -268,7 +178,7 @@
         },
         {
           "name": "sources",
-          "value": "dynamic, static"
+          "value": "static"
         }
       ]
     },
@@ -312,7 +222,7 @@
       "techniqueID": "T1497",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic+static corroborated; evidence: 1 mutexes found, antisandbox_windows_activation, antivm_wmi",
+      "comment": "dynamic+static corroborated; evidence: 1 mutexes found, antivm_wmi",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -323,42 +233,6 @@
         {
           "name": "sources",
           "value": "dynamic, static"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1543",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: unbacked_service_manipulation",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1547",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: unbacked_registry_modification",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
         }
       ]
     },
@@ -471,6 +345,24 @@
       ]
     },
     {
+      "techniqueID": "T1071",
+      "score": 60,
+      "color": "#ffe766",
+      "comment": "dynamic corroborated; evidence: http_request, reads_memory_remote_process, recon_checkip",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "medium"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
+        }
+      ]
+    },
+    {
       "techniqueID": "T1074",
       "score": 60,
       "color": "#ffe766",
@@ -485,24 +377,6 @@
         {
           "name": "sources",
           "value": "static"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1083",
-      "score": 60,
-      "color": "#ffe766",
-      "comment": "dynamic corroborated; evidence: folder_enumeration",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "medium"
-        },
-        {
-          "name": "sources",
-          "value": "dynamic"
         }
       ]
     },
@@ -615,10 +489,28 @@
       ]
     },
     {
-      "techniqueID": "T1027",
+      "techniqueID": "T1518",
       "score": 30,
       "color": "#8ec843",
-      "comment": "dynamic corroborated; evidence: unbacked_crypto_operations",
+      "comment": "dynamic corroborated; evidence: amsi_enumeration",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "low"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1685",
+      "score": 30,
+      "color": "#8ec843",
+      "comment": "dynamic corroborated; evidence: amsi_enumeration",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [

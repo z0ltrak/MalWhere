@@ -130,6 +130,18 @@ TECHNIQUE_NAME_FALLBACK = {
     "T1567.003": "Exfiltration Over Web Service: Exfiltration to Text Storage Sites",
     "T1567.004": "Exfiltration Over Web Service: Exfiltration Over Webhook",
     "T1048.003": "Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol",
+    # 2nd validation round (2026-08-28), after the CAPE agent-fingerprinting
+    # fix restored real dynamic coverage — new technique IDs surfaced across
+    # the 3 samples that weren't present in the first, degraded-dynamic run.
+    "T1016": "System Network Configuration Discovery",
+    "T1041": "Exfiltration Over C2 Channel",
+    "T1115": "Clipboard Data",
+    "T1123": "Audio Capture",
+    "T1132": "Data Encoding",
+    "T1140": "Deobfuscate/Decode Files or Information",
+    "T1201": "Password Policy Discovery",
+    "T1518": "Software Discovery",
+    "T1555.003": "Credentials from Password Stores: Credentials from Web Browsers",
 }
 
 _attck_bundle_cache = None
