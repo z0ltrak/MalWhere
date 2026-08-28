@@ -394,19 +394,26 @@ paper.
 
 | Sample | Precision | Recall | F1 | Notes |
 |---|---|---|---|---|
-| Akira (ransomware) | 0.92 | 1.00 | 0.96 | single-stage binary |
-| WhiteSnakeStealer (.NET infostealer) | 1.00 | 0.80 | 0.89 | single-stage binary |
-| RoningLoader (loader only) | 0.85 | 0.68 | 0.76 | parent binary alone |
-| RoningLoader (+ resubmission) | 0.84 | 0.84 | 0.84 | loader + 3 ground-truthed dropped components |
+| Akira (ransomware) | 0.87 | 1.00 | 0.93 | single-stage binary |
+| WhiteSnakeStealer (.NET infostealer) | 0.97 | 0.70 | 0.81 | single-stage binary |
+| RoningLoader (loader only) | 0.95 | 0.77 | 0.85 | parent binary alone |
+| RoningLoader (+ resubmission) | 0.86 | 0.92 | 0.89 | loader + ground-truthed dropped components |
 
 Family-level matching (a parent technique and its sub-technique count as
-the same finding). All 15 discrepancies found across the three samples
-during validation were individually traced to a specific cause: 12 fixed
-pipeline errors (10 outright, plus 2 confidence-calibration corrections
-whose underlying generic evidence remains present, honestly downgraded,
-rather than disappearing — see `docs/limitations.md`), 1 ground-truth
-extraction gap, 2 left open pending independent confirmation. See the
-paper's evaluation and case-studies sections for the full audit.
+the same finding). Every discrepancy against ground truth is individually
+audited against the manual report's full text, not just its own summary
+table: this found and fixed 4 real pipeline detection gaps (2 CAPE
+signature-reliability fixes on Akira, 2 static-detector coverage additions
+on RoningLoader) and 4 ground-truth corrections (3 additions of
+report-confirmed findings the original table-only extraction missed, 1
+removal of a table row that contradicted the same report's own technical
+detail), while confirming the remaining open false positives and missed
+techniques are genuine pipeline limitations or sandbox/evasion
+constraints (WhiteSnakeStealer's per-string encryption and dynamic API
+resolution defeat static string matching by design; its C2 infrastructure
+is unreachable from the network-isolated sandbox) rather than untraced
+gaps. See the paper's evaluation and case-studies sections for the full
+audit.
 
 ### Generality Smoke Test
 
