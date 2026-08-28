@@ -113,6 +113,12 @@ _SIGNATURE_TECHNIQUE_DROP = {
 }
 
 
+# Ports common enough that using them isn't itself a signal -- anything
+# else a C2 host is observed listening on gets flagged as T1571 (Non-
+# Standard Port). Deliberately just the universally-legitimate set
+# (web/DNS/mail/file transfer/remote access), not an exhaustive IANA list.
+_STANDARD_PORTS = {21, 22, 25, 53, 80, 110, 123, 135, 139, 143, 443, 445, 993, 995, 3389}
+
 # Known LOLBin/recon command patterns, checked against CAPE's own
 # executed_commands -- a generic capability, not a per-sample patch: any
 # sample using one of these well-known command patterns is picked up the
@@ -319,7 +325,46 @@ class CapeReportParser:
                 )
 
         mappings.extend(self._map_commands_to_attck(r))
+        mappings.extend(self._map_network_to_attck(r))
         return [m.__dict__ for m in mappings]
+
+    def _map_network_to_attck(self, r: Dict[str, Any]) -> List[ATTACKMapping]:
+        """Flag observed C2 hosts using a port outside _STANDARD_PORTS as T1571.
+
+        network.hosts is already captured as descriptive IOC data (see
+        _parse_network) but never turned into a technique mapping --
+        verified against RoningLoader, whose C2 (202.95.11.173:5551) was
+        otherwise invisible to attck_mappings entirely.
+
+        Args:
+            r: Raw CAPE report.
+
+        Returns:
+            One mapping per distinct non-standard (ip, port) pair observed.
+        """
+        hosts = r.get("network", {}).get("hosts", []) or []
+        mappings: List[ATTACKMapping] = []
+        seen: set = set()
+        for host in hosts:
+            ip = host.get("ip", "")
+            for port in host.get("ports", []) or []:
+                if port in _STANDARD_PORTS or (ip, port) in seen:
+                    continue
+                seen.add((ip, port))
+                mappings.append(
+                    ATTACKMapping(
+                        technique="T1571",
+                        name="",
+                        source="dynamic_network",
+                        evidence=f"{ip}:{port}",
+                        confidence="medium",
+                        justification=(
+                            f"Observed C2 connection to {ip} on port {port}, a protocol/port "
+                            "pairing outside the well-known port set."
+                        ),
+                    )
+                )
+        return mappings
 
     def _map_commands_to_attck(self, r: Dict[str, Any]) -> List[ATTACKMapping]:
         """Check CAPE's raw executed_commands against known LOLBin/recon

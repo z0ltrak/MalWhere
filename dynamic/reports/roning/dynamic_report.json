@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0",
   "source": "cape",
-  "source_report_path": "docker/cape/work/storage/analyses/2/reports/report.json",
-  "cape_task_id": 2,
-  "parsed_at": "2026-08-18T16:15:20.681843+00:00",
+  "source_report_path": "docker/cape/work/storage/analyses/49/reports/report.json",
+  "cape_task_id": 49,
+  "parsed_at": "2026-08-28T21:25:06.193904+00:00",
   "target": {
-    "filename": "binary",
+    "filename": "b0521ad45fd21cdae26a.exe",
     "md5": "73a84cba28d14625441e1b0eac2a67f1",
     "sha1": "813c1de6102e1cc953f86567e972d0e19d9e530a",
     "sha256": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
@@ -15,36 +15,23 @@
   "analysis": {
     "malscore": 9.0,
     "malstatus": "Malicious",
-    "duration_seconds": 234,
-    "started": "2026-08-11 13:15:58",
-    "ended": "2026-08-11 13:19:52",
+    "duration_seconds": 223,
+    "started": "2026-08-28 19:40:55",
+    "ended": "2026-08-28 19:44:38",
     "cape_version": "2.5",
     "family_detections": []
   },
   "signatures": [
     {
-      "name": "antivm_checks_available_memory",
-      "description": "Checks available memory",
-      "severity": 1,
-      "confidence": 100,
-      "categories": [
-        "antivm"
-      ],
-      "ttps": [
-        "T1082"
-      ],
-      "match_count": 6
-    },
-    {
       "name": "dead_connect",
-      "description": "Attempts to connect to a dead IP:Port (4 unique times)",
+      "description": "Attempts to connect to a dead IP:Port (1 unique times)",
       "severity": 1,
       "confidence": 100,
       "categories": [
         "network"
       ],
       "ttps": [],
-      "match_count": 10
+      "match_count": 2
     },
     {
       "name": "queries_keyboard_layout",
@@ -55,7 +42,7 @@
         "location_discovery"
       ],
       "ttps": [],
-      "match_count": 49
+      "match_count": 43
     },
     {
       "name": "queries_locale_api",
@@ -118,19 +105,6 @@
       "match_count": 2
     },
     {
-      "name": "anomalous_deletefile",
-      "description": "Anomalous file deletion behavior detected (10+)",
-      "severity": 2,
-      "confidence": 100,
-      "categories": [
-        "malware"
-      ],
-      "ttps": [
-        "T1485"
-      ],
-      "match_count": 22
-    },
-    {
       "name": "mouse_movement_detect",
       "description": "Checks for mouse movement",
       "severity": 2,
@@ -141,7 +115,7 @@
       "ttps": [
         "T1497"
       ],
-      "match_count": 60
+      "match_count": 14
     },
     {
       "name": "antisandbox_system_parameters_info",
@@ -170,7 +144,7 @@
         "T1033",
         "T1082"
       ],
-      "match_count": 31
+      "match_count": 17
     },
     {
       "name": "query_fips_reconnaissance",
@@ -184,7 +158,7 @@
       "ttps": [
         "T1082"
       ],
-      "match_count": 26
+      "match_count": 11
     },
     {
       "name": "mountpoints_volume_discovery",
@@ -199,7 +173,7 @@
       "ttps": [
         "T1082"
       ],
-      "match_count": 55
+      "match_count": 21
     },
     {
       "name": "dllload_suspicious_directory",
@@ -212,67 +186,7 @@
       "ttps": [
         "T1574"
       ],
-      "match_count": 18
-    },
-    {
-      "name": "allocated_memory_protection_noaccess",
-      "description": "Allocated memory and changed its protection to PAGE_NOACCESS, may be used to hide payloads from memory scanners or to trigger an access violation for exception-driven execution",
-      "severity": 2,
-      "confidence": 100,
-      "categories": [
-        "evasion",
-        "stealth",
-        "defense_evasion",
-        "obfuscation"
-      ],
-      "ttps": [
-        "T1027",
-        "T1055"
-      ],
-      "match_count": 15
-    },
-    {
-      "name": "per_file_acl_token_check",
-      "description": "Performs high-volume NtQueryInformationToken calls for TokenUser and TokenGroups, indicative of wiper/ransomware checking whether it has write permission to each file",
-      "severity": 2,
-      "confidence": 50,
-      "categories": [
-        "wiper",
-        "ransomware"
-      ],
-      "ttps": [
-        "T1485",
-        "T1069"
-      ],
-      "match_count": 2
-    },
-    {
-      "name": "creates_suspended_process",
-      "description": "Creates a process in a suspended state, likely for injection",
-      "severity": 2,
-      "confidence": 50,
-      "categories": [
-        "injection",
-        "process hollowing"
-      ],
-      "ttps": [
-        "T1055"
-      ],
-      "match_count": 1
-    },
-    {
-      "name": "resumethread_remote_process",
-      "description": "Resumed a thread in another process",
-      "severity": 2,
-      "confidence": 100,
-      "categories": [
-        "injection",
-        "unpacking"
-      ],
-      "ttps": [
-        "T1055"
-      ],
-      "match_count": 2
+      "match_count": 12
     },
     {
       "name": "injection_write_process",
@@ -311,7 +225,7 @@
       "ttps": [
         "T1057"
       ],
-      "match_count": 250
+      "match_count": 268
     },
     {
       "name": "process_interest",
@@ -324,7 +238,7 @@
       "ttps": [
         "T1057"
       ],
-      "match_count": 2030
+      "match_count": 2258
     },
     {
       "name": "process_needed",
@@ -337,7 +251,7 @@
       "ttps": [
         "T1057"
       ],
-      "match_count": 213
+      "match_count": 388
     },
     {
       "name": "reads_self",
@@ -349,6 +263,19 @@
       ],
       "ttps": [],
       "match_count": 10
+    },
+    {
+      "name": "network_http",
+      "description": "Performs some HTTP requests",
+      "severity": 2,
+      "confidence": 30,
+      "categories": [
+        "network"
+      ],
+      "ttps": [
+        "T1071"
+      ],
+      "match_count": 1
     },
     {
       "name": "pe_section_vsize_rsize_anomaly",
@@ -390,7 +317,7 @@
       "ttps": [
         "T1082"
       ],
-      "match_count": 12
+      "match_count": 2
     },
     {
       "name": "dropper",
@@ -431,82 +358,7 @@
         "T1543",
         "T1562"
       ],
-      "match_count": 15
-    },
-    {
-      "name": "antisandbox_unhook",
-      "description": "Tries to unhook or modify Windows functions monitored by CAPE",
-      "severity": 3,
-      "confidence": 60,
-      "categories": [
-        "anti-sandbox"
-      ],
-      "ttps": [
-        "T1562.001",
-        "T1562"
-      ],
-      "match_count": 20
-    },
-    {
-      "name": "hardware_id_profiling",
-      "description": "Queries the Volume Serial Number or Physical Hardware ID, possibly for anti-sandbox, victim profiling or environmental keying",
-      "severity": 3,
-      "confidence": 80,
-      "categories": [
-        "evasion",
-        "recon",
-        "anti-sandbox"
-      ],
-      "ttps": [
-        "T1082"
-      ],
-      "match_count": 7
-    },
-    {
-      "name": "antisandbox_windows_activation",
-      "description": "Queries Windows licensing, activation, or genuine status, possibly to detect unactivated sandbox or analysis environments.",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "anti_sandbox",
-        "evasion",
-        "discovery"
-      ],
-      "ttps": [
-        "T1082",
-        "T1497"
-      ],
-      "match_count": 5
-    },
-    {
-      "name": "suspicious_iocontrol_codes",
-      "description": "Uses suspicious IO control codes, indicative of disk enumeration or a bootkit/wiper",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "bootkit",
-        "rootkit",
-        "wiper"
-      ],
-      "ttps": [
-        "T1542.003"
-      ],
-      "match_count": 7
-    },
-    {
-      "name": "mountpoint_manager_access",
-      "description": "Repeatedly opens the MountPointManager device to enumerate drive letters and resolve volume paths to discover all attached drives and network shares",
-      "severity": 3,
-      "confidence": 60,
-      "categories": [
-        "ransomware",
-        "wiper",
-        "discovery"
-      ],
-      "ttps": [
-        "T1082"
-      ],
-      "match_count": 2
+      "match_count": 14
     },
     {
       "name": "install_kernel_driver_service",
@@ -755,7 +607,7 @@
         "network"
       ],
       "ttps": [],
-      "match_count": 6
+      "match_count": 2
     },
     {
       "name": "persistence_autorun",
@@ -770,7 +622,7 @@
         "T1112",
         "T1547"
       ],
-      "match_count": 101
+      "match_count": 59
     },
     {
       "name": "persistence_autorun_tasks",
@@ -784,18 +636,7 @@
         "T1053",
         "T1112"
       ],
-      "match_count": 101
-    },
-    {
-      "name": "infostealer_keylog",
-      "description": "Sniffs keystrokes",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "infostealer"
-      ],
-      "ttps": [],
-      "match_count": 2
+      "match_count": 59
     }
   ],
   "attck_mappings": [
@@ -832,68 +673,12 @@
       "justification": "CAPE signature 'antisandbox_system_parameters_info' fired (severity=2, confidence=50%, categories=['anti-sandbox', 'anti-analysis'])"
     },
     {
-      "technique": "T1685",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "antisandbox_unhook",
-      "confidence": "medium",
-      "justification": "CAPE signature 'antisandbox_unhook' fired (severity=3, confidence=60%, categories=['anti-sandbox'])"
-    },
-    {
-      "technique": "T1685",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "antisandbox_unhook",
-      "confidence": "medium",
-      "justification": "CAPE signature 'antisandbox_unhook' fired (severity=3, confidence=60%, categories=['anti-sandbox'])"
-    },
-    {
-      "technique": "T1082",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "hardware_id_profiling",
-      "confidence": "high",
-      "justification": "CAPE signature 'hardware_id_profiling' fired (severity=3, confidence=80%, categories=['evasion', 'recon', 'anti-sandbox'])"
-    },
-    {
-      "technique": "T1082",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "antisandbox_windows_activation",
-      "confidence": "high",
-      "justification": "CAPE signature 'antisandbox_windows_activation' fired (severity=3, confidence=100%, categories=['anti_sandbox', 'evasion', 'discovery'])"
-    },
-    {
-      "technique": "T1497",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "antisandbox_windows_activation",
-      "confidence": "high",
-      "justification": "CAPE signature 'antisandbox_windows_activation' fired (severity=3, confidence=100%, categories=['anti_sandbox', 'evasion', 'discovery'])"
-    },
-    {
-      "technique": "T1082",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "antivm_checks_available_memory",
-      "confidence": "low",
-      "justification": "CAPE signature 'antivm_checks_available_memory' fired (severity=1, confidence=100%, categories=['antivm'])"
-    },
-    {
       "technique": "T1033",
       "name": "",
       "source": "dynamic_signature",
       "evidence": "privilege_elevation_check",
       "confidence": "medium",
       "justification": "CAPE signature 'privilege_elevation_check' fired (severity=2, confidence=80%, categories=['discovery', 'privilege_escalation'])"
-    },
-    {
-      "technique": "T1082",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "mountpoint_manager_access",
-      "confidence": "medium",
-      "justification": "CAPE signature 'mountpoint_manager_access' fired (severity=3, confidence=60%, categories=['ransomware', 'wiper', 'discovery'])"
     },
     {
       "technique": "T1082",
@@ -910,38 +695,6 @@
       "evidence": "dllload_suspicious_directory",
       "confidence": "medium",
       "justification": "CAPE signature 'dllload_suspicious_directory' fired (severity=2, confidence=50%, categories=['side loading'])"
-    },
-    {
-      "technique": "T1027",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "allocated_memory_protection_noaccess",
-      "confidence": "medium",
-      "justification": "CAPE signature 'allocated_memory_protection_noaccess' fired (severity=2, confidence=100%, categories=['evasion', 'stealth', 'defense_evasion', 'obfuscation'])"
-    },
-    {
-      "technique": "T1055",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "allocated_memory_protection_noaccess",
-      "confidence": "medium",
-      "justification": "CAPE signature 'allocated_memory_protection_noaccess' fired (severity=2, confidence=100%, categories=['evasion', 'stealth', 'defense_evasion', 'obfuscation'])"
-    },
-    {
-      "technique": "T1055",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "creates_suspended_process",
-      "confidence": "medium",
-      "justification": "CAPE signature 'creates_suspended_process' fired (severity=2, confidence=50%, categories=['injection', 'process hollowing'])"
-    },
-    {
-      "technique": "T1055",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "resumethread_remote_process",
-      "confidence": "medium",
-      "justification": "CAPE signature 'resumethread_remote_process' fired (severity=2, confidence=100%, categories=['injection', 'unpacking'])"
     },
     {
       "technique": "T1055",
@@ -1136,6 +889,14 @@
       "justification": "CAPE signature 'process_needed' fired (severity=2, confidence=100%, categories=['generic'])"
     },
     {
+      "technique": "T1071",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "network_http",
+      "confidence": "low",
+      "justification": "CAPE signature 'network_http' fired (severity=2, confidence=30%, categories=['network'])"
+    },
+    {
       "technique": "T1027",
       "name": "",
       "source": "dynamic_signature",
@@ -1166,97 +927,24 @@
       "evidence": "dropper",
       "confidence": "medium",
       "justification": "CAPE signature 'dropper' fired (severity=2, confidence=50%, categories=['dropper'])"
+    },
+    {
+      "technique": "T1571",
+      "name": "",
+      "source": "dynamic_network",
+      "evidence": "202.95.11.173:5551",
+      "confidence": "medium",
+      "justification": "Observed C2 connection to 202.95.11.173 on port 5551, a protocol/port pairing outside the well-known port set."
     }
   ],
   "network": {
     "domains": [
       {
         "domain": "www.baidu.com",
-        "ip": "103.235.46.115"
-      },
-      {
-        "domain": "www.msftconnecttest.com",
-        "ip": "2.20.253.87"
+        "ip": "103.235.46.102"
       }
     ],
     "hosts": [
-      {
-        "ip": "172.64.154.167",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "52.113.196.254",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "108.140.32.194",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "185.43.182.25",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "www.msftconnecttest.com",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "185.43.182.40",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "www.msftconnecttest.com",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "4.242.235.91",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "96.16.86.160",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
       {
         "ip": "202.95.11.173",
         "country_name": "unknown",
@@ -1267,94 +955,6 @@
         "ports": [
           5551
         ]
-      },
-      {
-        "ip": "103.235.46.102",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "www.baidu.com",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "40.126.53.9",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "103.235.46.115",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "www.baidu.com",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "20.231.128.66",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "40.126.53.18",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "20.190.181.3",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "20.190.181.2",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "40.126.53.16",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
       }
     ],
     "dns_requests": [
@@ -1364,50 +964,29 @@
         "answers": [
           {
             "type": "A",
-            "data": "103.235.46.102"
-          },
-          {
-            "type": "A",
-            "data": "103.235.46.115"
-          },
-          {
-            "type": "CNAME",
-            "data": "www.wshifen.com"
-          },
-          {
-            "type": "CNAME",
-            "data": "www.a.shifen.com"
+            "data": "192.168.122.1"
           }
         ],
-        "first_seen": 1786454190.79115
-      },
-      {
-        "request": "www.msftconnecttest.com",
-        "type": "A",
-        "answers": [
-          {
-            "type": "CNAME",
-            "data": "www.msftconnecttest.com.edgesuite.net"
-          },
-          {
-            "type": "A",
-            "data": "185.43.182.40"
-          },
-          {
-            "type": "CNAME",
-            "data": "a39.d.akamai.net"
-          },
-          {
-            "type": "A",
-            "data": "185.43.182.25"
-          }
-        ],
-        "first_seen": 1786454232.551368
+        "first_seen": 1787946073.456267
       }
     ],
-    "http_requests": [],
-    "tcp_count": 0,
-    "udp_count": 44
+    "http_requests": [
+      {
+        "count": 1,
+        "host": "www.baidu.com",
+        "port": 80,
+        "data": "GET / HTTP/1.1\r\nHost: www.baidu.com\r\nAccept: */*\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko\r\n\r\n",
+        "uri": "http://www.baidu.com/",
+        "body": "",
+        "path": "/",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko",
+        "version": "1.1",
+        "method": "GET",
+        "first_seen": 1787946073.474512
+      }
+    ],
+    "tcp_count": 87,
+    "udp_count": 62
   },
   "dropped_files": [
     {
@@ -1440,6 +1019,18 @@
       "md5": "fa7298ceff285e62268fd337b532894b",
       "sha1": "02ec8e672ee8900b4f155ac5503cf1655d808ac5",
       "size": 2858217,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000c.db",
+      "sha256": "eb1cb77acb793bc278c095778a50e0495aa233a8da20564b544b26bf19eeb3a1",
+      "md5": "31700a0389dbc90b9b2d3489f9312d3e",
+      "sha1": "0fe869c2461418930443a7187006c410ecbb4d10",
+      "size": 70040,
       "type": "data",
       "cape_type": "",
       "roles": [
@@ -1531,11 +1122,11 @@
       ]
     },
     {
-      "name": "MoUsoCoreWorker.1b30e5ea-10b4-4df4-9b57-da118bc14b3c.1.etl",
-      "sha256": "417c513be26467c76e973399070df9d73d9ede8048d01c97efb8649b54885b85",
-      "md5": "5b3a2c5687d7c5866f83544018f0c705",
-      "sha1": "cd4f49d3483d33c3887be47399b560c977109b99",
-      "size": 12288,
+      "name": "thumbcache_32.db",
+      "sha256": "48c03aca9f67b0b8665da7df2cda0e30d681e53d4802aaa573f637cfddedd270",
+      "md5": "c34ffaddc4f8351919cc6564e8bb3152",
+      "sha1": "6fd7649b0cc6c0ceea156a37b67aedfa8f156261",
+      "size": 1048576,
       "type": "data",
       "cape_type": "",
       "roles": [
@@ -1579,30 +1170,6 @@
       ]
     },
     {
-      "name": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000d.db",
-      "sha256": "62ad0bf1e4354fdb5e84384469f4d13fb854e573649b27e3367cf730cb401c3e",
-      "md5": "95fb33741c0927c448823a1accd09777",
-      "sha1": "9bfcc36c5c9fe4521e4e1665ae60f708bee8ad92",
-      "size": 70552,
-      "type": "data",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
-      "name": "store.db",
-      "sha256": "7970924667a0549ec2e379b3e05c158ad09e0cb3457061decb3d1c8000442def",
-      "md5": "1f19b959ac41c496d0be64cfd5c0e3b4",
-      "sha1": "c1625af1e4237288a7d6f5819d27a8ad580f1b64",
-      "size": 61440,
-      "type": "SQLite 3.x database, user version 3, last written using SQLite version 3029000, file counter 7, database pages 15, cookie 0x6, schema 4, UTF-16 little endian, version-valid-for 7",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
       "name": "UserInfo.dll",
       "sha256": "4913d4cccf84cd0534069107cff3e8e2f427160cad841547db9019310ac86cc7",
       "md5": "d458b8251443536e4a334147e0170e95",
@@ -1627,12 +1194,36 @@
       ]
     },
     {
+      "name": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000d.db",
+      "sha256": "3368ad0b415e29f8e5339601fd44c7edcac5063be4114c8178fa6f04603f2cbe",
+      "md5": "62c41c8a41b6899f6efd31c3a5b66c18",
+      "sha1": "9e26a7129965dc0247d702408b8fc61780834406",
+      "size": 67952,
+      "type": "data",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
       "name": "66VOAk0O.exe",
       "sha256": "1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9",
       "md5": "082cb645d7b4fabd2ae92ec334049a3e",
       "sha1": "ec25e8244d642fe64bb8d35a0531cbb3a7a9d904",
       "size": 212824,
       "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "cversions.3.db",
+      "sha256": "42e7068b770144eb96ba969990558f0f7f73967ae5b45bbcb119bb63079ca3d4",
+      "md5": "6298e128cdd252cc5ebe65c5e51dafe0",
+      "sha1": "75558818e39497ebb04c33c120758700b432502d",
+      "size": 16384,
+      "type": "firmware e00 v0 (revision 0) `  V2, 16777216 bytes or less, UNKNOWN3 0x1000000, at 0x1000000 0 bytes , at 0 0 bytes ",
       "cape_type": "",
       "roles": [
         "dropped"
@@ -1651,11 +1242,11 @@
       ]
     },
     {
-      "name": "filecoauth-2026-08-11.1218.868.1.odl",
-      "sha256": "1c174ec623a51362bc15e2f8fb3feedae12a8840a8d67e6dee81d6f4efbdc55e",
-      "md5": "f24b640f8d3fa1ac442de0568810edfe",
-      "sha1": "d8ae9cc94d7fe82da5fb37e320cc4a450722c99c",
-      "size": 19268,
+      "name": "thumbcache_idx.db",
+      "sha256": "b04ac1e0078ef05e2065b4429579e420b30ac71855ac36bdabec8ebb7bcffa38",
+      "md5": "c6a291d682339a5a410a032c64b29811",
+      "sha1": "efc1332c753150705e7808536e4c34502a8e3a6e",
+      "size": 7416,
       "type": "data",
       "cape_type": "",
       "roles": [
@@ -1675,47 +1266,11 @@
       ]
     },
     {
-      "name": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000c.db",
-      "sha256": "0b057cadffa2a1fa6c6262b71cda748a40a0a540bc20b7143e4859b1a7bea38a",
-      "md5": "f94a29e3ffba4dbec5c971774498703d",
-      "sha1": "af390420a84ec678c73fa661507a5b75fd3a7a56",
-      "size": 74304,
-      "type": "data",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
-      "name": "cversions.3.db",
-      "sha256": "2fecfb0e3111c22a38200af49555ac0b2f9449be43adce334909ddd42e40ac05",
-      "md5": "2e8750f609ad015b9e5a82a4ded13892",
-      "sha1": "c41d98039c76211803d12cfa03af1c77aaaef021",
-      "size": 16384,
-      "type": "firmware d00 v0 (revision 0) `  V2, 16777216 bytes or less, UNKNOWN3 0x1000000, at 0x1000000 0 bytes , at 0 0 bytes ",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
       "name": "kill.txt",
       "sha256": "56a43b1f30c67304e0202d7d59fb96e8b44d73d7b9f14110b8a6d0bac1c0af66",
       "md5": "aec9a4bc3ee629a305020e6f107f150f",
       "sha1": "c45d08868ad52b38930067b9962e9c8d0ac9d4e9",
       "size": 54262,
-      "type": "data",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
-      "name": "WuProvider.91094383-7a4b-40cd-bca4-e8a41269a0d1.1.etl",
-      "sha256": "8b7be2edaa15781ffa4f0d971361108c7ed724b2b31ab9b369e4ed7646480db8",
-      "md5": "a5ec0d9b54ef42b16a26c5ba521a6e82",
-      "sha1": "dd56e9753f8e292f99198ac8db1a87748a3cf83a",
-      "size": 4096,
       "type": "data",
       "cape_type": "",
       "roles": [
@@ -1741,6 +1296,18 @@
       "sha1": "d0c502f45df55c0465c9406088ff016c2e7e6817",
       "size": 33280,
       "type": "PE32 executable (DLL) (GUI) Intel 80386, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000e.db",
+      "sha256": "40d48e50d30885cdbff5092930095d35cc6e8ee345718f575e65feeda60c3df2",
+      "md5": "db570402151f3abb73e99c6d7c9c70b6",
+      "sha1": "7658569700ac455d46bb48e30b225e9c3a49b8a6",
+      "size": 67288,
+      "type": "data",
       "cape_type": "",
       "roles": [
         "dropped"
@@ -1783,18 +1350,6 @@
       ]
     },
     {
-      "name": "11a6cb1d63a14e4a34aeedc43fa640d782c41533cc02ffdace19c3b5eacc03de",
-      "sha256": "11a6cb1d63a14e4a34aeedc43fa640d782c41533cc02ffdace19c3b5eacc03de",
-      "md5": "08e304e049c8be35e3c08fd1125d1c74",
-      "sha1": "73be3ce547d5a853f33aa2455f23fc1bb50537c2",
-      "size": 2860544,
-      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
-      "cape_type": "Unpacked PE Image: 64-bit executable",
-      "roles": [
-        "cape_payload"
-      ]
-    },
-    {
       "name": "05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5",
       "sha256": "05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5",
       "md5": "c9fae85ee2b0d25f1a302b6192512c33",
@@ -1831,6 +1386,18 @@
       ]
     },
     {
+      "name": "14301c69392c7e13fb9fb4852a321faac8bfc18ed5a32df599476c5b784d19b5",
+      "sha256": "14301c69392c7e13fb9fb4852a321faac8bfc18ed5a32df599476c5b784d19b5",
+      "md5": "c08834cbfa56189ee5261a52eafaa013",
+      "sha1": "9bf58bb220846fe49a0f21f6da584ce3010ad3a0",
+      "size": 2860544,
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "Unpacked PE Image: 64-bit executable",
+      "roles": [
+        "cape_payload"
+      ]
+    },
+    {
       "name": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
       "sha256": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
       "md5": "7a5ba5b73a9a516ac275d2ce8b0dcda4",
@@ -1857,17 +1424,30 @@
   ],
   "host_activity": {
     "mutexes": [
-      "Local\\SM0:6528:304:WilStaging_02",
       "cversions.3.m",
-      "Local\\__DDrawCheckExclMode__",
+      "Local\\SM0:3888:120:WilError_03",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!rwWriterMutex",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_16.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_32.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_48.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_96.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_256.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_768.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_1280.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_1920.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_2560.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_sr.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_wide.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_exif.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_wide_alternate.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_custom_stream.db!dfMaintainer",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!ThumbnailCacheInit",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!rwReaderRefs",
+      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!118",
       "Local\\MSCTF.Asm.MutexDefault1",
       "CicLoadWinStaWinSta0",
       "Local\\MSCTF.CtfMonitorInstMutexDefault1",
-      "Local\\SM0:5516:304:WilStaging_02",
-      "Global\\MoUsoCoreworkerRunning",
-      "Local\\SM0:9120:120:WilError_03",
-      "Local\\SM0:9120:304:WilStaging_02",
-      "Local\\SM0:868:168:WilStaging_02"
+      "Local\\SM0:200:304:WilStaging_02"
     ],
     "created_services": [
       "vally3dka",
@@ -1879,17 +1459,13 @@
       "vally3dka",
       "MicrosoftSoftware2ShadowCop4yProvider",
       "vmservice",
-      "MiniFilterDrv"
+      "MiniFilterDrv",
+      "BthAvctpSvc",
+      "edgeupdate"
     ],
     "commands_executed": [
       "\"C:\\Program Files\\\\Snegreijsmaity\\RDKl4OR6\\Kyl2lh\\66VOAk0O\"",
-      "C:\\Windows\\system32\\DllHost.exe /Processid:{338B40F9-9D68-4B53-A793-6B9AA0C5F63B}",
-      "C:\\Windows\\system32\\DllHost.exe /Processid:{AB8902B4-09CA-4BB6-B78D-A8F59079A8D5}",
-      "\"C:\\Users\\Windows\\AppData\\Local\\Microsoft\\OneDrive\\21.220.1024.0005\\FileCoAuth.exe\" -Embedding",
-      "C:\\Windows\\System32\\mousocoreworker.exe -Embedding",
-      "C:\\Windows\\System32\\CompPkgSrv.exe -Embedding",
-      "C:\\Windows\\system32\\DllHost.exe /Processid:{7966B4D8-4FDC-4126-A10B-39A3209AD251}",
-      "\"C:\\Windows\\system32\\BackgroundTaskHost.exe\" -ServerName:BackgroundTaskHost.WebAccountProvider"
+      "C:\\Windows\\system32\\DllHost.exe /Processid:{AB8902B4-09CA-4BB6-B78D-A8F59079A8D5}"
     ],
     "registry_keys_written": {
       "items": [
@@ -1919,86 +1495,60 @@
         "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\Comments",
         "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\Contact",
         "HKEY_LOCAL_MACHINE\\SOFTWARE\\FlashLink Global\\FlashLink Global\\Readme",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Cached\\{289AF617-1CC3-42A6-926C-E6A863F0E3BA} {ADD8BA80-002B-11D0-8F0F-00C04FD7D062} 0xFFFF",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Cached\\{35786D3C-B075-49B9-88DD-029876E11C01} {ADD8BA80-002B-11D0-8F0F-00C04FD7D062} 0xFFFF",
         "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\MiniFilterDrv\\Instances",
         "HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Services\\MiniFilterDrv\\Instances\\DefaultInstance",
         "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\MiniFilterDrv\\Instances\\MiniFilterDrv Instance",
         "HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Services\\MiniFilterDrv\\Instances\\MiniFilterDrv Instance\\Altitude",
         "HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Services\\MiniFilterDrv\\Instances\\MiniFilterDrv Instance\\Flags",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Security and Maintenance\\Checks\\{852FB1F8-5CC6-4567-9C0E-7C330F8807C2}.check.100\\CheckSetting",
+        "HKEY_CURRENT_USER\\Software\\Classes\\Local Settings\\MuiCache\\b\\417C44EB\\@C:\\Windows\\ImmersiveControlPanel\\systemsettings.exe,-650",
         "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Search\\InstalledWin32AppsRevision",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CloudStore\\Store\\Cache\\DefaultAccount\\$de${f02e4223-9380-472e-b51a-5055a5b7b6c5}$$windows.data.unifiedtile.localstartvolatiletilepropertiesmap\\Current\\Data",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Security and Maintenance\\Checks\\{C8E6F269-B90A-4053-A3BE-499AFCEC98C4}.check.0\\CheckSetting",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\jvaqbjf.vzzrefvirpbagebycnary_pj5a1u2gklrjl!zvpebfbsg.jvaqbjf.vzzrefvirpbagebycnary",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CloudStore\\Store\\Cache\\DefaultAccount\\$de${a992df9f-46d4-4e53-8d9c-7900a61e03af}$$windows.data.unifiedtile.localstartvolatiletilepropertiesmap\\Current\\Data",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SessionInfo\\1\\ApplicationViewManagement\\WRT:Microsoft.WindowsStore_8wekyb3d8bbwe!App+1+000000000005004C",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SessionInfo\\1\\ApplicationViewManagement\\WRT:Microsoft.WindowsStore_8wekyb3d8bbwe!App+1+000000000005004C\\ShowInSwitchers",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SessionInfo\\1\\ApplicationViewManagement\\WRT:Microsoft.WindowsStore_8wekyb3d8bbwe!App+1+000000000005004C\\VirtualDesktop",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SessionInfo\\1\\ImmersiveShell\\PersistedApplicationData\\Volatile\\Microsoft.WindowsStore_8wekyb3d8bbwe!App",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\Zvpebfbsg.JvaqbjfFgber_8jrxlo3q8oojr!Ncc",
         "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\HRZR_PGYFRFFVBA",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ActivityDataModel\\ReaderRevisionInfo\\1CD40912-DB90-BFB2-A30B-84B429687ADE",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Search\\TraySearchBoxVisible",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Orchestrator\\UpdateManagerCtorFailures",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsSelfHost\\FIDs\\AllFlights",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\ETag",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\LastUpdated",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\LastRefreshAttempted",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\RefreshInterval",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\LastHTTPCode",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Wosc\\Client\\Persistent\\ClientState\\WOSC\\QueryStringHash",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\WindowsSelfHost\\ClientState\\CurrentCallsPerDayCount"
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\Zvpebfbsg.Jvaqbjf.Rkcybere"
       ],
-      "total_count": 48,
+      "total_count": 43,
       "truncated": false
     }
   },
   "process_tree": [
     {
       "name": "svchost.exe",
-      "pid": 772,
-      "parent_id": 640,
+      "pid": 708,
+      "parent_id": 580,
       "module_path": "C:\\Windows\\System32\\svchost.exe",
       "children": [
         {
           "name": "dllhost.exe",
-          "pid": 6528,
-          "parent_id": 772,
+          "pid": 200,
+          "parent_id": 708,
           "module_path": "C:\\Windows\\System32\\dllhost.exe",
-          "children": []
-        },
-        {
-          "name": "dllhost.exe",
-          "pid": 5516,
-          "parent_id": 772,
-          "module_path": "C:\\Windows\\System32\\dllhost.exe",
-          "children": []
-        },
-        {
-          "name": "mousocoreworker.exe",
-          "pid": 9120,
-          "parent_id": 772,
-          "module_path": "C:\\Windows\\System32\\mousocoreworker.exe",
-          "children": []
-        },
-        {
-          "name": "FileCoAuth.exe",
-          "pid": 868,
-          "parent_id": 772,
-          "module_path": "C:\\Users\\Windows\\AppData\\Local\\Microsoft\\OneDrive\\21.220.1024.0005\\FileCoAuth.exe",
           "children": []
         }
       ]
     },
     {
       "name": "explorer.exe",
-      "pid": 4484,
-      "parent_id": 4412,
+      "pid": 3888,
+      "parent_id": 3852,
       "module_path": "C:\\Windows\\explorer.exe",
       "children": [
         {
-          "name": "sample.exe",
-          "pid": 2804,
-          "parent_id": 4484,
-          "module_path": "C:\\Users\\Windows\\AppData\\Local\\Temp\\sample.exe",
+          "name": "b0521ad45fd21cdae26a.exe",
+          "pid": 5484,
+          "parent_id": 3888,
+          "module_path": "C:\\Users\\sandbox\\AppData\\Local\\Temp\\b0521ad45fd21cdae26a.exe",
           "children": [
             {
               "name": "66VOAk0O.exe",
-              "pid": 2236,
-              "parent_id": 2804,
+              "pid": 4432,
+              "parent_id": 5484,
               "module_path": "C:\\Program Files\\Snegreijsmaity\\RDKl4OR6\\Kyl2lh\\66VOAk0O.exe",
               "children": []
             }
@@ -2008,24 +1558,6 @@
     }
   ],
   "process_injection_signatures": [
-    {
-      "name": "creates_suspended_process",
-      "description": "Creates a process in a suspended state, likely for injection",
-      "severity": 2,
-      "categories": [
-        "injection",
-        "process hollowing"
-      ]
-    },
-    {
-      "name": "resumethread_remote_process",
-      "description": "Resumed a thread in another process",
-      "severity": 2,
-      "categories": [
-        "injection",
-        "unpacking"
-      ]
-    },
     {
       "name": "injection_write_process",
       "description": "Writes to the memory another process",

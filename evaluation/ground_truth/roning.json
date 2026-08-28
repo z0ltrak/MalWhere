@@ -3,6 +3,12 @@
   "source_report": "manual_analysis/roning/manual_roningloader_report.md",
   "techniques": [
     {
+      "technique_id": "T1027",
+      "name": "Obfuscated Files or Information",
+      "evidence": "Manually confirmed in the report's prose, not the original ATT&CK table: `9ZUPMq.3w` is an RC4-encrypted payload (2.8 MB, Infection Chain Overview) and `goldendays.dll` is stored zlib-compressed (Stage 4C: AV Killer) -- both distinct from T1140's already-recorded decoding step",
+      "source": "manual"
+    },
+    {
       "technique_id": "T1033",
       "name": "System Owner/User Discovery",
       "evidence": "Checks own process token for Administrator/UAC elevation status"
@@ -73,9 +79,10 @@
       "evidence": "RC4-encrypted payload delivery"
     },
     {
-      "technique_id": "T1490",
-      "name": "Inhibit System Recovery",
-      "evidence": "VSS deletion"
+      "technique_id": "T1497",
+      "name": "Virtualization/Sandbox Evasion",
+      "evidence": "Manually confirmed in the report's prose, not the original ATT&CK table (and distinct from the pipeline's own, unsupported T1497 evidence -- see excluded_technique_ids' sibling note on T1490 for the pattern of the analyst's table vs. narrative sometimes disagreeing): `get_idle_status()` (Idle Detection, section 6) returns 0xD6/0x2A for idle/active based on >5 minutes of user inactivity, and the C2 uses this to schedule noisy operations -- functionally MITRE's T1497.002 (User Activity Based Checks), just framed by the analyst as opportunistic stealth rather than explicit sandbox detection",
+      "source": "manual"
     },
     {
       "technique_id": "T1543.003",
@@ -128,5 +135,8 @@
       "evidence": "Event log clearing via PowerShell"
     }
   ],
+  "excluded_technique_ids": {
+    "T1490": "The report's own summary table row (\"Inhibit System Recovery | T1490 | VSS deletion\") contradicts every technical section in the same document -- the function tables, the notes' hex dump of vss_shellcode.bin, and the \"Sophisticated evasion\" summary all describe *injecting shellcode into the VSS service* (vssvc.exe) as a Defender-bypass mechanism, never actual shadow-copy deletion. That's T1055 (already ground-truthed here). No vssadmin/wbadmin/Remove-WmiObject command or equivalent appears anywhere. Removed 2026-08-28 as an apparent mislabeling in the analyst's own table, not a pipeline detection gap -- re-add only if contradicting evidence surfaces."
+  },
   "duplicate_rows_collapsed": 0
 }

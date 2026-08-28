@@ -12,6 +12,13 @@ class StringATTACKMapper:
         'arika': {'technique': 'T1486', 'confidence': 'high'},
         'akira_readme.txt': {'technique': 'T1486', 'confidence': 'high'},
         'WH_KEYBOARD_LL': {'technique': 'T1056.001', 'confidence': 'high'},
+        # DirectInput keylogging: a completely separate API family from
+        # the Win32 hooking below (SetWindowsHookEx/GetAsyncKeyState) --
+        # verified against RoningLoader, whose keylogger uses
+        # DirectInput8Create/DINPUT8.dll exclusively and was missed
+        # entirely until this was added (2026-08-28).
+        'DirectInput8Create': {'technique': 'T1056.001', 'confidence': 'high'},
+        'DINPUT8.dll': {'technique': 'T1056.001', 'confidence': 'high'},
         'expand 32-byte k': {'technique': 'T1486', 'confidence': 'high'},
         'expand 16-byte k': {'technique': 'T1486', 'confidence': 'high'},
         'shadowcopy': {'technique': 'T1490', 'confidence': 'high'},

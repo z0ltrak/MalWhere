@@ -7,6 +7,12 @@ matches `## ... ATT&CK Techni...`, and the table is always
 `| Technique | ID | Implementation |` — including bold `**Technique**`
 cells (WhiteSnake's report), which a naive per-column split regex misses;
 matching directly on the ID column position handles both.
+
+Every technique extracted here is tagged "source": "table". A curator can
+hand-add entries found only in a report's prose (not its ATT&CK table) by
+editing ground_truth/<family>.json directly and tagging them
+"source": "manual" -- extract_ground_truth.py preserves those across a
+re-extraction instead of silently dropping them (see its own docstring).
 """
 
 import re
@@ -66,6 +72,7 @@ def extract_ground_truth(markdown_text: str, family: str, source_report: str) ->
             "technique_id": technique_id,
             "name": _strip_markdown_bold(name),
             "evidence": _strip_markdown_bold(evidence),
+            "source": "table",
         }
 
     techniques: List[Dict[str, Any]] = sorted(seen.values(), key=lambda t: t["technique_id"])
