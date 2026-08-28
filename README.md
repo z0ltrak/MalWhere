@@ -350,8 +350,7 @@ layers target **MITRE ATT&CK v19.2**. CAPE's own community signatures are
 frozen to whichever version they were last written against, so
 signature-sourced technique tags are remapped to their current v19
 identity at curation time (`dynamic/scripts/src/cape_report_parser.py`)
-rather than trusted verbatim; see `docs/limitations.md` for what this
-caught.
+rather than trusted verbatim.
 
 Static rules use a three-tier system to avoid promoting a single generic
 indicator to high confidence on its own:
@@ -376,9 +375,8 @@ binary's own confidence-scored output.
 
 Detection rules currently cover approximately 85 of 474 Windows-relevant
 MITRE ATT&CK techniques, each one sourced directly from MITRE's own
-technique description, not a generic API/tool name alone. See
-[`docs/limitations.md`](docs/limitations.md) for the coverage-extension
-history and what's deliberately out of scope.
+technique description, not a generic API/tool name alone. See the
+paper's limitations section for what's deliberately out of scope.
 
 ---
 
