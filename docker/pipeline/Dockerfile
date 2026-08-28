@@ -1,7 +1,7 @@
 # =============================================================================
 # malwhere — pipeline container
 # Base: Python 3.11 slim
-# Incluye: mitreattack-python, stix2, PyMISP, pandas
+# Incluye: stix2, PyMISP, pandas
 # =============================================================================
 
 FROM python:3.11-slim

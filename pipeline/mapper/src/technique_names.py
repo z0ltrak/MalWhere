@@ -2,15 +2,25 @@
 
 3-tier resolution, never blocks on network (malwhere_net is `internal: true`
 — no egress — see docker-compose.yml):
-  1. --attck-bundle <path>, if given: authoritative names via
-     mitreattack-python's MitreAttackData, matching ATTCK_VERSION.
+  1. --attck-bundle <path>, if given: authoritative names parsed directly out
+     of a local enterprise-attack.json STIX bundle (see fetch_attck_bundle.py
+     for how to get one). Pure stdlib json -- map_attck.py runs on the host,
+     not in the pipeline container, so this module can't depend on a
+     container-only package like mitreattack-python.
   2. Built-in fallback dict below, covering every technique ID actually
      observed across the 3 validated samples' static+dynamic reports.
   3. Generic "Unknown ATT&CK technique (ID)" placeholder — never fails.
 """
 
+import json
 from pathlib import Path
 from typing import Optional
+
+# Where fetch_attck_bundle.py saves the bundle by default; map_attck.py's
+# --attck-bundle argument defaults to this path when it exists, so fetching
+# the bundle once is enough to upgrade every future run to tier 1 with no
+# other changes needed.
+DEFAULT_BUNDLE_PATH = Path(__file__).resolve().parent.parent / "data" / "enterprise-attack.json"
 
 # Curated directly from real data: every technique ID observed in
 # results/{wsnake,roning,akira}/iocs/normalized_iocs.json as of the initial
@@ -154,6 +164,20 @@ _attck_bundle_cache = None
 def _load_bundle_names(bundle_path: Path) -> Optional[dict]:
     """Load and cache technique_id -> name from a local ATT&CK STIX bundle.
 
+    Parses the bundle's `objects` list directly rather than via a STIX
+    library: every attack-pattern object's external_references carries its
+    technique_id (source_name "mitre-attack") alongside the object's own
+    name. Includes revoked/deprecated techniques too, since older CAPE
+    signatures can still reference retired IDs.
+
+    A subtechnique's raw STIX `name` is just its own short name (e.g.
+    "Software Packing", not "Obfuscated Files or Information: Software
+    Packing") -- the parent name lives on a separate attack-pattern object,
+    joined via a "subtechnique-of" relationship. Reconstructs the
+    "Parent: Sub" form here so bundle-sourced names match
+    TECHNIQUE_NAME_FALLBACK's existing convention instead of silently
+    reformatting every subtechnique name the moment a bundle is present.
+
     Args:
         bundle_path: Path to an enterprise-attack.json STIX bundle.
 
@@ -164,17 +188,34 @@ def _load_bundle_names(bundle_path: Path) -> Optional[dict]:
     if _attck_bundle_cache is not None:
         return _attck_bundle_cache
     try:
-        from mitreattack.stix20 import MitreAttackData
+        with open(bundle_path, encoding="utf-8") as f:
+            bundle = json.load(f)
 
-        data = MitreAttackData(str(bundle_path))
-        names = {}
-        for technique in data.get_techniques(remove_revoked_deprecated=False):
-            for ref in technique.get("external_references", []):
+        techniques = [obj for obj in bundle.get("objects", []) if obj.get("type") == "attack-pattern"]
+        name_by_stix_id = {obj["id"]: obj.get("name", "") for obj in techniques if obj.get("id")}
+        technique_id_by_stix_id = {}
+        for obj in techniques:
+            for ref in obj.get("external_references", []):
                 if ref.get("source_name") == "mitre-attack" and ref.get("external_id"):
-                    names[ref["external_id"]] = technique.get("name", "")
+                    technique_id_by_stix_id[obj["id"]] = ref["external_id"]
+                    break
+
+        parent_stix_id_of = {
+            rel["source_ref"]: rel["target_ref"]
+            for rel in bundle.get("objects", [])
+            if rel.get("type") == "relationship" and rel.get("relationship_type") == "subtechnique-of"
+        }
+
+        names = {}
+        for stix_id, technique_id in technique_id_by_stix_id.items():
+            own_name = name_by_stix_id.get(stix_id, "")
+            parent_stix_id = parent_stix_id_of.get(stix_id)
+            parent_name = name_by_stix_id.get(parent_stix_id) if parent_stix_id else None
+            names[technique_id] = f"{parent_name}: {own_name}" if parent_name else own_name
+
         _attck_bundle_cache = names
         return names
-    except Exception:
+    except (OSError, json.JSONDecodeError, KeyError):
         return None
 
 

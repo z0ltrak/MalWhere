@@ -1,5 +1,4 @@
 # ATT&CK
-mitreattack-python==3.0.8
 attackcti==0.5.4
 
 # STIX 2.1
