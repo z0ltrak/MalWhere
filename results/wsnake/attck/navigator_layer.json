@@ -96,7 +96,7 @@
       "techniqueID": "T1055",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic+static corroborated; evidence: OpenProcess, ReadProcessMemory, VirtualQueryEx, ReadProcessMemory, VirtualQueryEx, creates_suspended_process, registers_vectored_exception_handler, resumethread_remote_process, unbacked_api_resolution, unbacked_memory_protection_alteration",
+      "comment": "dynamic+static corroborated; evidence: OpenProcess, ReadProcessMemory, VirtualQueryEx, ReadProcessMemory, VirtualQueryEx, registers_vectored_exception_handler, unbacked_api_resolution, unbacked_memory_protection_alteration",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -129,10 +129,46 @@
       ]
     },
     {
+      "techniqueID": "T1070",
+      "score": 100,
+      "color": "#e60d0d",
+      "comment": "dynamic corroborated; evidence: pe_compile_timestomping",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "high"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1070.006",
+      "score": 100,
+      "color": "#e60d0d",
+      "comment": "dynamic corroborated; evidence: pe_compile_timestomping",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "high"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
+        }
+      ]
+    },
+    {
       "techniqueID": "T1082",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "dynamic corroborated; evidence: antivm_checks_available_memory, antivm_wmi",
+      "comment": "dynamic corroborated; evidence: antivm_checks_available_memory, antivm_wmi, recon_programs",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -348,7 +384,7 @@
       "techniqueID": "T1071",
       "score": 60,
       "color": "#ffe766",
-      "comment": "dynamic corroborated; evidence: http_request, reads_memory_remote_process, recon_checkip",
+      "comment": "dynamic corroborated; evidence: http_request, network_cnc_http, network_http, recon_checkip",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -489,10 +525,28 @@
       ]
     },
     {
+      "techniqueID": "T1012",
+      "score": 30,
+      "color": "#8ec843",
+      "comment": "dynamic corroborated; evidence: recon_programs",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "low"
+        },
+        {
+          "name": "sources",
+          "value": "dynamic"
+        }
+      ]
+    },
+    {
       "techniqueID": "T1518",
       "score": 30,
       "color": "#8ec843",
-      "comment": "dynamic corroborated; evidence: amsi_enumeration",
+      "comment": "dynamic corroborated; evidence: amsi_enumeration, recon_programs",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [

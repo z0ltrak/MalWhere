@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-28T20:11:05.457600+00:00",
+  "sources": {
+    "static_report": "static/reports/wsnake/51fb8cdaa208b0cf4a05c2a36e97f53ff3740dbb3ca5bf4c827201d324973057_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "wsnake",
+    "static_sha256": "51fb8cdaa208b0cf4a05c2a36e97f53ff3740dbb3ca5bf4c827201d324973057",
+    "static_md5": "8dc5a025aeea197b847e2aa7aa12296c",
+    "static_sha1": "4e6c198a292104fc163b50516e57bef16b28fcc4",
+    "static_imphash": null,
+    "static_ssdeep": "3:XRaLmlQ+vlvQMyluVDE6ANy/lllL:BaLSQ+9f2u+y//B",
+    "static_tlsh": "T1E2B0228F0BE00022C0222230C008F2C0E3CF3CBBC308802E3C003200A33080E0C2ACC3",
+    "static_filename": "51fb8cdaa208b0cf4a05c2a36e97f53ff3740dbb3ca5bf4c827201d324973057",
+    "static_file_type": "unknown"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "51fb8cdaa208b0cf4a05c2a36e97f53ff3740dbb3ca5bf4c827201d324973057",
+      "md5": "8dc5a025aeea197b847e2aa7aa12296c",
+      "sha1": "4e6c198a292104fc163b50516e57bef16b28fcc4",
+      "filename": "51fb8cdaa208b0cf4a05c2a36e97f53ff3740dbb3ca5bf4c827201d324973057",
+      "type": "unknown"
+    }
+  ],
+  "network_iocs": {
+    "domains": [],
+    "ips": [],
+    "urls": [],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [],
+  "discarded_entries": []
+}

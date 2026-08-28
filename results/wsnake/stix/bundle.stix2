@@ -1,23 +1,23 @@
 {
     "type": "bundle",
-    "id": "bundle--a8de8ecd-5d39-4888-8b37-276d37cefff6",
+    "id": "bundle--9832e12c-3a20-4759-bd1d-9e5c5182d06c",
     "objects": [
         {
             "type": "identity",
             "spec_version": "2.1",
-            "id": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.147791Z",
-            "modified": "2026-08-28T18:09:52.147791Z",
+            "id": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.017455Z",
+            "modified": "2026-08-28T20:11:06.017455Z",
             "name": "MalWhere Threat Intelligence Pipeline",
             "identity_class": "organization"
         },
         {
             "type": "malware",
             "spec_version": "2.1",
-            "id": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.147977Z",
-            "modified": "2026-08-28T18:09:52.147977Z",
+            "id": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.017621Z",
+            "modified": "2026-08-28T20:11:06.017621Z",
             "name": "wsnake",
             "malware_types": [
                 "unknown"
@@ -27,13 +27,35 @@
         {
             "type": "file",
             "spec_version": "2.1",
-            "id": "file--9cbff82e-7c14-5ed4-9641-6f4f7b7b7cbf",
+            "id": "file--d24d12e1-0350-55b8-beea-909f242d9608",
             "hashes": {
                 "MD5": "ea08b197bbe8bc874a5c65500db03bf2",
                 "SHA-1": "3cbe0f9a6bb6c1600e196d3c2b54132c72ccce0d",
                 "SHA-256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312"
             },
-            "name": "sample.exe"
+            "name": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312.exe"
+        },
+        {
+            "type": "file",
+            "spec_version": "2.1",
+            "id": "file--243d464a-50e6-585c-9a10-f0b5a944f9d3",
+            "hashes": {
+                "MD5": "c3fe6ea383b5030b1a1815566e522422",
+                "SHA-1": "812d5eca95a174ec8e3f7ca9a55569870c0a5782",
+                "SHA-256": "acaef1b6633d71eeb23b1a24d1fe02d2e5cf2cbb54428fa61ad2b23ce5f6634b"
+            },
+            "name": "acaef1b6633d71eeb23b1a24d1fe02d2e5cf2cbb54428fa61ad2b23ce5f6634b"
+        },
+        {
+            "type": "file",
+            "spec_version": "2.1",
+            "id": "file--c034f167-8e56-51d5-89b3-372debdec9a7",
+            "hashes": {
+                "MD5": "8dc5a025aeea197b847e2aa7aa12296c",
+                "SHA-1": "4e6c198a292104fc163b50516e57bef16b28fcc4",
+                "SHA-256": "51fb8cdaa208b0cf4a05c2a36e97f53ff3740dbb3ca5bf4c827201d324973057"
+            },
+            "name": "51fb8cdaa208b0cf4a05c2a36e97f53ff3740dbb3ca5bf4c827201d324973057"
         },
         {
             "type": "domain-name",
@@ -48,171 +70,405 @@
             "value": "208.95.112.1"
         },
         {
+            "type": "ipv4-addr",
+            "spec_version": "2.1",
+            "id": "ipv4-addr--fe90cc77-7093-5479-92ea-178a240fbfe7",
+            "value": "167.99.138.249"
+        },
+        {
+            "type": "ipv4-addr",
+            "spec_version": "2.1",
+            "id": "ipv4-addr--050448f6-dc10-5972-ba11-b00250a01dc8",
+            "value": "206.166.251.4"
+        },
+        {
             "type": "url",
             "spec_version": "2.1",
             "id": "url--a7362b07-792d-555c-89f1-7233aeaae02b",
             "value": "http://ip-api.com/line?fields=query,country"
         },
         {
+            "type": "url",
+            "spec_version": "2.1",
+            "id": "url--4a25a2cc-81ba-5940-82ad-fcc286b65e33",
+            "value": "http://206.166.251.4:8080/Zteoi_sandbox%40DESKTOP-EBJM4FV_report.wsr"
+        },
+        {
+            "type": "url",
+            "spec_version": "2.1",
+            "id": "url--1885acfd-7c7f-551b-89e0-f96bde405285",
+            "value": "http://167.99.138.249:8080/Zteoi_sandbox%40DESKTOP-EBJM4FV_report.wsr"
+        },
+        {
             "type": "observed-data",
             "spec_version": "2.1",
-            "id": "observed-data--f51817ce-7f5b-4dc0-b28f-7421de3167c9",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.149495Z",
-            "modified": "2026-08-28T18:09:52.149495Z",
-            "first_observed": "2026-08-28T18:09:52.149479Z",
-            "last_observed": "2026-08-28T18:09:52.149481Z",
+            "id": "observed-data--846d9491-d504-4ac1-84ba-ac3630760c83",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.019616Z",
+            "modified": "2026-08-28T20:11:06.019616Z",
+            "first_observed": "2026-08-28T20:11:06.019596Z",
+            "last_observed": "2026-08-28T20:11:06.019597Z",
             "number_observed": 1,
             "object_refs": [
-                "file--9cbff82e-7c14-5ed4-9641-6f4f7b7b7cbf",
+                "file--d24d12e1-0350-55b8-beea-909f242d9608",
+                "file--243d464a-50e6-585c-9a10-f0b5a944f9d3",
+                "file--c034f167-8e56-51d5-89b3-372debdec9a7",
                 "domain-name--37b1aad0-b5ba-50cf-880d-f3f12740c2c5",
                 "ipv4-addr--14526caf-f706-5b3e-bfc3-504b6120ef8f",
-                "url--a7362b07-792d-555c-89f1-7233aeaae02b"
+                "ipv4-addr--fe90cc77-7093-5479-92ea-178a240fbfe7",
+                "ipv4-addr--050448f6-dc10-5972-ba11-b00250a01dc8",
+                "url--a7362b07-792d-555c-89f1-7233aeaae02b",
+                "url--4a25a2cc-81ba-5940-82ad-fcc286b65e33",
+                "url--1885acfd-7c7f-551b-89e0-f96bde405285"
             ]
         },
         {
             "type": "indicator",
             "spec_version": "2.1",
-            "id": "indicator--883025e9-1f9c-4457-9b17-5d8f29961840",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.149664Z",
-            "modified": "2026-08-28T18:09:52.149664Z",
+            "id": "indicator--44f39f95-4841-4d83-8efd-a1fe5fca3a47",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.019815Z",
+            "modified": "2026-08-28T20:11:06.019815Z",
             "pattern": "[file:hashes.'SHA-256' = '03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312']",
             "pattern_type": "stix",
             "pattern_version": "2.1",
-            "valid_from": "2026-08-28T18:09:52.149657Z"
+            "valid_from": "2026-08-28T20:11:06.019809Z"
         },
         {
             "type": "indicator",
             "spec_version": "2.1",
-            "id": "indicator--35c83649-8472-45ec-a62f-d346972c2b4a",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.154716Z",
-            "modified": "2026-08-28T18:09:52.154716Z",
+            "id": "indicator--5a69a793-ce3e-4168-9160-8df1255d9ead",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.024757Z",
+            "modified": "2026-08-28T20:11:06.024757Z",
+            "pattern": "[file:hashes.'SHA-256' = 'acaef1b6633d71eeb23b1a24d1fe02d2e5cf2cbb54428fa61ad2b23ce5f6634b']",
+            "pattern_type": "stix",
+            "pattern_version": "2.1",
+            "valid_from": "2026-08-28T20:11:06.024746Z"
+        },
+        {
+            "type": "indicator",
+            "spec_version": "2.1",
+            "id": "indicator--75f9541d-d4ea-4ee0-88a1-5602a0b5a2d6",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.025342Z",
+            "modified": "2026-08-28T20:11:06.025342Z",
+            "pattern": "[file:hashes.'SHA-256' = '51fb8cdaa208b0cf4a05c2a36e97f53ff3740dbb3ca5bf4c827201d324973057']",
+            "pattern_type": "stix",
+            "pattern_version": "2.1",
+            "valid_from": "2026-08-28T20:11:06.025335Z"
+        },
+        {
+            "type": "indicator",
+            "spec_version": "2.1",
+            "id": "indicator--545bcce1-602a-4888-a285-5cf708e15bee",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.025862Z",
+            "modified": "2026-08-28T20:11:06.025862Z",
             "pattern": "[domain-name:value = 'ip-api.com']",
             "pattern_type": "stix",
             "pattern_version": "2.1",
-            "valid_from": "2026-08-28T18:09:52.154706Z"
+            "valid_from": "2026-08-28T20:11:06.025857Z"
         },
         {
             "type": "indicator",
             "spec_version": "2.1",
-            "id": "indicator--d9b36080-d45a-4d04-b802-f26e4d6ab9b5",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.155921Z",
-            "modified": "2026-08-28T18:09:52.155921Z",
+            "id": "indicator--d8340a42-8467-4db4-afef-321a1b0962dc",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.026978Z",
+            "modified": "2026-08-28T20:11:06.026978Z",
             "pattern": "[ipv4-addr:value = '208.95.112.1']",
             "pattern_type": "stix",
             "pattern_version": "2.1",
-            "valid_from": "2026-08-28T18:09:52.155914Z"
+            "valid_from": "2026-08-28T20:11:06.026972Z"
         },
         {
             "type": "indicator",
             "spec_version": "2.1",
-            "id": "indicator--7e56a8f9-a456-4f9f-bd4d-e5363d1e2b75",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.156696Z",
-            "modified": "2026-08-28T18:09:52.156696Z",
+            "id": "indicator--e31f927b-90a6-4850-abf8-0721e52f112f",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.027605Z",
+            "modified": "2026-08-28T20:11:06.027605Z",
+            "pattern": "[ipv4-addr:value = '167.99.138.249']",
+            "pattern_type": "stix",
+            "pattern_version": "2.1",
+            "valid_from": "2026-08-28T20:11:06.0276Z"
+        },
+        {
+            "type": "indicator",
+            "spec_version": "2.1",
+            "id": "indicator--a44c5944-12ba-4c08-b0c3-2aacef2783db",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.028042Z",
+            "modified": "2026-08-28T20:11:06.028042Z",
+            "pattern": "[ipv4-addr:value = '206.166.251.4']",
+            "pattern_type": "stix",
+            "pattern_version": "2.1",
+            "valid_from": "2026-08-28T20:11:06.028037Z"
+        },
+        {
+            "type": "indicator",
+            "spec_version": "2.1",
+            "id": "indicator--97281785-92ba-44f0-8f45-7758057407b7",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.028435Z",
+            "modified": "2026-08-28T20:11:06.028435Z",
             "pattern": "[url:value = 'http://ip-api.com/line?fields=query,country']",
             "pattern_type": "stix",
             "pattern_version": "2.1",
-            "valid_from": "2026-08-28T18:09:52.15668Z"
+            "valid_from": "2026-08-28T20:11:06.028429Z"
+        },
+        {
+            "type": "indicator",
+            "spec_version": "2.1",
+            "id": "indicator--ab5fe44b-4318-489c-bfc2-9c5e1fa46122",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.02933Z",
+            "modified": "2026-08-28T20:11:06.02933Z",
+            "pattern": "[url:value = 'http://206.166.251.4:8080/Zteoi_sandbox%40DESKTOP-EBJM4FV_report.wsr']",
+            "pattern_type": "stix",
+            "pattern_version": "2.1",
+            "valid_from": "2026-08-28T20:11:06.029325Z"
+        },
+        {
+            "type": "indicator",
+            "spec_version": "2.1",
+            "id": "indicator--8db2729d-8f41-49d3-a295-f0c0819edaf8",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.030301Z",
+            "modified": "2026-08-28T20:11:06.030301Z",
+            "pattern": "[url:value = 'http://167.99.138.249:8080/Zteoi_sandbox%40DESKTOP-EBJM4FV_report.wsr']",
+            "pattern_type": "stix",
+            "pattern_version": "2.1",
+            "valid_from": "2026-08-28T20:11:06.030296Z"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--da71f455-e661-4bef-ab2b-34233e2dd4de",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.158179Z",
-            "modified": "2026-08-28T18:09:52.158179Z",
+            "id": "relationship--6cf7f4c8-3754-424f-b6fd-de10f4362a25",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.030696Z",
+            "modified": "2026-08-28T20:11:06.030696Z",
             "relationship_type": "indicates",
-            "source_ref": "indicator--883025e9-1f9c-4457-9b17-5d8f29961840",
-            "target_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145"
+            "source_ref": "indicator--44f39f95-4841-4d83-8efd-a1fe5fca3a47",
+            "target_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--2691c3dc-f0ed-4433-b23f-8476a47a69a7",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.15868Z",
-            "modified": "2026-08-28T18:09:52.15868Z",
+            "id": "relationship--b007a2f3-e022-42dd-9330-6a2443ed91d7",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.031017Z",
+            "modified": "2026-08-28T20:11:06.031017Z",
             "relationship_type": "based-on",
-            "source_ref": "indicator--883025e9-1f9c-4457-9b17-5d8f29961840",
-            "target_ref": "observed-data--f51817ce-7f5b-4dc0-b28f-7421de3167c9"
+            "source_ref": "indicator--44f39f95-4841-4d83-8efd-a1fe5fca3a47",
+            "target_ref": "observed-data--846d9491-d504-4ac1-84ba-ac3630760c83"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--236ebb1e-9cf5-49c2-95bb-6e2735940afb",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.158807Z",
-            "modified": "2026-08-28T18:09:52.158807Z",
+            "id": "relationship--8c0ed69a-2a75-4d76-8f11-159f0560be90",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.031137Z",
+            "modified": "2026-08-28T20:11:06.031137Z",
             "relationship_type": "indicates",
-            "source_ref": "indicator--35c83649-8472-45ec-a62f-d346972c2b4a",
-            "target_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145"
+            "source_ref": "indicator--5a69a793-ce3e-4168-9160-8df1255d9ead",
+            "target_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--545c58de-b127-4398-afb3-15f63af02559",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.158923Z",
-            "modified": "2026-08-28T18:09:52.158923Z",
+            "id": "relationship--350e2d78-d47f-49e9-b912-fad2adcc544e",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.031258Z",
+            "modified": "2026-08-28T20:11:06.031258Z",
             "relationship_type": "based-on",
-            "source_ref": "indicator--35c83649-8472-45ec-a62f-d346972c2b4a",
-            "target_ref": "observed-data--f51817ce-7f5b-4dc0-b28f-7421de3167c9"
+            "source_ref": "indicator--5a69a793-ce3e-4168-9160-8df1255d9ead",
+            "target_ref": "observed-data--846d9491-d504-4ac1-84ba-ac3630760c83"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--15ddade5-4d1c-4e72-b0a0-1c4f6f0296b4",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.159053Z",
-            "modified": "2026-08-28T18:09:52.159053Z",
+            "id": "relationship--78355787-2886-429e-a501-f6fa1600b642",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.031372Z",
+            "modified": "2026-08-28T20:11:06.031372Z",
             "relationship_type": "indicates",
-            "source_ref": "indicator--d9b36080-d45a-4d04-b802-f26e4d6ab9b5",
-            "target_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145"
+            "source_ref": "indicator--75f9541d-d4ea-4ee0-88a1-5602a0b5a2d6",
+            "target_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--3ef9e289-315c-4c3f-8157-a58c3169ddda",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.15918Z",
-            "modified": "2026-08-28T18:09:52.15918Z",
+            "id": "relationship--ba1cbc5b-3d57-4a13-a00b-e15752cabaf4",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.031481Z",
+            "modified": "2026-08-28T20:11:06.031481Z",
             "relationship_type": "based-on",
-            "source_ref": "indicator--d9b36080-d45a-4d04-b802-f26e4d6ab9b5",
-            "target_ref": "observed-data--f51817ce-7f5b-4dc0-b28f-7421de3167c9"
+            "source_ref": "indicator--75f9541d-d4ea-4ee0-88a1-5602a0b5a2d6",
+            "target_ref": "observed-data--846d9491-d504-4ac1-84ba-ac3630760c83"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--c9c56251-89b7-434d-abe0-3c20c7dbe8b4",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.159305Z",
-            "modified": "2026-08-28T18:09:52.159305Z",
+            "id": "relationship--ab8372a3-5058-4b7c-8fc6-3441c7ab322c",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.031595Z",
+            "modified": "2026-08-28T20:11:06.031595Z",
             "relationship_type": "indicates",
-            "source_ref": "indicator--7e56a8f9-a456-4f9f-bd4d-e5363d1e2b75",
-            "target_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145"
+            "source_ref": "indicator--545bcce1-602a-4888-a285-5cf708e15bee",
+            "target_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--0a428461-87d3-4a45-bba4-6dd7b8842e0e",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.159424Z",
-            "modified": "2026-08-28T18:09:52.159424Z",
+            "id": "relationship--4239c3bf-2534-4a81-b09e-a50a5b8bbe3c",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.031713Z",
+            "modified": "2026-08-28T20:11:06.031713Z",
             "relationship_type": "based-on",
-            "source_ref": "indicator--7e56a8f9-a456-4f9f-bd4d-e5363d1e2b75",
-            "target_ref": "observed-data--f51817ce-7f5b-4dc0-b28f-7421de3167c9"
+            "source_ref": "indicator--545bcce1-602a-4888-a285-5cf708e15bee",
+            "target_ref": "observed-data--846d9491-d504-4ac1-84ba-ac3630760c83"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--7ea6fe45-2b27-4490-876d-0a45d43cb549",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.031821Z",
+            "modified": "2026-08-28T20:11:06.031821Z",
+            "relationship_type": "indicates",
+            "source_ref": "indicator--d8340a42-8467-4db4-afef-321a1b0962dc",
+            "target_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--762c7be6-10a1-4556-b2be-aa84ec7c4a71",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.031934Z",
+            "modified": "2026-08-28T20:11:06.031934Z",
+            "relationship_type": "based-on",
+            "source_ref": "indicator--d8340a42-8467-4db4-afef-321a1b0962dc",
+            "target_ref": "observed-data--846d9491-d504-4ac1-84ba-ac3630760c83"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--23a9ac43-f23a-427b-a418-88a854075c65",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.032047Z",
+            "modified": "2026-08-28T20:11:06.032047Z",
+            "relationship_type": "indicates",
+            "source_ref": "indicator--e31f927b-90a6-4850-abf8-0721e52f112f",
+            "target_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--ccb52ad9-8e77-48ea-8ea5-15a2991af5dd",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.032156Z",
+            "modified": "2026-08-28T20:11:06.032156Z",
+            "relationship_type": "based-on",
+            "source_ref": "indicator--e31f927b-90a6-4850-abf8-0721e52f112f",
+            "target_ref": "observed-data--846d9491-d504-4ac1-84ba-ac3630760c83"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--df0d5039-ee72-41e8-af94-b6ff53d3f798",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.032275Z",
+            "modified": "2026-08-28T20:11:06.032275Z",
+            "relationship_type": "indicates",
+            "source_ref": "indicator--a44c5944-12ba-4c08-b0c3-2aacef2783db",
+            "target_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--56105c45-ec09-4111-895d-516773a1f91d",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.032388Z",
+            "modified": "2026-08-28T20:11:06.032388Z",
+            "relationship_type": "based-on",
+            "source_ref": "indicator--a44c5944-12ba-4c08-b0c3-2aacef2783db",
+            "target_ref": "observed-data--846d9491-d504-4ac1-84ba-ac3630760c83"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--553195a8-bc66-4492-9aba-1804c66e7ec1",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.032502Z",
+            "modified": "2026-08-28T20:11:06.032502Z",
+            "relationship_type": "indicates",
+            "source_ref": "indicator--97281785-92ba-44f0-8f45-7758057407b7",
+            "target_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--e643be64-044c-4526-88a4-0689329bb3e0",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.032613Z",
+            "modified": "2026-08-28T20:11:06.032613Z",
+            "relationship_type": "based-on",
+            "source_ref": "indicator--97281785-92ba-44f0-8f45-7758057407b7",
+            "target_ref": "observed-data--846d9491-d504-4ac1-84ba-ac3630760c83"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--93eb40b9-cef5-45d3-8d82-e5bc393fa4df",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.032722Z",
+            "modified": "2026-08-28T20:11:06.032722Z",
+            "relationship_type": "indicates",
+            "source_ref": "indicator--ab5fe44b-4318-489c-bfc2-9c5e1fa46122",
+            "target_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--d5f3fc0b-d526-4a25-8f71-a3b99f057c2b",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.032834Z",
+            "modified": "2026-08-28T20:11:06.032834Z",
+            "relationship_type": "based-on",
+            "source_ref": "indicator--ab5fe44b-4318-489c-bfc2-9c5e1fa46122",
+            "target_ref": "observed-data--846d9491-d504-4ac1-84ba-ac3630760c83"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--3bfc1bd4-d791-465e-b62e-3da7f3a5a773",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.032941Z",
+            "modified": "2026-08-28T20:11:06.032941Z",
+            "relationship_type": "indicates",
+            "source_ref": "indicator--8db2729d-8f41-49d3-a295-f0c0819edaf8",
+            "target_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--dfcc93f3-1225-4af8-859d-bb9e146e7b39",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.033053Z",
+            "modified": "2026-08-28T20:11:06.033053Z",
+            "relationship_type": "based-on",
+            "source_ref": "indicator--8db2729d-8f41-49d3-a295-f0c0819edaf8",
+            "target_ref": "observed-data--846d9491-d504-4ac1-84ba-ac3630760c83"
         },
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--d0a1f3b7-e02d-4de9-a7bb-8c0128053605",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.159554Z",
-            "modified": "2026-08-28T18:09:52.159554Z",
+            "id": "attack-pattern--beba92f9-8b30-42f6-928d-69bc3c41c432",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.033168Z",
+            "modified": "2026-08-28T20:11:06.033168Z",
             "name": "Data from Local System",
             "description": "[confidence=high, sources=dynamic] CAPE signature 'infostealer_bitcoin' fired (severity=3, confidence=100%, categories=['infostealer']) | CAPE signature 'infostealer_ftp' fired (severity=3, confidence=100%, categories=['infostealer']) | CAPE signature 'infostealer_mail' fired (severity=3, confidence=100%, categories=['infostealer'])",
             "external_references": [
@@ -231,10 +487,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--9741ec48-42a5-4720-9bed-d559be2d7e77",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.159806Z",
-            "modified": "2026-08-28T18:09:52.159806Z",
+            "id": "attack-pattern--1b80c5bf-647c-46f6-b280-db130d9a1c08",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.033439Z",
+            "modified": "2026-08-28T20:11:06.033439Z",
             "name": "System Network Configuration Discovery",
             "description": "[confidence=high, sources=static] The managed .NET API calls System.Net.NetworkInformation.NetworkInterface::GetAllNetworkInterfaces, System.Net.NetworkInformation.NetworkInterface::GetIPProperties were resolved from the assembly's method bodies (call/callvirt/newobj targets, not just type/method names). Multiple corroborating BCL API calls, not one in isolation, is what makes this a strong signal for System Network Configuration Discovery.",
             "external_references": [
@@ -253,10 +509,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--fbfe9967-7a7d-42b5-8872-def708731737",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.159961Z",
-            "modified": "2026-08-28T18:09:52.159961Z",
+            "id": "attack-pattern--4812b682-73a1-4d44-9c41-f8e3000a0471",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.033593Z",
+            "modified": "2026-08-28T20:11:06.033593Z",
             "name": "Exfiltration Over C2 Channel",
             "description": "[confidence=high, sources=static] The managed .NET API calls System.Net.WebClient::UploadData, System.Net.WebClient::UploadString were resolved from the assembly's method bodies (call/callvirt/newobj targets, not just type/method names). Multiple corroborating BCL API calls, not one in isolation, is what makes this a strong signal for Exfiltration Over C2 Channel.",
             "external_references": [
@@ -275,10 +531,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--347b270e-0503-4cbf-bb74-c1afa8584f35",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.160171Z",
-            "modified": "2026-08-28T18:09:52.160171Z",
+            "id": "attack-pattern--4bb9cc39-84b7-465d-81a4-6a8d37896274",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.033738Z",
+            "modified": "2026-08-28T20:11:06.033738Z",
             "name": "Windows Management Instrumentation",
             "description": "[confidence=high, sources=dynamic,static] The managed .NET API calls System.Management.ManagementClass::GetInstances, System.Management.ManagementObjectSearcher::Get were resolved from the assembly's method bodies (call/callvirt/newobj targets, not just type/method names). Multiple corroborating BCL API calls, not one in isolation, is what makes this a strong signal for Windows Management Instrumentation. | CAPE signature 'antivm_wmi' fired (severity=3, confidence=80%, categories=['anti-vm'])",
             "external_references": [
@@ -298,12 +554,12 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--da41d24a-9b02-4e8c-946f-410ba2e75863",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.160336Z",
-            "modified": "2026-08-28T18:09:52.160336Z",
+            "id": "attack-pattern--f7ff80a0-288f-42b1-9448-5fe175fd7bdc",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.033885Z",
+            "modified": "2026-08-28T20:11:06.033885Z",
             "name": "Process Injection",
-            "description": "[confidence=high, sources=dynamic,static] The malware string 'VirtualQueryEx' was found in the binary, alongside 1 other string(s) also characteristic of Process Injection. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal. | The malware string 'ReadProcessMemory' was found in the binary, alongside 1 other string(s) also characteristic of Process Injection. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal. | The API functions OpenProcess, ReadProcessMemory, VirtualQueryEx are all imported by the binary. This combination is characteristic of Process Injection \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal. | CAPE signature 'registers_vectored_exception_handler' fired (severity=2, confidence=80%, categories=['evasion', 'execution', 'injection']) | CAPE signature 'creates_suspended_process' fired (severity=2, confidence=50%, categories=['injection', 'process hollowing']) | CAPE signature 'resumethread_remote_process' fired (severity=2, confidence=100%, categories=['injection', 'unpacking']) | CAPE signature 'unbacked_api_resolution' fired (severity=3, confidence=100%, categories=['evasion', 'shellcode', 'fileless']) | CAPE signature 'unbacked_memory_protection_alteration' fired (severity=3, confidence=20%, categories=['evasion', 'stealth', 'fileless', 'shellcode'])",
+            "description": "[confidence=high, sources=dynamic,static] The malware string 'VirtualQueryEx' was found in the binary, alongside 1 other string(s) also characteristic of Process Injection. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal. | The malware string 'ReadProcessMemory' was found in the binary, alongside 1 other string(s) also characteristic of Process Injection. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal. | The API functions OpenProcess, ReadProcessMemory, VirtualQueryEx are all imported by the binary. This combination is characteristic of Process Injection \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal. | CAPE signature 'registers_vectored_exception_handler' fired (severity=2, confidence=80%, categories=['evasion', 'execution', 'injection']) | CAPE signature 'unbacked_api_resolution' fired (severity=3, confidence=100%, categories=['evasion', 'shellcode', 'fileless']) | CAPE signature 'unbacked_memory_protection_alteration' fired (severity=3, confidence=20%, categories=['evasion', 'stealth', 'fileless', 'shellcode'])",
             "external_references": [
                 {
                     "source_name": "mitre-attack",
@@ -321,10 +577,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--53c52b16-7e61-41a0-b3b1-7afcb215cd74",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.16048Z",
-            "modified": "2026-08-28T18:09:52.16048Z",
+            "id": "attack-pattern--fbcfe275-2438-43b9-bf01-7460a94d3f01",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.03403Z",
+            "modified": "2026-08-28T20:11:06.03403Z",
             "name": "Command and Scripting Interpreter",
             "description": "[confidence=high, sources=dynamic] CAPE signature 'unbacked_library_load' fired (severity=3, confidence=100%, categories=['evasion', 'execution', 'fileless']) | CAPE signature 'cmdline_terminate' fired (severity=1, confidence=100%, categories=['command'])",
             "external_references": [
@@ -343,12 +599,56 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--12c9a161-ae03-4942-840a-80dd00af1672",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.160622Z",
-            "modified": "2026-08-28T18:09:52.160622Z",
+            "id": "attack-pattern--e110857c-cdb9-4e9f-9fb5-46a60d343224",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.034174Z",
+            "modified": "2026-08-28T20:11:06.034174Z",
+            "name": "Indicator Removal",
+            "description": "[confidence=high, sources=dynamic] CAPE signature 'pe_compile_timestomping' fired (severity=3, confidence=100%, categories=['generic'])",
+            "external_references": [
+                {
+                    "source_name": "mitre-attack",
+                    "url": "https://attack.mitre.org/techniques/T1070/",
+                    "external_id": "T1070"
+                }
+            ],
+            "x_confidence": "high",
+            "x_confidence_score": 100,
+            "x_sources": [
+                "dynamic"
+            ]
+        },
+        {
+            "type": "attack-pattern",
+            "spec_version": "2.1",
+            "id": "attack-pattern--18776a41-ed2d-490e-b8d0-e07ac3118b33",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.034321Z",
+            "modified": "2026-08-28T20:11:06.034321Z",
+            "name": "Indicator Removal: Timestomp",
+            "description": "[confidence=high, sources=dynamic] CAPE signature 'pe_compile_timestomping' fired (severity=3, confidence=100%, categories=['generic'])",
+            "external_references": [
+                {
+                    "source_name": "mitre-attack",
+                    "url": "https://attack.mitre.org/techniques/T1070/006/",
+                    "external_id": "T1070.006"
+                }
+            ],
+            "x_confidence": "high",
+            "x_confidence_score": 100,
+            "x_sources": [
+                "dynamic"
+            ]
+        },
+        {
+            "type": "attack-pattern",
+            "spec_version": "2.1",
+            "id": "attack-pattern--901ebdbf-8bf3-42a8-8ce9-1e239f602a99",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.034463Z",
+            "modified": "2026-08-28T20:11:06.034463Z",
             "name": "System Information Discovery",
-            "description": "[confidence=high, sources=dynamic] CAPE signature 'antivm_checks_available_memory' fired (severity=1, confidence=100%, categories=['antivm']) | CAPE signature 'antivm_wmi' fired (severity=3, confidence=80%, categories=['anti-vm'])",
+            "description": "[confidence=high, sources=dynamic] CAPE signature 'antivm_checks_available_memory' fired (severity=1, confidence=100%, categories=['antivm']) | CAPE signature 'antivm_wmi' fired (severity=3, confidence=80%, categories=['anti-vm']) | CAPE signature 'recon_programs' fired (severity=3, confidence=20%, categories=['discovery'])",
             "external_references": [
                 {
                     "source_name": "mitre-attack",
@@ -365,10 +665,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--e4353ad7-c94c-4d75-afe6-5c14c8b5d7c1",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.160774Z",
-            "modified": "2026-08-28T18:09:52.160774Z",
+            "id": "attack-pattern--01f38e08-849e-4ec8-bb59-7cf4635901fe",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.034606Z",
+            "modified": "2026-08-28T20:11:06.034606Z",
             "name": "Proxy",
             "description": "[confidence=high, sources=static] The managed .NET API calls System.Net.HttpListener::GetContext, System.Net.HttpListener::Start were resolved from the assembly's method bodies (call/callvirt/newobj targets, not just type/method names). Multiple corroborating BCL API calls, not one in isolation, is what makes this a strong signal for Proxy.",
             "external_references": [
@@ -387,10 +687,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--1b3a35bd-e8d2-4a09-9b6c-c8d83e684ebd",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.160924Z",
-            "modified": "2026-08-28T18:09:52.160924Z",
+            "id": "attack-pattern--fbfe6337-2ee7-4e0f-a44d-7bc660548da8",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.034749Z",
+            "modified": "2026-08-28T20:11:06.034749Z",
             "name": "Modify Registry",
             "description": "[confidence=high, sources=static] The managed .NET API calls Microsoft.Win32.RegistryKey::CreateSubKey, Microsoft.Win32.RegistryKey::DeleteSubKeyTree, Microsoft.Win32.RegistryKey::SetValue were resolved from the assembly's method bodies (call/callvirt/newobj targets, not just type/method names). Multiple corroborating BCL API calls, not one in isolation, is what makes this a strong signal for Modify Registry.",
             "external_references": [
@@ -409,10 +709,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--2821f4e9-6f8a-4a89-af0f-01a17e35470a",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.161064Z",
-            "modified": "2026-08-28T18:09:52.161064Z",
+            "id": "attack-pattern--797cdddd-f446-44bf-8443-c4063960a05a",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.034888Z",
+            "modified": "2026-08-28T20:11:06.034888Z",
             "name": "Email Collection",
             "description": "[confidence=high, sources=dynamic] CAPE signature 'infostealer_mail' fired (severity=3, confidence=100%, categories=['infostealer'])",
             "external_references": [
@@ -431,10 +731,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--9410df5b-3987-409f-b1a2-4a365aca2a1b",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.161209Z",
-            "modified": "2026-08-28T18:09:52.161209Z",
+            "id": "attack-pattern--e8d551fc-67d6-4617-a359-bb87e1a00a09",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.035025Z",
+            "modified": "2026-08-28T20:11:06.035025Z",
             "name": "Clipboard Data",
             "description": "[confidence=high, sources=static] The managed .NET API calls System.Windows.Forms.Clipboard::GetDataObject, System.Windows.Forms.Clipboard::GetText, System.Windows.Forms.Clipboard::SetDataObject were resolved from the assembly's method bodies (call/callvirt/newobj targets, not just type/method names). Multiple corroborating BCL API calls, not one in isolation, is what makes this a strong signal for Clipboard Data.",
             "external_references": [
@@ -453,10 +753,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--c4d288d1-e61f-4e44-8851-aa1307b67ff3",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.161365Z",
-            "modified": "2026-08-28T18:09:52.161365Z",
+            "id": "attack-pattern--173d59e4-c97d-4666-a9ea-48e60f34f78c",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.035169Z",
+            "modified": "2026-08-28T20:11:06.035169Z",
             "name": "Virtualization/Sandbox Evasion",
             "description": "[confidence=high, sources=dynamic,static] Found 1 mutex names in the configuration. Mutexes are often used to check for a running instance (single-instance enforcement) and for sandbox detection (T1497). | CAPE signature 'antivm_wmi' fired (severity=3, confidence=80%, categories=['anti-vm'])",
             "external_references": [
@@ -476,10 +776,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--4344bab9-71f7-44d9-b497-1bc8e384ac60",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.161512Z",
-            "modified": "2026-08-28T18:09:52.161512Z",
+            "id": "attack-pattern--497cb2d4-31ff-43fe-bfe2-66c5dfdc9088",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.035317Z",
+            "modified": "2026-08-28T20:11:06.035317Z",
             "name": "Unsecured Credentials",
             "description": "[confidence=high, sources=dynamic] CAPE signature 'infostealer_ftp' fired (severity=3, confidence=100%, categories=['infostealer']) | CAPE signature 'infostealer_mail' fired (severity=3, confidence=100%, categories=['infostealer'])",
             "external_references": [
@@ -498,10 +798,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--0cccbe65-0a54-4da7-9b12-df895ff06b8f",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.161658Z",
-            "modified": "2026-08-28T18:09:52.161658Z",
+            "id": "attack-pattern--8c384d56-7289-48ef-bc88-6a87222f7be6",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.035457Z",
+            "modified": "2026-08-28T20:11:06.035457Z",
             "name": "Unsecured Credentials: Credentials In Files",
             "description": "[confidence=high, sources=dynamic] CAPE signature 'infostealer_ftp' fired (severity=3, confidence=100%, categories=['infostealer']) | CAPE signature 'infostealer_mail' fired (severity=3, confidence=100%, categories=['infostealer'])",
             "external_references": [
@@ -520,10 +820,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--718ee8e4-6423-4ac8-926d-a88f3fe9b696",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.161806Z",
-            "modified": "2026-08-28T18:09:52.161806Z",
+            "id": "attack-pattern--962822e4-dca0-40e0-8b3d-a2abbed6507f",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.035596Z",
+            "modified": "2026-08-28T20:11:06.035596Z",
             "name": "Credentials from Password Stores",
             "description": "[confidence=high, sources=static] The malware string 'CredentialBlob' was found in the binary, alongside 2 other string(s) also characteristic of Credentials from Password Stores. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal. | The malware string 'CredEnumerate' was found in the binary, alongside 2 other string(s) also characteristic of Credentials from Password Stores. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal. | The malware string 'NativeCredential' was found in the binary, alongside 2 other string(s) also characteristic of Credentials from Password Stores. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal.",
             "external_references": [
@@ -542,10 +842,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--d31ade21-ab2e-4740-8e67-54baf070640d",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.161952Z",
-            "modified": "2026-08-28T18:09:52.161952Z",
+            "id": "attack-pattern--939e2eb1-18b0-4b1e-abf7-4994663e6466",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.03574Z",
+            "modified": "2026-08-28T20:11:06.03574Z",
             "name": "Archive Collected Data: Archive via Utility",
             "description": "[confidence=high, sources=static] The malware string 'GZipStream' was found in the binary, alongside 2 other string(s) also characteristic of Archive via Utility. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal. | The malware string 'FilenameInZip' was found in the binary, alongside 2 other string(s) also characteristic of Archive via Utility. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal. | The malware string 'ZipFileEntry' was found in the binary, alongside 2 other string(s) also characteristic of Archive via Utility. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal.",
             "external_references": [
@@ -564,10 +864,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--c02eec52-b86d-4673-8520-dfa4cdb8745a",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.162093Z",
-            "modified": "2026-08-28T18:09:52.162093Z",
+            "id": "attack-pattern--32f4a246-095a-414c-beaf-268068781018",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.035878Z",
+            "modified": "2026-08-28T20:11:06.035878Z",
             "name": "Reflective Code Loading",
             "description": "[confidence=high, sources=dynamic] CAPE signature 'unbacked_api_resolution' fired (severity=3, confidence=100%, categories=['evasion', 'shellcode', 'fileless']) | CAPE signature 'unbacked_library_load' fired (severity=3, confidence=100%, categories=['evasion', 'execution', 'fileless'])",
             "external_references": [
@@ -586,10 +886,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--331001fa-c2ab-4bb5-b711-faeed7ad5a90",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.162234Z",
-            "modified": "2026-08-28T18:09:52.162234Z",
+            "id": "attack-pattern--215bdc0c-20ba-4129-aa5f-8458ffda1759",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.036015Z",
+            "modified": "2026-08-28T20:11:06.036015Z",
             "name": "System Owner/User Discovery",
             "description": "[confidence=medium, sources=dynamic] CAPE signature 'privilege_elevation_check' fired (severity=2, confidence=80%, categories=['discovery', 'privilege_escalation'])",
             "external_references": [
@@ -608,12 +908,12 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--b9434e96-f035-4222-8af4-172ac2464953",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.162393Z",
-            "modified": "2026-08-28T18:09:52.162393Z",
+            "id": "attack-pattern--f5e84a06-5a22-4e8c-a912-852992fc0278",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.036151Z",
+            "modified": "2026-08-28T20:11:06.036151Z",
             "name": "Application Layer Protocol",
-            "description": "[confidence=medium, sources=dynamic] CAPE signature 'http_request' fired (severity=2, confidence=100%, categories=['network']) | CAPE signature 'reads_memory_remote_process' fired (severity=2, confidence=100%, categories=['memory scraping', 'injection']) | CAPE signature 'recon_checkip' fired (severity=2, confidence=100%, categories=['network', 'discovery'])",
+            "description": "[confidence=medium, sources=dynamic] CAPE signature 'http_request' fired (severity=2, confidence=100%, categories=['network']) | CAPE signature 'network_cnc_http' fired (severity=2, confidence=30%, categories=['network', 'c2']) | CAPE signature 'network_http' fired (severity=2, confidence=30%, categories=['network']) | CAPE signature 'recon_checkip' fired (severity=2, confidence=100%, categories=['network', 'discovery'])",
             "external_references": [
                 {
                     "source_name": "mitre-attack",
@@ -630,10 +930,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--f3de13df-06b2-4288-ab83-bad41d97ed1c",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.162539Z",
-            "modified": "2026-08-28T18:09:52.162539Z",
+            "id": "attack-pattern--52139485-0c86-46c0-a904-940e9876cdbd",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.036304Z",
+            "modified": "2026-08-28T20:11:06.036304Z",
             "name": "Data Staged",
             "description": "[confidence=medium, sources=static] The malware strings GZipStream, FilenameInZip, ZipFileEntry indicate an archive-building engine bundling data prior to transfer. The same evidence that supports Archive via Utility (T1560.001) also supports Data Staged (T1074) -- collecting data into an archive format is a form of staging it before exfiltration.",
             "external_references": [
@@ -652,10 +952,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--a65c5400-00ba-4baa-966c-06b690bc4886",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.162685Z",
-            "modified": "2026-08-28T18:09:52.162685Z",
+            "id": "attack-pattern--f62de5bd-e963-4ea3-8824-c1c2be947fa8",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.03644Z",
+            "modified": "2026-08-28T20:11:06.03644Z",
             "name": "Screen Capture",
             "description": "[confidence=medium, sources=static] The malware string 'CopyFromScreen' was found in the binary. This string is characteristic of Screen Capture behavior. The presence of this specific string alone (no other Screen Capture-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would.",
             "external_references": [
@@ -674,10 +974,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--6ba8ac23-3924-48db-ad2f-26522a7abd6d",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.162825Z",
-            "modified": "2026-08-28T18:09:52.162825Z",
+            "id": "attack-pattern--ee254d1e-e125-475e-b127-290774f26154",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.036577Z",
+            "modified": "2026-08-28T20:11:06.036577Z",
             "name": "Audio Capture",
             "description": "[confidence=medium, sources=static] The API function 'mciSendStringA' is imported by the binary. This API is commonly used to perform Audio Capture. Importing this function alone (no other Audio Capture-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would.",
             "external_references": [
@@ -696,10 +996,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--61237a06-e82d-4dbc-b251-40a1ac174e99",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.162968Z",
-            "modified": "2026-08-28T18:09:52.162968Z",
+            "id": "attack-pattern--5f39c047-6221-4d46-acc1-4712c8f7f9a6",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.036717Z",
+            "modified": "2026-08-28T20:11:06.036717Z",
             "name": "Data Encoding",
             "description": "[confidence=medium, sources=static] The managed .NET API call 'System.Convert::ToBase64String' was resolved from the assembly's method bodies. This BCL API is specific enough to Data Encoding that its presence alone indicates the capability, but with less certainty than a corroborated combination would.",
             "external_references": [
@@ -718,10 +1018,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--62f5a38d-1f53-4b3b-9a4c-b93064b3eff5",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.16311Z",
-            "modified": "2026-08-28T18:09:52.16311Z",
+            "id": "attack-pattern--08470379-d036-4a91-9259-8788c44b7aae",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.036859Z",
+            "modified": "2026-08-28T20:11:06.036859Z",
             "name": "Deobfuscate/Decode Files or Information",
             "description": "[confidence=medium, sources=static] The managed .NET API call 'System.Convert::FromBase64String' was resolved from the assembly's method bodies. This BCL API is specific enough to Deobfuscate/Decode Files or Information that its presence alone indicates the capability, but with less certainty than a corroborated combination would.",
             "external_references": [
@@ -740,10 +1040,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--1eb51728-74bb-4a7b-8a0b-f197b58e0ae9",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.16326Z",
-            "modified": "2026-08-28T18:09:52.16326Z",
+            "id": "attack-pattern--fe9abf3a-3753-4cda-bbaf-a1aa90a0c0ef",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.036999Z",
+            "modified": "2026-08-28T20:11:06.036999Z",
             "name": "Password Policy Discovery",
             "description": "[confidence=medium, sources=dynamic] Executed command '\"cmd.exe\" /c chcp 65001 && netsh wlan show profiles|findstr /R /C:\"[ ]:[ ]\"' matches the known pattern 'netsh wlan show'. | Executed command '\"cmd.exe\" /c chcp 65001 && netsh wlan show networks mode=bssid | findstr \"SSID BSSID Signal\"' matches the known pattern 'netsh wlan show'.",
             "external_references": [
@@ -762,10 +1062,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--c80e85c9-9c2f-434f-8fb9-6ccf5df40c16",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.163405Z",
-            "modified": "2026-08-28T18:09:52.163405Z",
+            "id": "attack-pattern--928f3450-b773-4136-86ae-b75f2a2323eb",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.037138Z",
+            "modified": "2026-08-28T20:11:06.037138Z",
             "name": "Archive Collected Data",
             "description": "[confidence=medium, sources=static] The managed .NET API call 'System.Security.Cryptography.RSACryptoServiceProvider::Encrypt' was resolved from the assembly's method bodies. This BCL API is specific enough to Archive Collected Data that its presence alone indicates the capability, but with less certainty than a corroborated combination would.",
             "external_references": [
@@ -784,12 +1084,34 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--ea7038fe-8638-4be4-945c-c5bfa0fc1b14",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.16355Z",
-            "modified": "2026-08-28T18:09:52.16355Z",
+            "id": "attack-pattern--8f818f55-b238-4a1e-ba9d-74f765d9449d",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.037281Z",
+            "modified": "2026-08-28T20:11:06.037281Z",
+            "name": "Query Registry",
+            "description": "[confidence=low, sources=dynamic] CAPE signature 'recon_programs' fired (severity=3, confidence=20%, categories=['discovery'])",
+            "external_references": [
+                {
+                    "source_name": "mitre-attack",
+                    "url": "https://attack.mitre.org/techniques/T1012/",
+                    "external_id": "T1012"
+                }
+            ],
+            "x_confidence": "low",
+            "x_confidence_score": 30,
+            "x_sources": [
+                "dynamic"
+            ]
+        },
+        {
+            "type": "attack-pattern",
+            "spec_version": "2.1",
+            "id": "attack-pattern--45c39e58-3367-48f2-b8f9-b375fd6dbce8",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.037432Z",
+            "modified": "2026-08-28T20:11:06.037432Z",
             "name": "Software Discovery",
-            "description": "[confidence=low, sources=dynamic] CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])",
+            "description": "[confidence=low, sources=dynamic] CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion']) | CAPE signature 'recon_programs' fired (severity=3, confidence=20%, categories=['discovery'])",
             "external_references": [
                 {
                     "source_name": "mitre-attack",
@@ -806,10 +1128,10 @@
         {
             "type": "attack-pattern",
             "spec_version": "2.1",
-            "id": "attack-pattern--a711b58d-d453-46a3-b44f-df303eb70516",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.163692Z",
-            "modified": "2026-08-28T18:09:52.163692Z",
+            "id": "attack-pattern--ce8d5a89-17f8-4bda-90db-28ab18bcab1a",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.037568Z",
+            "modified": "2026-08-28T20:11:06.037568Z",
             "name": "Disable or Modify Tools",
             "description": "[confidence=low, sources=dynamic] CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])",
             "external_references": [
@@ -828,338 +1150,374 @@
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--5e7dade8-9e4f-43ad-b201-1ccb7c43c628",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.163839Z",
-            "modified": "2026-08-28T18:09:52.163839Z",
+            "id": "relationship--d2746d84-062d-4e0c-887d-eb38f9583e2b",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.037712Z",
+            "modified": "2026-08-28T20:11:06.037712Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=dynamic",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--d0a1f3b7-e02d-4de9-a7bb-8c0128053605"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--beba92f9-8b30-42f6-928d-69bc3c41c432"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--cd92b544-26f7-4c3e-9126-d0dbba757b0c",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.163967Z",
-            "modified": "2026-08-28T18:09:52.163967Z",
+            "id": "relationship--96eb39fd-5755-48fe-a94c-deb0cc9594c9",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.037828Z",
+            "modified": "2026-08-28T20:11:06.037828Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--9741ec48-42a5-4720-9bed-d559be2d7e77"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--1b80c5bf-647c-46f6-b280-db130d9a1c08"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--b896e1b9-cf95-4a5c-ab32-b3951a60dbc4",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.164086Z",
-            "modified": "2026-08-28T18:09:52.164086Z",
+            "id": "relationship--764ac54f-61da-49cd-bfe5-79d5d935f2dd",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.037946Z",
+            "modified": "2026-08-28T20:11:06.037946Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--fbfe9967-7a7d-42b5-8872-def708731737"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--4812b682-73a1-4d44-9c41-f8e3000a0471"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--fe581e03-648d-47d6-97ce-3da67f7bc6a0",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.164205Z",
-            "modified": "2026-08-28T18:09:52.164205Z",
+            "id": "relationship--b8efccba-cc99-4350-8e7e-743b9fbe2e4c",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.03806Z",
+            "modified": "2026-08-28T20:11:06.03806Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=dynamic,static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--347b270e-0503-4cbf-bb74-c1afa8584f35"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--4bb9cc39-84b7-465d-81a4-6a8d37896274"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--38f19627-3857-474a-a6eb-366cba923652",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.164329Z",
-            "modified": "2026-08-28T18:09:52.164329Z",
+            "id": "relationship--1e847241-2ad4-4be6-a1c4-bedd46a54ec7",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.038169Z",
+            "modified": "2026-08-28T20:11:06.038169Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=dynamic,static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--da41d24a-9b02-4e8c-946f-410ba2e75863"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--f7ff80a0-288f-42b1-9448-5fe175fd7bdc"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--eda6deb8-5c79-4847-a244-f65ebd77261e",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.164441Z",
-            "modified": "2026-08-28T18:09:52.164441Z",
+            "id": "relationship--5a787c81-5fd2-40f4-a83e-9622cad1d467",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.038285Z",
+            "modified": "2026-08-28T20:11:06.038285Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=dynamic",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--53c52b16-7e61-41a0-b3b1-7afcb215cd74"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--fbcfe275-2438-43b9-bf01-7460a94d3f01"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--723cee97-43cb-4053-a718-7f9a5f6c3b57",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.164553Z",
-            "modified": "2026-08-28T18:09:52.164553Z",
+            "id": "relationship--78af1fd0-523a-488b-9932-22e5659ee005",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.038393Z",
+            "modified": "2026-08-28T20:11:06.038393Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=dynamic",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--12c9a161-ae03-4942-840a-80dd00af1672"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--e110857c-cdb9-4e9f-9fb5-46a60d343224"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--a841d74f-70fd-47ae-a8a7-8f9c8d155180",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.164665Z",
-            "modified": "2026-08-28T18:09:52.164665Z",
-            "relationship_type": "uses",
-            "description": "confidence=high, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--e4353ad7-c94c-4d75-afe6-5c14c8b5d7c1"
-        },
-        {
-            "type": "relationship",
-            "spec_version": "2.1",
-            "id": "relationship--4c867bbc-2885-4d74-ac61-ffac01b1f288",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.164793Z",
-            "modified": "2026-08-28T18:09:52.164793Z",
-            "relationship_type": "uses",
-            "description": "confidence=high, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--1b3a35bd-e8d2-4a09-9b6c-c8d83e684ebd"
-        },
-        {
-            "type": "relationship",
-            "spec_version": "2.1",
-            "id": "relationship--b66b7cd0-5518-4926-a860-778d93f22b30",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.164905Z",
-            "modified": "2026-08-28T18:09:52.164905Z",
+            "id": "relationship--056a82c1-b986-4025-a8eb-d8b192f4710b",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.038507Z",
+            "modified": "2026-08-28T20:11:06.038507Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=dynamic",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--2821f4e9-6f8a-4a89-af0f-01a17e35470a"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--18776a41-ed2d-490e-b8d0-e07ac3118b33"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--0d5106ed-187a-4086-a024-ca5bdfb01227",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.16502Z",
-            "modified": "2026-08-28T18:09:52.16502Z",
+            "id": "relationship--d35e9bee-9b67-4b4d-a784-25e0e9836fd4",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.03862Z",
+            "modified": "2026-08-28T20:11:06.03862Z",
+            "relationship_type": "uses",
+            "description": "confidence=high, sources=dynamic",
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--901ebdbf-8bf3-42a8-8ce9-1e239f602a99"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--0534f4a5-3452-4d2f-a55e-77feaa5d3eb7",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.038735Z",
+            "modified": "2026-08-28T20:11:06.038735Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--9410df5b-3987-409f-b1a2-4a365aca2a1b"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--01f38e08-849e-4ec8-bb59-7cf4635901fe"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--ceb0d163-3d4a-4e9b-82e3-45171fe19631",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.165137Z",
-            "modified": "2026-08-28T18:09:52.165137Z",
+            "id": "relationship--108eed52-cb79-434e-b846-89b310f37486",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.038844Z",
+            "modified": "2026-08-28T20:11:06.038844Z",
+            "relationship_type": "uses",
+            "description": "confidence=high, sources=static",
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--fbfe6337-2ee7-4e0f-a44d-7bc660548da8"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--ea9e118d-8081-4069-9372-6c7c2d8c0063",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.038951Z",
+            "modified": "2026-08-28T20:11:06.038951Z",
+            "relationship_type": "uses",
+            "description": "confidence=high, sources=dynamic",
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--797cdddd-f446-44bf-8443-c4063960a05a"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--14910486-3ff7-4612-ad68-7aab7f29e252",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.039065Z",
+            "modified": "2026-08-28T20:11:06.039065Z",
+            "relationship_type": "uses",
+            "description": "confidence=high, sources=static",
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--e8d551fc-67d6-4617-a359-bb87e1a00a09"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--ffa0b32b-3197-4643-b636-9c5f1cf97dd8",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.039173Z",
+            "modified": "2026-08-28T20:11:06.039173Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=dynamic,static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--c4d288d1-e61f-4e44-8851-aa1307b67ff3"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--173d59e4-c97d-4666-a9ea-48e60f34f78c"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--c9043e21-63a8-446c-8629-90dc64a49d52",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.16526Z",
-            "modified": "2026-08-28T18:09:52.16526Z",
+            "id": "relationship--af4c56ba-0dbf-448c-93e8-3b5dae4a1908",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.039288Z",
+            "modified": "2026-08-28T20:11:06.039288Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=dynamic",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--4344bab9-71f7-44d9-b497-1bc8e384ac60"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--497cb2d4-31ff-43fe-bfe2-66c5dfdc9088"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--d542e1dd-ed72-40e0-9d2b-2c6253e6a9e1",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.165376Z",
-            "modified": "2026-08-28T18:09:52.165376Z",
+            "id": "relationship--f73f4abe-7b29-4e71-8bbd-8e75b9119bde",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.039397Z",
+            "modified": "2026-08-28T20:11:06.039397Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=dynamic",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--0cccbe65-0a54-4da7-9b12-df895ff06b8f"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--8c384d56-7289-48ef-bc88-6a87222f7be6"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--c291b901-a645-48c5-b970-bb6b9ad26426",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.165488Z",
-            "modified": "2026-08-28T18:09:52.165488Z",
+            "id": "relationship--e6d15bff-4620-44cd-87a3-98719c2f6ae8",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.039505Z",
+            "modified": "2026-08-28T20:11:06.039505Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--718ee8e4-6423-4ac8-926d-a88f3fe9b696"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--962822e4-dca0-40e0-8b3d-a2abbed6507f"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--7f0389d3-1e85-408e-9304-c7b868e918d3",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.165599Z",
-            "modified": "2026-08-28T18:09:52.165599Z",
+            "id": "relationship--b2048021-5b57-4e29-8401-2db1f3993f01",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.039616Z",
+            "modified": "2026-08-28T20:11:06.039616Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--d31ade21-ab2e-4740-8e67-54baf070640d"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--939e2eb1-18b0-4b1e-abf7-4994663e6466"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--7eb15aa3-ef6c-49b9-a11e-bfb4d52e04ce",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.165711Z",
-            "modified": "2026-08-28T18:09:52.165711Z",
+            "id": "relationship--5995cd99-f2df-47e6-99b6-0585e882f64d",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.03973Z",
+            "modified": "2026-08-28T20:11:06.03973Z",
             "relationship_type": "uses",
             "description": "confidence=high, sources=dynamic",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--c02eec52-b86d-4673-8520-dfa4cdb8745a"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--32f4a246-095a-414c-beaf-268068781018"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--cd6fea24-ac52-45f7-936c-76913c940ad8",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.165822Z",
-            "modified": "2026-08-28T18:09:52.165822Z",
+            "id": "relationship--ca22e47b-a616-4929-9d73-2c59aa8ec5bf",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.039838Z",
+            "modified": "2026-08-28T20:11:06.039838Z",
             "relationship_type": "uses",
             "description": "confidence=medium, sources=dynamic",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--331001fa-c2ab-4bb5-b711-faeed7ad5a90"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--215bdc0c-20ba-4129-aa5f-8458ffda1759"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--d99e0461-2914-4b7e-8a53-cb2bd603ba28",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.165939Z",
-            "modified": "2026-08-28T18:09:52.165939Z",
+            "id": "relationship--4dcff0b4-13c8-41fc-8cf6-b7042642e57d",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.039978Z",
+            "modified": "2026-08-28T20:11:06.039978Z",
             "relationship_type": "uses",
             "description": "confidence=medium, sources=dynamic",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--b9434e96-f035-4222-8af4-172ac2464953"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--f5e84a06-5a22-4e8c-a912-852992fc0278"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--c39ed372-bbab-4764-a163-564c1a6dea2f",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.166051Z",
-            "modified": "2026-08-28T18:09:52.166051Z",
+            "id": "relationship--56407fc1-e1e6-4b54-9f51-6d982ce80eee",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.040087Z",
+            "modified": "2026-08-28T20:11:06.040087Z",
             "relationship_type": "uses",
             "description": "confidence=medium, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--f3de13df-06b2-4288-ab83-bad41d97ed1c"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--52139485-0c86-46c0-a904-940e9876cdbd"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--d8b64d7d-b49b-4fc5-b704-0da9d551ed08",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.166161Z",
-            "modified": "2026-08-28T18:09:52.166161Z",
+            "id": "relationship--64f899cc-030a-4955-9e40-929ff4dbd853",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.040202Z",
+            "modified": "2026-08-28T20:11:06.040202Z",
             "relationship_type": "uses",
             "description": "confidence=medium, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--a65c5400-00ba-4baa-966c-06b690bc4886"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--f62de5bd-e963-4ea3-8824-c1c2be947fa8"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--b698abe4-7a23-4005-97b8-dab7a80cc5ce",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.166283Z",
-            "modified": "2026-08-28T18:09:52.166283Z",
+            "id": "relationship--6de64716-05b6-48cb-bf05-f03cd5ffd6ff",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.040317Z",
+            "modified": "2026-08-28T20:11:06.040317Z",
             "relationship_type": "uses",
             "description": "confidence=medium, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--6ba8ac23-3924-48db-ad2f-26522a7abd6d"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--ee254d1e-e125-475e-b127-290774f26154"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--f406fdc9-e4bd-440b-9a64-84c867af91c1",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.166395Z",
-            "modified": "2026-08-28T18:09:52.166395Z",
+            "id": "relationship--69dd05b6-713a-4e9a-9dde-b3d7a53eedd4",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.040424Z",
+            "modified": "2026-08-28T20:11:06.040424Z",
             "relationship_type": "uses",
             "description": "confidence=medium, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--61237a06-e82d-4dbc-b251-40a1ac174e99"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--5f39c047-6221-4d46-acc1-4712c8f7f9a6"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--1543ddfc-0b0e-4a51-8f20-eff18ad1a43e",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.166512Z",
-            "modified": "2026-08-28T18:09:52.166512Z",
+            "id": "relationship--eea8c3a0-49cd-4b32-8d82-5e8280b9c272",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.040535Z",
+            "modified": "2026-08-28T20:11:06.040535Z",
             "relationship_type": "uses",
             "description": "confidence=medium, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--62f5a38d-1f53-4b3b-9a4c-b93064b3eff5"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--08470379-d036-4a91-9259-8788c44b7aae"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--6a3bc3af-a911-45a0-8efb-e66192d7ee72",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.166623Z",
-            "modified": "2026-08-28T18:09:52.166623Z",
+            "id": "relationship--8d78d91f-bcdc-4738-a4b7-19d8223f00a7",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.040642Z",
+            "modified": "2026-08-28T20:11:06.040642Z",
             "relationship_type": "uses",
             "description": "confidence=medium, sources=dynamic",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--1eb51728-74bb-4a7b-8a0b-f197b58e0ae9"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--fe9abf3a-3753-4cda-bbaf-a1aa90a0c0ef"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--e9c5315b-72f1-4f6d-899d-35700c82b1e6",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.166734Z",
-            "modified": "2026-08-28T18:09:52.166734Z",
+            "id": "relationship--58738d4f-fe45-47ca-bcc2-5e8718477676",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.040756Z",
+            "modified": "2026-08-28T20:11:06.040756Z",
             "relationship_type": "uses",
             "description": "confidence=medium, sources=static",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--c80e85c9-9c2f-434f-8fb9-6ccf5df40c16"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--928f3450-b773-4136-86ae-b75f2a2323eb"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--ca89e90d-3c9d-4650-95a7-1d6eb06e0f3e",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.166845Z",
-            "modified": "2026-08-28T18:09:52.166845Z",
+            "id": "relationship--17e4a435-752b-4ac6-81db-f01a7eda85b4",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.040865Z",
+            "modified": "2026-08-28T20:11:06.040865Z",
             "relationship_type": "uses",
             "description": "confidence=low, sources=dynamic",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--ea7038fe-8638-4be4-945c-c5bfa0fc1b14"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--8f818f55-b238-4a1e-ba9d-74f765d9449d"
         },
         {
             "type": "relationship",
             "spec_version": "2.1",
-            "id": "relationship--33ada84b-67b3-4ea7-a0f2-d631b345fb5b",
-            "created_by_ref": "identity--1cc1d8cc-7e7c-4cbe-8b64-f8bab305237e",
-            "created": "2026-08-28T18:09:52.166956Z",
-            "modified": "2026-08-28T18:09:52.166956Z",
+            "id": "relationship--28dd5a6e-7168-4c87-9695-5bf6cbda8e41",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.040976Z",
+            "modified": "2026-08-28T20:11:06.040976Z",
             "relationship_type": "uses",
             "description": "confidence=low, sources=dynamic",
-            "source_ref": "malware--3bd414b5-77c6-4bfc-ab28-40b339b33145",
-            "target_ref": "attack-pattern--a711b58d-d453-46a3-b44f-df303eb70516"
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--45c39e58-3367-48f2-b8f9-b375fd6dbce8"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--2a5a6b5b-f177-42c8-b6ac-c74c12cd96b1",
+            "created_by_ref": "identity--5805b7cc-f360-4215-a6f2-5b226c88f68b",
+            "created": "2026-08-28T20:11:06.041084Z",
+            "modified": "2026-08-28T20:11:06.041084Z",
+            "relationship_type": "uses",
+            "description": "confidence=low, sources=dynamic",
+            "source_ref": "malware--464c0670-1a5a-4ed9-a6e4-241af8d30cbc",
+            "target_ref": "attack-pattern--ce8d5a89-17f8-4bda-90db-28ab18bcab1a"
         }
     ]
 }

