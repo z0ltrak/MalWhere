@@ -2,10 +2,13 @@
 
 import json
 import os
+import re
 import subprocess
 import shutil
 from typing import Dict, List, Any
 from pathlib import Path
+
+_ANSI_ESCAPE_RE = re.compile(r'\x1b\[[0-9;]*m')
 
 
 class PackerDetector:
@@ -91,7 +94,7 @@ class PackerDetector:
             )
 
             if result.stdout:
-                self._parse_die_text_output(result.stdout)
+                self._parse_die_text_output(_ANSI_ESCAPE_RE.sub('', result.stdout))
             elif result.stderr:
                 self.errors.append(f"DIE error: {result.stderr[:200]}")
 

@@ -435,6 +435,55 @@ def process_resubmissions_static() -> None:
     compose("exec", "static", "python3", "/scripts/process_resubmissions.py", "--verbose")
 
 
+def retire_resubmission_queue() -> None:
+    """Delete queue entries that already have a static report on disk, across every family.
+
+    The static container's /resubmit mount is read-only by design (see
+    ensure_containers_up's comment on who owns this directory) -- it can consume
+    the queue but never mutate it, so retirement has to happen here on the host,
+    which is the queue's sole writer (resubmit_writer.py).
+
+    Leaving a fully-processed entry in the queue serves no purpose and is
+    actively dangerous: if its static report is ever deleted independently (e.g.
+    a family cleanup), the next run's already_processed() check in
+    static/scripts/process_resubmissions.py finds nothing and silently
+    regenerates the "deleted" data from the still-queued manifest -- exactly
+    what happened with stale asyncrat entries resurrecting static/reports/asyncrat
+    after that family's data was removed.
+    """
+    manifest_dir = DOCKER_DIR / "resubmit_queue" / "manifest"
+    artifacts_dir = DOCKER_DIR / "resubmit_queue" / "artifacts"
+    if not manifest_dir.is_dir():
+        return
+
+    manifests = sorted(manifest_dir.glob("*.json"))
+    parsed = {}
+    reference_counts = {}
+    for mp in manifests:
+        try:
+            m = json.loads(mp.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        parsed[mp] = m
+        reference_counts[m.get("sha256")] = reference_counts.get(m.get("sha256"), 0) + 1
+
+    retired = 0
+    for mp, m in parsed.items():
+        family = m.get("parent_family", "unknown")
+        sha256 = m.get("sha256")
+        report = REPO_ROOT / "static" / "reports" / family / f"{sha256}_static.json"
+        if not report.exists():
+            continue
+        mp.unlink(missing_ok=True)
+        reference_counts[sha256] -= 1
+        if reference_counts[sha256] <= 0:
+            (artifacts_dir / sha256).unlink(missing_ok=True)
+        retired += 1
+
+    if retired:
+        log(f"Retired {retired} already-processed entr{'y' if retired == 1 else 'ies'} from the resubmission queue")
+
+
 def process_resubmissions_merge() -> None:
     """Run the resubmission loop's merge half: normalize + map each dropped file's static report on the host."""
     banner("Resubmission loop, merge half (normalize + map each dropped file)")
@@ -599,6 +648,7 @@ def main() -> int:
 
     if dynamic_report is not None and not args.skip_resubmit:
         process_resubmissions_static()
+        retire_resubmission_queue()
         process_resubmissions_merge()
 
     mapping_path = normalize_and_map(args.family, static_report, dynamic_report)
