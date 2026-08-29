@@ -511,14 +511,6 @@ before `misp` starts" under [Known Issues](#known-issues--fixes) for the
 mechanics, and why it can take MISP a minute or two to respond on first
 boot.
 
-### Post-Build: PostgreSQL Setup
-
-After starting the sandbox profile for the first time (step 2 above), the
-`cape` container initializes its PostgreSQL/MongoDB databases
-(`cape_task_db`, `cape_postgres_data`, `cape_mongo_data`) on first boot. If
-`cape-web` fails to come up, see [Known Issues & Fixes](#known-issues--fixes)
-("CAPE's PostgreSQL role missing after a fresh build") for the manual fix.
-
 ### Verifying CAPE is Running
 
 ```bash
@@ -532,7 +524,26 @@ curl -s http://localhost:8000/apiv2/tasks/list/ | python3 -m json.tool
 # already run samples through the pipeline
 ```
 
+### Post-Build: PostgreSQL Setup
+
+After starting the sandbox profile for the first time (step 2 above), the
+`cape` container initializes its PostgreSQL/MongoDB databases
+(`cape_task_db`, `cape_postgres_data`, `cape_mongo_data`) on first boot. If
+`cape-web` fails to come up (i.e. the check above shows it inactive or the
+API call fails), see [Known Issues & Fixes](#known-issues--fixes) ("CAPE's
+PostgreSQL role missing after a fresh build") for the manual fix.
+
 > **Note:** CAPE runs in no-auth mode for local development. The web UI is accessible at `http://localhost:8000` without credentials.
+
+**If you've followed every step above with no errors, setup is done — you
+can start analyzing samples now.** Skip straight to the main
+[README.md](../README.md)'s [**"Run the pipeline on a
+sample"**](../README.md#run-the-pipeline-on-a-sample) section for
+`run_pipeline.py`, the single entry point that runs a sample through the
+whole pipeline (static analysis → CAPE detonation → resubmission → ATT&CK
+mapping → STIX/MISP export) automatically. Everything from here down in
+this doc is reference material: service URLs, manual per-stage commands,
+and troubleshooting — not further setup.
 
 ---
 
