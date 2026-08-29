@@ -397,6 +397,15 @@ paper.
 | RoningLoader (loader only) | 0.95 | 0.77 | 0.85 | parent binary alone |
 | RoningLoader (+ resubmission) | 0.86 | 0.92 | 0.89 | loader + ground-truthed dropped components |
 
+Figures above are from the audited baseline run (commit `98235b8`).
+CAPE detonation is not perfectly deterministic: re-running the pipeline
+end-to-end, including on an independent clean-clone VM, can shift
+individual runs' precision/recall by a few points and change which
+specific dynamic-analysis techniques fire, since a CAPE behavioral
+signature may or may not trigger between runs even against the same
+sample. This variance is confined to dynamic-sourced techniques; static
+analysis findings are stable across runs.
+
 Family-level matching (a parent technique and its sub-technique count as
 the same finding). Every discrepancy against ground truth is individually
 audited against the manual report's full text, not just its own summary
