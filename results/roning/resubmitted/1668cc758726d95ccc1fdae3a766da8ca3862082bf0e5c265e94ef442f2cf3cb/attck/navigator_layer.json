@@ -1,7 +1,7 @@
 {
   "name": "MalWhere - roning",
   "versions": {
-    "attack": "14",
+    "attack": "19",
     "navigator": "4.9.1",
     "layer": "4.5"
   },
@@ -24,7 +24,7 @@
       "techniqueID": "T1055",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "static corroborated; evidence: OpenProcess, VirtualAllocEx, WriteProcessMemory, OpenProcess",
+      "comment": "static corroborated; evidence: VirtualAllocEx, WriteProcessMemory, OpenProcess",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -78,7 +78,7 @@
       "techniqueID": "T1071",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "static corroborated; evidence: .onion, 20 C2 IPs found",
+      "comment": "static corroborated; evidence: .onion, 1 C2 IPs found",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -114,7 +114,25 @@
       "techniqueID": "T1134",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "static corroborated; evidence: AdjustTokenPrivileges, LookupPrivilegeValue",
+      "comment": "static corroborated; evidence: AdjustTokenPrivileges, LookupPrivilegeValue, OpenProcessToken",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "high"
+        },
+        {
+          "name": "sources",
+          "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1140",
+      "score": 100,
+      "color": "#e60d0d",
+      "comment": "static corroborated; evidence: 202.95.11.173 (XOR key 0x61)",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -132,7 +150,7 @@
       "techniqueID": "T1497",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "static corroborated; evidence: GetTickCount, GetTickCount, QueryPerformanceFrequency, Sleep, QueryPerformanceCounter, QueryPerformanceCounter, Sleep",
+      "comment": "static corroborated; evidence: GetSystemInfo, GetTickCount, GetTickCount, QueryPerformanceFrequency, Sleep, QueryPerformanceCounter, QueryPerformanceCounter, Sleep",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -151,6 +169,24 @@
       "score": 100,
       "color": "#e60d0d",
       "comment": "static corroborated; evidence: RegSetValueExA, RegCreateKeyExA",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "high"
+        },
+        {
+          "name": "sources",
+          "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1555",
+      "score": 100,
+      "color": "#e60d0d",
+      "comment": "static corroborated; evidence: Browser extension path(s) referencing: MetaMask",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -193,24 +229,6 @@
         {
           "name": "confidence",
           "value": "medium"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1082",
-      "score": 30,
-      "color": "#8ec843",
-      "comment": "static corroborated; evidence: GetSystemInfo",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "low"
         },
         {
           "name": "sources",

@@ -1239,7 +1239,7 @@
     "detected": true,
     "packers": [
       {
-        "name": "Compiler: Microsoft Visual C/C++(16.00.30319)[LTCG/C++",
+        "name": "\u001b[39;49mCompiler: Microsoft Visual C/C++(16.00.30319)[LTCG/C++]\u001b[0m",
         "version": "N/A",
         "type": "compiler",
         "confidence": "medium"
@@ -5901,7 +5901,7 @@
       "name": "Indicator Removal on Host",
       "source": "import",
       "evidence": "CreateFileW",
-      "confidence": "medium",
+      "confidence": "low",
       "justification": "The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
     },
     {
@@ -5927,14 +5927,6 @@
       "evidence": "AntiDebug_IsDebuggerPresent",
       "confidence": "high",
       "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
-    },
-    {
-      "technique": "T1071",
-      "name": "Application Layer Protocol",
-      "source": "config",
-      "evidence": "1 C2 IPs found",
-      "confidence": "medium",
-      "justification": "Found 1 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
     }
   ],
   "config": {
@@ -5944,20 +5936,21 @@
     ],
     "urls": [
       "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
-      "http://www.microsoft.com/pki/certs/tspca.crt0",
       "http://www.microsoft.com/DirectX0",
       "http://www.microsoft.com/pki/certs/CSPCA.crt0",
-      "http://crl.microsoft.com/pki/crl/products/tspca.crl0H"
+      "http://crl.microsoft.com/pki/crl/products/tspca.crl0H",
+      "http://www.microsoft.com/pki/certs/tspca.crt0"
     ],
     "emails": [],
     "registry_paths": [],
     "file_paths": [],
     "mutexes": [],
     "encryption_keys": [],
-    "patterns": []
+    "patterns": [],
+    "xor_recovered_iocs": []
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-12T13:19:55.214948",
+  "analysis_timestamp": "2026-08-28T19:56:42.601585",
   "errors": [],
   "resubmission_lineage": {
     "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",

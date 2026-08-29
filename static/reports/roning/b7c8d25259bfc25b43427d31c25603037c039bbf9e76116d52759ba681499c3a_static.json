@@ -164,10 +164,11 @@
     "file_paths": [],
     "mutexes": [],
     "encryption_keys": [],
-    "patterns": []
+    "patterns": [],
+    "xor_recovered_iocs": []
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-12T13:25:38.215643",
+  "analysis_timestamp": "2026-08-28T20:03:42.066940",
   "errors": [],
   "resubmission_lineage": {
     "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",

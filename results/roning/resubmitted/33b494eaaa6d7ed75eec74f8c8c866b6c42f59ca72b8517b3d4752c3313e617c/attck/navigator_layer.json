@@ -1,7 +1,7 @@
 {
   "name": "MalWhere - roning",
   "versions": {
-    "attack": "14",
+    "attack": "19",
     "navigator": "4.9.1",
     "layer": "4.5"
   },
@@ -24,25 +24,7 @@
       "techniqueID": "T1055",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "static corroborated; evidence: OpenProcess, VirtualAllocEx, CreateRemoteThread, OpenProcess, WriteProcessMemory",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1070",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "static corroborated; evidence: CreateFile, CreateFileA, CreateFileW",
+      "comment": "static corroborated; evidence: VirtualAllocEx, CreateRemoteThread, OpenProcess, WriteProcessMemory",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -121,6 +103,24 @@
         {
           "name": "confidence",
           "value": "medium"
+        },
+        {
+          "name": "sources",
+          "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1070",
+      "score": 30,
+      "color": "#8ec843",
+      "comment": "static corroborated; evidence: CreateFile, CreateFileA, CreateFileW",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "low"
         },
         {
           "name": "sources",

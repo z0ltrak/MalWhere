@@ -1,0 +1,631 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-29T09:28:31.068242+00:00",
+  "sources": {
+    "static_report": "static/reports/roning/beff689602a45a461a5dc23e629a5b67622a1c6847cdff660c72de201fded79f_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "roning",
+    "static_sha256": "beff689602a45a461a5dc23e629a5b67622a1c6847cdff660c72de201fded79f",
+    "static_md5": "725c088047d8124d11be5d43be82a891",
+    "static_sha1": "debc4ed82947c78353b0b3811034a8f9d7385d2f",
+    "static_imphash": "21ca77f78fb06814e02e4de6021dd985",
+    "static_ssdeep": "49152:WoS+7sa9lqas8ew+AyKrMqY/U4FKQVDTh4SVH20vD:lx7ds8ew+AyKrMqaDiSVH20vD",
+    "static_tlsh": "T1DAD5BF56ABA424F8D96BC138C9734513EBF2B4550760E7CF07A086A61F237E19E3E391",
+    "static_filename": "beff689602a45a461a5dc23e629a5b67622a1c6847cdff660c72de201fded79f",
+    "static_file_type": "pe_native"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "beff689602a45a461a5dc23e629a5b67622a1c6847cdff660c72de201fded79f",
+      "md5": "725c088047d8124d11be5d43be82a891",
+      "sha1": "debc4ed82947c78353b0b3811034a8f9d7385d2f",
+      "filename": "beff689602a45a461a5dc23e629a5b67622a1c6847cdff660c72de201fded79f",
+      "type": "pe_native"
+    }
+  ],
+  "network_iocs": {
+    "domains": [
+      {
+        "value": "example.com",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "ips": [
+      {
+        "value": "202.95.11.173",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "urls": [
+      {
+        "value": "https://curl.se/docs/alt-svc.html",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "https://www.certum.pl/CPS0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "https://www.verisign.com/rpa0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://subca.ocsp-certum.com01",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://csc3-2010-crl.verisign.com/CSC3-2010.crl0D",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://ocsp.verisign.com0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "https://www.verisign.com/rpa",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://repository.certum.pl/ctnca2.cer09",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://ocsp.digicert.com0A",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crt.comodoca.com/COMODORSAAddTrustCA.crt0$",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://subca.crl.certum.pl/ctsca2021.crl0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://www.baidu.com/",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://ocsp.verisign.com0;",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl.usertrust.com/AddTrustExternalCARoot.crl05",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "https://secure.comodo.net/CPS0C",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://subca.ocsp-certum.com02",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://ccsca2021.crl.certum.pl/ccsca2021.crl0s",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl.microsoft.com/pki/crl/products/MicrosoftCodeVerifRoot.crl0",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "emails": [
+      {
+        "value": "ftp@example.com",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "tJ@8.tE",
+        "sources": [
+          "static"
+        ]
+      }
+    ]
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [
+      {
+        "value": "C:\\Users\\%s\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\nkbihfbeogaeaoehlefnkodbefgpgknn",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "C:\\ProgramData\\Roning\\goldendays.dll",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "C:\\windows\\system32\\drivers\\zeasea.tmp",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "C:\\ProgramData\\DiamondAge\\diamondage.exe",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "C:\\Program Files\\Snegreijsmaity\\RDKl4OR6\\Kyl2lh\\66VOAk0O.exe",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "\\\\%s\\%s%c%s",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "Z:\\Zemana\\Projects\\AntiMalware\\bin\\zam64.pdb",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "\\\\.\\ZemanaAntiMalware",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "C:\\ProgramData\\DiamondAge",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "C:\\ProgramData\\DiamondAge\\diamondage.dll",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [
+    {
+      "technique": "T1055",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "VirtualAllocEx, WriteProcessMemory, OpenProcess",
+          "confidence": "high",
+          "name": "Process Injection",
+          "justification": "The API functions VirtualAllocEx, WriteProcessMemory, OpenProcess are all imported by the binary. This combination is characteristic of Process Injection \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1057",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateToolhelp32Snapshot",
+          "confidence": "medium",
+          "name": "Process Discovery",
+          "justification": "The API function 'CreateToolhelp32Snapshot' is imported by the binary. This API is commonly used to perform Process Discovery. Importing this function alone (no other Process Discovery-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1059",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateProcessW",
+          "confidence": "high",
+          "name": "Command and Scripting Interpreter",
+          "justification": "The malware string 'CreateProcessW' was found in the binary, alongside 1 other string(s) also characteristic of Command and Scripting Interpreter. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "ShellExecuteW",
+          "confidence": "high",
+          "name": "Command and Scripting Interpreter",
+          "justification": "The malware string 'ShellExecuteW' was found in the binary, alongside 1 other string(s) also characteristic of Command and Scripting Interpreter. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateProcessW, ShellExecuteW",
+          "confidence": "high",
+          "name": "Command and Scripting Interpreter",
+          "justification": "The API functions CreateProcessW, ShellExecuteW are all imported by the binary. This combination is characteristic of Command and Scripting Interpreter \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1070",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateFile",
+          "confidence": "low",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "DeleteFile",
+          "confidence": "medium",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'DeleteFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "DeleteFileA, CreateFileA, DeleteFileW, CreateFileW",
+          "confidence": "high",
+          "name": "Indicator Removal on Host",
+          "justification": "The API functions DeleteFileA, CreateFileA, DeleteFileW, CreateFileW are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1071",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": ".onion",
+          "confidence": "high",
+          "name": "Application Layer Protocol",
+          "justification": "The malware string '.onion' was found in the binary. This string is characteristic of Application Layer Protocol behavior. The presence of this specific string alone (no other Application Layer Protocol-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "1 C2 IPs found",
+          "confidence": "medium",
+          "name": "Application Layer Protocol",
+          "justification": "Found 1 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
+        }
+      ]
+    },
+    {
+      "technique": "T1083",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "FindFirstFile",
+          "confidence": "high",
+          "name": "File and Directory Discovery",
+          "justification": "The malware string 'FindFirstFile' was found in the binary, alongside 1 other string(s) also characteristic of File and Directory Discovery. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "FindNextFile",
+          "confidence": "high",
+          "name": "File and Directory Discovery",
+          "justification": "The malware string 'FindNextFile' was found in the binary, alongside 1 other string(s) also characteristic of File and Directory Discovery. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "FindClose, FindNextFileW, FindFirstFileW",
+          "confidence": "high",
+          "name": "File and Directory Discovery",
+          "justification": "The API functions FindClose, FindNextFileW, FindFirstFileW are all imported by the binary. This combination is characteristic of File and Directory Discovery \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1134",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "OpenProcessToken",
+          "confidence": "high",
+          "name": "Privilege Escalation",
+          "justification": "The malware string 'OpenProcessToken' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "AdjustTokenPrivileges",
+          "confidence": "high",
+          "name": "Privilege Escalation",
+          "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "LookupPrivilegeValue",
+          "confidence": "high",
+          "name": "Privilege Escalation",
+          "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1140",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "202.95.11.173 (XOR key 0x61)",
+          "confidence": "high",
+          "name": "Deobfuscate/Decode Files or Information",
+          "justification": "Recovered 202.95.11.173 (XOR key 0x61) by brute-forcing every possible single-byte XOR key against the binary and requiring a clean null-padded boundary around the match (not just a coincidental decode). A network address stored obfuscated like this is unusable to the malware until it reverses the same encoding at runtime -- direct evidence of Deobfuscate/Decode Files or Information (T1140)."
+        }
+      ]
+    },
+    {
+      "technique": "T1486",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "WriteFile",
+          "confidence": "low",
+          "name": "Data Encrypted for Impact",
+          "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1497",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "QueryPerformanceCounter",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'QueryPerformanceCounter' was found in the binary, alongside 3 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "Sleep",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'Sleep' was found in the binary, alongside 3 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "GetTickCount",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'GetTickCount' was found in the binary, alongside 3 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "GetSystemInfo",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'GetSystemInfo' was found in the binary, alongside 3 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "GetTickCount, QueryPerformanceFrequency, Sleep, QueryPerformanceCounter",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The API functions GetTickCount, QueryPerformanceFrequency, Sleep, QueryPerformanceCounter are all imported by the binary. This combination is characteristic of Virtualization/Sandbox Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1547.001",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "RegSetValueExA, RegCreateKeyExA",
+          "confidence": "high",
+          "name": "Registry Run Keys / Startup Folder",
+          "justification": "The API functions RegSetValueExA, RegCreateKeyExA are all imported by the binary. This combination is characteristic of Registry Run Keys / Startup Folder \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1555",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "Browser extension path(s) referencing: MetaMask",
+          "confidence": "high",
+          "name": "Credentials from Password Stores",
+          "justification": "A file path referencing the MetaMask browser extension's fixed store ID was found in the binary. Checking for or targeting a specific cryptocurrency wallet extension's installation path is characteristic of Credentials from Password Stores (T1555) -- these extension IDs are assigned once by the browser's extension store and have no legitimate reason to appear hardcoded in unrelated software."
+        }
+      ]
+    },
+    {
+      "technique": "T1622",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "IsDebuggerPresent",
+          "confidence": "low",
+          "name": "Debugger Evasion",
+          "justification": "The malware string 'IsDebuggerPresent' was found in the binary. This string is characteristic of Debugger Evasion behavior. The presence of this specific string alone (no other Debugger Evasion-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "OutputDebugStringW, UnhandledExceptionFilter, SetUnhandledExceptionFilter, IsDebuggerPresent",
+          "confidence": "high",
+          "name": "Debugger Evasion",
+          "justification": "The API functions OutputDebugStringW, UnhandledExceptionFilter, SetUnhandledExceptionFilter, IsDebuggerPresent are all imported by the binary. This combination is characteristic of Debugger Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "yara",
+          "evidence": "AntiDebug_IsDebuggerPresent",
+          "confidence": "high",
+          "name": "Debugger Evasion",
+          "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
+        },
+        {
+          "source": "static",
+          "source_type": "yara",
+          "evidence": "AntiDebug_NtQueryInformationProcess",
+          "confidence": "high",
+          "name": "Debugger Evasion",
+          "justification": "YARA rule 'AntiDebug_NtQueryInformationProcess' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
+        }
+      ]
+    }
+  ],
+  "discarded_entries": [
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "csc3-2010-crl.verisign.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.verisign.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "csc3-2010-aia.verisign.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "repository.certum.pl"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.microsoft.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.certum.pl"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.comodoca.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.usertrust.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl3.digicert.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "logo.verisign.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "cacerts.digicert.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crt.comodoca.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "secure.comodo.net"
+    }
+  ]
+}

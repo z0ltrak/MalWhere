@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T09:41:37.351110+00:00",
+  "generated_at": "2026-08-28T20:06:33.980280+00:00",
   "sources": {
     "static_report": "static/reports/roning/1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9_static.json",
     "dynamic_report": null
@@ -38,12 +38,6 @@
         ]
       },
       {
-        "value": "http://www.microsoft.com/pki/certs/tspca.crt0",
-        "sources": [
-          "static"
-        ]
-      },
-      {
         "value": "http://www.microsoft.com/DirectX0",
         "sources": [
           "static"
@@ -57,6 +51,12 @@
       },
       {
         "value": "http://crl.microsoft.com/pki/crl/products/tspca.crl0H",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://www.microsoft.com/pki/certs/tspca.crt0",
         "sources": [
           "static"
         ]
@@ -100,22 +100,9 @@
           "source": "static",
           "source_type": "import",
           "evidence": "CreateFileW",
-          "confidence": "medium",
+          "confidence": "low",
           "name": "Indicator Removal on Host",
           "justification": "The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
-        }
-      ]
-    },
-    {
-      "technique": "T1071",
-      "observations": [
-        {
-          "source": "static",
-          "source_type": "config",
-          "evidence": "1 C2 IPs found",
-          "confidence": "medium",
-          "name": "Application Layer Protocol",
-          "justification": "Found 1 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
         }
       ]
     },

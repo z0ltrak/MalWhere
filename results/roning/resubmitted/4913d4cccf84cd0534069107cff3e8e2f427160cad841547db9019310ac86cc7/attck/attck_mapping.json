@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:29.310977+00:00",
+  "generated_at": "2026-08-28T20:06:34.750813+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "4913d4cccf84cd0534069107cff3e8e2f427160cad841547db9019310ac86cc7",
@@ -44,31 +44,8 @@
   },
   "techniques": [
     {
-      "technique_id": "T1055",
-      "technique_name": "Process Injection",
-      "final_confidence": "medium",
-      "confidence_score": 60,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "medium",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "OpenProcess",
-          "confidence": "medium",
-          "name": "Process Injection",
-          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1082",
-      "technique_name": "System Information Discovery",
+      "technique_id": "T1033",
+      "technique_name": "System Owner/User Discovery",
       "final_confidence": "medium",
       "confidence_score": 60,
       "sources": [
@@ -82,8 +59,8 @@
           "source_type": "import",
           "evidence": "GetUserNameW",
           "confidence": "medium",
-          "name": "System Information Discovery",
-          "justification": "The API function 'GetUserNameW' is imported by the binary. This API is commonly used to perform System Information Discovery. Importing this function alone (no other System Information Discovery-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+          "name": "System Owner/User Discovery",
+          "justification": "The API function 'GetUserNameW' is imported by the binary. This API is commonly used to perform System Owner/User Discovery. Importing this function alone (no other System Owner/User Discovery-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }
       ],
       "cross_level_corroboration": false,
@@ -91,7 +68,7 @@
     },
     {
       "technique_id": "T1134",
-      "technique_name": "Unknown ATT&CK technique (T1134)",
+      "technique_name": "Access Token Manipulation",
       "final_confidence": "medium",
       "confidence_score": 60,
       "sources": [
@@ -102,11 +79,11 @@
       "evidence": [
         {
           "source": "static",
-          "source_type": "import",
+          "source_type": "string_pattern",
           "evidence": "OpenProcessToken",
           "confidence": "medium",
           "name": "Privilege Escalation",
-          "justification": "The API function 'OpenProcessToken' is imported by the binary. This API is commonly used to perform Privilege Escalation. Importing this function alone (no other Privilege Escalation-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+          "justification": "The malware string 'OpenProcessToken' was found in the binary. This string is characteristic of Privilege Escalation behavior. The presence of this specific string alone (no other Privilege Escalation-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
       ],
       "cross_level_corroboration": false,
@@ -114,12 +91,12 @@
     }
   ],
   "summary": {
-    "total_techniques": 3,
+    "total_techniques": 2,
     "high": 0,
-    "medium": 3,
+    "medium": 2,
     "low": 0,
     "both_sources": 0,
-    "static_only": 3,
+    "static_only": 2,
     "dynamic_only": 0
   }
 }

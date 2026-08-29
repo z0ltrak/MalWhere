@@ -2334,7 +2334,7 @@
     "detected": true,
     "packers": [
       {
-        "name": "Compiler: Microsoft Visual C/C++(16.00.30319)[LTCG/C++",
+        "name": "\u001b[39;49mCompiler: Microsoft Visual C/C++(16.00.30319)[LTCG/C++]\u001b[0m",
         "version": "N/A",
         "type": "compiler",
         "confidence": "medium"
@@ -7052,12 +7052,20 @@
   },
   "attck_mappings": [
     {
-      "technique": "T1055",
-      "name": "Process Injection",
+      "technique": "T1518.001",
+      "name": "Software Discovery: Security Software Discovery",
       "source": "string_pattern",
-      "evidence": "OpenProcess",
+      "evidence": "avp.exe",
       "confidence": "medium",
-      "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+      "justification": "The malware string 'avp.exe' was found in the binary. This string is characteristic of Software Discovery: Security Software Discovery behavior. The presence of this specific string alone (no other Software Discovery: Security Software Discovery-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+    },
+    {
+      "technique": "T1134",
+      "name": "Privilege Escalation",
+      "source": "string_pattern",
+      "evidence": "OpenProcessToken",
+      "confidence": "high",
+      "justification": "The malware string 'OpenProcessToken' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1134",
@@ -7065,7 +7073,7 @@
       "source": "string_pattern",
       "evidence": "AdjustTokenPrivileges",
       "confidence": "high",
-      "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1134",
@@ -7073,7 +7081,7 @@
       "source": "string_pattern",
       "evidence": "LookupPrivilegeValue",
       "confidence": "high",
-      "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1497",
@@ -7088,16 +7096,16 @@
       "name": "Indicator Removal on Host",
       "source": "string_pattern",
       "evidence": "DeleteFile",
-      "confidence": "high",
-      "justification": "The malware string 'DeleteFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "confidence": "medium",
+      "justification": "The malware string 'DeleteFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
     },
     {
       "technique": "T1070",
       "name": "Indicator Removal on Host",
       "source": "string_pattern",
       "evidence": "CreateFile",
-      "confidence": "high",
-      "justification": "The malware string 'CreateFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "confidence": "low",
+      "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
     },
     {
       "technique": "T1486",
@@ -7152,8 +7160,8 @@
       "name": "Indicator Removal on Host",
       "source": "import",
       "evidence": "DeleteFileA, CreateFileA, CreateFileW",
-      "confidence": "high",
-      "justification": "The API functions DeleteFileA, CreateFileA, CreateFileW are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+      "confidence": "medium",
+      "justification": "The API functions DeleteFileA, CreateFileA, CreateFileW are imported by the binary. Each is individually associated with Indicator Removal on Host, but this specific combination doesn't form one of the corroborating patterns known to indicate Indicator Removal on Host with high confidence \u2014 treat this as suggestive rather than conclusive."
     },
     {
       "technique": "T1059",
@@ -7210,6 +7218,14 @@
       "evidence": "GetAsyncKeyState",
       "confidence": "medium",
       "justification": "The API function 'GetAsyncKeyState' is imported by the binary. This API is commonly used to perform Keylogging. Importing this function alone (no other Keylogging-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+    },
+    {
+      "technique": "T1529",
+      "name": "System Shutdown/Reboot",
+      "source": "import",
+      "evidence": "ExitWindowsEx",
+      "confidence": "medium",
+      "justification": "The API function 'ExitWindowsEx' is imported by the binary. This API is commonly used to perform System Shutdown/Reboot. Importing this function alone (no other System Shutdown/Reboot-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
     },
     {
       "technique": "T1547.001",
@@ -7274,7 +7290,7 @@
     ]
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-12T14:28:55.936418",
+  "analysis_timestamp": "2026-08-28T19:58:14.588096",
   "errors": [],
   "resubmission_lineage": {
     "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",

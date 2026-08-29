@@ -1,7 +1,7 @@
 {
   "name": "MalWhere - roning",
   "versions": {
-    "attack": "14",
+    "attack": "19",
     "navigator": "4.9.1",
     "layer": "4.5"
   },
@@ -22,27 +22,9 @@
   "techniques": [
     {
       "techniqueID": "T1070",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "static corroborated; evidence: CreateFile, DeleteFile",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1055",
       "score": 60,
       "color": "#ffe766",
-      "comment": "static corroborated; evidence: OpenProcess",
+      "comment": "static corroborated; evidence: CreateFile, DeleteFile",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [

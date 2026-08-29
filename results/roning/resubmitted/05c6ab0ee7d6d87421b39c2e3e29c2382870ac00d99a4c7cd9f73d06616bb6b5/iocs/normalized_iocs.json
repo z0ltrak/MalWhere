@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:28.303505+00:00",
+  "generated_at": "2026-08-28T20:06:33.612625+00:00",
   "sources": {
     "static_report": "static/reports/roning/05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5_static.json",
     "dynamic_report": null
@@ -49,36 +49,23 @@
   },
   "technique_observations": [
     {
-      "technique": "T1055",
-      "observations": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "OpenProcess",
-          "confidence": "medium",
-          "name": "Process Injection",
-          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        }
-      ]
-    },
-    {
       "technique": "T1070",
       "observations": [
         {
           "source": "static",
           "source_type": "string_pattern",
           "evidence": "CreateFile",
-          "confidence": "high",
+          "confidence": "low",
           "name": "Indicator Removal on Host",
-          "justification": "The malware string 'CreateFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         },
         {
           "source": "static",
           "source_type": "string_pattern",
           "evidence": "DeleteFile",
-          "confidence": "high",
+          "confidence": "medium",
           "name": "Indicator Removal on Host",
-          "justification": "The malware string 'DeleteFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+          "justification": "The malware string 'DeleteFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
       ]
     },

@@ -1,7 +1,7 @@
 {
   "name": "MalWhere - roning",
   "versions": {
-    "attack": "14",
+    "attack": "19",
     "navigator": "4.9.1",
     "layer": "4.5"
   },
@@ -19,80 +19,7 @@
     "showName": true
   },
   "hideDisabled": false,
-  "techniques": [
-    {
-      "techniqueID": "T1059",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "static corroborated; evidence: CreateProcessW, CreateProcessW, ShellExecuteW, ShellExecuteW",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1055",
-      "score": 60,
-      "color": "#ffe766",
-      "comment": "static corroborated; evidence: OpenProcess",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "medium"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1057",
-      "score": 60,
-      "color": "#ffe766",
-      "comment": "static corroborated; evidence: CreateToolhelp32Snapshot",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "medium"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1134",
-      "score": 60,
-      "color": "#ffe766",
-      "comment": "static corroborated; evidence: OpenProcessToken",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "medium"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    }
-  ],
+  "techniques": [],
   "gradient": {
     "colors": [
       "#8ec843",

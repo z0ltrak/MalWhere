@@ -1,0 +1,89 @@
+{
+  "filename": "ae60180c61e2bf14a0467d4dca34b5c5d1705fed39d3466bde3b8d0d594635d1",
+  "size_bytes": 16384,
+  "size_mb": 0.02,
+  "extension": "",
+  "file_type": "unknown",
+  "file_type_info": {
+    "type": "unknown",
+    "confidence": "low"
+  },
+  "md5": "b5557da7e59e6d1f6a5dc115c936f4c9",
+  "sha1": "ec341e5f5b5a8175c66df8e61554df29ba52c76d",
+  "sha256": "ae60180c61e2bf14a0467d4dca34b5c5d1705fed39d3466bde3b8d0d594635d1",
+  "ssdeep": "24:Wg0q54sc//0E6igTsi5QkU//M8yKIDka5I8M//:W254sc6igTs//M8a5I8M",
+  "tlsh": "T1EA720B08CC11C632CA5D41B9DC6F0D487BD402B9E5B537671F28A0A3E9D3356E18B19C",
+  "is_dotnet": false,
+  "metadata": {},
+  "sections": [],
+  "imports": [],
+  "exports": [],
+  "resources": [],
+  "strings": {
+    "standard": [],
+    "floss": [],
+    "decoded": [],
+    "deobfuscated": [],
+    "dotnet_strings": []
+  },
+  "packer": {
+    "detected": false,
+    "packers": [],
+    "confidence": "none"
+  },
+  "indicators": {
+    "suspicious_imports": [],
+    "suspicious_strings": [],
+    "high_entropy_sections": [],
+    "anti_debug": [],
+    "anti_vm": [],
+    "ransomware_indicators": [],
+    "anti_sandbox": [],
+    "anti_vm_strings": [],
+    "anti_sandbox_strings": [],
+    "sleep_functions": []
+  },
+  "embedded_files": [],
+  "discovered_keys": [],
+  "yara": {
+    "matches": [],
+    "matched_rules": [],
+    "packer_detected": false,
+    "packers": [],
+    "attck_mapping": []
+  },
+  "entropy_analysis": {
+    "high_entropy_sections": [],
+    "suspicious_entropy": [],
+    "packed_sections": [],
+    "encrypted_data": [],
+    "overall_entropy": 0.38340071579559043,
+    "justification": "Overall file entropy is 0.38, which is within the normal range for executables (typically 5.5-6.5). No significant entropy anomalies detected.",
+    "crypto_indicators": []
+  },
+  "attck_mappings": [],
+  "config": {
+    "ips": [],
+    "domains": [],
+    "urls": [],
+    "emails": [],
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": [],
+    "xor_recovered_iocs": []
+  },
+  "nsis_detected": false,
+  "analysis_timestamp": "2026-08-28T18:49:02.957425",
+  "errors": [],
+  "resubmission_lineage": {
+    "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
+    "parent_family": "roning",
+    "discovery_mechanism": "dropped",
+    "original_name": "cversions.3.db",
+    "cape_task_id": 46,
+    "depth": 1,
+    "discovered_at": "2026-08-28T18:37:18.619538+00:00"
+  }
+}

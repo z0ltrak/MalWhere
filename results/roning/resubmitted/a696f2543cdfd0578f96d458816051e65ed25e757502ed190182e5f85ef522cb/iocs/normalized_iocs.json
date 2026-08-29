@@ -1,0 +1,265 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-28T18:51:59.617021+00:00",
+  "sources": {
+    "static_report": "static/reports/roning/a696f2543cdfd0578f96d458816051e65ed25e757502ed190182e5f85ef522cb_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "roning",
+    "static_sha256": "a696f2543cdfd0578f96d458816051e65ed25e757502ed190182e5f85ef522cb",
+    "static_md5": "786680a4c3714af139623b7ad67f71e9",
+    "static_sha1": "e41b1aea6db5918d48ad2db1b24fdb83a28859f0",
+    "static_imphash": null,
+    "static_ssdeep": "3072:tC+U7Tz+HjTejTUvs/Sa1DHt3p3makuDozRNd8suZ100oYd:tCzz+DTejIvuSkHtZdp0Fb7R0",
+    "static_tlsh": "T187044946339432F5D46B8278C9924B17FBB27876477157CF46A482BA2F233E16E3A311",
+    "static_filename": "a696f2543cdfd0578f96d458816051e65ed25e757502ed190182e5f85ef522cb",
+    "static_file_type": "unknown"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "a696f2543cdfd0578f96d458816051e65ed25e757502ed190182e5f85ef522cb",
+      "md5": "786680a4c3714af139623b7ad67f71e9",
+      "sha1": "e41b1aea6db5918d48ad2db1b24fdb83a28859f0",
+      "filename": "a696f2543cdfd0578f96d458816051e65ed25e757502ed190182e5f85ef522cb",
+      "type": "unknown"
+    }
+  ],
+  "network_iocs": {
+    "domains": [],
+    "ips": [
+      {
+        "value": "202.95.11.173",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "urls": [],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [
+      {
+        "value": "C:\\Windows\\System32\\svchost.exe",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "C:\\Users\\%s\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\nkbihfbeogaeaoehlefnkodbefgpgknn",
+        "sources": [
+          "static"
+        ]
+      }
+    ],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [
+    {
+      "technique": "T1057",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "WTSFreeMemory",
+          "confidence": "medium",
+          "name": "Process Discovery",
+          "justification": "The malware string 'WTSFreeMemory' was found in the binary. This string is characteristic of Process Discovery behavior. The presence of this specific string alone (no other Process Discovery-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1070",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "DeleteFile",
+          "confidence": "medium",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'DeleteFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateFile",
+          "confidence": "low",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1071",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "1 C2 IPs found",
+          "confidence": "medium",
+          "name": "Application Layer Protocol",
+          "justification": "Found 1 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
+        }
+      ]
+    },
+    {
+      "technique": "T1115",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "OpenClipboard",
+          "confidence": "high",
+          "name": "Clipboard Data",
+          "justification": "The malware string 'OpenClipboard' was found in the binary, alongside 2 other string(s) also characteristic of Clipboard Data. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "GetClipboardData",
+          "confidence": "high",
+          "name": "Clipboard Data",
+          "justification": "The malware string 'GetClipboardData' was found in the binary, alongside 2 other string(s) also characteristic of Clipboard Data. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "SetClipboardData",
+          "confidence": "high",
+          "name": "Clipboard Data",
+          "justification": "The malware string 'SetClipboardData' was found in the binary, alongside 2 other string(s) also characteristic of Clipboard Data. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1134",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "OpenProcessToken",
+          "confidence": "high",
+          "name": "Privilege Escalation",
+          "justification": "The malware string 'OpenProcessToken' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "AdjustTokenPrivileges",
+          "confidence": "high",
+          "name": "Privilege Escalation",
+          "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "LookupPrivilegeValue",
+          "confidence": "high",
+          "name": "Privilege Escalation",
+          "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1140",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "202.95.11.173 (XOR key 0x61)",
+          "confidence": "high",
+          "name": "Deobfuscate/Decode Files or Information",
+          "justification": "Recovered 202.95.11.173 (XOR key 0x61) by brute-forcing every possible single-byte XOR key against the binary and requiring a clean null-padded boundary around the match (not just a coincidental decode). A network address stored obfuscated like this is unusable to the malware until it reverses the same encoding at runtime -- direct evidence of Deobfuscate/Decode Files or Information (T1140)."
+        }
+      ]
+    },
+    {
+      "technique": "T1486",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "WriteFile",
+          "confidence": "low",
+          "name": "Data Encrypted for Impact",
+          "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1497",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "GetTickCount",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'GetTickCount' was found in the binary, alongside 1 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "QueryPerformanceCounter",
+          "confidence": "high",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "The malware string 'QueryPerformanceCounter' was found in the binary, alongside 1 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        }
+      ]
+    },
+    {
+      "technique": "T1518.001",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "avp.exe",
+          "confidence": "medium",
+          "name": "Software Discovery: Security Software Discovery",
+          "justification": "The malware string 'avp.exe' was found in the binary. This string is characteristic of Software Discovery: Security Software Discovery behavior. The presence of this specific string alone (no other Software Discovery: Security Software Discovery-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ]
+    },
+    {
+      "technique": "T1555",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "Browser extension path(s) referencing: MetaMask",
+          "confidence": "high",
+          "name": "Credentials from Password Stores",
+          "justification": "A file path referencing the MetaMask browser extension's fixed store ID was found in the binary. Checking for or targeting a specific cryptocurrency wallet extension's installation path is characteristic of Credentials from Password Stores (T1555) -- these extension IDs are assigned once by the browser's extension store and have no legitimate reason to appear hardcoded in unrelated software."
+        }
+      ]
+    },
+    {
+      "technique": "T1622",
+      "observations": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "IsDebuggerPresent",
+          "confidence": "low",
+          "name": "Debugger Evasion",
+          "justification": "The malware string 'IsDebuggerPresent' was found in the binary. This string is characteristic of Debugger Evasion behavior. The presence of this specific string alone (no other Debugger Evasion-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "yara",
+          "evidence": "AntiDebug_IsDebuggerPresent",
+          "confidence": "high",
+          "name": "Debugger Evasion",
+          "justification": "YARA rule 'AntiDebug_IsDebuggerPresent' matched the sample. This rule was specifically designed to detect Debugger Evasion patterns, confirming the presence of this capability."
+        }
+      ]
+    }
+  ],
+  "discarded_entries": []
+}

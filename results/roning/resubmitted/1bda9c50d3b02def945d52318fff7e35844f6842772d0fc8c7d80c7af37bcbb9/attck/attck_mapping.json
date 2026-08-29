@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T09:41:37.407173+00:00",
+  "generated_at": "2026-08-28T20:06:34.023713+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "1bda9c50d3b02def945d52318fff7e35844f6842772d0fc8c7d80c7af37bcbb9",
@@ -35,12 +35,6 @@
           ]
         },
         {
-          "value": "http://www.microsoft.com/pki/certs/tspca.crt0",
-          "sources": [
-            "static"
-          ]
-        },
-        {
           "value": "http://www.microsoft.com/DirectX0",
           "sources": [
             "static"
@@ -54,6 +48,12 @@
         },
         {
           "value": "http://crl.microsoft.com/pki/crl/products/tspca.crl0H",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://www.microsoft.com/pki/certs/tspca.crt0",
           "sources": [
             "static"
           ]
@@ -178,12 +178,12 @@
     {
       "technique_id": "T1070",
       "technique_name": "Indicator Removal",
-      "final_confidence": "medium",
-      "confidence_score": 60,
+      "final_confidence": "low",
+      "confidence_score": 30,
       "sources": [
         "static"
       ],
-      "static_best_confidence": "medium",
+      "static_best_confidence": "low",
       "dynamic_best_confidence": null,
       "evidence": [
         {
@@ -198,32 +198,9 @@
           "source": "static",
           "source_type": "import",
           "evidence": "CreateFileW",
-          "confidence": "medium",
+          "confidence": "low",
           "name": "Indicator Removal on Host",
           "justification": "The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1071",
-      "technique_name": "Application Layer Protocol",
-      "final_confidence": "medium",
-      "confidence_score": 60,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "medium",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "config",
-          "evidence": "1 C2 IPs found",
-          "confidence": "medium",
-          "name": "Application Layer Protocol",
-          "justification": "Found 1 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
         }
       ],
       "cross_level_corroboration": false,
@@ -254,12 +231,12 @@
     }
   ],
   "summary": {
-    "total_techniques": 6,
+    "total_techniques": 5,
     "high": 2,
-    "medium": 3,
-    "low": 1,
+    "medium": 1,
+    "low": 2,
     "both_sources": 0,
-    "static_only": 6,
+    "static_only": 5,
     "dynamic_only": 0
   }
 }

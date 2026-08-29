@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:29.717992+00:00",
+  "generated_at": "2026-08-28T20:06:35.112382+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "78b0a1c7847506452ee518b03f8502ecc4f5d746a87d1130157383dd9a6e0e57",
@@ -34,13 +34,13 @@
       "registry_paths": [],
       "file_paths": [
         {
-          "value": "C:\\Program Files\\DirectX",
+          "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs",
           "sources": [
             "static"
           ]
         },
         {
-          "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\sys\\thread_local\\native\\lazy.rs",
+          "value": "C:\\Program Files\\DirectX",
           "sources": [
             "static"
           ]
@@ -52,7 +52,7 @@
           ]
         },
         {
-          "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs",
+          "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\sys\\thread_local\\native\\lazy.rs",
           "sources": [
             "static"
           ]
@@ -81,37 +81,6 @@
     "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
   },
   "techniques": [
-    {
-      "technique_id": "T1070",
-      "technique_name": "Indicator Removal",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "high",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "CreateFile",
-          "confidence": "low",
-          "name": "Indicator Removal on Host",
-          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        },
-        {
-          "source": "static",
-          "source_type": "import",
-          "evidence": "CreateFileW, CreateFileA",
-          "confidence": "high",
-          "name": "Indicator Removal on Host",
-          "justification": "The API functions CreateFileW, CreateFileA are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
     {
       "technique_id": "T1083",
       "technique_name": "File and Directory Discovery",
@@ -269,6 +238,37 @@
       "cross_level_sibling": null
     },
     {
+      "technique_id": "T1070",
+      "technique_name": "Indicator Removal",
+      "final_confidence": "low",
+      "confidence_score": 30,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "low",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateFile",
+          "confidence": "low",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateFileW, CreateFileA",
+          "confidence": "low",
+          "name": "Indicator Removal on Host",
+          "justification": "The API functions CreateFileW, CreateFileA are imported by the binary. Each is individually associated with Indicator Removal on Host, but this specific combination doesn't form one of the corroborating patterns known to indicate Indicator Removal on Host with high confidence \u2014 treat this as suggestive rather than conclusive."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
       "technique_id": "T1486",
       "technique_name": "Data Encrypted for Impact",
       "final_confidence": "low",
@@ -294,9 +294,9 @@
   ],
   "summary": {
     "total_techniques": 6,
-    "high": 5,
+    "high": 4,
     "medium": 0,
-    "low": 1,
+    "low": 2,
     "both_sources": 0,
     "static_only": 6,
     "dynamic_only": 0

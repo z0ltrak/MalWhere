@@ -3316,12 +3316,12 @@
   },
   "attck_mappings": [
     {
-      "technique": "T1055",
-      "name": "Process Injection",
+      "technique": "T1134",
+      "name": "Privilege Escalation",
       "source": "string_pattern",
-      "evidence": "OpenProcess",
+      "evidence": "OpenProcessToken",
       "confidence": "medium",
-      "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+      "justification": "The malware string 'OpenProcessToken' was found in the binary. This string is characteristic of Privilege Escalation behavior. The presence of this specific string alone (no other Privilege Escalation-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
     },
     {
       "technique": "T1059",
@@ -3354,14 +3354,6 @@
       "evidence": "CreateProcessW, ShellExecuteW",
       "confidence": "high",
       "justification": "The API functions CreateProcessW, ShellExecuteW are all imported by the binary. This combination is characteristic of Command and Scripting Interpreter \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
-    },
-    {
-      "technique": "T1134",
-      "name": "Privilege Escalation",
-      "source": "import",
-      "evidence": "OpenProcessToken",
-      "confidence": "medium",
-      "justification": "The API function 'OpenProcessToken' is imported by the binary. This API is commonly used to perform Privilege Escalation. Importing this function alone (no other Privilege Escalation-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
     }
   ],
   "config": {
@@ -3373,10 +3365,11 @@
     "file_paths": [],
     "mutexes": [],
     "encryption_keys": [],
-    "patterns": []
+    "patterns": [],
+    "xor_recovered_iocs": []
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-12T13:27:02.041549",
+  "analysis_timestamp": "2026-08-28T20:05:16.356634",
   "errors": [],
   "resubmission_lineage": {
     "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",

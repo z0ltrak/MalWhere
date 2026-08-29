@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:29.358109+00:00",
+  "generated_at": "2026-08-28T20:06:34.796695+00:00",
   "sources": {
     "static_report": "static/reports/roning/4d5beb8efd4ade583c8ff730609f142550e8ed14c251bae1097c35a756ed39e6_static.json",
     "dynamic_report": null
@@ -42,19 +42,6 @@
   },
   "technique_observations": [
     {
-      "technique": "T1055",
-      "observations": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "OpenProcess",
-          "confidence": "medium",
-          "name": "Process Injection",
-          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        }
-      ]
-    },
-    {
       "technique": "T1057",
       "observations": [
         {
@@ -82,7 +69,7 @@
           "source": "static",
           "source_type": "import",
           "evidence": "CreateFileW",
-          "confidence": "medium",
+          "confidence": "low",
           "name": "Indicator Removal on Host",
           "justification": "The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }

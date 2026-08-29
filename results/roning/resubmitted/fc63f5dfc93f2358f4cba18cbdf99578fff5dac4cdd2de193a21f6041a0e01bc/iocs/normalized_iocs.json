@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:30.823817+00:00",
+  "generated_at": "2026-08-28T20:06:36.147790+00:00",
   "sources": {
     "static_report": "static/reports/roning/fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc_static.json",
     "dynamic_report": null
@@ -37,13 +37,13 @@
     "registry_paths": [],
     "file_paths": [
       {
-        "value": "C:\\ProgramData\\goldendays_reg.log",
+        "value": "C:\\ProgramData\\Roning\\Enpug.bin",
         "sources": [
           "static"
         ]
       },
       {
-        "value": "C:\\ProgramData\\Roning\\Enpug.bin",
+        "value": "C:\\ProgramData\\goldendays_reg.log",
         "sources": [
           "static"
         ]
@@ -54,19 +54,6 @@
     "patterns": []
   },
   "technique_observations": [
-    {
-      "technique": "T1055",
-      "observations": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "OpenProcess",
-          "confidence": "medium",
-          "name": "Process Injection",
-          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        }
-      ]
-    },
     {
       "technique": "T1070",
       "observations": [
@@ -107,10 +94,18 @@
         {
           "source": "static",
           "source_type": "string_pattern",
+          "evidence": "OpenProcessToken",
+          "confidence": "high",
+          "name": "Privilege Escalation",
+          "justification": "The malware string 'OpenProcessToken' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
           "evidence": "AdjustTokenPrivileges",
           "confidence": "high",
           "name": "Privilege Escalation",
-          "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+          "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
         },
         {
           "source": "static",
@@ -118,7 +113,7 @@
           "evidence": "LookupPrivilegeValue",
           "confidence": "high",
           "name": "Privilege Escalation",
-          "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+          "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
         }
       ]
     },

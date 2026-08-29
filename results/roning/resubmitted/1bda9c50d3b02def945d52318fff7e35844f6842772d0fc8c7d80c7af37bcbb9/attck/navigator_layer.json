@@ -1,7 +1,7 @@
 {
   "name": "MalWhere - roning",
   "versions": {
-    "attack": "14",
+    "attack": "19",
     "navigator": "4.9.1",
     "layer": "4.5"
   },
@@ -76,33 +76,15 @@
     },
     {
       "techniqueID": "T1070",
-      "score": 60,
-      "color": "#ffe766",
+      "score": 30,
+      "color": "#8ec843",
       "comment": "static corroborated; evidence: CreateFile, CreateFileW",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
         {
           "name": "confidence",
-          "value": "medium"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    },
-    {
-      "techniqueID": "T1071",
-      "score": 60,
-      "color": "#ffe766",
-      "comment": "static corroborated; evidence: 1 C2 IPs found",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "medium"
+          "value": "low"
         },
         {
           "name": "sources",

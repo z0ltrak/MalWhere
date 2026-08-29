@@ -1916,7 +1916,7 @@
     "detected": true,
     "packers": [
       {
-        "name": "Compiler: Microsoft Visual C/C++(19.36.35213)[LTCG/C++",
+        "name": "\u001b[39;49mCompiler: Microsoft Visual C/C++(19.44.35213)[LTCG/C++]\u001b[0m",
         "version": "N/A",
         "type": "compiler",
         "confidence": "medium"
@@ -6461,7 +6461,7 @@
       "source": "string_pattern",
       "evidence": "GetTickCount",
       "confidence": "high",
-      "justification": "The malware string 'GetTickCount' was found in the binary, alongside 1 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "justification": "The malware string 'GetTickCount' was found in the binary, alongside 2 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1486",
@@ -6472,12 +6472,12 @@
       "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
     },
     {
-      "technique": "T1082",
-      "name": "System Information Discovery",
+      "technique": "T1497",
+      "name": "Virtualization/Sandbox Evasion",
       "source": "string_pattern",
       "evidence": "GetSystemInfo",
-      "confidence": "low",
-      "justification": "The malware string 'GetSystemInfo' was found in the binary. This string is characteristic of System Information Discovery behavior. The presence of this specific string alone (no other System Information Discovery-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+      "confidence": "high",
+      "justification": "The malware string 'GetSystemInfo' was found in the binary, alongside 2 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1622",
@@ -6493,7 +6493,7 @@
       "source": "string_pattern",
       "evidence": "QueryPerformanceCounter",
       "confidence": "high",
-      "justification": "The malware string 'QueryPerformanceCounter' was found in the binary, alongside 1 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "justification": "The malware string 'QueryPerformanceCounter' was found in the binary, alongside 2 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1083",
@@ -6531,16 +6531,16 @@
       "technique": "T1497",
       "name": "Virtualization/Sandbox Evasion",
       "source": "import",
-      "evidence": "GetTickCount, Sleep, QueryPerformanceCounter",
+      "evidence": "GetTickCount, Sleep, GetSystemInfo, QueryPerformanceCounter",
       "confidence": "high",
-      "justification": "The API functions GetTickCount, Sleep, QueryPerformanceCounter are all imported by the binary. This combination is characteristic of Virtualization/Sandbox Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+      "justification": "The API functions GetTickCount, Sleep, GetSystemInfo, QueryPerformanceCounter are all imported by the binary. This combination is characteristic of Virtualization/Sandbox Evasion \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1070",
       "name": "Indicator Removal on Host",
       "source": "import",
       "evidence": "CreateFileW",
-      "confidence": "medium",
+      "confidence": "low",
       "justification": "The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
     },
     {
@@ -6577,10 +6577,11 @@
     "file_paths": [],
     "mutexes": [],
     "encryption_keys": [],
-    "patterns": []
+    "patterns": [],
+    "xor_recovered_iocs": []
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-12T13:22:24.220234",
+  "analysis_timestamp": "2026-08-28T20:00:09.249705",
   "errors": [],
   "resubmission_lineage": {
     "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",

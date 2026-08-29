@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-28T20:06:34.560186+00:00",
+  "sample": {
+    "family": "roning",
+    "static_sha256": "40d48e50d30885cdbff5092930095d35cc6e8ee345718f575e65feeda60c3df2",
+    "static_md5": "db570402151f3abb73e99c6d7c9c70b6",
+    "static_sha1": "7658569700ac455d46bb48e30b225e9c3a49b8a6",
+    "static_imphash": null,
+    "static_ssdeep": "768:wV6gskPGNNfL487x3d86UqJBiR1v4AU3qqmgypo3yFTNgN/JNvmOJs:xkKxUFTNgNRNfs",
+    "static_tlsh": "T1E66398243AF94225E6F28B755EF5A7699571FC129D12CF4F1180B38D0831A11E8BAF3B",
+    "static_filename": "40d48e50d30885cdbff5092930095d35cc6e8ee345718f575e65feeda60c3df2",
+    "static_file_type": "unknown"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "40d48e50d30885cdbff5092930095d35cc6e8ee345718f575e65feeda60c3df2",
+        "md5": "db570402151f3abb73e99c6d7c9c70b6",
+        "sha1": "7658569700ac455d46bb48e30b225e9c3a49b8a6",
+        "filename": "40d48e50d30885cdbff5092930095d35cc6e8ee345718f575e65feeda60c3df2",
+        "type": "unknown"
+      }
+    ],
+    "network_iocs": {
+      "domains": [],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [],
+      "mutexes": [],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [],
+  "summary": {
+    "total_techniques": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 0,
+    "dynamic_only": 0
+  }
+}

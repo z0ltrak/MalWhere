@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:28.994424+00:00",
+  "generated_at": "2026-08-28T20:06:34.290744+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c",
@@ -63,50 +63,11 @@
       "evidence": [
         {
           "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "OpenProcess",
-          "confidence": "medium",
-          "name": "Process Injection",
-          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        },
-        {
-          "source": "static",
           "source_type": "import",
           "evidence": "VirtualAllocEx, CreateRemoteThread, OpenProcess, WriteProcessMemory",
           "confidence": "high",
           "name": "Process Injection",
           "justification": "The API functions VirtualAllocEx, CreateRemoteThread, OpenProcess, WriteProcessMemory are all imported by the binary. This combination is characteristic of Process Injection \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1070",
-      "technique_name": "Indicator Removal",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "high",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "CreateFile",
-          "confidence": "low",
-          "name": "Indicator Removal on Host",
-          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        },
-        {
-          "source": "static",
-          "source_type": "import",
-          "evidence": "CreateFileA, CreateFileW",
-          "confidence": "high",
-          "name": "Indicator Removal on Host",
-          "justification": "The API functions CreateFileA, CreateFileW are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
         }
       ],
       "cross_level_corroboration": false,
@@ -245,6 +206,37 @@
       "cross_level_sibling": null
     },
     {
+      "technique_id": "T1070",
+      "technique_name": "Indicator Removal",
+      "final_confidence": "low",
+      "confidence_score": 30,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "low",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateFile",
+          "confidence": "low",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateFileA, CreateFileW",
+          "confidence": "low",
+          "name": "Indicator Removal on Host",
+          "justification": "The API functions CreateFileA, CreateFileW are imported by the binary. Each is individually associated with Indicator Removal on Host, but this specific combination doesn't form one of the corroborating patterns known to indicate Indicator Removal on Host with high confidence \u2014 treat this as suggestive rather than conclusive."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
       "technique_id": "T1486",
       "technique_name": "Data Encrypted for Impact",
       "final_confidence": "low",
@@ -270,9 +262,9 @@
   ],
   "summary": {
     "total_techniques": 7,
-    "high": 5,
+    "high": 4,
     "medium": 1,
-    "low": 1,
+    "low": 2,
     "both_sources": 0,
     "static_only": 7,
     "dynamic_only": 0

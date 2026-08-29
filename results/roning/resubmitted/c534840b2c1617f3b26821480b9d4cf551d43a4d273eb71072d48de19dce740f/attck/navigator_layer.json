@@ -1,7 +1,7 @@
 {
   "name": "MalWhere - roning",
   "versions": {
-    "attack": "14",
+    "attack": "19",
     "navigator": "4.9.1",
     "layer": "4.5"
   },
@@ -57,24 +57,6 @@
       ]
     },
     {
-      "techniqueID": "T1070",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "static corroborated; evidence: CreateFile, DeleteFile, DeleteFileA, CreateFileA, CreateFileW",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    },
-    {
       "techniqueID": "T1115",
       "score": 100,
       "color": "#e60d0d",
@@ -96,7 +78,25 @@
       "techniqueID": "T1134",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "static corroborated; evidence: AdjustTokenPrivileges, LookupPrivilegeValue",
+      "comment": "static corroborated; evidence: AdjustTokenPrivileges, LookupPrivilegeValue, OpenProcessToken",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "high"
+        },
+        {
+          "name": "sources",
+          "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1140",
+      "score": 100,
+      "color": "#e60d0d",
+      "comment": "static corroborated; evidence: 202.95.11.173 (XOR key 0x61)",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -129,10 +129,10 @@
       ]
     },
     {
-      "techniqueID": "T1622",
+      "techniqueID": "T1555",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "static corroborated; evidence: AntiDebug_IsDebuggerPresent, IsDebuggerPresent, OutputDebugStringA, IsDebuggerPresent, SetUnhandledExceptionFilter, UnhandledExceptionFilter",
+      "comment": "static corroborated; evidence: Browser extension path(s) referencing: MetaMask",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -147,16 +147,16 @@
       ]
     },
     {
-      "techniqueID": "T1055",
-      "score": 60,
-      "color": "#ffe766",
-      "comment": "static corroborated; evidence: OpenProcess",
+      "techniqueID": "T1622",
+      "score": 100,
+      "color": "#e60d0d",
+      "comment": "static corroborated; evidence: AntiDebug_IsDebuggerPresent, IsDebuggerPresent, OutputDebugStringA, IsDebuggerPresent, SetUnhandledExceptionFilter, UnhandledExceptionFilter",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
         {
           "name": "confidence",
-          "value": "medium"
+          "value": "high"
         },
         {
           "name": "sources",
@@ -183,10 +183,82 @@
       ]
     },
     {
+      "techniqueID": "T1070",
+      "score": 60,
+      "color": "#ffe766",
+      "comment": "static corroborated; evidence: CreateFile, DeleteFile, DeleteFileA, CreateFileA, CreateFileW",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "medium"
+        },
+        {
+          "name": "sources",
+          "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1071",
+      "score": 60,
+      "color": "#ffe766",
+      "comment": "static corroborated; evidence: 1 C2 IPs found",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "medium"
+        },
+        {
+          "name": "sources",
+          "value": "static"
+        }
+      ]
+    },
+    {
       "techniqueID": "T1082",
       "score": 60,
       "color": "#ffe766",
       "comment": "static corroborated; evidence: GetComputerNameA",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "medium"
+        },
+        {
+          "name": "sources",
+          "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1518.001",
+      "score": 60,
+      "color": "#ffe766",
+      "comment": "static corroborated; evidence: avp.exe",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "medium"
+        },
+        {
+          "name": "sources",
+          "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1529",
+      "score": 60,
+      "color": "#ffe766",
+      "comment": "static corroborated; evidence: ExitWindowsEx",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [

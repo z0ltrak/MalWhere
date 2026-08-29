@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:29.403869+00:00",
+  "generated_at": "2026-08-28T20:06:34.841207+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "4d5beb8efd4ade583c8ff730609f142550e8ed14c251bae1097c35a756ed39e6",
@@ -145,60 +145,6 @@
       "cross_level_sibling": null
     },
     {
-      "technique_id": "T1055",
-      "technique_name": "Process Injection",
-      "final_confidence": "medium",
-      "confidence_score": 60,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "medium",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "OpenProcess",
-          "confidence": "medium",
-          "name": "Process Injection",
-          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1070",
-      "technique_name": "Indicator Removal",
-      "final_confidence": "medium",
-      "confidence_score": 60,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "medium",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "CreateFile",
-          "confidence": "low",
-          "name": "Indicator Removal on Host",
-          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        },
-        {
-          "source": "static",
-          "source_type": "import",
-          "evidence": "CreateFileW",
-          "confidence": "medium",
-          "name": "Indicator Removal on Host",
-          "justification": "The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
       "technique_id": "T1497",
       "technique_name": "Virtualization/Sandbox Evasion",
       "final_confidence": "medium",
@@ -216,6 +162,37 @@
           "confidence": "medium",
           "name": "Virtualization/Sandbox Evasion",
           "justification": "The malware string 'QueryPerformanceCounter' was found in the binary. This string is characteristic of Virtualization/Sandbox Evasion behavior. The presence of this specific string alone (no other Virtualization/Sandbox Evasion-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1070",
+      "technique_name": "Indicator Removal",
+      "final_confidence": "low",
+      "confidence_score": 30,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "low",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "CreateFile",
+          "confidence": "low",
+          "name": "Indicator Removal on Host",
+          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        },
+        {
+          "source": "static",
+          "source_type": "import",
+          "evidence": "CreateFileW",
+          "confidence": "low",
+          "name": "Indicator Removal on Host",
+          "justification": "The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
         }
       ],
       "cross_level_corroboration": false,
@@ -246,12 +223,12 @@
     }
   ],
   "summary": {
-    "total_techniques": 7,
+    "total_techniques": 6,
     "high": 3,
-    "medium": 3,
-    "low": 1,
+    "medium": 1,
+    "low": 2,
     "both_sources": 0,
-    "static_only": 7,
+    "static_only": 6,
     "dynamic_only": 0
   }
 }

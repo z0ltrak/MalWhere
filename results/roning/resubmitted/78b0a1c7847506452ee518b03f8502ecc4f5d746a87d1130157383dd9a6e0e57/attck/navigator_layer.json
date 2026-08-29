@@ -1,7 +1,7 @@
 {
   "name": "MalWhere - roning",
   "versions": {
-    "attack": "14",
+    "attack": "19",
     "navigator": "4.9.1",
     "layer": "4.5"
   },
@@ -20,24 +20,6 @@
   },
   "hideDisabled": false,
   "techniques": [
-    {
-      "techniqueID": "T1070",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "static corroborated; evidence: CreateFile, CreateFileW, CreateFileA",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    },
     {
       "techniqueID": "T1083",
       "score": 100,
@@ -103,6 +85,24 @@
         {
           "name": "confidence",
           "value": "high"
+        },
+        {
+          "name": "sources",
+          "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1070",
+      "score": 30,
+      "color": "#8ec843",
+      "comment": "static corroborated; evidence: CreateFile, CreateFileW, CreateFileA",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "low"
         },
         {
           "name": "sources",

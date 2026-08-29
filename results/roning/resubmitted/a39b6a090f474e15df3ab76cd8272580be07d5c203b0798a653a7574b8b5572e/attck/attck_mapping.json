@@ -1,27 +1,27 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:30.236853+00:00",
+  "generated_at": "2026-08-28T20:06:35.565115+00:00",
   "sample": {
     "family": "roning",
-    "static_sha256": "f3e9b0d43b66fa6b05d2fa4de4547517a3ec0bc0b14de3c349d817465bbf7ab4",
-    "static_md5": "6ebdde247cad8468575f1f2a4d7ae2a2",
-    "static_sha1": "d0c502f45df55c0465c9406088ff016c2e7e6817",
-    "static_imphash": "e6c3208e90c430388b2da3b455c174ba",
-    "static_ssdeep": "768:6vVnRZHrPT4n4d/CryKDuIcrFKpnp0jdhK7R+qV:6vV3Hrc4EJBcZtXIV",
-    "static_tlsh": "T1C9E2394CFDC52EBAE2DF05390409557F466FC8081B14DAABD3712E92D5E23326EE522E",
-    "static_filename": "nsis_tauri_utils.dll",
-    "static_file_type": "pe_native"
+    "static_sha256": "a39b6a090f474e15df3ab76cd8272580be07d5c203b0798a653a7574b8b5572e",
+    "static_md5": "b267d99f3b5f3cbf1e55758755165acb",
+    "static_sha1": "16664656c966fa9f435803b8ebccf188f0b59d18",
+    "static_imphash": null,
+    "static_ssdeep": "3072:vnPdzuK8Jdw4TMJw3ubvWcNACcnyUAYcHcTqdg01H7:vnPdudwD/WcpYJAYnqdjb",
+    "static_tlsh": "T1931429ACF6A0CB56D4344AB8097E8FFD1C79EC32283577DB2A027619E47276CD81B502",
+    "static_filename": "a39b6a090f474e15df3ab76cd8272580be07d5c203b0798a653a7574b8b5572e",
+    "static_file_type": "nsis_installer"
   },
   "iocs": {
     "hashes": [
       {
         "role": "primary_sample",
         "source": "static",
-        "sha256": "f3e9b0d43b66fa6b05d2fa4de4547517a3ec0bc0b14de3c349d817465bbf7ab4",
-        "md5": "6ebdde247cad8468575f1f2a4d7ae2a2",
-        "sha1": "d0c502f45df55c0465c9406088ff016c2e7e6817",
-        "filename": "nsis_tauri_utils.dll",
-        "type": "pe_native"
+        "sha256": "a39b6a090f474e15df3ab76cd8272580be07d5c203b0798a653a7574b8b5572e",
+        "md5": "b267d99f3b5f3cbf1e55758755165acb",
+        "sha1": "16664656c966fa9f435803b8ebccf188f0b59d18",
+        "filename": "a39b6a090f474e15df3ab76cd8272580be07d5c203b0798a653a7574b8b5572e",
+        "type": "nsis_installer"
       }
     ],
     "network_iocs": {
@@ -42,123 +42,14 @@
     "version": "1.0",
     "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
   },
-  "techniques": [
-    {
-      "technique_id": "T1059",
-      "technique_name": "Command and Scripting Interpreter",
-      "final_confidence": "high",
-      "confidence_score": 100,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "high",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "CreateProcessW",
-          "confidence": "high",
-          "name": "Command and Scripting Interpreter",
-          "justification": "The malware string 'CreateProcessW' was found in the binary, alongside 1 other string(s) also characteristic of Command and Scripting Interpreter. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
-        },
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "ShellExecuteW",
-          "confidence": "high",
-          "name": "Command and Scripting Interpreter",
-          "justification": "The malware string 'ShellExecuteW' was found in the binary, alongside 1 other string(s) also characteristic of Command and Scripting Interpreter. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
-        },
-        {
-          "source": "static",
-          "source_type": "import",
-          "evidence": "CreateProcessW, ShellExecuteW",
-          "confidence": "high",
-          "name": "Command and Scripting Interpreter",
-          "justification": "The API functions CreateProcessW, ShellExecuteW are all imported by the binary. This combination is characteristic of Command and Scripting Interpreter \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1055",
-      "technique_name": "Process Injection",
-      "final_confidence": "medium",
-      "confidence_score": 60,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "medium",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "OpenProcess",
-          "confidence": "medium",
-          "name": "Process Injection",
-          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1057",
-      "technique_name": "Process Discovery",
-      "final_confidence": "medium",
-      "confidence_score": 60,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "medium",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "import",
-          "evidence": "CreateToolhelp32Snapshot",
-          "confidence": "medium",
-          "name": "Process Discovery",
-          "justification": "The API function 'CreateToolhelp32Snapshot' is imported by the binary. This API is commonly used to perform Process Discovery. Importing this function alone (no other Process Discovery-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
-      "technique_id": "T1134",
-      "technique_name": "Unknown ATT&CK technique (T1134)",
-      "final_confidence": "medium",
-      "confidence_score": 60,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "medium",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "import",
-          "evidence": "OpenProcessToken",
-          "confidence": "medium",
-          "name": "Privilege Escalation",
-          "justification": "The API function 'OpenProcessToken' is imported by the binary. This API is commonly used to perform Privilege Escalation. Importing this function alone (no other Privilege Escalation-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    }
-  ],
+  "techniques": [],
   "summary": {
-    "total_techniques": 4,
-    "high": 1,
-    "medium": 3,
+    "total_techniques": 0,
+    "high": 0,
+    "medium": 0,
     "low": 0,
     "both_sources": 0,
-    "static_only": 4,
+    "static_only": 0,
     "dynamic_only": 0
   }
 }

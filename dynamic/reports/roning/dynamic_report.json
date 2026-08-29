@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
   "source": "cape",
-  "source_report_path": "docker/cape/work/storage/analyses/49/reports/report.json",
-  "cape_task_id": 49,
-  "parsed_at": "2026-08-28T21:25:06.193904+00:00",
+  "source_report_path": "docker/cape/work/storage/analyses/52/reports/report.json",
+  "cape_task_id": 52,
+  "parsed_at": "2026-08-29T09:25:36.086804+00:00",
   "target": {
     "filename": "b0521ad45fd21cdae26a.exe",
     "md5": "73a84cba28d14625441e1b0eac2a67f1",
@@ -15,9 +15,9 @@
   "analysis": {
     "malscore": 9.0,
     "malstatus": "Malicious",
-    "duration_seconds": 223,
-    "started": "2026-08-28 19:40:55",
-    "ended": "2026-08-28 19:44:38",
+    "duration_seconds": 226,
+    "started": "2026-08-29 09:20:50",
+    "ended": "2026-08-29 09:24:36",
     "cape_version": "2.5",
     "family_detections": []
   },
@@ -42,7 +42,7 @@
         "location_discovery"
       ],
       "ttps": [],
-      "match_count": 43
+      "match_count": 28
     },
     {
       "name": "queries_locale_api",
@@ -54,7 +54,7 @@
         "geofence"
       ],
       "ttps": [],
-      "match_count": 9
+      "match_count": 7
     },
     {
       "name": "accesses_public_folder",
@@ -115,7 +115,7 @@
       "ttps": [
         "T1497"
       ],
-      "match_count": 14
+      "match_count": 47
     },
     {
       "name": "antisandbox_system_parameters_info",
@@ -144,7 +144,7 @@
         "T1033",
         "T1082"
       ],
-      "match_count": 17
+      "match_count": 13
     },
     {
       "name": "query_fips_reconnaissance",
@@ -158,7 +158,7 @@
       "ttps": [
         "T1082"
       ],
-      "match_count": 11
+      "match_count": 6
     },
     {
       "name": "mountpoints_volume_discovery",
@@ -173,7 +173,7 @@
       "ttps": [
         "T1082"
       ],
-      "match_count": 21
+      "match_count": 28
     },
     {
       "name": "dllload_suspicious_directory",
@@ -203,18 +203,6 @@
       "match_count": 4
     },
     {
-      "name": "reads_memory_remote_process",
-      "description": "Reads from the memory of another process",
-      "severity": 2,
-      "confidence": 100,
-      "categories": [
-        "memory scraping",
-        "injection"
-      ],
-      "ttps": [],
-      "match_count": 16
-    },
-    {
       "name": "enumerates_running_processes",
       "description": "Enumerates running processes",
       "severity": 2,
@@ -225,7 +213,7 @@
       "ttps": [
         "T1057"
       ],
-      "match_count": 268
+      "match_count": 270
     },
     {
       "name": "process_interest",
@@ -238,7 +226,7 @@
       "ttps": [
         "T1057"
       ],
-      "match_count": 2258
+      "match_count": 2261
     },
     {
       "name": "process_needed",
@@ -251,7 +239,7 @@
       "ttps": [
         "T1057"
       ],
-      "match_count": 388
+      "match_count": 77
     },
     {
       "name": "reads_self",
@@ -317,7 +305,7 @@
       "ttps": [
         "T1082"
       ],
-      "match_count": 2
+      "match_count": 12
     },
     {
       "name": "dropper",
@@ -358,7 +346,22 @@
         "T1543",
         "T1562"
       ],
-      "match_count": 14
+      "match_count": 13
+    },
+    {
+      "name": "mountpoint_manager_access",
+      "description": "Repeatedly opens the MountPointManager device to enumerate drive letters and resolve volume paths to discover all attached drives and network shares",
+      "severity": 3,
+      "confidence": 60,
+      "categories": [
+        "ransomware",
+        "wiper",
+        "discovery"
+      ],
+      "ttps": [
+        "T1082"
+      ],
+      "match_count": 2
     },
     {
       "name": "install_kernel_driver_service",
@@ -622,7 +625,7 @@
         "T1112",
         "T1547"
       ],
-      "match_count": 59
+      "match_count": 44
     },
     {
       "name": "persistence_autorun_tasks",
@@ -636,7 +639,7 @@
         "T1053",
         "T1112"
       ],
-      "match_count": 59
+      "match_count": 44
     }
   ],
   "attck_mappings": [
@@ -679,6 +682,14 @@
       "evidence": "privilege_elevation_check",
       "confidence": "medium",
       "justification": "CAPE signature 'privilege_elevation_check' fired (severity=2, confidence=80%, categories=['discovery', 'privilege_escalation'])"
+    },
+    {
+      "technique": "T1082",
+      "name": "",
+      "source": "dynamic_signature",
+      "evidence": "mountpoint_manager_access",
+      "confidence": "medium",
+      "justification": "CAPE signature 'mountpoint_manager_access' fired (severity=3, confidence=60%, categories=['ransomware', 'wiper', 'discovery'])"
     },
     {
       "technique": "T1082",
@@ -941,7 +952,7 @@
     "domains": [
       {
         "domain": "www.baidu.com",
-        "ip": "103.235.46.102"
+        "ip": "103.235.46.115"
       }
     ],
     "hosts": [
@@ -967,7 +978,7 @@
             "data": "192.168.122.1"
           }
         ],
-        "first_seen": 1787946073.456267
+        "first_seen": 1787995271.186832
       }
     ],
     "http_requests": [
@@ -982,10 +993,10 @@
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko",
         "version": "1.1",
         "method": "GET",
-        "first_seen": 1787946073.474512
+        "first_seen": 1787995271.205321
       }
     ],
-    "tcp_count": 87,
+    "tcp_count": 80,
     "udp_count": 62
   },
   "dropped_files": [
@@ -1122,24 +1133,24 @@
       ]
     },
     {
-      "name": "thumbcache_32.db",
-      "sha256": "48c03aca9f67b0b8665da7df2cda0e30d681e53d4802aaa573f637cfddedd270",
-      "md5": "c34ffaddc4f8351919cc6564e8bb3152",
-      "sha1": "6fd7649b0cc6c0ceea156a37b67aedfa8f156261",
-      "size": 1048576,
-      "type": "data",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
       "name": "D3D11InstallHelper.dll",
       "sha256": "78b0a1c7847506452ee518b03f8502ecc4f5d746a87d1130157383dd9a6e0e57",
       "md5": "4c153ab7598fc93fccbbd3239375ffa0",
       "sha1": "050ec34368bd23a49f5f72a273daf551fa1fdfb2",
       "size": 247808,
       "type": "PE32+ executable (DLL) (GUI) x86-64, for MS Windows",
+      "cape_type": "",
+      "roles": [
+        "dropped"
+      ]
+    },
+    {
+      "name": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000e.db",
+      "sha256": "f638e493e153d6fd97ff33799bbb559ae9af842f7aa55c1d26988be3a9b40cc8",
+      "md5": "78e9efbacd133c5ba54a41d24a06a83e",
+      "sha1": "adea1af289ba43485c414e33e051f4c1299cb63c",
+      "size": 67288,
+      "type": "data",
       "cape_type": "",
       "roles": [
         "dropped"
@@ -1242,18 +1253,6 @@
       ]
     },
     {
-      "name": "thumbcache_idx.db",
-      "sha256": "b04ac1e0078ef05e2065b4429579e420b30ac71855ac36bdabec8ebb7bcffa38",
-      "md5": "c6a291d682339a5a410a032c64b29811",
-      "sha1": "efc1332c753150705e7808536e4c34502a8e3a6e",
-      "size": 7416,
-      "type": "data",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
       "name": "vmservice.sys",
       "sha256": "627169b1bad0744f636c72a86f6f8e0ff1f4fbb475e8629576a2462a0341ca4f",
       "md5": "5b3bea02989eaa3c91cc0529b28c0fdb",
@@ -1302,18 +1301,6 @@
       ]
     },
     {
-      "name": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000e.db",
-      "sha256": "40d48e50d30885cdbff5092930095d35cc6e8ee345718f575e65feeda60c3df2",
-      "md5": "db570402151f3abb73e99c6d7c9c70b6",
-      "sha1": "7658569700ac455d46bb48e30b225e9c3a49b8a6",
-      "size": 67288,
-      "type": "data",
-      "cape_type": "",
-      "roles": [
-        "dropped"
-      ]
-    },
-    {
       "name": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
       "sha256": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
       "md5": "dba136b8380bbe468f702dc58f05b203",
@@ -1345,6 +1332,18 @@
       "size": 503296,
       "type": "PE32+ executable (console) x86-64, for MS Windows",
       "cape_type": "",
+      "roles": [
+        "cape_payload"
+      ]
+    },
+    {
+      "name": "beff689602a45a461a5dc23e629a5b67622a1c6847cdff660c72de201fded79f",
+      "sha256": "beff689602a45a461a5dc23e629a5b67622a1c6847cdff660c72de201fded79f",
+      "md5": "725c088047d8124d11be5d43be82a891",
+      "sha1": "debc4ed82947c78353b0b3811034a8f9d7385d2f",
+      "size": 2860544,
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "Unpacked PE Image: 64-bit executable",
       "roles": [
         "cape_payload"
       ]
@@ -1386,18 +1385,6 @@
       ]
     },
     {
-      "name": "14301c69392c7e13fb9fb4852a321faac8bfc18ed5a32df599476c5b784d19b5",
-      "sha256": "14301c69392c7e13fb9fb4852a321faac8bfc18ed5a32df599476c5b784d19b5",
-      "md5": "c08834cbfa56189ee5261a52eafaa013",
-      "sha1": "9bf58bb220846fe49a0f21f6da584ce3010ad3a0",
-      "size": 2860544,
-      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
-      "cape_type": "Unpacked PE Image: 64-bit executable",
-      "roles": [
-        "cape_payload"
-      ]
-    },
-    {
       "name": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
       "sha256": "d86a86901aee19d8f361ef38ac16750455efcabc840700f3cd53d040bd557fef",
       "md5": "7a5ba5b73a9a516ac275d2ce8b0dcda4",
@@ -1424,30 +1411,7 @@
   ],
   "host_activity": {
     "mutexes": [
-      "cversions.3.m",
-      "Local\\SM0:3888:120:WilError_03",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!rwWriterMutex",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_16.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_32.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_48.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_96.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_256.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_768.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_1280.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_1920.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_2560.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_sr.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_wide.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_exif.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_wide_alternate.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_custom_stream.db!dfMaintainer",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!ThumbnailCacheInit",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!rwReaderRefs",
-      "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!118",
-      "Local\\MSCTF.Asm.MutexDefault1",
-      "CicLoadWinStaWinSta0",
-      "Local\\MSCTF.CtfMonitorInstMutexDefault1",
-      "Local\\SM0:200:304:WilStaging_02"
+      "cversions.3.m"
     ],
     "created_services": [
       "vally3dka",
@@ -1460,12 +1424,10 @@
       "MicrosoftSoftware2ShadowCop4yProvider",
       "vmservice",
       "MiniFilterDrv",
-      "BthAvctpSvc",
       "edgeupdate"
     ],
     "commands_executed": [
-      "\"C:\\Program Files\\\\Snegreijsmaity\\RDKl4OR6\\Kyl2lh\\66VOAk0O\"",
-      "C:\\Windows\\system32\\DllHost.exe /Processid:{AB8902B4-09CA-4BB6-B78D-A8F59079A8D5}"
+      "\"C:\\Program Files\\\\Snegreijsmaity\\RDKl4OR6\\Kyl2lh\\66VOAk0O\""
     ],
     "registry_keys_written": {
       "items": [
@@ -1504,16 +1466,9 @@
         "HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Services\\MiniFilterDrv\\Instances\\MiniFilterDrv Instance\\Flags",
         "HKEY_CURRENT_USER\\Software\\Classes\\Local Settings\\MuiCache\\b\\417C44EB\\@C:\\Windows\\ImmersiveControlPanel\\systemsettings.exe,-650",
         "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Search\\InstalledWin32AppsRevision",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CloudStore\\Store\\Cache\\DefaultAccount\\$de${a992df9f-46d4-4e53-8d9c-7900a61e03af}$$windows.data.unifiedtile.localstartvolatiletilepropertiesmap\\Current\\Data",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SessionInfo\\1\\ApplicationViewManagement\\WRT:Microsoft.WindowsStore_8wekyb3d8bbwe!App+1+000000000005004C",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SessionInfo\\1\\ApplicationViewManagement\\WRT:Microsoft.WindowsStore_8wekyb3d8bbwe!App+1+000000000005004C\\ShowInSwitchers",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SessionInfo\\1\\ApplicationViewManagement\\WRT:Microsoft.WindowsStore_8wekyb3d8bbwe!App+1+000000000005004C\\VirtualDesktop",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SessionInfo\\1\\ImmersiveShell\\PersistedApplicationData\\Volatile\\Microsoft.WindowsStore_8wekyb3d8bbwe!App",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\Zvpebfbsg.JvaqbjfFgber_8jrxlo3q8oojr!Ncc",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\HRZR_PGYFRFFVBA",
-        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\Zvpebfbsg.Jvaqbjf.Rkcybere"
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CloudStore\\Store\\Cache\\DefaultAccount\\$de${a992df9f-46d4-4e53-8d9c-7900a61e03af}$$windows.data.unifiedtile.localstartvolatiletilepropertiesmap\\Current\\Data"
       ],
-      "total_count": 43,
+      "total_count": 36,
       "truncated": false
     }
   },
@@ -1523,15 +1478,7 @@
       "pid": 708,
       "parent_id": 580,
       "module_path": "C:\\Windows\\System32\\svchost.exe",
-      "children": [
-        {
-          "name": "dllhost.exe",
-          "pid": 200,
-          "parent_id": 708,
-          "module_path": "C:\\Windows\\System32\\dllhost.exe",
-          "children": []
-        }
-      ]
+      "children": []
     },
     {
       "name": "explorer.exe",
@@ -1541,14 +1488,14 @@
       "children": [
         {
           "name": "b0521ad45fd21cdae26a.exe",
-          "pid": 5484,
+          "pid": 6060,
           "parent_id": 3888,
           "module_path": "C:\\Users\\sandbox\\AppData\\Local\\Temp\\b0521ad45fd21cdae26a.exe",
           "children": [
             {
               "name": "66VOAk0O.exe",
-              "pid": 4432,
-              "parent_id": 5484,
+              "pid": 5144,
+              "parent_id": 6060,
               "module_path": "C:\\Program Files\\Snegreijsmaity\\RDKl4OR6\\Kyl2lh\\66VOAk0O.exe",
               "children": []
             }
@@ -1565,15 +1512,6 @@
       "categories": [
         "injection",
         "unpacking"
-      ]
-    },
-    {
-      "name": "reads_memory_remote_process",
-      "description": "Reads from the memory of another process",
-      "severity": 2,
-      "categories": [
-        "memory scraping",
-        "injection"
       ]
     },
     {

@@ -8043,7 +8043,7 @@
     "detected": true,
     "packers": [
       {
-        "name": "Compiler: Microsoft Visual C/C++(19.36.35217)[LTCG/C++",
+        "name": "\u001b[39;49mCompiler: Microsoft Visual C/C++(19.44.35217)[LTCG/C++]\u001b[0m",
         "version": "N/A",
         "type": "compiler",
         "confidence": "medium"
@@ -12915,16 +12915,8 @@
       "name": "Indicator Removal on Host",
       "source": "string_pattern",
       "evidence": "CreateFile",
-      "confidence": "high",
-      "justification": "The malware string 'CreateFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
-    },
-    {
-      "technique": "T1055",
-      "name": "Process Injection",
-      "source": "string_pattern",
-      "evidence": "OpenProcess",
-      "confidence": "medium",
-      "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+      "confidence": "low",
+      "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
     },
     {
       "technique": "T1083",
@@ -12947,8 +12939,8 @@
       "name": "Indicator Removal on Host",
       "source": "string_pattern",
       "evidence": "DeleteFile",
-      "confidence": "high",
-      "justification": "The malware string 'DeleteFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "confidence": "medium",
+      "justification": "The malware string 'DeleteFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
     },
     {
       "technique": "T1059",
@@ -12962,9 +12954,17 @@
       "technique": "T1134",
       "name": "Privilege Escalation",
       "source": "string_pattern",
+      "evidence": "OpenProcessToken",
+      "confidence": "high",
+      "justification": "The malware string 'OpenProcessToken' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+    },
+    {
+      "technique": "T1134",
+      "name": "Privilege Escalation",
+      "source": "string_pattern",
       "evidence": "AdjustTokenPrivileges",
       "confidence": "high",
-      "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1134",
@@ -12972,7 +12972,7 @@
       "source": "string_pattern",
       "evidence": "LookupPrivilegeValue",
       "confidence": "high",
-      "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1059",
@@ -12996,7 +12996,7 @@
       "source": "string_pattern",
       "evidence": "QueryPerformanceCounter",
       "confidence": "high",
-      "justification": "The malware string 'QueryPerformanceCounter' was found in the binary, alongside 2 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "justification": "The malware string 'QueryPerformanceCounter' was found in the binary, alongside 3 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1497",
@@ -13004,7 +13004,7 @@
       "source": "string_pattern",
       "evidence": "Sleep",
       "confidence": "high",
-      "justification": "The malware string 'Sleep' was found in the binary, alongside 2 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "justification": "The malware string 'Sleep' was found in the binary, alongside 3 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1497",
@@ -13012,15 +13012,15 @@
       "source": "string_pattern",
       "evidence": "GetTickCount",
       "confidence": "high",
-      "justification": "The malware string 'GetTickCount' was found in the binary, alongside 2 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "justification": "The malware string 'GetTickCount' was found in the binary, alongside 3 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
-      "technique": "T1082",
-      "name": "System Information Discovery",
+      "technique": "T1497",
+      "name": "Virtualization/Sandbox Evasion",
       "source": "string_pattern",
       "evidence": "GetSystemInfo",
-      "confidence": "low",
-      "justification": "The malware string 'GetSystemInfo' was found in the binary. This string is characteristic of System Information Discovery behavior. The presence of this specific string alone (no other System Information Discovery-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+      "confidence": "high",
+      "justification": "The malware string 'GetSystemInfo' was found in the binary, alongside 3 other string(s) also characteristic of Virtualization/Sandbox Evasion. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1070",
@@ -13106,43 +13106,68 @@
       "technique": "T1071",
       "name": "Application Layer Protocol",
       "source": "config",
-      "evidence": "20 C2 IPs found",
+      "evidence": "1 C2 IPs found",
       "confidence": "medium",
-      "justification": "Found 20 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
+      "justification": "Found 1 IP addresses in the configuration. These are likely command and control (C2) servers used for communication (T1071)."
+    },
+    {
+      "technique": "T1555",
+      "name": "Credentials from Password Stores",
+      "source": "config",
+      "evidence": "Browser extension path(s) referencing: MetaMask",
+      "confidence": "high",
+      "justification": "A file path referencing the MetaMask browser extension's fixed store ID was found in the binary. Checking for or targeting a specific cryptocurrency wallet extension's installation path is characteristic of Credentials from Password Stores (T1555) -- these extension IDs are assigned once by the browser's extension store and have no legitimate reason to appear hardcoded in unrelated software."
+    },
+    {
+      "technique": "T1140",
+      "name": "Deobfuscate/Decode Files or Information",
+      "source": "config",
+      "evidence": "202.95.11.173 (XOR key 0x61)",
+      "confidence": "high",
+      "justification": "Recovered 202.95.11.173 (XOR key 0x61) by brute-forcing every possible single-byte XOR key against the binary and requiring a clean null-padded boundary around the match (not just a coincidental decode). A network address stored obfuscated like this is unusable to the malware until it reverses the same encoding at runtime -- direct evidence of Deobfuscate/Decode Files or Information (T1140)."
     }
   ],
   "config": {
-    "ips": [],
+    "ips": [
+      "202.95.11.173"
+    ],
     "domains": [
-      "secure.comodo.net",
       "crl.comodoca.com",
       "crl.microsoft.com",
-      "crl.usertrust.com",
-      "crt.comodoca.com",
+      "cacerts.digicert.com",
+      "crl.verisign.com",
+      "csc3-2010-crl.verisign.com",
       "logo.verisign.com",
-      "crl.verisign.com"
+      "repository.certum.pl",
+      "example.com",
+      "crt.comodoca.com",
+      "crl.certum.pl",
+      "csc3-2010-aia.verisign.com",
+      "secure.comodo.net",
+      "crl3.digicert.com",
+      "crl.usertrust.com"
     ],
     "urls": [
-      "http://subca.ocsp-certum.com01",
-      "http://repository.certum.pl/ctnca.cer09",
-      "https://www.certum.pl/CPS0",
-      "http://crt.comodoca.com/COMODORSACodeSigningCA.crt0$",
-      "http://ccsca2021.crl.certum.pl/ccsca2021.crl0s",
+      "http://subca.ocsp-certum.com0",
+      "http://ccsca2021.ocsp-certum.com05",
       "http://subca.repository.certum.pl/ctsca2021.cer0(",
-      "http://crl3.digicert.com/DigiCertTrustedRootG4.crl0",
-      "http://crl.microsoft.com/pki/crl/products/MicrosoftCodeVerifRoot.crl0",
-      "http://ocsp.verisign.com0",
-      "http://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_",
-      "http://www.baidu.com/",
-      "http://repository.certum.pl/ctnca2.cer09",
-      "https://curl.se/docs/hsts.html",
-      "http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C",
-      "http://ocsp.verisign.com0;",
-      "http://logo.verisign.com/vslogo.gif04",
-      "http://subca.ocsp-certum.com02",
       "https://www.verisign.com/cps0*",
-      "http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E",
-      "http://subca.ocsp-certum.com0"
+      "http://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0",
+      "http://subca.ocsp-certum.com01",
+      "http://crt.comodoca.com/COMODORSAAddTrustCA.crt0$",
+      "https://www.verisign.com/rpa",
+      "http://crl.comodoca.com/COMODORSACertificationAuthority.crl0q",
+      "http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C",
+      "http://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_",
+      "http://csc3-2010-crl.verisign.com/CSC3-2010.crl0D",
+      "http://ocsp.digicert.com0C",
+      "https://curl.se/docs/hsts.html",
+      "http://www.certum.pl/CPS0",
+      "http://ocsp.comodoca.com0",
+      "http://ocsp.verisign.com0",
+      "http://repository.certum.pl/ctnca2.cer09",
+      "http://crl.usertrust.com/AddTrustExternalCARoot.crl05",
+      "http://crl3.digicert.com/DigiCertTrustedRootG4.crl0"
     ],
     "emails": [
       "ftp@example.com",
@@ -13150,23 +13175,28 @@
     ],
     "registry_paths": [],
     "file_paths": [
-      "C:\\ProgramData\\DiamondAge\\diamondage.exe",
-      "C:\\ProgramData\\Roning\\goldendays.dll",
-      "\\\\.\\ZemanaAntiMalware",
-      "C:\\windows\\system32\\drivers\\zeasea.tmp",
-      "C:\\Users\\%s\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\nkbihfbeogaeaoehlefnkodbefgpgknn",
-      "Z:\\Zemana\\Projects\\AntiMalware\\bin\\zam64.pdb",
-      "C:\\ProgramData\\DiamondAge\\diamondage.dll",
       "\\\\%s\\%s%c%s",
-      "C:\\ProgramData\\DiamondAge"
+      "C:\\ProgramData\\Roning\\goldendays.dll",
+      "C:\\ProgramData\\DiamondAge\\diamondage.dll",
+      "C:\\ProgramData\\DiamondAge",
+      "Z:\\Zemana\\Projects\\AntiMalware\\bin\\zam64.pdb",
+      "C:\\Users\\%s\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\nkbihfbeogaeaoehlefnkodbefgpgknn",
+      "\\\\.\\ZemanaAntiMalware",
+      "C:\\ProgramData\\DiamondAge\\diamondage.exe",
+      "C:\\windows\\system32\\drivers\\zeasea.tmp"
     ],
     "mutexes": [],
     "encryption_keys": [],
     "patterns": [],
-    "xor_recovered_iocs": []
+    "xor_recovered_iocs": [
+      {
+        "ip": "202.95.11.173",
+        "xor_key": "0x61"
+      }
+    ]
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-12T13:19:35.558560",
+  "analysis_timestamp": "2026-08-28T19:56:24.435917",
   "errors": [
     "FLOSS timed out with: floss --no static --json -- /resubmit/artifacts/1668cc758726d95ccc1fdae3a766da8ca3862082bf0e5c265e94ef442f2cf3cb",
     "FLOSS timed out with: floss --json -- /resubmit/artifacts/1668cc758726d95ccc1fdae3a766da8ca3862082bf0e5c265e94ef442f2cf3cb"

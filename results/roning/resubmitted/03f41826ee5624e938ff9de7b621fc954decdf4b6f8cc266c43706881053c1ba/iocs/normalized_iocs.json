@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:28.185839+00:00",
+  "generated_at": "2026-08-28T20:06:33.520302+00:00",
   "sources": {
     "static_report": "static/reports/roning/03f41826ee5624e938ff9de7b621fc954decdf4b6f8cc266c43706881053c1ba_static.json",
     "dynamic_report": null
@@ -32,31 +32,13 @@
     "ips": [],
     "urls": [
       {
-        "value": "http://subca.ocsp-certum.com01",
+        "value": "http://subca.ocsp-certum.com0",
         "sources": [
           "static"
         ]
       },
       {
-        "value": "http://repository.certum.pl/ctnca.cer09",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "https://www.certum.pl/CPS0",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "http://crt.comodoca.com/COMODORSACodeSigningCA.crt0$",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "http://ccsca2021.crl.certum.pl/ccsca2021.crl0s",
+        "value": "http://ccsca2021.ocsp-certum.com05",
         "sources": [
           "static"
         ]
@@ -68,25 +50,25 @@
         ]
       },
       {
-        "value": "http://crl3.digicert.com/DigiCertTrustedRootG4.crl0",
+        "value": "http://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0",
         "sources": [
           "static"
         ]
       },
       {
-        "value": "http://crl.microsoft.com/pki/crl/products/MicrosoftCodeVerifRoot.crl0",
+        "value": "http://subca.ocsp-certum.com01",
         "sources": [
           "static"
         ]
       },
       {
-        "value": "http://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_",
+        "value": "http://crt.comodoca.com/COMODORSAAddTrustCA.crt0$",
         "sources": [
           "static"
         ]
       },
       {
-        "value": "http://repository.certum.pl/ctnca2.cer09",
+        "value": "http://crl.comodoca.com/COMODORSACertificationAuthority.crl0q",
         "sources": [
           "static"
         ]
@@ -98,19 +80,7 @@
         ]
       },
       {
-        "value": "http://subca.ocsp-certum.com02",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E",
-        "sources": [
-          "static"
-        ]
-      },
-      {
-        "value": "http://subca.ocsp-certum.com0",
+        "value": "http://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_",
         "sources": [
           "static"
         ]
@@ -122,13 +92,31 @@
         ]
       },
       {
-        "value": "http://crl.certum.pl/ctnca2.crl0l",
+        "value": "http://www.certum.pl/CPS0",
         "sources": [
           "static"
         ]
       },
       {
-        "value": "http://ocsp.digicert.com0]",
+        "value": "http://ocsp.comodoca.com0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://repository.certum.pl/ctnca2.cer09",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl.usertrust.com/AddTrustExternalCARoot.crl05",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://crl3.digicert.com/DigiCertTrustedRootG4.crl0",
         "sources": [
           "static"
         ]
@@ -140,7 +128,19 @@
         ]
       },
       {
-        "value": "http://www.certum.pl/CPS0",
+        "value": "http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://subca.crl.certum.pl/ctsca2021.crl0",
+        "sources": [
+          "static"
+        ]
+      },
+      {
+        "value": "http://repository.certum.pl/ccsca2021.cer0",
         "sources": [
           "static"
         ]
@@ -170,36 +170,23 @@
   },
   "technique_observations": [
     {
-      "technique": "T1055",
-      "observations": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "OpenProcess",
-          "confidence": "medium",
-          "name": "Process Injection",
-          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        }
-      ]
-    },
-    {
       "technique": "T1070",
       "observations": [
         {
           "source": "static",
           "source_type": "string_pattern",
           "evidence": "CreateFile",
-          "confidence": "high",
+          "confidence": "low",
           "name": "Indicator Removal on Host",
-          "justification": "The malware string 'CreateFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+          "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         },
         {
           "source": "static",
           "source_type": "string_pattern",
           "evidence": "DeleteFile",
-          "confidence": "high",
+          "confidence": "medium",
           "name": "Indicator Removal on Host",
-          "justification": "The malware string 'DeleteFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+          "justification": "The malware string 'DeleteFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
       ]
     },
@@ -235,12 +222,6 @@
       "reason": "known_benign_infrastructure",
       "origin": "static",
       "field": "domains",
-      "raw_value": "secure.comodo.net"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "static",
-      "field": "domains",
       "raw_value": "crl.comodoca.com"
     },
     {
@@ -253,13 +234,7 @@
       "reason": "known_benign_infrastructure",
       "origin": "static",
       "field": "domains",
-      "raw_value": "crl.usertrust.com"
-    },
-    {
-      "reason": "known_benign_infrastructure",
-      "origin": "static",
-      "field": "domains",
-      "raw_value": "crt.comodoca.com"
+      "raw_value": "cacerts.digicert.com"
     },
     {
       "reason": "known_benign_infrastructure",
@@ -271,13 +246,31 @@
       "reason": "known_benign_infrastructure",
       "origin": "static",
       "field": "domains",
-      "raw_value": "cacerts.digicert.com"
+      "raw_value": "crt.comodoca.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.certum.pl"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "secure.comodo.net"
     },
     {
       "reason": "known_benign_infrastructure",
       "origin": "static",
       "field": "domains",
       "raw_value": "crl3.digicert.com"
+    },
+    {
+      "reason": "known_benign_infrastructure",
+      "origin": "static",
+      "field": "domains",
+      "raw_value": "crl.usertrust.com"
     }
   ]
 }

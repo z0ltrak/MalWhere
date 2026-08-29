@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:28.882619+00:00",
+  "generated_at": "2026-08-28T20:06:34.200877+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "1cbb3d517793c2239d0c8e7e05ba2bce1e920bb50355d10889bd41b6b7a69a61",
@@ -29,85 +29,13 @@
       "ips": [],
       "urls": [
         {
-          "value": "http://subca.ocsp-certum.com01",
+          "value": "http://subca.ocsp-certum.com0",
           "sources": [
             "static"
           ]
         },
         {
-          "value": "http://repository.certum.pl/ctnca.cer09",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "https://www.certum.pl/CPS0",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://ccsca2021.crl.certum.pl/ccsca2021.crl0s",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://subca.repository.certum.pl/ctsca2021.cer0(",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://crl3.digicert.com/DigiCertTrustedRootG4.crl0",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://crl.microsoft.com/pki/crl/products/MicrosoftCodeVerifRoot.crl0",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://ocsp.verisign.com0",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://repository.certum.pl/ctnca2.cer09",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://ocsp.verisign.com0;",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://logo.verisign.com/vslogo.gif04",
-          "sources": [
-            "static"
-          ]
-        },
-        {
-          "value": "http://subca.ocsp-certum.com02",
+          "value": "http://ccsca2021.ocsp-certum.com05",
           "sources": [
             "static"
           ]
@@ -119,19 +47,37 @@
           ]
         },
         {
-          "value": "http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E",
+          "value": "http://subca.repository.certum.pl/ctsca2021.cer0(",
           "sources": [
             "static"
           ]
         },
         {
-          "value": "http://subca.ocsp-certum.com0",
+          "value": "http://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0",
           "sources": [
             "static"
           ]
         },
         {
-          "value": "https://www.verisign.com/rpa0",
+          "value": "http://subca.ocsp-certum.com01",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "https://www.verisign.com/rpa",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_",
           "sources": [
             "static"
           ]
@@ -143,7 +89,61 @@
           ]
         },
         {
-          "value": "http://crl.certum.pl/ctnca2.crl0l",
+          "value": "http://www.certum.pl/CPS0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://ocsp.verisign.com0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://repository.certum.pl/ctnca2.cer09",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://crl3.digicert.com/DigiCertTrustedRootG4.crl0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://logo.verisign.com/vslogo.gif04",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://subca.crl.certum.pl/ctsca2021.crl0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://repository.certum.pl/ccsca2021.cer0",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://repository.certum.pl/ctnca.cer09",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "http://ocsp.verisign.com0;",
           "sources": [
             "static"
           ]

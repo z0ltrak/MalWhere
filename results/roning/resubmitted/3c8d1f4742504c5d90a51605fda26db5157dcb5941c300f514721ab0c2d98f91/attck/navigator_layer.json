@@ -1,7 +1,7 @@
 {
   "name": "MalWhere - roning",
   "versions": {
-    "attack": "14",
+    "attack": "19",
     "navigator": "4.9.1",
     "layer": "4.5"
   },
@@ -57,24 +57,6 @@
       ]
     },
     {
-      "techniqueID": "T1070",
-      "score": 100,
-      "color": "#e60d0d",
-      "comment": "static corroborated; evidence: CreateFile, DeleteFile, DeleteFileA, CreateFileA, CreateFileW",
-      "enabled": true,
-      "showSubtechniques": false,
-      "metadata": [
-        {
-          "name": "confidence",
-          "value": "high"
-        },
-        {
-          "name": "sources",
-          "value": "static"
-        }
-      ]
-    },
-    {
       "techniqueID": "T1115",
       "score": 100,
       "color": "#e60d0d",
@@ -96,7 +78,7 @@
       "techniqueID": "T1134",
       "score": 100,
       "color": "#e60d0d",
-      "comment": "static corroborated; evidence: AdjustTokenPrivileges, LookupPrivilegeValue",
+      "comment": "static corroborated; evidence: AdjustTokenPrivileges, LookupPrivilegeValue, OpenProcessToken",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -183,10 +165,10 @@
       ]
     },
     {
-      "techniqueID": "T1055",
+      "techniqueID": "T1056.001",
       "score": 60,
       "color": "#ffe766",
-      "comment": "static corroborated; evidence: OpenProcess",
+      "comment": "static corroborated; evidence: GetAsyncKeyState",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -201,10 +183,10 @@
       ]
     },
     {
-      "techniqueID": "T1056.001",
+      "techniqueID": "T1070",
       "score": 60,
       "color": "#ffe766",
-      "comment": "static corroborated; evidence: GetAsyncKeyState",
+      "comment": "static corroborated; evidence: CreateFile, DeleteFile, DeleteFileA, CreateFileA, CreateFileW",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [
@@ -241,6 +223,42 @@
       "score": 60,
       "color": "#ffe766",
       "comment": "static corroborated; evidence: GetComputerNameA",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "medium"
+        },
+        {
+          "name": "sources",
+          "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1518.001",
+      "score": 60,
+      "color": "#ffe766",
+      "comment": "static corroborated; evidence: avp.exe",
+      "enabled": true,
+      "showSubtechniques": false,
+      "metadata": [
+        {
+          "name": "confidence",
+          "value": "medium"
+        },
+        {
+          "name": "sources",
+          "value": "static"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1529",
+      "score": 60,
+      "color": "#ffe766",
+      "comment": "static corroborated; evidence: ExitWindowsEx",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [

@@ -540,7 +540,7 @@
     "detected": true,
     "packers": [
       {
-        "name": "Compiler: Microsoft Visual C/C++(19.36.35213)[C",
+        "name": "\u001b[39;49mCompiler: Microsoft Visual C/C++(19.44.35213)[C]\u001b[0m",
         "version": "N/A",
         "type": "compiler",
         "confidence": "medium"
@@ -3638,10 +3638,11 @@
     "file_paths": [],
     "mutexes": [],
     "encryption_keys": [],
-    "patterns": []
+    "patterns": [],
+    "xor_recovered_iocs": []
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-12T13:26:40.360393",
+  "analysis_timestamp": "2026-08-28T20:04:56.008291",
   "errors": [],
   "resubmission_lineage": {
     "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",

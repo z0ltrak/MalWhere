@@ -312,7 +312,7 @@
       "techniqueID": "T1082",
       "score": 60,
       "color": "#ffe766",
-      "comment": "dynamic corroborated; evidence: antisandbox_system_parameters_info, discover_registry_mount_points, mountpoints_volume_discovery",
+      "comment": "dynamic corroborated; evidence: antisandbox_system_parameters_info, discover_registry_mount_points, mountpoint_manager_access, mountpoints_volume_discovery",
       "enabled": true,
       "showSubtechniques": false,
       "metadata": [

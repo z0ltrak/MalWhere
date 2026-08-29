@@ -938,7 +938,7 @@
       "yara_matches": [],
       "discovered_keys": [],
       "full_report": {
-        "filename": "tmp7n_6af1r.exe",
+        "filename": "tmpo6jl40x4.exe",
         "size_bytes": 32768,
         "size_mb": 0.03,
         "extension": ".exe",
@@ -1158,7 +1158,7 @@
           "detected": true,
           "packers": [
             {
-              "name": "Compiler: Microsoft Visual C/C++(19.34.31823)[LTCG/C++",
+              "name": "\u001b[39;49mCompiler: Microsoft Visual C/C++(19.34.31823)[LTCG/C++]\u001b[0m",
               "version": "N/A",
               "type": "compiler",
               "confidence": "medium"
@@ -1215,10 +1215,11 @@
           "file_paths": [],
           "mutexes": [],
           "encryption_keys": [],
-          "patterns": []
+          "patterns": [],
+          "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-12T13:28:20.392795",
+        "analysis_timestamp": "2026-08-28T20:06:30.627047",
         "errors": []
       }
     }
@@ -4972,14 +4973,6 @@
       "justification": "The malware string 'WriteFile' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
     },
     {
-      "technique": "T1055",
-      "name": "Process Injection",
-      "source": "string_pattern",
-      "evidence": "OpenProcess",
-      "confidence": "medium",
-      "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-    },
-    {
       "technique": "T1070",
       "name": "Indicator Removal on Host",
       "source": "string_pattern",
@@ -4991,9 +4984,17 @@
       "technique": "T1134",
       "name": "Privilege Escalation",
       "source": "string_pattern",
+      "evidence": "OpenProcessToken",
+      "confidence": "high",
+      "justification": "The malware string 'OpenProcessToken' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+    },
+    {
+      "technique": "T1134",
+      "name": "Privilege Escalation",
+      "source": "string_pattern",
       "evidence": "AdjustTokenPrivileges",
       "confidence": "high",
-      "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1134",
@@ -5001,7 +5002,7 @@
       "source": "string_pattern",
       "evidence": "LookupPrivilegeValue",
       "confidence": "high",
-      "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
       "technique": "T1497",
@@ -5051,15 +5052,16 @@
     "emails": [],
     "registry_paths": [],
     "file_paths": [
-      "C:\\ProgramData\\goldendays_reg.log",
-      "C:\\ProgramData\\Roning\\Enpug.bin"
+      "C:\\ProgramData\\Roning\\Enpug.bin",
+      "C:\\ProgramData\\goldendays_reg.log"
     ],
     "mutexes": [],
     "encryption_keys": [],
-    "patterns": []
+    "patterns": [],
+    "xor_recovered_iocs": []
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-12T13:28:20.405862",
+  "analysis_timestamp": "2026-08-28T20:06:30.640590",
   "errors": [],
   "resubmission_lineage": {
     "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",

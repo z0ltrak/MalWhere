@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:30.877334+00:00",
+  "generated_at": "2026-08-28T20:06:36.191496+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "fc63f5dfc93f2358f4cba18cbdf99578fff5dac4cdd2de193a21f6041a0e01bc",
@@ -34,13 +34,13 @@
       "registry_paths": [],
       "file_paths": [
         {
-          "value": "C:\\ProgramData\\goldendays_reg.log",
+          "value": "C:\\ProgramData\\Roning\\Enpug.bin",
           "sources": [
             "static"
           ]
         },
         {
-          "value": "C:\\ProgramData\\Roning\\Enpug.bin",
+          "value": "C:\\ProgramData\\goldendays_reg.log",
           "sources": [
             "static"
           ]
@@ -89,7 +89,7 @@
     },
     {
       "technique_id": "T1134",
-      "technique_name": "Unknown ATT&CK technique (T1134)",
+      "technique_name": "Access Token Manipulation",
       "final_confidence": "high",
       "confidence_score": 100,
       "sources": [
@@ -101,10 +101,18 @@
         {
           "source": "static",
           "source_type": "string_pattern",
+          "evidence": "OpenProcessToken",
+          "confidence": "high",
+          "name": "Privilege Escalation",
+          "justification": "The malware string 'OpenProcessToken' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+        },
+        {
+          "source": "static",
+          "source_type": "string_pattern",
           "evidence": "AdjustTokenPrivileges",
           "confidence": "high",
           "name": "Privilege Escalation",
-          "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+          "justification": "The malware string 'AdjustTokenPrivileges' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
         },
         {
           "source": "static",
@@ -112,7 +120,7 @@
           "evidence": "LookupPrivilegeValue",
           "confidence": "high",
           "name": "Privilege Escalation",
-          "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 1 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+          "justification": "The malware string 'LookupPrivilegeValue' was found in the binary, alongside 2 other string(s) also characteristic of Privilege Escalation. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
         }
       ],
       "cross_level_corroboration": false,
@@ -181,29 +189,6 @@
       "cross_level_sibling": null
     },
     {
-      "technique_id": "T1055",
-      "technique_name": "Process Injection",
-      "final_confidence": "medium",
-      "confidence_score": 60,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "medium",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "OpenProcess",
-          "confidence": "medium",
-          "name": "Process Injection",
-          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
       "technique_id": "T1070",
       "technique_name": "Indicator Removal",
       "final_confidence": "low",
@@ -251,12 +236,12 @@
     }
   ],
   "summary": {
-    "total_techniques": 7,
+    "total_techniques": 6,
     "high": 4,
-    "medium": 1,
+    "medium": 0,
     "low": 2,
     "both_sources": 0,
-    "static_only": 7,
+    "static_only": 6,
     "dynamic_only": 0
   }
 }

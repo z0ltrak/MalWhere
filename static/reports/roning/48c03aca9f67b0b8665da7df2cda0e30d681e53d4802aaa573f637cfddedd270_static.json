@@ -1,0 +1,89 @@
+{
+  "filename": "48c03aca9f67b0b8665da7df2cda0e30d681e53d4802aaa573f637cfddedd270",
+  "size_bytes": 1048576,
+  "size_mb": 1.0,
+  "extension": "",
+  "file_type": "unknown",
+  "file_type_info": {
+    "type": "unknown",
+    "confidence": "low"
+  },
+  "md5": "c34ffaddc4f8351919cc6564e8bb3152",
+  "sha1": "6fd7649b0cc6c0ceea156a37b67aedfa8f156261",
+  "sha256": "48c03aca9f67b0b8665da7df2cda0e30d681e53d4802aaa573f637cfddedd270",
+  "ssdeep": "12:S+YnrMlxnqYmupfVVVCVVVCVVVCVVVCVVVdIIIIgUXE3tFDIK9umtqthZNVt:lYQlxnqWkXDMdN",
+  "tlsh": "T15E25F1253205C7CEE98709B0EDE6EEFA562ABDD1DC156407B4D17F4F3BB244438A00A4",
+  "is_dotnet": false,
+  "metadata": {},
+  "sections": [],
+  "imports": [],
+  "exports": [],
+  "resources": [],
+  "strings": {
+    "standard": [],
+    "floss": [],
+    "decoded": [],
+    "deobfuscated": [],
+    "dotnet_strings": []
+  },
+  "packer": {
+    "detected": false,
+    "packers": [],
+    "confidence": "none"
+  },
+  "indicators": {
+    "suspicious_imports": [],
+    "suspicious_strings": [],
+    "high_entropy_sections": [],
+    "anti_debug": [],
+    "anti_vm": [],
+    "ransomware_indicators": [],
+    "anti_sandbox": [],
+    "anti_vm_strings": [],
+    "anti_sandbox_strings": [],
+    "sleep_functions": []
+  },
+  "embedded_files": [],
+  "discovered_keys": [],
+  "yara": {
+    "matches": [],
+    "matched_rules": [],
+    "packer_detected": false,
+    "packers": [],
+    "attck_mapping": []
+  },
+  "entropy_analysis": {
+    "high_entropy_sections": [],
+    "suspicious_entropy": [],
+    "packed_sections": [],
+    "encrypted_data": [],
+    "overall_entropy": 0.012161395891935482,
+    "justification": "Overall file entropy is 0.01, which is within the normal range for executables (typically 5.5-6.5). No significant entropy anomalies detected.",
+    "crypto_indicators": []
+  },
+  "attck_mappings": [],
+  "config": {
+    "ips": [],
+    "domains": [],
+    "urls": [],
+    "emails": [],
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": [],
+    "xor_recovered_iocs": []
+  },
+  "nsis_detected": false,
+  "analysis_timestamp": "2026-08-28T18:44:34.310809",
+  "errors": [],
+  "resubmission_lineage": {
+    "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",
+    "parent_family": "roning",
+    "discovery_mechanism": "dropped",
+    "original_name": "thumbcache_32.db",
+    "cape_task_id": 46,
+    "depth": 1,
+    "discovered_at": "2026-08-28T18:37:18.620081+00:00"
+  }
+}

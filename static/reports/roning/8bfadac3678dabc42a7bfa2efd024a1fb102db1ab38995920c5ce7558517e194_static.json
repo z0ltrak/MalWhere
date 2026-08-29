@@ -6169,7 +6169,7 @@
     "detected": true,
     "packers": [
       {
-        "name": "Compiler: Microsoft Visual C/C++(19.36.35213)[LTCG/C++",
+        "name": "\u001b[39;49mCompiler: Microsoft Visual C/C++(19.44.35213)[LTCG/C++]\u001b[0m",
         "version": "N/A",
         "type": "compiler",
         "confidence": "medium"
@@ -10934,8 +10934,8 @@
       "name": "Indicator Removal on Host",
       "source": "string_pattern",
       "evidence": "CreateFile",
-      "confidence": "high",
-      "justification": "The malware string 'CreateFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "confidence": "low",
+      "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
     },
     {
       "technique": "T1497",
@@ -10970,14 +10970,6 @@
       "justification": "The malware string 'FindNextFile' was found in the binary, alongside 1 other string(s) also characteristic of File and Directory Discovery. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
     },
     {
-      "technique": "T1055",
-      "name": "Process Injection",
-      "source": "string_pattern",
-      "evidence": "OpenProcess",
-      "confidence": "medium",
-      "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-    },
-    {
       "technique": "T1497",
       "name": "Virtualization/Sandbox Evasion",
       "source": "string_pattern",
@@ -10990,16 +10982,16 @@
       "name": "Indicator Removal on Host",
       "source": "string_pattern",
       "evidence": "DeleteFile",
-      "confidence": "high",
-      "justification": "The malware string 'DeleteFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "confidence": "medium",
+      "justification": "The malware string 'DeleteFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
     },
     {
       "technique": "T1070",
       "name": "Indicator Removal on Host",
       "source": "import",
       "evidence": "CreateFileA, CreateFileW",
-      "confidence": "high",
-      "justification": "The API functions CreateFileA, CreateFileW are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+      "confidence": "low",
+      "justification": "The API functions CreateFileA, CreateFileW are imported by the binary. Each is individually associated with Indicator Removal on Host, but this specific combination doesn't form one of the corroborating patterns known to indicate Indicator Removal on Host with high confidence \u2014 treat this as suggestive rather than conclusive."
     },
     {
       "technique": "T1497",
@@ -11045,35 +11037,36 @@
   "config": {
     "ips": [],
     "domains": [
-      "secure.comodo.net",
       "crl.comodoca.com",
       "crl.microsoft.com",
-      "crl.usertrust.com",
-      "crt.comodoca.com",
-      "repository.certum.pl",
       "cacerts.digicert.com",
-      "crl3.digicert.com"
+      "repository.certum.pl",
+      "crt.comodoca.com",
+      "crl.certum.pl",
+      "secure.comodo.net",
+      "crl3.digicert.com",
+      "crl.usertrust.com"
     ],
     "urls": [
-      "http://subca.ocsp-certum.com01",
-      "http://repository.certum.pl/ctnca.cer09",
-      "https://www.certum.pl/CPS0",
-      "http://crt.comodoca.com/COMODORSACodeSigningCA.crt0$",
-      "http://ccsca2021.crl.certum.pl/ccsca2021.crl0s",
-      "http://subca.repository.certum.pl/ctsca2021.cer0(",
-      "http://crl3.digicert.com/DigiCertTrustedRootG4.crl0",
-      "http://crl.microsoft.com/pki/crl/products/MicrosoftCodeVerifRoot.crl0",
-      "http://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_",
-      "http://repository.certum.pl/ctnca2.cer09",
-      "http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C",
-      "http://subca.ocsp-certum.com02",
-      "http://cacerts.digicert.com/DigiCertAssuredIDRootCA.crt0E",
       "http://subca.ocsp-certum.com0",
+      "http://ccsca2021.ocsp-certum.com05",
+      "http://subca.repository.certum.pl/ctsca2021.cer0(",
+      "http://crl3.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crl0",
+      "http://subca.ocsp-certum.com01",
+      "http://crt.comodoca.com/COMODORSAAddTrustCA.crt0$",
+      "http://crl.comodoca.com/COMODORSACertificationAuthority.crl0q",
+      "http://cacerts.digicert.com/DigiCertTrustedRootG4.crt0C",
+      "http://cacerts.digicert.com/DigiCertTrustedG4TimeStampingRSA4096SHA2562025CA1.crt0_",
       "http://ocsp.digicert.com0C",
-      "http://crl.certum.pl/ctnca2.crl0l",
-      "http://ocsp.digicert.com0]",
-      "http://ocsp.usertrust.com0",
       "http://www.certum.pl/CPS0",
+      "http://ocsp.comodoca.com0",
+      "http://repository.certum.pl/ctnca2.cer09",
+      "http://crl.usertrust.com/AddTrustExternalCARoot.crl05",
+      "http://crl3.digicert.com/DigiCertTrustedRootG4.crl0",
+      "http://ocsp.usertrust.com0",
+      "http://crl3.digicert.com/DigiCertAssuredIDRootCA.crl0",
+      "http://subca.crl.certum.pl/ctsca2021.crl0",
+      "http://repository.certum.pl/ccsca2021.cer0",
       "http://crl.comodoca.com/COMODORSACodeSigningCA.crl0t"
     ],
     "emails": [],
@@ -11084,10 +11077,11 @@
     ],
     "mutexes": [],
     "encryption_keys": [],
-    "patterns": []
+    "patterns": [],
+    "xor_recovered_iocs": []
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-12T13:23:53.716415",
+  "analysis_timestamp": "2026-08-28T20:02:02.122853",
   "errors": [],
   "resubmission_lineage": {
     "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",

@@ -1145,7 +1145,7 @@
     "detected": true,
     "packers": [
       {
-        "name": "Compiler: Microsoft Visual C/C++(19.34.31823)[LTCG/C++",
+        "name": "\u001b[39;49mCompiler: Microsoft Visual C/C++(19.34.31823)[LTCG/C++]\u001b[0m",
         "version": "N/A",
         "type": "compiler",
         "confidence": "medium"
@@ -5390,14 +5390,6 @@
   },
   "attck_mappings": [
     {
-      "technique": "T1055",
-      "name": "Process Injection",
-      "source": "string_pattern",
-      "evidence": "OpenProcess",
-      "confidence": "medium",
-      "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-    },
-    {
       "technique": "T1497",
       "name": "Virtualization/Sandbox Evasion",
       "source": "string_pattern",
@@ -5458,7 +5450,7 @@
       "name": "Indicator Removal on Host",
       "source": "import",
       "evidence": "CreateFileW",
-      "confidence": "medium",
+      "confidence": "low",
       "justification": "The API function 'CreateFileW' is imported by the binary. This API is commonly used to perform Indicator Removal on Host. Importing this function alone (no other Indicator Removal on Host-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
     },
     {
@@ -5495,10 +5487,11 @@
     "file_paths": [],
     "mutexes": [],
     "encryption_keys": [],
-    "patterns": []
+    "patterns": [],
+    "xor_recovered_iocs": []
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-12T13:21:07.710178",
+  "analysis_timestamp": "2026-08-28T19:58:52.083737",
   "errors": [],
   "resubmission_lineage": {
     "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",

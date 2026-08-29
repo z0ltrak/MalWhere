@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:28.940633+00:00",
+  "generated_at": "2026-08-28T20:06:34.246413+00:00",
   "sources": {
     "static_report": "static/reports/roning/33b494eaaa6d7ed75eec74f8c8c866b6c42f59ca72b8517b3d4752c3313e617c_static.json",
     "dynamic_report": null
@@ -53,14 +53,6 @@
       "observations": [
         {
           "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "OpenProcess",
-          "confidence": "medium",
-          "name": "Process Injection",
-          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        },
-        {
-          "source": "static",
           "source_type": "import",
           "evidence": "VirtualAllocEx, CreateRemoteThread, OpenProcess, WriteProcessMemory",
           "confidence": "high",
@@ -97,9 +89,9 @@
           "source": "static",
           "source_type": "import",
           "evidence": "CreateFileA, CreateFileW",
-          "confidence": "high",
+          "confidence": "low",
           "name": "Indicator Removal on Host",
-          "justification": "The API functions CreateFileA, CreateFileW are all imported by the binary. This combination is characteristic of Indicator Removal on Host \u2014 multiple corroborating APIs together, not one import in isolation, is what makes this a strong signal."
+          "justification": "The API functions CreateFileA, CreateFileW are imported by the binary. Each is individually associated with Indicator Removal on Host, but this specific combination doesn't form one of the corroborating patterns known to indicate Indicator Removal on Host with high confidence \u2014 treat this as suggestive rather than conclusive."
         }
       ]
     },

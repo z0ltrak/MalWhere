@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:30.713753+00:00",
+  "generated_at": "2026-08-28T20:06:36.058780+00:00",
   "sources": {
     "static_report": "static/reports/roning/f3e9b0d43b66fa6b05d2fa4de4547517a3ec0bc0b14de3c349d817465bbf7ab4_static.json",
     "dynamic_report": null
@@ -41,19 +41,6 @@
     "patterns": []
   },
   "technique_observations": [
-    {
-      "technique": "T1055",
-      "observations": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "OpenProcess",
-          "confidence": "medium",
-          "name": "Process Injection",
-          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        }
-      ]
-    },
     {
       "technique": "T1057",
       "observations": [
@@ -101,11 +88,11 @@
       "observations": [
         {
           "source": "static",
-          "source_type": "import",
+          "source_type": "string_pattern",
           "evidence": "OpenProcessToken",
           "confidence": "medium",
           "name": "Privilege Escalation",
-          "justification": "The API function 'OpenProcessToken' is imported by the binary. This API is commonly used to perform Privilege Escalation. Importing this function alone (no other Privilege Escalation-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+          "justification": "The malware string 'OpenProcessToken' was found in the binary. This string is characteristic of Privilege Escalation behavior. The presence of this specific string alone (no other Privilege Escalation-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
       ]
     }

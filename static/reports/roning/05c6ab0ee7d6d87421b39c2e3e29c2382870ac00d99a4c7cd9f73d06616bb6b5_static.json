@@ -4748,7 +4748,7 @@
     "detected": true,
     "packers": [
       {
-        "name": "Compiler: Microsoft Visual C/C++(18.00.31101)[C",
+        "name": "\u001b[39;49mCompiler: Microsoft Visual C/C++(18.00.31101)[C]\u001b[0m",
         "version": "N/A",
         "type": "compiler",
         "confidence": "medium"
@@ -9446,20 +9446,12 @@
   },
   "attck_mappings": [
     {
-      "technique": "T1055",
-      "name": "Process Injection",
-      "source": "string_pattern",
-      "evidence": "OpenProcess",
-      "confidence": "medium",
-      "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-    },
-    {
       "technique": "T1070",
       "name": "Indicator Removal on Host",
       "source": "string_pattern",
       "evidence": "CreateFile",
-      "confidence": "high",
-      "justification": "The malware string 'CreateFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "confidence": "low",
+      "justification": "The malware string 'CreateFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
     },
     {
       "technique": "T1497",
@@ -9474,8 +9466,8 @@
       "name": "Indicator Removal on Host",
       "source": "string_pattern",
       "evidence": "DeleteFile",
-      "confidence": "high",
-      "justification": "The malware string 'DeleteFile' was found in the binary, alongside 1 other string(s) also characteristic of Indicator Removal on Host. Multiple corroborating strings, not this one in isolation, is what makes this a strong signal."
+      "confidence": "medium",
+      "justification": "The malware string 'DeleteFile' was found in the binary. This string is characteristic of Indicator Removal on Host behavior. The presence of this specific string alone (no other Indicator Removal on Host-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
     },
     {
       "technique": "T1486",
@@ -9497,10 +9489,11 @@
     ],
     "mutexes": [],
     "encryption_keys": [],
-    "patterns": []
+    "patterns": [],
+    "xor_recovered_iocs": []
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-12T13:14:19.036419",
+  "analysis_timestamp": "2026-08-28T19:47:33.511505",
   "errors": [],
   "resubmission_lineage": {
     "parent_hash": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6",

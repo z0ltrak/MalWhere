@@ -1,5 +1,5 @@
 {
-  "filename": "sample.exe",
+  "filename": "b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6.exe",
   "size_bytes": 3331426,
   "size_mb": 3.18,
   "extension": ".exe",
@@ -2246,7 +2246,7 @@
           "detected": true,
           "packers": [
             {
-              "name": "Compiler: Microsoft Visual C/C++(19.36.35403)[C++",
+              "name": "Compiler: Microsoft Visual C/C++(19.50.35403)[C++",
               "version": "N/A",
               "type": "compiler",
               "confidence": "medium"
@@ -7027,11 +7027,11 @@
           "emails": [],
           "registry_paths": [],
           "file_paths": [
-            "C:\\Program Files\\DirectX",
+            "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\sys\\thread_local\\native\\lazy.rs",
+            "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs",
             "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\local.rs",
             "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\mod.rs",
-            "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\sys\\thread_local\\native\\lazy.rs",
-            "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs"
+            "C:\\Program Files\\DirectX"
           ],
           "mutexes": [],
           "encryption_keys": [
@@ -7060,7 +7060,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-18T19:04:14.805649",
+        "analysis_timestamp": "2026-08-29T09:19:09.509525",
         "errors": []
       },
       "keys_used": 1458,
@@ -13007,10 +13007,10 @@
           ],
           "urls": [
             "http://www.microsoft.com/pki/certs/CSPCA.crt0",
-            "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
-            "http://crl.microsoft.com/pki/crl/products/tspca.crl0H",
             "http://www.microsoft.com/DirectX0",
-            "http://www.microsoft.com/pki/certs/tspca.crt0"
+            "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
+            "http://www.microsoft.com/pki/certs/tspca.crt0",
+            "http://crl.microsoft.com/pki/crl/products/tspca.crl0H"
           ],
           "emails": [],
           "registry_paths": [],
@@ -13021,7 +13021,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-18T19:04:33.491677",
+        "analysis_timestamp": "2026-08-29T09:19:28.537962",
         "errors": []
       },
       "keys_used": 1458,
@@ -14047,7 +14047,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-18T19:04:45.574143",
+        "analysis_timestamp": "2026-08-29T09:19:40.584282",
         "errors": []
       },
       "keys_used": 1458,
@@ -17320,7 +17320,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-18T19:04:57.252375",
+        "analysis_timestamp": "2026-08-29T09:19:52.096308",
         "errors": []
       },
       "keys_used": 1458,
@@ -20700,7 +20700,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-18T19:05:16.483579",
+        "analysis_timestamp": "2026-08-29T09:20:11.412284",
         "errors": []
       },
       "keys_used": 1458,
@@ -24298,7 +24298,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-18T19:05:30.746561",
+        "analysis_timestamp": "2026-08-29T09:20:25.472780",
         "errors": []
       },
       "keys_used": 1458,
@@ -27580,7 +27580,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-18T19:05:42.174549",
+        "analysis_timestamp": "2026-08-29T09:20:36.670270",
         "errors": []
       },
       "keys_used": 1458,
@@ -31016,7 +31016,7 @@
           "xor_recovered_iocs": []
         },
         "nsis_detected": false,
-        "analysis_timestamp": "2026-08-18T19:05:53.914732",
+        "analysis_timestamp": "2026-08-29T09:20:47.796194",
         "errors": []
       },
       "keys_used": 1458,
@@ -53053,11 +53053,11 @@
   ],
   "config": {
     "file_paths": [
-      "C:\\Program Files\\DirectX",
+      "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\sys\\thread_local\\native\\lazy.rs",
+      "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs",
       "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\local.rs",
       "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\thread\\mod.rs",
-      "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\sys\\thread_local\\native\\lazy.rs",
-      "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs"
+      "C:\\Program Files\\DirectX"
     ],
     "encryption_keys": [
       {
@@ -53071,19 +53071,19 @@
     ],
     "urls": [
       "http://www.microsoft.com/pki/certs/CSPCA.crt0",
-      "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
-      "http://crl.microsoft.com/pki/crl/products/tspca.crl0H",
       "http://www.microsoft.com/DirectX0",
-      "http://www.microsoft.com/pki/certs/tspca.crt0"
+      "http://crl.microsoft.com/pki/crl/products/CSPCA.crl0H",
+      "http://www.microsoft.com/pki/certs/tspca.crt0",
+      "http://crl.microsoft.com/pki/crl/products/tspca.crl0H"
     ]
   },
   "nsis_detected": true,
-  "analysis_timestamp": "2026-08-18T19:05:53.973310",
+  "analysis_timestamp": "2026-08-29T09:20:47.853524",
   "errors": [
     "Detected NSIS installer: Nullsoft.NSIS.exehead",
     "Using 7z for NSIS extraction",
     "Using 7z for NSIS extraction",
-    "Running: 7z x -y /samples/roning/sample.exe -o/tmp/nsis_extract_7sbnsh4q",
+    "Running: 7z x -y /samples/b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6.exe -o/tmp/nsis_extract_ayd_3uf6",
     "7z return code: 0",
     "7z stdout: \n7-Zip [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21\np7zip Version 16.02 (locale=C.UTF-8,Utf16=on,HugeFiles=on,64 bits,16 CPUs AMD Ryzen 7 4800H with Radeon Graphics          (860F01),...",
     "Extracted: 9ZUPMq.3w (unknown, 2858217 bytes)",

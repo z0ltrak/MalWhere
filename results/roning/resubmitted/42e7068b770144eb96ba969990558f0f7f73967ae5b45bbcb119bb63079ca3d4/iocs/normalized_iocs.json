@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-28T20:06:34.604536+00:00",
+  "sources": {
+    "static_report": "static/reports/roning/42e7068b770144eb96ba969990558f0f7f73967ae5b45bbcb119bb63079ca3d4_static.json",
+    "dynamic_report": null
+  },
+  "sample": {
+    "family": "roning",
+    "static_sha256": "42e7068b770144eb96ba969990558f0f7f73967ae5b45bbcb119bb63079ca3d4",
+    "static_md5": "6298e128cdd252cc5ebe65c5e51dafe0",
+    "static_sha1": "75558818e39497ebb04c33c120758700b432502d",
+    "static_imphash": null,
+    "static_ssdeep": "24:WplB0q54sc//0E6igTsi5QkU//M8yKIDka5I8M//:Wpl54sc6igTs//M8a5I8M",
+    "static_tlsh": "T18F72D3098C11CA32CA5941B9DC6F0E487BD402B9E5B627661F28E0A3E9D3356E28B19C",
+    "static_filename": "42e7068b770144eb96ba969990558f0f7f73967ae5b45bbcb119bb63079ca3d4",
+    "static_file_type": "unknown"
+  },
+  "hashes": [
+    {
+      "role": "primary_sample",
+      "source": "static",
+      "sha256": "42e7068b770144eb96ba969990558f0f7f73967ae5b45bbcb119bb63079ca3d4",
+      "md5": "6298e128cdd252cc5ebe65c5e51dafe0",
+      "sha1": "75558818e39497ebb04c33c120758700b432502d",
+      "filename": "42e7068b770144eb96ba969990558f0f7f73967ae5b45bbcb119bb63079ca3d4",
+      "type": "unknown"
+    }
+  ],
+  "network_iocs": {
+    "domains": [],
+    "ips": [],
+    "urls": [],
+    "emails": []
+  },
+  "host_iocs": {
+    "registry_paths": [],
+    "file_paths": [],
+    "mutexes": [],
+    "encryption_keys": [],
+    "patterns": []
+  },
+  "technique_observations": [],
+  "discarded_entries": []
+}

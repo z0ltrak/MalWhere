@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-28T21:25:18.101674+00:00",
+  "generated_at": "2026-08-29T09:28:31.206192+00:00",
   "sources": {
-    "static_report": "static/reports/roning/b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6_static.json",
-    "dynamic_report": "dynamic/reports/roning/dynamic_report.json"
+    "static_report": "/home/z0ltrak/MalWhere/static/reports/roning/b0521ad45fd21cdae26afdc74307870c5859421e049bbff2a545852b0ccf0fe6_static.json",
+    "dynamic_report": "/home/z0ltrak/MalWhere/dynamic/reports/roning/dynamic_report.json"
   },
   "sample": {
     "family": "roning",
@@ -145,20 +145,20 @@
     {
       "role": "dropped_file",
       "source": "dynamic",
-      "sha256": "48c03aca9f67b0b8665da7df2cda0e30d681e53d4802aaa573f637cfddedd270",
-      "md5": "c34ffaddc4f8351919cc6564e8bb3152",
-      "sha1": "6fd7649b0cc6c0ceea156a37b67aedfa8f156261",
-      "filename": "thumbcache_32.db",
-      "type": "data"
-    },
-    {
-      "role": "dropped_file",
-      "source": "dynamic",
       "sha256": "78b0a1c7847506452ee518b03f8502ecc4f5d746a87d1130157383dd9a6e0e57",
       "md5": "4c153ab7598fc93fccbbd3239375ffa0",
       "sha1": "050ec34368bd23a49f5f72a273daf551fa1fdfb2",
       "filename": "D3D11InstallHelper.dll",
       "type": "PE32+ executable (DLL) (GUI) x86-64, for MS Windows"
+    },
+    {
+      "role": "dropped_file",
+      "source": "dynamic",
+      "sha256": "f638e493e153d6fd97ff33799bbb559ae9af842f7aa55c1d26988be3a9b40cc8",
+      "md5": "78e9efbacd133c5ba54a41d24a06a83e",
+      "sha1": "adea1af289ba43485c414e33e051f4c1299cb63c",
+      "filename": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000e.db",
+      "type": "data"
     },
     {
       "role": "dropped_file",
@@ -235,15 +235,6 @@
     {
       "role": "dropped_file",
       "source": "dynamic",
-      "sha256": "b04ac1e0078ef05e2065b4429579e420b30ac71855ac36bdabec8ebb7bcffa38",
-      "md5": "c6a291d682339a5a410a032c64b29811",
-      "sha1": "efc1332c753150705e7808536e4c34502a8e3a6e",
-      "filename": "thumbcache_idx.db",
-      "type": "data"
-    },
-    {
-      "role": "dropped_file",
-      "source": "dynamic",
       "sha256": "627169b1bad0744f636c72a86f6f8e0ff1f4fbb475e8629576a2462a0341ca4f",
       "md5": "5b3bea02989eaa3c91cc0529b28c0fdb",
       "sha1": "8b938dda75e9c72be2e34be0a3fd855b09d780c2",
@@ -278,15 +269,6 @@
       "type": "PE32 executable (DLL) (GUI) Intel 80386, for MS Windows"
     },
     {
-      "role": "dropped_file",
-      "source": "dynamic",
-      "sha256": "40d48e50d30885cdbff5092930095d35cc6e8ee345718f575e65feeda60c3df2",
-      "md5": "db570402151f3abb73e99c6d7c9c70b6",
-      "sha1": "7658569700ac455d46bb48e30b225e9c3a49b8a6",
-      "filename": "{3DA71D5A-20CC-432F-A115-DFE92379E91F}.3.ver0x000000000000000e.db",
-      "type": "data"
-    },
-    {
       "role": "cape_payload",
       "source": "dynamic",
       "sha256": "7ba86e4f1eadb4d1d58f7045cb713de592ff68c8fda8bf91768a4b734f74894d",
@@ -316,6 +298,16 @@
     {
       "role": "cape_payload",
       "source": "dynamic",
+      "sha256": "beff689602a45a461a5dc23e629a5b67622a1c6847cdff660c72de201fded79f",
+      "md5": "725c088047d8124d11be5d43be82a891",
+      "sha1": "debc4ed82947c78353b0b3811034a8f9d7385d2f",
+      "filename": "beff689602a45a461a5dc23e629a5b67622a1c6847cdff660c72de201fded79f",
+      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
+      "cape_type": "Unpacked PE Image: 64-bit executable"
+    },
+    {
+      "role": "cape_payload",
+      "source": "dynamic",
       "sha256": "05c6ab0ee7d6d87421b39c2e3e29c2382870ac00d99a4c7cd9f73d06616bb6b5",
       "md5": "c9fae85ee2b0d25f1a302b6192512c33",
       "sha1": "ab68f82092ce5456df405063d986ebbf9f669feb",
@@ -338,16 +330,6 @@
       "md5": "f6edf599aaafcb225a60de36eca66be7",
       "sha1": "c7083ba98ff29446e38f470b68ee51c2bbc72aa8",
       "filename": "1668cc758726d95ccc1fdae3a766da8ca3862082bf0e5c265e94ef442f2cf3cb",
-      "type": "PE32+ executable (GUI) x86-64, for MS Windows",
-      "cape_type": "Unpacked PE Image: 64-bit executable"
-    },
-    {
-      "role": "cape_payload",
-      "source": "dynamic",
-      "sha256": "14301c69392c7e13fb9fb4852a321faac8bfc18ed5a32df599476c5b784d19b5",
-      "md5": "c08834cbfa56189ee5261a52eafaa013",
-      "sha1": "9bf58bb220846fe49a0f21f6da584ce3010ad3a0",
-      "filename": "14301c69392c7e13fb9fb4852a321faac8bfc18ed5a32df599476c5b784d19b5",
       "type": "PE32+ executable (GUI) x86-64, for MS Windows",
       "cape_type": "Unpacked PE Image: 64-bit executable"
     },
@@ -382,7 +364,7 @@
     ],
     "ips": [
       {
-        "value": "103.235.46.102",
+        "value": "103.235.46.115",
         "sources": [
           "dynamic"
         ]
@@ -396,13 +378,13 @@
     ],
     "urls": [
       {
-        "value": "http://www.microsoft.com/DirectX0",
+        "value": "http://www.microsoft.com/pki/certs/CSPCA.crt0",
         "sources": [
           "static"
         ]
       },
       {
-        "value": "http://www.microsoft.com/pki/certs/CSPCA.crt0",
+        "value": "http://www.microsoft.com/DirectX0",
         "sources": [
           "static"
         ]
@@ -414,13 +396,13 @@
         ]
       },
       {
-        "value": "http://crl.microsoft.com/pki/crl/products/tspca.crl0H",
+        "value": "http://www.microsoft.com/pki/certs/tspca.crt0",
         "sources": [
           "static"
         ]
       },
       {
-        "value": "http://www.microsoft.com/pki/certs/tspca.crt0",
+        "value": "http://crl.microsoft.com/pki/crl/products/tspca.crl0H",
         "sources": [
           "static"
         ]
@@ -651,57 +633,9 @@
         "sources": [
           "dynamic"
         ]
-      },
-      {
-        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SessionInfo\\1\\ApplicationViewManagement\\WRT:Microsoft.WindowsStore_8wekyb3d8bbwe!App+1+000000000005004C",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SessionInfo\\1\\ApplicationViewManagement\\WRT:Microsoft.WindowsStore_8wekyb3d8bbwe!App+1+000000000005004C\\ShowInSwitchers",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SessionInfo\\1\\ApplicationViewManagement\\WRT:Microsoft.WindowsStore_8wekyb3d8bbwe!App+1+000000000005004C\\VirtualDesktop",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SessionInfo\\1\\ImmersiveShell\\PersistedApplicationData\\Volatile\\Microsoft.WindowsStore_8wekyb3d8bbwe!App",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\Zvpebfbsg.JvaqbjfFgber_8jrxlo3q8oojr!Ncc",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\HRZR_PGYFRFFVBA",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist\\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count\\Zvpebfbsg.Jvaqbjf.Rkcybere",
-        "sources": [
-          "dynamic"
-        ]
       }
     ],
     "file_paths": [
-      {
-        "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs",
-        "sources": [
-          "static"
-        ]
-      },
       {
         "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\sys\\thread_local\\native\\lazy.rs",
         "sources": [
@@ -709,7 +643,7 @@
         ]
       },
       {
-        "value": "C:\\Program Files\\DirectX",
+        "value": "C:\\Users\\wwww\\.rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\lib/rustlib/src/rust\\library\\std\\src\\io\\mod.rs",
         "sources": [
           "static"
         ]
@@ -725,149 +659,17 @@
         "sources": [
           "static"
         ]
+      },
+      {
+        "value": "C:\\Program Files\\DirectX",
+        "sources": [
+          "static"
+        ]
       }
     ],
     "mutexes": [
       {
         "value": "cversions.3.m",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Local\\SM0:3888:120:WilError_03",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!rwWriterMutex",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_16.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_32.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_48.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_96.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_256.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_768.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_1280.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_1920.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_2560.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_sr.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_wide.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_exif.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_wide_alternate.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_custom_stream.db!dfMaintainer",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!ThumbnailCacheInit",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!rwReaderRefs",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Global\\C::Users:sandbox:AppData:Local:Microsoft:Windows:Explorer:thumbcache_idx.db!118",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Local\\MSCTF.Asm.MutexDefault1",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "CicLoadWinStaWinSta0",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Local\\MSCTF.CtfMonitorInstMutexDefault1",
-        "sources": [
-          "dynamic"
-        ]
-      },
-      {
-        "value": "Local\\SM0:200:304:WilStaging_02",
         "sources": [
           "dynamic"
         ]
@@ -1097,6 +899,14 @@
           "confidence": "medium",
           "name": "",
           "justification": "CAPE signature 'antisandbox_system_parameters_info' fired (severity=2, confidence=50%, categories=['anti-sandbox', 'anti-analysis'])"
+        },
+        {
+          "source": "dynamic",
+          "source_type": "dynamic_signature",
+          "evidence": "mountpoint_manager_access",
+          "confidence": "medium",
+          "name": "",
+          "justification": "CAPE signature 'mountpoint_manager_access' fired (severity=3, confidence=60%, categories=['ransomware', 'wiper', 'discovery'])"
         },
         {
           "source": "dynamic",

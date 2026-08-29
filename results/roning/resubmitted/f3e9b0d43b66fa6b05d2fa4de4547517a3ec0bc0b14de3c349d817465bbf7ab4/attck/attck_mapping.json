@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-18T07:57:30.765656+00:00",
+  "generated_at": "2026-08-28T20:06:36.102501+00:00",
   "sample": {
     "family": "roning",
     "static_sha256": "f3e9b0d43b66fa6b05d2fa4de4547517a3ec0bc0b14de3c349d817465bbf7ab4",
@@ -83,29 +83,6 @@
       "cross_level_sibling": null
     },
     {
-      "technique_id": "T1055",
-      "technique_name": "Process Injection",
-      "final_confidence": "medium",
-      "confidence_score": 60,
-      "sources": [
-        "static"
-      ],
-      "static_best_confidence": "medium",
-      "dynamic_best_confidence": null,
-      "evidence": [
-        {
-          "source": "static",
-          "source_type": "string_pattern",
-          "evidence": "OpenProcess",
-          "confidence": "medium",
-          "name": "Process Injection",
-          "justification": "The malware string 'OpenProcess' was found in the binary. This string is characteristic of Process Injection behavior. The presence of this specific string alone (no other Process Injection-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
-        }
-      ],
-      "cross_level_corroboration": false,
-      "cross_level_sibling": null
-    },
-    {
       "technique_id": "T1057",
       "technique_name": "Process Discovery",
       "final_confidence": "medium",
@@ -130,7 +107,7 @@
     },
     {
       "technique_id": "T1134",
-      "technique_name": "Unknown ATT&CK technique (T1134)",
+      "technique_name": "Access Token Manipulation",
       "final_confidence": "medium",
       "confidence_score": 60,
       "sources": [
@@ -141,11 +118,11 @@
       "evidence": [
         {
           "source": "static",
-          "source_type": "import",
+          "source_type": "string_pattern",
           "evidence": "OpenProcessToken",
           "confidence": "medium",
           "name": "Privilege Escalation",
-          "justification": "The API function 'OpenProcessToken' is imported by the binary. This API is commonly used to perform Privilege Escalation. Importing this function alone (no other Privilege Escalation-related import corroborates it) indicates the malware has the capability to execute this technique, but with less certainty than a corroborated combination would."
+          "justification": "The malware string 'OpenProcessToken' was found in the binary. This string is characteristic of Privilege Escalation behavior. The presence of this specific string alone (no other Privilege Escalation-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
         }
       ],
       "cross_level_corroboration": false,
@@ -153,12 +130,12 @@
     }
   ],
   "summary": {
-    "total_techniques": 4,
+    "total_techniques": 3,
     "high": 1,
-    "medium": 3,
+    "medium": 2,
     "low": 0,
     "both_sources": 0,
-    "static_only": 4,
+    "static_only": 3,
     "dynamic_only": 0
   }
 }
