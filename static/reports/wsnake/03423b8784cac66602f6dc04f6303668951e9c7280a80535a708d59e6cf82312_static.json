@@ -1,5 +1,5 @@
 {
-  "filename": "sample.exe",
+  "filename": "03423b8784cac66602f6dc04f6303668951e9c7280a80535a708d59e6cf82312.exe",
   "size_bytes": 138752,
   "size_mb": 0.13,
   "extension": ".exe",
@@ -6325,6 +6325,6 @@
     "xor_recovered_iocs": []
   },
   "nsis_detected": false,
-  "analysis_timestamp": "2026-08-18T19:02:48.690503",
+  "analysis_timestamp": "2026-08-28T20:06:42.294621",
   "errors": []
 }
