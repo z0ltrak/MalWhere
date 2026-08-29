@@ -1,0 +1,244 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-28T19:03:33.631284+00:00",
+  "sample": {
+    "family": "akira",
+    "static_sha256": "da64dd796d555ea12752b461f5d7afe7e7153274901b1ac30f13a06822ff46de",
+    "static_md5": "2615c884130c3a987c1f87d1c07c1fd4",
+    "static_sha1": "f4b3b33a0db908c14776b660b967cb90be64f536",
+    "static_imphash": null,
+    "static_ssdeep": "768:VF1zDZDX/HKozi0/fVM+ym18Vzf1/EJ9wNSI3Ex:VFRVTfVMxk/r",
+    "static_tlsh": "T17B939C09BBBD635F2D13245C739A1E15318CE39A15A54F6232B0D21C64CAF52AACF3ED",
+    "static_filename": "da64dd796d555ea12752b461f5d7afe7e7153274901b1ac30f13a06822ff46de",
+    "static_file_type": "data_json"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "da64dd796d555ea12752b461f5d7afe7e7153274901b1ac30f13a06822ff46de",
+        "md5": "2615c884130c3a987c1f87d1c07c1fd4",
+        "sha1": "f4b3b33a0db908c14776b660b967cb90be64f536",
+        "filename": "da64dd796d555ea12752b461f5d7afe7e7153274901b1ac30f13a06822ff46de",
+        "type": "data_json"
+      }
+    ],
+    "network_iocs": {
+      "domains": [],
+      "ips": [],
+      "urls": [],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [
+        {
+          "value": "C:\\Program Files\\Common Files\\microsoft shared\\ink\\en-GB\\tipresx.dll.mui)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Program Files (x86)\\Common Files\\System\\ado\\adovbs.inc)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Program Files\\Common Files\\microsoft shared\\ink\\fsdefinitions\\main\\base_ca.xml)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Program Files (x86)\\WindowsPowerShell\\Modules\\Pester\\3.4.0\\Functions\\Assertions\\Be.Tests.ps1)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Program Files (x86)\\WindowsPowerShell\\Modules\\Pester\\3.4.0\\Snippets\\Context.snippets.ps1xml)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Users\\sandbox\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\Network Action Predictor-journal)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Program Files (x86)\\Common Files\\System\\Ole DB\\en-US\\sqloledb.rll.mui)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Users\\sandbox\\AppData\\Local\\Packages\\Microsoft.YourPhone_8wekyb3d8bbwe\\Settings\\roaming.lock)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Program Files (x86)\\WindowsPowerShell\\Modules\\Pester\\3.4.0\\Snippets\\It.snippets.ps1xml)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Program Files (x86)\\WindowsPowerShell\\Modules\\Pester\\3.4.0\\Functions\\Assertions\\BeOfType.Tests.ps1)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Program Files (x86)\\WindowsPowerShell\\Modules\\Pester\\3.4.0\\Snippets\\ShouldNotThrow.snippets.ps1xml)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Users\\sandbox\\AppData\\Local\\Packages\\Microsoft.GetHelp_8wekyb3d8bbwe\\Settings\\roaming.lock)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Program Files\\Common Files\\System\\msadc\\en-US\\msadcor.dll.mui)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Program Files (x86)\\Common Files\\Microsoft Shared\\ink\\ThirdPartyNotices.MSHWLatin.txt)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Users\\sandbox\\AppData\\Local\\Comms\\UnistoreDB\\store.vol)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Program Files (x86)\\Windows Media Player\\en-GB\\mpvis.dll.mui)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Users\\sandbox\\AppData\\Local\\Packages\\microsoft.windowscommunicationsapps_8wekyb3d8bbwe\\Settings\\settings.dat.LOG2)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Users\\sandbox\\AppData\\Local\\Packages\\Microsoft.WindowsStore_8wekyb3d8bbwe\\Settings\\settings.dat.LOG1)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Program Files\\Common Files\\microsoft shared\\ink\\nl-NL\\tipresx.dll.mui)",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "C:\\Users\\sandbox\\AppData\\Local\\Packages\\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\\LocalState\\ContentManagementSDK\\Creatives\\353698\\imprbeacons.dat)",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "mutexes": [
+        {
+          "value": "F46D4000-FD22-4DB4-AC8E-4E1DDDE828FE",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "c5e2524a-ea46-4f67-841f-6a9465d9d515",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "1527c705-839a-4832-9118-54d4Bd6a0c89",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "53b39e88-18c4-11ea-a811-000d3aa4692b",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "E2A4F912-2574-4A75-9BB0-0D023378592B",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "encryption_keys": [
+        {
+          "value": "{'hex': '57C8EDB95DF3F0AD4EE2DC2B8CFD4157', 'length': 32, 'description': 'MD5 key'}",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "{'hex': '77EC63BDA74BD0D0E0426DC8F8008506', 'length': 32, 'description': 'MD5 key'}",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [
+    {
+      "technique_id": "T1497",
+      "technique_name": "Virtualization/Sandbox Evasion",
+      "final_confidence": "medium",
+      "confidence_score": 60,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "medium",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "5 mutexes found",
+          "confidence": "medium",
+          "name": "Virtualization/Sandbox Evasion",
+          "justification": "Found 5 mutex names in the configuration. Mutexes are often used to check for a running instance (single-instance enforcement) and for sandbox detection (T1497)."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    }
+  ],
+  "summary": {
+    "total_techniques": 1,
+    "high": 0,
+    "medium": 1,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 1,
+    "dynamic_only": 0
+  }
+}

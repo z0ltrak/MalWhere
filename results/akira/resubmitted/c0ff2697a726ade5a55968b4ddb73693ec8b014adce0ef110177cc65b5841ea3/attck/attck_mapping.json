@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-28T19:03:33.541182+00:00",
+  "sample": {
+    "family": "akira",
+    "static_sha256": "c0ff2697a726ade5a55968b4ddb73693ec8b014adce0ef110177cc65b5841ea3",
+    "static_md5": "7c1953c7772becdf24901464ac412001",
+    "static_sha1": "a24b4b2d15c95a77ae2679c107b0c6e5105430c0",
+    "static_imphash": null,
+    "static_ssdeep": "48:6BrgOgOX3WJJTThOUNIN7BJf/WTmvDOPZtP5NwvsGkdHCiXYJMC2r:cMZX3TTQlNT3WKr6tP5Svxk1CaYtc",
+    "static_tlsh": "T12C51862FB748313195A111813B5E77BAF729902CA3B6C1B64CA5E27C3374F6A733A584",
+    "static_filename": "c0ff2697a726ade5a55968b4ddb73693ec8b014adce0ef110177cc65b5841ea3",
+    "static_file_type": "plaintext"
+  },
+  "iocs": {
+    "hashes": [
+      {
+        "role": "primary_sample",
+        "source": "static",
+        "sha256": "c0ff2697a726ade5a55968b4ddb73693ec8b014adce0ef110177cc65b5841ea3",
+        "md5": "7c1953c7772becdf24901464ac412001",
+        "sha1": "a24b4b2d15c95a77ae2679c107b0c6e5105430c0",
+        "filename": "c0ff2697a726ade5a55968b4ddb73693ec8b014adce0ef110177cc65b5841ea3",
+        "type": "plaintext"
+      }
+    ],
+    "network_iocs": {
+      "domains": [
+        {
+          "value": "akiral2iz6a7qgd3ayp3l6yub7xx2uep76idk3u2kollpj5z3z636bad.onion",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "akiralkzxzq2dsrzsrvbr2xgbbu2wgsmxryd4csgfameg52n7efvr2id.onion",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "ips": [],
+      "urls": [
+        {
+          "value": "https://www.torproject.org/download/.",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "https://akiralkzxzq2dsrzsrvbr2xgbbu2wgsmxryd4csgfameg52n7efvr2id.onion/d/6937967676-AWUMG",
+          "sources": [
+            "static"
+          ]
+        },
+        {
+          "value": "https://akiral2iz6a7qgd3ayp3l6yub7xx2uep76idk3u2kollpj5z3z636bad.onion.",
+          "sources": [
+            "static"
+          ]
+        }
+      ],
+      "emails": []
+    },
+    "host_iocs": {
+      "registry_paths": [],
+      "file_paths": [],
+      "mutexes": [],
+      "encryption_keys": [],
+      "patterns": []
+    }
+  },
+  "confidence_model": {
+    "version": "1.0",
+    "rule": "Technique observed by BOTH static and dynamic evidence -> High, unless both sources' best individual confidence is Low -> Medium. Technique observed by a single source retains that source's own best per-finding confidence tier unchanged (cannot be promoted by a single source alone)."
+  },
+  "techniques": [
+    {
+      "technique_id": "T1071",
+      "technique_name": "Application Layer Protocol",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "config",
+          "evidence": "2 .onion URLs found",
+          "confidence": "high",
+          "name": "Application Layer Protocol",
+          "justification": "Found 2 .onion URLs in the binary. Onion URLs are characteristic of Tor-based command and control (T1071), indicating the malware can communicate via the Tor network."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    },
+    {
+      "technique_id": "T1486",
+      "technique_name": "Data Encrypted for Impact",
+      "final_confidence": "high",
+      "confidence_score": 100,
+      "sources": [
+        "static"
+      ],
+      "static_best_confidence": "high",
+      "dynamic_best_confidence": null,
+      "evidence": [
+        {
+          "source": "static",
+          "source_type": "string_pattern",
+          "evidence": "akira",
+          "confidence": "high",
+          "name": "Data Encrypted for Impact",
+          "justification": "The malware string 'akira' was found in the binary. This string is characteristic of Data Encrypted for Impact behavior. The presence of this specific string alone (no other Data Encrypted for Impact-related string corroborates it) indicates the malware has capabilities associated with this technique, but with less certainty than a corroborated combination would."
+        }
+      ],
+      "cross_level_corroboration": false,
+      "cross_level_sibling": null
+    }
+  ],
+  "summary": {
+    "total_techniques": 2,
+    "high": 2,
+    "medium": 0,
+    "low": 0,
+    "both_sources": 0,
+    "static_only": 2,
+    "dynamic_only": 0
+  }
+}
