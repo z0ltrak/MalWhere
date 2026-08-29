@@ -8,6 +8,12 @@
       "evidence": "Collects local files for exfiltration, verified `wallet.dat` capture (base64 in XML report), 15-currency crypto wallet targeting"
     },
     {
+      "technique_id": "T1012",
+      "name": "Query Registry",
+      "evidence": "Manually confirmed in the report's prose, not the original ATT&CK table: `koBz` reads HKLM...Uninstall\\DisplayName to enumerate installed AV/security software, and the Thunderbird stealer reads 9 HKCU...Thunderbird/Windows Messaging Subsystem\\Profiles keys for stored credentials -- the read/enumerate action itself, distinct from the already-recorded T1112 (writes) and T1552.002 (the stolen contents)",
+      "source": "manual"
+    },
+    {
       "technique_id": "T1016",
       "name": "System Network Configuration Discovery",
       "evidence": "LAN scanning"

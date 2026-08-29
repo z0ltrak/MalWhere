@@ -28,6 +28,12 @@
       "evidence": "2 `.onion` URLs embedded in the binary (Tor-based C2/leak-site channel)"
     },
     {
+      "technique_id": "T1082",
+      "name": "System Information Discovery",
+      "evidence": "Manually confirmed in function_example.md, not the original ATT&CK table: `enumerate_drives()` walks all drives, and `validate_path_and_log` calls `GetDriveTypeW`/`PathIsNetworkPathW` to classify each one before encryption",
+      "source": "manual"
+    },
+    {
       "technique_id": "T1083",
       "name": "File and Directory Discovery",
       "evidence": "`open_directory_iterator` walks target directories (wildcard-based, per-drive) to find files to encrypt, see Directory Traversal & File Processing"
