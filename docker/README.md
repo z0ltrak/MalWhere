@@ -151,27 +151,6 @@ Building from upstream `celyrin/cape-docker` instead of our fork? See
 ("`CAPEv2/installer not found`", "`poetry: not found`") our fork already
 fixes.
 
-### Post-Build: PostgreSQL Setup
-
-After the image is built and you start the sandbox profile, the `cape`
-container initializes its PostgreSQL/MongoDB databases (`cape_task_db`,
-`cape_postgres_data`, `cape_mongo_data`) on first boot. If `cape-web` fails
-to come up, see [Known Issues & Fixes](#known-issues--fixes) ("CAPE's
-PostgreSQL role missing after a fresh build") for the manual fix.
-
-### Verifying CAPE is Running
-
-```bash
-# Check all CAPE services
-docker exec malwhere-cape systemctl status cape cape-web cape-processor | grep -E "Active|●"
-
-# Test the API
-curl -s http://localhost:8000/apiv2/tasks/list/ | python3 -m json.tool
-# Expected: {"data": [], "config": "Limit: 10, Offset: None", "buf": 0}
-```
-
-> **Note:** CAPE runs in no-auth mode for local development. The web UI is accessible at `http://localhost:8000` without credentials.
-
 ---
 
 ## Creating the Guest VM
@@ -531,6 +510,29 @@ under [Service Access](#service-access) and "`redis` needs to be running
 before `misp` starts" under [Known Issues](#known-issues--fixes) for the
 mechanics, and why it can take MISP a minute or two to respond on first
 boot.
+
+### Post-Build: PostgreSQL Setup
+
+After starting the sandbox profile for the first time (step 2 above), the
+`cape` container initializes its PostgreSQL/MongoDB databases
+(`cape_task_db`, `cape_postgres_data`, `cape_mongo_data`) on first boot. If
+`cape-web` fails to come up, see [Known Issues & Fixes](#known-issues--fixes)
+("CAPE's PostgreSQL role missing after a fresh build") for the manual fix.
+
+### Verifying CAPE is Running
+
+```bash
+# Check all CAPE services
+docker exec malwhere-cape systemctl status cape cape-web cape-processor | grep -E "Active|●"
+
+# Test the API
+curl -s http://localhost:8000/apiv2/tasks/list/ | python3 -m json.tool
+# Expected: a JSON object with "data"/"config"/"buf" keys, not an error --
+# "data": [] on a brand-new environment, or real task entries if you've
+# already run samples through the pipeline
+```
+
+> **Note:** CAPE runs in no-auth mode for local development. The web UI is accessible at `http://localhost:8000` without credentials.
 
 ---
 
