@@ -358,7 +358,7 @@ indicator to high confidence on its own:
 | Tier | Criteria | Example |
 |---|---|---|
 | **High** | Deterministic artifact → technique, or a coherent multi-import combination | `VirtualAllocEx` + `WriteProcessMemory` + `CreateRemoteThread` → T1055 |
-| **Medium** | Suggestive artifact, requires context | `cmd.exe /c` string → T1059.003 (needs corroboration) |
+| **Medium** | Suggestive artifact, requires context | `mshta.exe` string → T1218.005 (needs corroboration) |
 | **Low** | Weak signal, combinatorial only | High entropy section alone → possible packing |
 
 `pipeline/mapper/src/reconcile.py` then reconciles those static findings
@@ -373,9 +373,12 @@ static → normalize → map pipeline, tagged with lineage back to the parent,
 so a dropped payload's own capabilities are never folded into the parent
 binary's own confidence-scored output.
 
-Detection rules currently cover approximately 85 of 474 Windows-relevant
-MITRE ATT&CK techniques, each one sourced directly from MITRE's own
-technique description, not a generic API/tool name alone. See the
+Static detection rules currently cover approximately 86 of 474
+Windows-relevant MITRE ATT&CK techniques, each one sourced directly from
+MITRE's own technique description, not a generic API/tool name alone
+(dynamic-side coverage adds 2 more this project curated the same way,
+`T1571` and `T1201`, on top of whatever CAPE's own upstream community
+signatures separately report). See the
 paper's limitations section for what's deliberately out of scope.
 
 ---
