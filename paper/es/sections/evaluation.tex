@@ -124,13 +124,13 @@ binario cargador frente a unos datos de referencia escritos para
 construcci\'on, ya que las t\'ecnicas propias del driver rootkit y del
 cliente RAT son hallazgos reales que los datos de referencia esperan
 pero que el binario padre por s\'i solo no puede presentar. La
-exhaustividad sube 16 puntos en cuanto se analizan de forma
+exhaustividad sube 15 puntos en cuanto se analizan de forma
 independiente los tres componentes soltados y se cuentan sus
-hallazgos, a un coste de 1 punto de precisi\'on por la superficie
+hallazgos, a un coste de 9 puntos de precisi\'on por la superficie
 a\~nadida, una compensaci\'on que la mejora del F1 agregado
-(0.76~$\rightarrow$~0.84) demuestra que mereci\'o la pena.
+(0.85~$\rightarrow$~0.89) demuestra que mereci\'o la pena.
 
-La precisi\'on es alta en las cuatro filas (0.84--1.00), es decir,
+La precisi\'on es alta en las cuatro filas (0.86--0.97), es decir,
 el peque\~no n\'umero de hallazgos que reporta la pipeline rara vez son
 err\'oneos. Esta es la consecuencia directa e intencionada de la
 filosof\'ia de combinaci\'on coherente de \S\ref{sec:static-rules} y la
@@ -147,7 +147,7 @@ calibrada'' de ``los datos de referencia resultan ser permisivos''. A
 diferencia de un agregador de reputaci\'on que muestra la etiqueta de
 cada motor o sandbox tal cual, cada discrepancia entre el resultado
 de la pipeline y los datos de referencia encontrados en las tres muestras,
-15 en total (5 Akira, 4 WhiteSnakeStealer, 6 RoningLoader), se
+17 en total (6 Akira, 5 WhiteSnakeStealer, 6 RoningLoader), se
 rastre\'o individualmente hasta una causa concreta y verificable en
 lugar de aceptarse o descartarse solo por la cifra agregada. Cada una
 se contrast\'o con el \emph{texto completo} del informe manual
@@ -199,14 +199,25 @@ El resultado de esta auditor\'ia, por causa:
     ilustraci\'on directa de la relaci\'on entre confianza y precisi\'on
     examinada en \S\ref{sec:confidence-calibration}, no un
     contraejemplo de ella.
-  \item \textbf{Un hueco de extracci\'on de datos de referencia}, no un
-    error de la pipeline: el propio informe manual de
+  \item \textbf{Tres huecos de extracci\'on de datos de referencia}, no
+    errores de la pipeline: el propio informe manual de
     WhiteSnakeStealer discute la carga reflexiva de DLL en su texto
     narrativo, pero la fila correspondiente de \technique{T1620} faltaba
-    en la tabla ATT\&CK del propio informe, de modo que la extracci\'on
-    autom\'atica de datos de referencia nunca la captur\'o. El hallazgo
-    de la pipeline era correcto; se corrigi\'o el documento fuente en
-    lugar de la pipeline.
+    en la tabla ATT\&CK del propio informe; ese mismo informe tambi\'en
+    documenta que \code{koBz} enumera el software de seguridad/antivirus
+    instalado a trav\'es del registro y que el ladr\'on de Thunderbird
+    lee nueve claves de perfil en busca de credenciales almacenadas --
+    la propia acci\'on de leer/enumerar (\technique{T1012}, Query
+    Registry), distinta de lo ya registrado en \technique{T1112}
+    (escrituras) y \technique{T1552.002} (el contenido robado); y el
+    informe de Akira describe c\'omo \code{enumerate\_drives()} recorre
+    todas las unidades y clasifica cada una mediante
+    \code{GetDriveTypeW}/\code{PathIsNetworkPathW} antes de cifrar, es
+    decir, \technique{T1082} (Descubrimiento de Informaci\'on del
+    Sistema). Ninguna de las tres tablas de t\'ecnicas captur\'o estos
+    hallazgos solo narrativos. En los tres casos el hallazgo de la
+    pipeline era correcto; se corrigi\'o el documento fuente en lugar de
+    la pipeline.
   \item \textbf{Dos dejados abiertos deliberadamente}, en RoningLoader
     (\technique{T1027}, \technique{T1497}): la evidencia de apoyo de la
     pipeline para ambos es real, pero no existe confirmaci\'on expl\'icita
@@ -218,12 +229,12 @@ El resultado de esta auditor\'ia, por causa:
     sentido u otro.
 \end{itemize}
 
-Esta asimetr\'ia, un hueco de datos de referencia corregido y dos
+Esta asimetr\'ia, tres huecos de datos de referencia corregidos y dos
 discrepancias de aspecto similar dejadas abiertas, es deliberada: el
 factor distintivo es si existe confirmaci\'on independiente en el
 documento fuente, no si la evidencia propia de la pipeline parece
 convincente. El resultado pr\'actico de ejecutar esta auditor\'ia se
-aprecia en la columna de corregidos: 12 de las 15 discrepancias se
+aprecia en la columna de corregidos: 12 de las 17 discrepancias se
 tradujeron en mejoras concretas y verificables al conjunto de reglas
 (\S\ref{sec:coverage}) y a la l\'ogica de agregaci\'on
 (\S\ref{sec:case-installer}) en lugar de absorberse en silencio dentro
@@ -238,7 +249,7 @@ es significativo y no meramente cosm\'etico, la precisi\'on deber\'ia
 ser medible y mayor entre los hallazgos de confianza \emph{alta}
 (aquellos corroborados entre fuentes o entre niveles de t\'ecnica) que
 entre los hallazgos de \emph{media}/\emph{baja} de una sola fuente. En
-las tres muestras validadas, 14 de las 15 discrepancias identificadas en
+las tres muestras validadas, 16 de las 17 discrepancias identificadas en
 la auditor\'ia anterior tuvieron su origen en un hallazgo de una sola
 fuente. La \'unica excepci\'on, \technique{T1497} de RoningLoader,
 alcanz\'o confianza \emph{alta} mediante corroboraci\'on gen\'uina entre

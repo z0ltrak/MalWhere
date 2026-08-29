@@ -145,14 +145,14 @@ and recall bit-for-bit unchanged.
 
 First, the static domain extractor's dotted-string regex was filtered
 only by a hand-written denylist, so it mis-tokenized compiler metadata
-as domains (\code{kernel32.dllfailed}) and, across RoningLoader's 26
+as domains (\code{kernel32.dllfailed}) and, across RoningLoader's 42
 resubmitted components (\S\ref{sec:resubmission}), an entire class of
 Authenticode certificate-chain endpoints (\code{crl.comodoca.com})
 present in essentially any code-signed PE -- none of them
 adversary-chosen infrastructure. A TLD allowlist, a compound-identifier
 casing check, and a small, exact-matched allowlist for the
 confirmed-benign PKI endpoints removed every instance across all three
-families and all 26 resubmitted components.
+families and all 42 resubmitted components.
 
 Second, and unrelated to the first, CAPE's dynamic network capture
 (\code{network.hosts}) is a whole-VM PCAP dump with no per-process

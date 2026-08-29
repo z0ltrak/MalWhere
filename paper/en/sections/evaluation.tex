@@ -113,13 +113,13 @@ RoningLoader's two rows isolate exactly what the resubmission loop
 against ground truth written for its \emph{entire} infection chain
 understates recall by construction, since the rootkit driver's and the
 RAT client's own techniques are real findings the ground truth expects
-but the parent binary alone cannot exhibit. Recall rises 16 points once
+but the parent binary alone cannot exhibit. Recall rises 15 points once
 the three dropped components are independently analyzed and their
-findings counted, at a 1-point precision cost from the added surface
-area, a trade the aggregate F1 improvement (0.76~$\rightarrow$~0.84)
+findings counted, at a 9-point precision cost from the added surface
+area, a trade the aggregate F1 improvement (0.85~$\rightarrow$~0.89)
 shows was worth taking.
 
-Precision is high across all four rows (0.84--1.00), i.e.\ the small
+Precision is high across all four rows (0.86--0.97), i.e.\ the small
 number of findings the pipeline reports at all are seldom wrong. This
 is the direct, intended consequence of the coherent-combination
 philosophy in \S\ref{sec:static-rules} and the signature-curation
@@ -134,7 +134,7 @@ Precision alone does not distinguish ``the pipeline is well-calibrated''
 from ``the ground truth happens to be permissive.'' Unlike a reputation
 aggregator that displays each engine's or sandbox's tag as given, every
 discrepancy between pipeline output and ground truth found across the
-three samples, 15 in total (5 Akira, 4 WhiteSnakeStealer, 6
+three samples, 17 in total (6 Akira, 5 WhiteSnakeStealer, 6
 RoningLoader), was individually traced to a specific, checkable cause
 rather than accepted or dismissed on the aggregate number alone. Each
 was checked against the \emph{full text} of the corresponding manual
@@ -179,13 +179,23 @@ The outcome of this audit, by cause:
     disappearing outright -- a direct illustration of the
     confidence/precision relationship examined in
     \S\ref{sec:confidence-calibration}, not a counterexample to it.
-  \item \textbf{One ground-truth extraction gap}, not a pipeline
-    error: WhiteSnakeStealer's own manual report discusses reflective
+  \item \textbf{Three ground-truth extraction gaps}, not pipeline
+    errors: WhiteSnakeStealer's own manual report discusses reflective
     DLL loading in its narrative text but the corresponding
     \technique{T1620} row was missing from the report's own ATT\&CK
-    table, so automatic ground-truth extraction never captured it. The
-    pipeline's finding was correct; the source document was fixed
-    instead of the pipeline.
+    table; the same report also documents \code{koBz} enumerating
+    installed AV/security software via the registry and the
+    Thunderbird stealer reading nine profile keys for stored
+    credentials -- the read/enumerate action itself
+    (\technique{T1012}, Query Registry), distinct from the
+    already-recorded \technique{T1112} (writes) and
+    \technique{T1552.002} (the stolen contents); and Akira's report
+    describes \code{enumerate\_drives()} walking every drive and
+    classifying each via \code{GetDriveTypeW}/\code{PathIsNetworkPathW}
+    before encryption, i.e.\ \technique{T1082} (System Information
+    Discovery). None of the three technique tables captured these
+    narrative-only findings. In every case the pipeline's finding was
+    correct; the source document was fixed instead of the pipeline.
   \item \textbf{Two left deliberately open}, on RoningLoader
     (\technique{T1027}, \technique{T1497}): the pipeline's supporting
     evidence for both is real, but no explicit analyst confirmation
@@ -196,12 +206,12 @@ The outcome of this audit, by cause:
     than resolved either way.
 \end{itemize}
 
-This asymmetry, one ground-truth gap fixed, two similar-looking
+This asymmetry, three ground-truth gaps fixed, two similar-looking
 discrepancies left open, is deliberate: the distinguishing factor is
 whether independent confirmation exists in the source document, not
 whether the pipeline's own evidence looks convincing. The practical
 payoff of running this audit at all is visible in the fixed column: 12
-of 15 discrepancies turned into concrete, verifiable improvements to
+of 17 discrepancies turned into concrete, verifiable improvements to
 the rule set (\S\ref{sec:coverage}) and the aggregation logic
 (\S\ref{sec:case-installer}) rather than being absorbed silently into
 an aggregate score, which is precisely the diagnostic step a
@@ -215,7 +225,7 @@ meaningful rather than cosmetic, precision should be measurably higher
 among \emph{high}-confidence findings (those corroborated across
 sources or across technique levels) than among single-source
 \emph{medium}/\emph{low} findings. Across the three validated samples,
-14 of the 15 discrepancies identified in the audit above originated
+16 of the 17 discrepancies identified in the audit above originated
 from a single-source finding. The one exception, RoningLoader's
 \technique{T1497}, reached \emph{high} confidence through genuine
 cross-source corroboration (a coherent anti-sandbox API combination in
