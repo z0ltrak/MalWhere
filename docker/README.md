@@ -74,23 +74,6 @@ Installing Docker this way does **not** add you to the `docker` group, so every
 sudo usermod -aG docker $USER
 ```
 
-Then **log out of your Ubuntu account and back in — or reboot** for it to
-take effect. Closing the terminal window is **not** the same thing and does
-**not** work: group membership is computed once, at login, for the whole
-session, not per-terminal, so a new terminal opened from the same still-open
-desktop session still has the old group list (confirmed hitting exactly
-this: closed the terminal, reopened it, `docker` *and* `virsh` both still
-needed `sudo`). Don't substitute `newgrp docker` either: it only refreshes
-the current shell for the group you name, and `host-prereqs.sh` below adds
-you to two more groups (`libvirt`/`kvm`) in a separate step — a `newgrp
-docker` run now snapshots your group list *before* those exist, so `docker`
-stops needing `sudo` but `virsh`/CAPE start needing it (confirmed hitting
-exactly this too: `newgrp docker` now, `sudo` becomes required for `virsh`
-afterwards, even though it wasn't before). One real log out/in (or reboot),
-done once after `host-prereqs.sh` has run and added all three groups, picks
-up everything at once and avoids the whole class of problem. Verify it took
-with `groups` — it should list `docker`, `libvirt`, and `kvm`.
-
 ---
 
 ## Host Setup: libvirt/KVM
@@ -121,9 +104,11 @@ guessable in advance) and writes `LIBVIRT_GATEWAY`/`LIBVIRT_BRIDGE` into
 these via `%(ENV:LIBVIRT_GATEWAY)s`-style interpolation, so nothing needs
 hand-editing afterwards. Safe to re-run any time.
 
-If it added you to the `libvirt`/`kvm` groups, **log out and back in**
-before continuing: group membership doesn't apply to your current shell
-session otherwise (`virsh` will fail with "Permission denied" until you do).
+This is the point to **reboot** — a log-out/in doesn't always pick up new
+group membership reliably, a reboot does. Group membership doesn't apply to
+your current shell session otherwise (`virsh` will fail with "Permission
+denied" until you do). Verify it took with `groups` — it should list
+`docker`, `libvirt`, and `kvm`.
 
 ---
 
