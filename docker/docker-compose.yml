@@ -421,7 +421,17 @@ services:
   # Profile: sandbox
   # -------------------------------------------------------------------------
   misp:
-    image: ghcr.io/misp/misp-docker/misp-core:latest
+    # Pinned to 2.5.43, not :latest -- misp-docker split nginx out of
+    # misp-core into a separate misp-nginx container in a later release
+    # (github.com/MISP/misp-docker/issues/449), which breaks the single-
+    # container setup below (TLS handshake fails: SSL_ERROR_SYSCALL /
+    # PR_END_OF_FILE_ERROR, since misp-core alone no longer terminates
+    # HTTPS on 443 in the newer architecture). Confirmed working at this
+    # exact digest; a real clean clone on 2026-09-15 pulled a newer
+    # :latest (2.5.46) and hit exactly this failure. Revisit only after
+    # adding the misp-nginx/misp-guard/misp-modules services this repo's
+    # compose file doesn't have yet.
+    image: ghcr.io/misp/misp-docker/misp-core@sha256:7387212ea5064e76914d1862afa3be7ea086cf0be3bbe25dc0bdec684a8a6297
     container_name: malwhere-misp
     profiles: [sandbox]
     ports:
