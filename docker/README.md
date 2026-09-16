@@ -126,8 +126,8 @@ This project uses **KVM** (Kernel-based Virtual Machine) for hardware-accelerate
 ### Build Steps
 
 ```bash
-# 1. Clone our fixed fork of the cape-docker build repository (outside the MalWhere project)
-cd ~
+# 1. Clone our fixed fork of the cape-docker build repository (from inside the MalWhere directory and it is cloned outside at the same level)
+cd ..
 git clone https://github.com/z0ltrak/kvm-cape-docker.git
 cd kvm-cape-docker
 
@@ -919,7 +919,7 @@ Both fixed in our fork ([z0ltrak/kvm-cape-docker](https://github.com/z0ltrak/kvm
 
 **"CAPEv2/installer not found"** -- CAPEv2 is a git submodule; a plain `git clone` leaves it empty. Either clone with `--recurse-submodules`, or:
 ```bash
-cd ~/cape-docker
+cd ../cape-docker
 git submodule update --init --recursive
 make all
 ```
@@ -927,7 +927,7 @@ make all
 **"poetry: not found"**
 ```bash
 # Edit the Dockerfile to install poetry before use
-cd ~/cape-docker
+cd ../cape-docker
 nano Dockerfile
 # Add this line before RUN poetry install:
 # RUN sudo pip3 install poetry

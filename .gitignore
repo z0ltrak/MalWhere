@@ -92,6 +92,12 @@ static/reports/diamondage_exe_retest/
 # dist/, and the gif assets it was built with.
 talk/
 
+# Claude Code repo instructions -- kept local-only, not shared via the repo
+CLAUDE.md
+
+# Scholarship-competition video script -- personal, not project deliverable
+scholarship/
+
 # OS
 .DS_Store
 Thumbs.db
