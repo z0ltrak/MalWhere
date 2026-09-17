@@ -92,6 +92,15 @@ static/reports/diamondage_exe_retest/
 # dist/, and the gif assets it was built with.
 talk/
 
+# Paper sources -- only the two final compiled PDFs (paper/en/main.pdf,
+# paper/es/main.pdf) are tracked in the repo; the LaTeX sources stay
+# local (already public on Overleaf) so the GitHub view shows just the
+# finished deliverable, not the build scaffolding.
+paper/*/*.tex
+paper/*/*.bib
+paper/*/sections/
+paper/*/appendix/
+
 # Claude Code repo instructions -- kept local-only, not shared via the repo
 CLAUDE.md
 
