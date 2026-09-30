@@ -231,7 +231,11 @@ services:
   # Profile: core
   # -------------------------------------------------------------------------
   navigator:
-    image: ghcr.io/mitre-attack/attack-navigator:latest
+    # Pinned to what :latest resolved to on 2026-09-30 (multi-arch index
+    # digest, not a single-platform manifest, so amd64/arm64 both still
+    # resolve correctly) -- bump deliberately, don't just re-widen to
+    # :latest, so an upstream update can't silently change this service.
+    image: ghcr.io/mitre-attack/attack-navigator:latest@sha256:ee91dad18d4f2370e85f69710465f2b3433df10f22ece1e1d86236609dae9630
     container_name: malwhere-navigator
     profiles: [core]
     ports:
